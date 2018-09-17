@@ -1,0 +1,17 @@
+{
+  "name": "openpilot-workbench",
+  "productName": "openpilot-workbench",
+  "version": "0.0.1",
+  "description": "This helps you port your car without knowing everything.",
+  "main": "./main.prod.js",
+  "author": {
+    "name": "jfrux",
+    "url": "https://github.com/jfrux"
+  },
+  "scripts": {
+    "electron-rebuild": "node -r babel-register ../internals/scripts/ElectronRebuild.js",
+    "postinstall": "yarn electron-rebuild"
+  },
+  "license": "MIT",
+  "dependencies": {}
+}

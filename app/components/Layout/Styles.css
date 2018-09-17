@@ -1,0 +1,80 @@
+.container {
+  position: relative;
+  width:100%;
+  /* top: 0;
+  left: 0;
+  height:100%; */
+  text-align: center;
+}
+
+.app_wrapper {
+  padding-top:0;
+}
+
+.header {
+  display:flex;
+  position:relative;
+  width:100%;
+}
+
+.header .brand {
+  flex: 0 0 50%;
+  padding: 19px 15px;
+}
+
+.header .eon_status {
+  flex: 0 0 50%;
+  text-align:right;
+  padding:15px 15px 15px 15px;
+}
+
+.footer {
+  font-size:10px;
+  color:#888;
+  text-align:center;
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  padding:10px;
+}
+
+.footer a,.footer a:hover {
+  color:#888;
+  text-decoration:none;
+}
+
+.heart {
+  color:#FF0000;
+}
+
+.container h2 {
+  font-size: 5rem;
+}
+
+.container a {
+  font-size: 1.4rem;
+}
+
+.eon_name {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: right;
+  
+  /* base/GRAY-300 */
+  color: #DEE2E6;
+}
+.label {
+  font-size:12px;
+  text-align: right;
+  
+  /* base/GRAY-500 */
+  color: #ADB5BD;
+}
+.eon_ip {
+  font-size:12px;
+  text-align: right;
+  
+  color: #ADB5BD;
+}

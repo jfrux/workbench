@@ -1,0 +1,5 @@
+export const SCAN_NETWORK = 'connectEon/SCAN_NETWORK'
+export const SCAN_NETWORK_SUCCESS = 'connectEon/SCAN_NETWORK_SUCCESS'
+export const SCAN_NETWORK_FAIL = 'connectEon/SCAN_NETWORK_FAIL'
+export const SCAN_NETWORK_NOT_FOUND = 'connectEon/SCAN_NETWORK_NOT_FOUND'
+export const SELECT_EON = 'connectEon/SELECT_EON'
