@@ -83,9 +83,6 @@ class Openpilot extends Component {
     
     return (
       <Layout hideLogo={true}>
-        <div className="navbar navbar-fixed">
-          
-        </div>
         <div className={styles.container + " container"}>
           {this.props.eon && 
             <div>

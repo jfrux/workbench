@@ -70,6 +70,7 @@ app.on('ready', async () => {
 
   mainWindow = new BrowserWindow({
     // show: false,
+    titleBarStyle: 'hiddenInset',
     width,
     height
   });

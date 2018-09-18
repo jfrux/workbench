@@ -15,11 +15,12 @@
   display:flex;
   position:relative;
   width:100%;
+  -webkit-app-region: drag;
 }
 
 .header .brand {
   flex: 0 0 50%;
-  padding: 19px 0 19px 0;
+  padding: 30px 0 19px 0;
   margin: 0 auto;
   text-align: center;
 }
@@ -33,11 +34,11 @@
 }
 
 .footer {
-  font-size:10px;
+  font-size:12px;
   color:#888;
   text-align:center;
   position:fixed;
-  bottom:0;
+  bottom:10px;
   left:0;
   width:100%;
   padding:10px;
