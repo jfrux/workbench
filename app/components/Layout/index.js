@@ -12,29 +12,16 @@ class Layout extends React.PureComponent {
   handleOpenOPC() {
     shell.openExternal('https://opc.ai/');
   }
+  componentDidMount() {
+    this.props.retrieveEonFromSettings();
+  }
   render() {
     const { backBtn, hideLogo, selectedEon } = this.props;
     return (
       <div className={styles.app_wrapper}>
         <div className={styles.header + " no-select"}>
           <div className={styles.brand}>
-            {backBtn}
             {!hideLogo && <Logo />}
-          </div>
-          <div className={styles.eon_status + " no-select"}>
-            {selectedEon && 
-              <div>
-                <div className={styles.label}>
-                Selected EON
-                </div>
-                <div className={styles.eon_name}>
-                {selectedEon.mac}
-                </div>
-                <div className={styles.eon_ip}>
-                {selectedEon.ip}
-                </div>
-              </div>
-            }
           </div>
         </div>
         <div className={styles.content}>
@@ -52,6 +39,11 @@ function mapStateToProps(state) {
   };
 }
 
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(ConnectEonActions, dispatch);
+}
+
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Layout);

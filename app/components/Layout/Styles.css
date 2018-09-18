@@ -19,9 +19,13 @@
 
 .header .brand {
   flex: 0 0 50%;
-  padding: 19px 15px;
+  padding: 19px 0 19px 0;
+  margin: 0 auto;
+  text-align: center;
 }
-
+.header .brand svg {
+  transform: scale(1.2);
+}
 .header .eon_status {
   flex: 0 0 50%;
   text-align:right;
@@ -61,20 +65,17 @@
   font-weight: 600;
   font-size: 14px;
   text-align: right;
-  
-  /* base/GRAY-300 */
   color: #DEE2E6;
 }
+
 .label {
-  font-size:12px;
+  font-size:11px;
   text-align: right;
-  
-  /* base/GRAY-500 */
-  color: #ADB5BD;
+  color: #666;
 }
 .eon_ip {
-  font-size:12px;
+  font-size:10px;
   text-align: right;
   
-  color: #ADB5BD;
+  color: #666;
 }

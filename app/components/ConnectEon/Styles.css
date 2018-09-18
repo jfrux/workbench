@@ -5,29 +5,63 @@
   transform:translate(-50%,-50%);
 }
 
-.title {
-  /* font-size:18px;
-  color:#FFF;*/
-  font-weight:400;
-  text-align:center;
+.eon_icon {
+  width:70px;
+  display:block;
+  position:absolute;
+  left:8px;
+  top:50%;
+  opacity: 0.3;
+  transform:translateY(-50%);
 }
+
+.results_button_selected {
+  position:absolute;
+  right:15px;
+  top:50%;
+  transform: translateY(-50%);
+}
+
+.eon_icon svg {
+  object-fit: cover;
+  height:100%!important;
+}
+
 
 .results {
   width:100%;
+  margin-top:10px;
 }
+
 .results_button {
   display:block;
 }
-.results_button_line {
+
+/* .results_button:hover .eon_icon {
+  opacity: 0.5;
+} */
+
+.results_button_ip {
   display:block;
+  color:#F7F7F7;
+}
+
+.results_button_mac {
+  display:block;
+  color:#888;
+  font-weight:400;
+  font-size:12px;
+}
+
+.title {
+  font-weight:400;
+  text-align:center;
 }
 .subtext {
-  /* font-size:15px;
-  color:#FFF;
-  font-weight:200;*/
   font-weight:200;
   text-align:center;
 }
+
 .subsubtext {
   font-weight:200;
   text-align:center;

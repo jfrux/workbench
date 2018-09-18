@@ -1,10 +1,14 @@
-// @flow
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import Home from '../components/Home';
 import Layout from '../components/Layout';
-
-export default class HomePage extends Component {
+import { Redirect } from 'react-router';
+import routes from '../constants/routes.json';
+class HomePage extends Component {
   render() {
-    return <Layout><Home /></Layout>;
+    return <Redirect from="/" to={routes.CONNECT_EON} />;
   }
 }
+
+export default HomePage;

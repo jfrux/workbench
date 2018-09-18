@@ -11,8 +11,8 @@
  */
 import { app, BrowserWindow } from 'electron';
 import MenuBuilder from './menu';
-const Store = require('./store.js');
-
+import settings from 'electron-settings';
+app.commandLine.appendSwitch('--enable-viewport-meta', 'true');
 let mainWindow = null;
 
 if (process.env.NODE_ENV === 'production') {
@@ -29,13 +29,6 @@ if (
   const p = path.join(__dirname, '..', 'app', 'node_modules');
   require('module').globalPaths.push(p);
 }
-
-const store = new Store({
-  configName: 'user-preferences',
-  defaults: {
-    windowBounds: { width: 800, height: 600 }
-  }
-});
 
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
@@ -60,9 +53,14 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', async () => {
-  let { width, height } = store.get('windowBounds');
-  console.warn("width:",width);
-  console.warn("height:",height);
+  if (!settings.get("windowBounds")) {
+    settings.set("windowBounds", { width: 800, height: 600 })
+  }
+  console.log("Settings are stored in:\n" + settings.file());
+  let { width, height } = settings.get('windowBounds');
+
+  // console.warn("width:",width);
+  // console.warn("height:",height);
   if (
     process.env.NODE_ENV === 'development' ||
     process.env.DEBUG_PROD === 'true'
@@ -71,19 +69,19 @@ app.on('ready', async () => {
   }
 
   mainWindow = new BrowserWindow({
-    show: false,
+    // show: false,
     width,
     height
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
   mainWindow.on('resize', () => {
-    console.log(store.get('windowBounds'));
+    // console.log(store.get('windowBounds'));
     // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with
     // the height, width, and x and y coordinates.
     let { width, height } = mainWindow.getBounds();
     // Now that we have them, save them using the `set` method.
-    store.set('windowBounds', { width, height });
+    settings.set('windowBounds', { width, height });
   });
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event

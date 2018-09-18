@@ -1,0 +1,38 @@
+
+.title {
+  font-weight:400;
+  text-align:center;
+}
+.subtext {
+  font-weight:200;
+  text-align:center;
+}
+.disconnect_button {
+  margin-top:10px;
+  margin-bottom:10px;
+}
+.subsubtext {
+  font-weight:200;
+  text-align:center;
+  font-weight:200;
+  color:#555;
+}
+
+.state_list {
+  display:table;
+  width:100%;
+}
+.state_item {
+  display:table-row;
+}
+
+.state_label,.state_status {
+  display:table-cell;
+  border-bottom: 1px solid #555;
+}
+.state_label {
+  font-weight:200;
+}
+.state_status {
+
+}

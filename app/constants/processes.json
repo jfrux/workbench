@@ -1,0 +1,46 @@
+{
+  "updated": {
+    "label": "Updater",
+    "description": "An openpilot process..."
+  },
+  "logcatd": {
+    "label": "Logcat",
+    "description": "An openpilot process..."
+  },
+  "pandad": {
+    "label": "Panda",
+    "description": "An openpilot process..."
+  },
+  "thermald": {
+    "label": "Thermal",
+    "description": "An openpilot process..."
+  },
+  "ui": {
+    "label": "UI",
+    "description": "An openpilot process..."
+  },
+  "uploader": {
+    "label": "Upload",
+    "description": "An openpilot process..."
+  },
+  "tombstoned": {
+    "label": "Tombstone",
+    "description": "An openpilot process..."
+  },
+  "logmessaged": {
+    "label": "LogMessage",
+    "description": "An openpilot process..."
+  },
+  "controlsd": {
+    "label": "Controls",
+    "description": "This process is responsible for interfacing with the vehicle."
+  },
+  "visiond": {
+    "label": "Vision",
+    "description": "The Comma.ai Vision System is responsible for interpreting the camera image and sending commands openpilot needs to make vehicle maneuvering decisions."
+  },
+  "gpsd": {
+    "label": "GPS",
+    "description": "Service worker for the GPS"
+  }
+}

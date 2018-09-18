@@ -1,4 +1,5 @@
 {
-  "HOME": "/",
-  "CONNECT_EON": "/connect_eon"
+  "CONNECT_EON": "/connect_eon",
+  "OPENPILOT": "/openpilot",
+  "FINGERPRINT": "/fingerprint"
 }
