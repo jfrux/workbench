@@ -218,6 +218,17 @@ export function selectEon(index) {
     dispatch(SELECT_EON(index));
   };
 }
+export function addManually(ip_address) {
+  return (dispatch, getState) => {
+    dispatch(SUCCESS_scanNetwork([
+      {
+        ip: ip_address,
+        mac: "Unknown"
+      }
+    ]));
+    dispatch(SELECT_EON(0));
+  };
+}
 
 export function retrieveEonFromSettings() {
   return (dispatch, getState) => {

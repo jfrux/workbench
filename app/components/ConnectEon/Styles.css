@@ -4,7 +4,17 @@
   left:50%;
   transform:translate(-50%,-50%);
 }
-
+.divider {
+  text-align:center;
+  padding:10px;
+  color:#555;
+}
+.add_field {
+  border:0;
+}
+.manual_error {
+  background-color:transparent!important;
+}
 .eon_icon {
   width:70px;
   display:block;

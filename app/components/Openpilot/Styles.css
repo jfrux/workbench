@@ -1,4 +1,9 @@
-
+.eon_bar {
+  position:relative;
+}
+.add_field {
+  border:0;
+}
 .title {
   font-weight:400;
   text-align:center;

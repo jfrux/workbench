@@ -16,7 +16,14 @@ const propTypes = {
   scanning: PropTypes.bool,
   status: PropTypes.string
 };
-
+function ValidateIPaddress(ipaddress) 
+{
+ if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress))
+  {
+    return (true)
+  }
+return (false)
+}
 const statusMessages = {
   eon_selected: {
     title: "Connect to EON",
@@ -49,11 +56,28 @@ class ConnectEon extends Component {
   constructor() {
     super();
     this.state = {
+      value: '',
+      manualError: '',
       scanningStarted: false
     }
   }
   handleScanNetwork = () => {
     this.props.scanNetwork();
+  }
+  handleChange = (event) => {
+    this.setState({value: event.target.value});
+  }
+  handleSubmit = (event) => {
+    const { value } = this.state;
+    if (ValidateIPaddress(value)) {
+      this.props.addManually(value);
+      this.setState({value: ''});
+    } else {
+      this.setState({manualError: "Invalid IP Address"});
+    }
+    event.preventDefault();
+  }
+  handleAddManually = (ev,) => {
   }
   handleSelectEon = (index) => {
     this.props.selectEon(index);
@@ -112,6 +136,18 @@ class ConnectEon extends Component {
           {status === "scanned_no_results" &&
             <button className="mt-5 btn btn-dark btn-block" onClick={this.handleScanNetwork} type="button"><i className="fa fa-sync"></i> Try Again</button>
           }
+          <div className={styles.divider}>
+            or
+          </div>
+          {this.state.manualError &&
+            <div className={styles.manual_error + " alert alert-danger"}>
+              {this.state.manualError}
+            </div>
+          }
+          
+          <form onSubmit={this.handleSubmit}>
+            <input type="text" name="ip_address" id="ip_address" value={this.state.value} onChange={this.handleChange} className={styles.add_field + " form-control bg-dark"} placeholder="Add IP Address Manually" />
+          </form>
         </div>
       </Layout>
     );

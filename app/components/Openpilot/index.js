@@ -58,7 +58,7 @@ class Openpilot extends Component {
   render() {
     const processKeys = Object.keys(processInfo);
     if (!this.props.tmuxAttached) {
-      return <div className={styles.loadingOverlay}><LoadingIndicator /></div>;
+      return <div className={styles.loading_overlay}><LoadingIndicator /></div>;
     }
 
     // PROCESS ITEMS
@@ -85,7 +85,8 @@ class Openpilot extends Component {
       <Layout hideLogo={true}>
         <div className={styles.container + " container"}>
           {this.props.eon && 
-            <div>
+            <div className={styles.eon_bar}>
+              <ConnectedTime startedTime={this.props.tmuxStartedAt} />
               <h3 className={styles.title + " no-select"}>
               Connected to EON
               </h3>
@@ -94,7 +95,7 @@ class Openpilot extends Component {
               </h5>
               <div className={styles.subsubtext + " no-select"}>
                 {this.props.eon.mac}
-                <ConnectedTime startedTime={this.props.tmuxStartedAt} />
+                
               </div>
               <Link className={styles.disconnect_button + " btn btn-outline-danger btn-block"} to={routes.CONNECT_EON}>
                 Disconnect
