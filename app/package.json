@@ -1,7 +1,7 @@
 {
   "name": "openpilot-workbench",
   "productName": "openpilot-workbench",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This helps you port your car without knowing everything.",
   "main": "./main.prod.js",
   "author": {
