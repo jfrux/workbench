@@ -1,3 +1,6 @@
-[
-  "waiting for board..."
-]
+{
+  "waiting for board...": {
+    "label": "Vehicle not connected.",
+    "description": "Connect to panda for vehicle functions."
+  }
+}

@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import Circle from './Circle';
-import styles from './Styles.css';
+import IndicatorIcon from './IndicatorIcon';
 
 class LoadingIndicator extends Component {
   render() {
     return (<div className={this.props.className}>
-      <Circle />
+      <IndicatorIcon icon={this.props.icon} />
     </div>)
   }
 }

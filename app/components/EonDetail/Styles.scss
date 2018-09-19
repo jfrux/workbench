@@ -1,5 +1,7 @@
 .eon_bar {
   position:relative;
+  margin-top:40px;
+  margin-bottom:30px;
 }
 .loading_overlay {
   position:absolute;
@@ -12,8 +14,8 @@
   position:absolute;
   top:50%;
   left:50%;
-  height:75px;
-  width:75px;
+  height:85px;
+  width:85px;
   transform:translate(-50%,-50%);
   
   /* width:100%;
@@ -24,32 +26,59 @@
 .add_field {
   border:0;
 }
+.title,.subtext,.subsubtext {
+  text-align:center;
+  margin: 0;
+}
 .title {
   font-weight:400;
-  text-align:center;
 }
 .subtext {
   font-weight:200;
-  text-align:center;
 }
 .disconnect_button {
   margin-top:10px;
   margin-bottom:10px;
+  position:absolute;
+  top:0;
+  left:0;
+  width:200px;
 }
 .subsubtext {
   font-weight:200;
-  text-align:center;
   font-weight:200;
   color:#555;
 }
+.connection {
+  background-color:rgba(#FFF,0.2);
+  padding:10px;
+  border-radius:100px;
+  width:50%;
+  margin:0 auto;
 
+  span {
+    display:block;
+    text-align:center;
+  }
+  
+  .connection_message {
+    font-size:18px;
+    font-weight:200;
+    line-height:20px;
+  }
+
+  .connection_label {
+    font-size:10px;
+    line-height:15px;
+  }
+}
 .state_list {
   display:table;
   width:100%;
 }
 .state_spinner {
-  height: 20px;
-  width: 20px;
+  height: 100%;
+  width: 100%;
 }
 .state_spinner img {
   width:100%;
@@ -57,6 +86,12 @@
 }
 .state_item {
   display:table-row;
+}
+.state_loading_icon_wrap {
+  width: 16px;
+  height: 16px;
+  position: relative;
+  display: block;
 }
 
 .state_label,.state_status {
@@ -74,6 +109,6 @@
 .state_status {
   /* color:#28a745; */
 }
-.state_status.started {
+.state_status_started {
   color:#28a745;
 }

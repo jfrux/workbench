@@ -1,0 +1,110 @@
+{
+  "logMonoTime": {
+    "label": "Log Mono Time",
+    "description": "Stat for logMonoTime",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "cpu0": {
+    "label": "CPU #1",
+    "description": "Stat for cpu1",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "cpu1": {
+    "label": "CPU #2",
+    "description": "Stat for cpu2",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "cpu2": {
+    "label": "CPU #3",
+    "description": "Stat for cpu3",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "cpu3": {
+    "label": "CPU #4",
+    "description": "Stat for cpu4",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "mem": {
+    "label": "Memory",
+    "description": "Stat for mem",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "gpu": {
+    "label": "GPU",
+    "description": "Stat for gpu",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "bat": {
+    "label": "Battery",
+    "description": "Stat for bat",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "freeSpace": {
+    "label": "Free Space",
+    "description": "Stat for freeSpace",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "batteryPercent": {
+    "label": "Battery %",
+    "description": "Stat for batteryPercent",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "batteryStatus": {
+    "label": "Battery Status",
+    "description": "Stat for batteryStatus",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "fanSpeed": {
+    "label": "Fan Speed",
+    "description": "Stat for fanSpeed",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "started": {
+    "label": "Started",
+    "description": "Stat for started",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "usbOnline": {
+    "label": "USB Online",
+    "description": "Stat for usbOnline",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "startedTs": {
+    "label": "Started TS",
+    "description": "Stat for startedTs",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "thermalStatus": {
+    "label": "Thermal Status",
+    "description": "Stat for thermalStatus",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "batteryCurrent": {
+    "label": "Battery Current",
+    "description": "Stat for batteryCurrent",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "batteryVoltage": {
+    "label": "Battery Voltage",
+    "description": "Stat for batteryVoltage",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  }
+}

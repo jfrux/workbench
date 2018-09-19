@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Logo from "./images/logo.svg";
-import styles from './Styles.css';
+import Logo from "../../images/logo.svg";
+import styles from './Styles.scss';
 import * as eonListActions from '../../actions/eon_list_actions';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -18,11 +18,13 @@ class Layout extends React.PureComponent {
   render() {
     const { backBtn, hideLogo, selectedEon } = this.props;
     return (
-      <div className={styles.app_wrapper}>
+      <div className={styles.app_wrapper + (hideLogo ? " thin-wrapper" : "")}>
         <div className={styles.header + " no-select"}>
+        {!hideLogo && 
           <div className={styles.brand}>
-            {!hideLogo && <Logo />}
+            <Logo />
           </div>
+        }
         </div>
         <div className={styles.content}>
           {this.props.children}

@@ -89,14 +89,33 @@ export function RESPONSE_tmuxPipe(lines, state) {
 
   regexKeys = Object.keys(regex);
   regexKeys.forEach((key) => {
-    // console.log(key);
-    if ((m = regex[key].exec(lines)) !== null) {
-      // console.log(m);
-      if (key === 'PROCESS') {
-        payload[m[1]] = m[3];
-      } else if (key === 'VEHICLE_CONNECTION') {
-        payload.vehicleConnection = m[0];
-      }
+    switch (key) {
+      case "THERMAL":
+        // console.warn("Parsing:",key);
+        while ((m = regex[key].exec(lines)) !== null) {
+          if (m.index === regex.lastIndex) {
+            regex.lastIndex++;
+          }
+          // console.warn(m[1],m[2]);
+          payload[m[1]] = m[2].replace(/\"/g,'');
+        }
+        break;
+      case "PROCESS":
+        // console.warn("Parsing:",key);
+        while ((m = regex[key].exec(lines)) !== null) {
+          if (m.index === regex.lastIndex) {
+            regex.lastIndex++;
+          }
+          // console.warn(m[1],m[3]);
+          payload[m[1]] = m[3].replace(/\"/g,'');
+        }
+        break;
+      case "VEHICLE_CONNECTION":
+        // console.warn("Parsing:",key);
+        if ((m = regex[key].exec(lines)) !== null) {
+          payload.vehicleConnection = m[0];
+        }
+        break;
     }
   });
 

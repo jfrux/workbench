@@ -22,7 +22,26 @@ const initialState = {
   visiond: null,
   tmuxStartedAt: null,
   gpsd: null,
-  vehicleConnection: null
+  vehicleConnection: null,
+  logMonoTime: null,
+  thermal: null,
+  cpu0: null,
+  cpu1: null,
+  cpu2: null,
+  cpu3: null,
+  mem: null,
+  gpu: null,
+  bat: null,
+  freeSpace: null,
+  batteryPercent: null,
+  batteryStatus: null,
+  fanSpeed: null,
+  started: null,
+  usbOnline: null,
+  startedTs: null,
+  thermalStatus: null,
+  batteryCurrent: null,
+  batteryVoltage: null
 };
 
 export default function eonDetailReducer(state = initialState, action) {
@@ -68,7 +87,26 @@ export default function eonDetailReducer(state = initialState, action) {
         visiond: null,
         gpsd: null,
         vehicleConnection: null,
-        tmuxStartedAt: null
+        tmuxStartedAt: null,
+        logMonoTime: null,
+        thermal: null,
+        cpu0: null,
+        cpu1: null,
+        cpu2: null,
+        cpu3: null,
+        mem: null,
+        gpu: null,
+        bat: null,
+        freeSpace: null,
+        batteryPercent: null,
+        batteryStatus: null,
+        fanSpeed: null,
+        started: null,
+        usbOnline: null,
+        startedTs: null,
+        thermalStatus: null,
+        batteryCurrent: null,
+        batteryVoltage: null
       }
 
     case types.FETCH_PID:

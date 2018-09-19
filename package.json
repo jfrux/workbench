@@ -1,7 +1,7 @@
 {
   "name": "openpilot-workbench",
   "productName": "Workbench",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "The Openpilot Workbench is to help people fix problems with EON, Openpilot, etc.",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -28,7 +28,8 @@
     "test": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 node --trace-warnings -r babel-register ./internals/scripts/RunTests.js",
     "test-all": "yarn lint && yarn build && yarn test && yarn test-e2e",
     "test-e2e": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 node --trace-warnings -r babel-register ./internals/scripts/RunTests.js e2e",
-    "test-watch": "yarn test --watch"
+    "test-watch": "yarn test --watch",
+    "release": "build"
   },
   "browserslist": "electron 1.6",
   "lint-staged": {
@@ -45,6 +46,7 @@
   "build": {
     "productName": "Workbench",
     "appId": "ai.opc.workbench",
+    "artifactName": "Workbench-v${version}.${os}.${ext}",
     "files": [
       "dist/",
       "node_modules/",
@@ -217,6 +219,7 @@
     "react-hot-loader": "^4.3.4",
     "react-moment": "^0.7.9",
     "react-redux": "^5.0.7",
+    "react-resize-detector": "^3.1.2",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-router-redux": "^5.0.0-alpha.6",

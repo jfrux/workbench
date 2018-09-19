@@ -54,7 +54,7 @@ app.on('window-all-closed', () => {
 
 app.on('ready', async () => {
   if (!settings.get("windowBounds")) {
-    settings.set("windowBounds", { width: 800, height: 600 })
+    settings.set("windowBounds", { width: 800, height: 800 })
   }
   console.log("Settings are stored in:\n" + settings.file());
   let { width, height } = settings.get('windowBounds');
@@ -71,8 +71,11 @@ app.on('ready', async () => {
   mainWindow = new BrowserWindow({
     // show: false,
     titleBarStyle: 'hiddenInset',
+    backgroundColor: "#000000",
     width,
-    height
+    height,
+    minHeight: 800,
+    minWidth: 800
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
