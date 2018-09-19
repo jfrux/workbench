@@ -4,6 +4,7 @@ import EonDetail from '../components/EonDetail';
 import * as EonActions from '../actions/eon_detail_actions';
 
 function mapStateToProps(state) {
+  const connectedState = {};
   return {
     status: state.eonDetail.status,
     eon: state.eonList.selectedEon,
