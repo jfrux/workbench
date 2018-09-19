@@ -1,10 +1,11 @@
 import { combineReducers } from 'redux';
 import { routerReducer as router } from 'react-router-redux';
-import connectEon from './connect_eon';
-import openpilot from './openpilot';
+import eonListReducer from './eon_list_reducer';
+import eonDetailReducer from './eon_detail_reducer';
+
 const rootReducer = combineReducers({
-  connectEon,
-  openpilot,
+  eonList: eonListReducer,
+  eonDetail: eonDetailReducer,
   router
 });
 

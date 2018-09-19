@@ -4,7 +4,8 @@ import { createHashHistory } from 'history';
 import { routerMiddleware, routerActions } from 'react-router-redux';
 import { createLogger } from 'redux-logger';
 import rootReducer from '../reducers';
-import * as connectEonActions from '../actions/connect_eon';
+import * as eonListActions from '../actions/eon_list_actions';
+import * as eonDetailActions from '../actions/eon_detail_actions';
 
 const history = createHashHistory();
 
@@ -33,7 +34,8 @@ const configureStore = (initialState) => {
 
   // Redux DevTools Configuration
   const actionCreators = {
-    ...connectEonActions,
+    ...eonDetailActions,
+    ...eonListActions,
     ...routerActions
   };
   // If Redux DevTools Extension is installed use it, otherwise use Redux compose

@@ -1,18 +1,16 @@
 /* eslint flowtype-errors/show-errors: 0 */
 import React from 'react';
-import { Switch, Route } from 'react-router';
+import { Switch, IndexRoute, Route } from 'react-router';
 import routes from './constants/routes.json';
 import App from './containers/App';
-import HomePage from './containers/HomePage';
-import ConnectEonPage from './containers/ConnectEonPage';
-import OpenpilotPage from './containers/OpenpilotPage';
+import EonListPage from './containers/EonListPage';
+import EonDetailPage from './containers/EonDetailPage';
 
 export default () => (
-  <App>
+  <App path="/" component={ App }>
     <Switch>
-      <Route path={routes.OPENPILOT} component={OpenpilotPage} />
-      <Route path={routes.CONNECT_EON} component={ConnectEonPage} />
-      <Route path={routes.HOME} component={HomePage} />
+      <Route path={routes.EON_DETAIL} component={EonDetailPage} />
+      <Route path={routes.EON_LIST} component={EonListPage} />
     </Switch>
   </App>
 );

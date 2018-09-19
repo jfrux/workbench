@@ -19,7 +19,7 @@ Available for
   - [x] Can connect to EON
   - [x] Can display basic tmux data
   - [x] Can scan network for EON
-- [ ] Pull in thermal details to eon screen.
+- [ ] Pull in thermal details to EON screen.
 - [ ] Add first tool, get fingerprint.
 - [ ] Add addl tools as we see fit...
   - [ ] Install a fork of Openpilot from a git url

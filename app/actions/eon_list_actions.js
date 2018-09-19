@@ -1,14 +1,12 @@
 const app = require('electron').remote.app
 const SSH = require('node-ssh');
 const RSAKey = require('rsa-key');
-// const SimpleSSH = require("simple-ssh");
 import path from 'path';
 import fs from 'fs';
 const netList = require('network-list');
 const dns = require("dns"); 
 import settings from 'electron-settings';
-
-import * as types from '../constants/connect_eon_types'
+import * as types from '../constants/eon_list_action_types'
 
 // SSH ACTION CREATORS
 export function BEGIN_connectSSH() {

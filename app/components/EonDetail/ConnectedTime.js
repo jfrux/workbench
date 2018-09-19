@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 const app = require('electron').remote.app
-import routes from '../../constants/routes.json';
 import PropTypes from 'prop-types';
 import formatTime from '../../utils/format-time';
-import processInfo from '../../constants/processes.json';
-import Layout from '../Layout';
-import LoadingIndicator from '../LoadingIndicator';
 import styles from './ConnectedTime.css';
 const propTypes = {
   tmuxStartedAt: PropTypes.date

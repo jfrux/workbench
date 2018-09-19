@@ -1,6 +1,6 @@
-import * as types from '../constants/openpilot_types'
+/* reducer for managing state for individual eon */
+import * as types from '../constants/eon_detail_action_types'
 import settings from 'electron-settings';
-
 
 const defaultTmuxLogLength = 300;
 
@@ -25,7 +25,7 @@ const initialState = {
   vehicleConnection: null
 };
 
-export default function openpilot(state = initialState, action) {
+export default function eonDetailReducer(state = initialState, action) {
   switch (action.type) {
     case types.TMUX_PIPE:
       return {

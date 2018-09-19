@@ -1,7 +1,7 @@
 import settings from 'electron-settings';
 const app = require('electron').remote.app
-import * as types from '../constants/openpilot_types'
-import * as connectEonActions from './connect_eon';
+import * as types from '../constants/eon_detail_action_types'
+import * as eonListActions from './eon_list_actions';
 import * as commands from '../constants/commands.json';
 import * as regex from '../constants/tmux_regex';
 import * as vehicle_connection_statuses from '../constants/vehicle_connection_statuses.json';
@@ -74,14 +74,16 @@ const limitedLogArray = function(length) {
 }
 
 export function RESPONSE_tmuxPipe(lines, state) {
-  let newArray = limitedLogArray(state.openpilot.tmuxLogLimit);
+  const { eonDetail } = state;
+  const { tmuxLogLimit, tmuxLog, tmuxStartedAt } = eonDetail;
+  let newArray = limitedLogArray(tmuxLogLimit);
   let regexKeys;
   let payload = {};
   let m;
-  if (!state.openpilot.tmuxStartedAt) {
+  if (!tmuxStartedAt) {
     payload.tmuxStartedAt = new Date();
   }
-  state.openpilot.tmuxLog.forEach((item) => {
+  tmuxLog.forEach((item) => {
     newArray.push(item.trim());
   });
 
@@ -125,10 +127,10 @@ export function CLOSE_tmuxPipe() {
 
 export function pipeTmux() {
   return (dispatch, getState) => {
-    const { selectedEon } = getState().connectEon;
+    const { selectedEon } = getState().eonList;
     if (selectedEon) {
       dispatch(OPEN_tmuxPipe());
-      dispatch(connectEonActions.sendPiped(selectedEon, commands.PIPE_TMUX, [], (resp) => {
+      dispatch(eonListActions.sendPiped(selectedEon, commands.PIPE_TMUX, [], (resp) => {
         dispatch(RESPONSE_tmuxPipe(resp,getState()));
       }, (err) => {
         dispatch(FAIL_tmuxPipe(err));
@@ -150,7 +152,7 @@ export function getOpenpilotPid() {
   return (dispatch, getState) => {
     const { selectedEon } = getState().connectEon;
     dispatch(BEGIN_fetchPid());
-    connectEonActions.sendCommand(selectedEon, commands.OPENPILOT_PID).then((result) => {
+    eonListActions.sendCommand(selectedEon, commands.OPENPILOT_PID).then((result) => {
       const pid = result.stdout.split('\n')[0].trim();
       
       if (result.stderr) {
@@ -169,7 +171,7 @@ export function getOpenpilotPid() {
 export function install() {
   return (dispatch, getState) => {
     // dispatch(BEGIN_install());
-    connectEonActions.sendCommand(getState())
+    eonListActions.sendCommand(getState())
 
     console.warn("Starting install...");
     // ssh.exec('echo "Node.js"', {

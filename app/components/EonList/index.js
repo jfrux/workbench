@@ -1,9 +1,7 @@
 // @flow
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import styles from './Styles.css';
 import Eon from "../../images/device-icons/eon.svg";
-import { Route, Redirect } from 'react-router'
 import PropTypes from 'prop-types';
 import routes from '../../constants/routes.json';
 import Layout from '../Layout';
@@ -77,11 +75,9 @@ class ConnectEon extends Component {
     }
     event.preventDefault();
   }
-  handleAddManually = (ev,) => {
-  }
   handleSelectEon = (index) => {
     this.props.selectEon(index);
-    this.props.history.push('/openpilot');
+    this.props.history.push(routes.EON_DETAIL);
   }
   render() {
     const {

@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Logo from "./images/logo.svg";
 import styles from './Styles.css';
-import * as ConnectEonActions from '../../actions/connect_eon';
+import * as eonListActions from '../../actions/eon_list_actions';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import routes from '../../constants/routes.json';
@@ -35,12 +35,12 @@ class Layout extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    selectedEon: state.connectEon.selectedEon
+    selectedEon: state.eonList.selectedEon
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(ConnectEonActions, dispatch);
+  return bindActionCreators(eonListActions, dispatch);
 }
 
 export default connect(

@@ -1,4 +1,5 @@
-import * as types from '../constants/connect_eon_types'
+/* reducer for managing list of eons and scanning for eons */
+import * as types from '../constants/eon_list_action_types'
 import settings from 'electron-settings';
 
 const initialState = {
@@ -14,8 +15,10 @@ const initialState = {
   sshCommandErrors: null,
   sshCommandStatus: "idle"
 };
-export default function connectEon(state = initialState, action) {
+
+export default function eonListReducer(state = initialState, action) {
   switch (action.type) {
+    /* SSH Connections might should be moved to EON reducer */
     case types.CONNECT_SSH:
       return {
         sshStatus: "connecting"

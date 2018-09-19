@@ -8,6 +8,7 @@ import processInfo from '../../constants/processes.json';
 import Layout from '../Layout';
 import LoadingIndicator from '../LoadingIndicator';
 import ConnectedTime from './ConnectedTime';
+
 const propTypes = {
   install: PropTypes.func,
   eon: PropTypes.object,
@@ -30,7 +31,7 @@ const propTypes = {
   vehicleConnection: PropTypes.string
 };
 
-class Openpilot extends Component {
+class EonDetail extends Component {
   
   componentDidMount() {
     if (this.props.eon && this.props.pipeTmux) {
@@ -40,7 +41,7 @@ class Openpilot extends Component {
     this.tmuxTimeout = setTimeout(() => {
       if (!this.props.tmuxAttached) {
         console.warn("Could not connect to tmux...");
-        this.props.history.push('/connect_eon');
+        this.props.history.push(routes.EON_DETAIL);
       }
     }, 3000);
     
@@ -97,7 +98,7 @@ class Openpilot extends Component {
                 {this.props.eon.mac}
                 
               </div>
-              <Link className={styles.disconnect_button + " btn btn-outline-danger btn-block"} to={routes.CONNECT_EON}>
+              <Link className={styles.disconnect_button + " btn btn-outline-danger btn-block"} to={routes.EON_LIST}>
                 Disconnect
               </Link>
             </div>
@@ -116,6 +117,6 @@ class Openpilot extends Component {
   }
 }
 
-Openpilot.propTypes = propTypes;
+EonDetail.propTypes = propTypes;
 
-export default Openpilot;
+export default EonDetail;
