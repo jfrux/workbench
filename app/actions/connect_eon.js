@@ -65,7 +65,7 @@ export function FAIL_sshCommand(err) {
 
 // LOCATE ACTION CREATORS
 export function BEGIN_scanNetwork() {
-  console.log("dispatched BEGIN_scanNetwork");
+  // console.log("dispatched BEGIN_scanNetwork");
 
   return {
     type: types.SCAN_NETWORK
@@ -73,18 +73,7 @@ export function BEGIN_scanNetwork() {
 }
 
 export function SUCCESS_scanNetwork(results,state) {
-  let currentEons = state.connectEon.scanResults;
-  let newList = [];
-  newList = results.map((result) => {
-    const foundCurrent = currentEons.filter((item) => {
-      result.mac === item.mac
-    });
-
-    if (!foundCurrent.length) {
-      return result;
-    }
-  });
-  console.log(newList);
+  settings.set("scanResults",results);
   return {
     type: types.SCAN_NETWORK_SUCCESS,
     payload: {
@@ -188,7 +177,7 @@ export function sendPiped(eon, command, commandArgs = [], stdOut = () => {}, std
 export function sendCommand(eon, command, commandArgs = []) {
   const privateKey = getPrivateKey();
   const sshClient = new SSH();
-  console.log("Connecting...");
+  // console.log("Connecting...");
   return sshClient.connect({
     host: eon.ip,
     username: 'root',
@@ -204,38 +193,16 @@ export function sendCommand(eon, command, commandArgs = []) {
 export function scanNetwork() {
   return (dispatch, getState) => {
     dispatch(BEGIN_scanNetwork());
-    return new Promise((resolve,reject) => {
-      let foundItem;
-      let tryCount = 0;
-      // while (!foundItem || tryCount >= 100) {
-      // netList.findFirst('OnePlus', {}, (err, obj) => {
-      //   console.log(obj);
-      //   resolve(obj);
-        // if (obj.vendor === "OnePlus Technology (Shenzhen) Co., Ltd") {
-          // console.warn("FOUND");
-          // foundItem = obj;
-          // 
-          // skip;
-        // }
-      // });
-      // }
-    
-      netList.scan({}, (err, arr) => {
-        if(err!=null) {
-          dispatch(FAIL_scanNetwork(err));
-          return reject(err);
+    let found = false;
+
+      netList.scanEach({}, (err, obj) => {
+        // console.log(obj);
+        
+        if (obj.vendor === "OnePlus Technology (Shenzhen) Co., Ltd") {
+          dispatch(SUCCESS_scanNetwork([obj],getState()));
+          found = true;
         }
-        var aliveResults = arr.filter(item => item.alive);
-        var eonResults = arr.filter(item => item.vendor === "OnePlus Technology (Shenzhen) Co., Ltd");
-        // console.warn(aliveResults);
-        if (eonResults.length) {
-          dispatch(SUCCESS_scanNetwork(eonResults,getState()));
-        } else {
-          dispatch(NO_FOUND_scanNetwork("Could not find EON on your network."))
-        }
-        resolve(aliveResults);
       });
-    });
   };
 }
 

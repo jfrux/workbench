@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Circle from './Circle';
 import styles from './Styles.css';
 
-const LoadingIndicator = () => (
-  <div className={styles.spinner}>
-    <Circle />
-  </div>
-);
+class LoadingIndicator extends Component {
+  render() {
+    return (<div className={this.props.className}>
+      <Circle />
+    </div>)
+  }
+}
 
 export default LoadingIndicator;

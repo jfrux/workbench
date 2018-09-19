@@ -148,7 +148,7 @@ class ConnectEon extends Component {
               }
               
               <form onSubmit={this.handleSubmit}>
-                <input type="text" name="ip_address" id="ip_address" value={this.state.value} onChange={this.handleChange} className={styles.add_field + " form-control bg-dark"} placeholder="Add IP Address Manually" />
+                <input type="text" name="ip_address" id="ip_address" value={this.state.value} onChange={this.handleChange} className={styles.add_field + " form-control text-light bg-dark"} placeholder="Add IP Address Manually" />
               </form>
             </div>
           }

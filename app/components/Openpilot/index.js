@@ -58,7 +58,7 @@ class Openpilot extends Component {
   render() {
     const processKeys = Object.keys(processInfo);
     if (!this.props.tmuxAttached) {
-      return <div className={styles.loading_overlay}><LoadingIndicator /></div>;
+      return <LoadingIndicator className={styles.loading_overlay} />;
     }
 
     // PROCESS ITEMS
@@ -69,12 +69,12 @@ class Openpilot extends Component {
       return (
         <div key={key} className={styles.state_item}>
           <span className={styles.state_label}>{processDetails.label}</span>
-          <span className={styles.state_status + " " + processStatus}>
+          <span className={styles.state_status}>
             {processStatus && (processStatus === 'started') &&
               <i className="fa fa-check"></i>
             }
-            {!processStatus || (processStatus !== 'started') &&
-              <LoadingIndicator />
+            {(processStatus !== 'started') &&
+              <LoadingIndicator className={styles.state_spinner} />
             }
           </span>
         </div>
