@@ -196,7 +196,7 @@ export function scanNetwork() {
     let found = false;
 
       netList.scanEach({}, (err, obj) => {
-        // console.log(obj);
+        console.log(obj);
         
         if (obj.vendor === "OnePlus Technology (Shenzhen) Co., Ltd") {
           dispatch(SUCCESS_scanNetwork([obj],getState()));

@@ -23,6 +23,10 @@
     "label": "Upload",
     "description": "An openpilot process..."
   },
+  "calibrationd": {
+    "label": "Calibration",
+    "description": "Calibration service..."
+  },
   "tombstoned": {
     "label": "Tombstone",
     "description": "An openpilot process..."
@@ -42,5 +46,17 @@
   "gpsd": {
     "label": "GPS",
     "description": "Service worker for the GPS"
+  },
+  "sensord": {
+    "label": "Sensor",
+    "description": "Service worker for the SensorD"
+  },
+  "orbd": {
+    "label": "Orb",
+    "description": "Service worker for the OrbD"
+  },
+  "ubloxd": {
+    "label": "ubloxd",
+    "description": "Service worker for the ubloxd"
   }
 }
