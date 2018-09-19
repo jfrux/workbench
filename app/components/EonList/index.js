@@ -1,12 +1,12 @@
 // @flow
 import React, { Component } from 'react';
-import styles from './Styles.css';
+import styles from './Styles.scss';
 import Eon from "../../images/device-icons/eon.svg";
 import PropTypes from 'prop-types';
 import routes from '../../constants/routes.json';
 import Layout from '../Layout';
 import LoadingIndicator from '../LoadingIndicator';
-
+import statusMessages from '../../constants/scan_status_messages.json';
 const propTypes = {
   scanNetwork: PropTypes.func,
   scanResults: PropTypes.array,
@@ -21,33 +21,6 @@ function ValidateIPaddress(ipaddress)
     return (true)
   }
 return (false)
-}
-const statusMessages = {
-  eon_selected: {
-    title: "Connect to EON",
-    subtext: "There are existing devices from previous scans below.",
-    subsubtext: "Scan again to discover newly connected EON."
-  },
-  scanning: {
-    title: "Scanning the network...",
-    subtext: "We're compiling a list of EON on the local network.",
-    subsubtext: "This may take a minute."
-  },
-  scanned_has_results: {
-    title: "Connect to EON",
-    subtext: "We found one or more EONs on the local network.",
-    subsubtext: "You may also scan again to discover more EON."
-  },
-  scanned_no_results: {
-    title: "Ouch, that sucks.",
-    subtext: "We were unable to find EON on the network.",
-    subsubtext: "Please verify that EON is connected to the same network as this computer."
-  },
-  not_scanned: {
-    title: "Let's get started",
-    subtext: "Workbench needs to locate EON on the local network.",
-    subsubtext: "Press the button below to rip it and stick it."
-  }
 }
 
 class ConnectEon extends Component {
@@ -116,8 +89,10 @@ class ConnectEon extends Component {
               })}
             </div>
           }
-          {scanning && 
-            <LoadingIndicator />
+          {scanning &&
+            <div className={styles.loading_overlay}>
+              <LoadingIndicator />
+            </div>
           }
 
           {status === "eon_selected" &&

@@ -1,6 +1,7 @@
 const app = require('electron').remote.app
 const SSH = require('node-ssh');
 const RSAKey = require('rsa-key');
+const mkdirp = require("mkdirp");
 import path from 'path';
 import fs from 'fs';
 const netList = require('network-list');
@@ -111,6 +112,7 @@ export function SELECT_EON(index) {
 // METHODS
 export function getPrivateKey() {
   const userHome = app.getPath('home');
+  mkdirp.sync(path.join(userHome,'.ssh'));
   const filePath = path.join(userHome,'.ssh','openpilot_rsa');
   if (!fs.existsSync(filePath)) {
     fs.writeFileSync(filePath,`-----BEGIN PRIVATE KEY-----
