@@ -1,8 +1,19 @@
 <div align="center">
-<img src="https://i.imgur.com/XA5hz8w.png" width="600px" />
+<img src="https://media.giphy.com/media/9S1x6c9x2cWG0xPApj/giphy.gif" />
 </div>
 
-## Todos
+## How to install
+
+Grab the latest release from the Releases screen:
+https://github.com/openpilot-community/workbench/releases
+
+Available for
+
+- Windows
+- Mac
+- Ubuntu / Debian
+
+## Roadmap
 
 - [x] Proof of concept
   - [x] Can connect to EON
