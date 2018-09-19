@@ -45,17 +45,17 @@ export default class MenuBuilder {
 
   buildDarwinTemplate() {
     const subMenuAbout = {
-      label: 'Openpilot Workbench',
+      label: 'Workbench',
       submenu: [
         {
-          label: 'About Openpilot Workbench',
+          label: 'About Workbench',
           selector: 'orderFrontStandardAboutPanel:'
         },
         { type: 'separator' },
         { label: 'Services', submenu: [] },
         { type: 'separator' },
         {
-          label: 'Hide Openpilot Workbench',
+          label: 'Hide Workbench',
           accelerator: 'Command+H',
           selector: 'hide:'
         },

@@ -2,7 +2,7 @@ import * as types from '../constants/openpilot_types'
 import settings from 'electron-settings';
 
 
-const defaultTmuxLogLength = 100;
+const defaultTmuxLogLength = 300;
 
 const initialState = {
   pid: null,

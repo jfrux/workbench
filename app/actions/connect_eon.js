@@ -72,7 +72,19 @@ export function BEGIN_scanNetwork() {
   };
 }
 
-export function SUCCESS_scanNetwork(results) {
+export function SUCCESS_scanNetwork(results,state) {
+  let currentEons = state.connectEon.scanResults;
+  let newList = [];
+  newList = results.map((result) => {
+    const foundCurrent = currentEons.filter((item) => {
+      result.mac === item.mac
+    });
+
+    if (!foundCurrent.length) {
+      return result;
+    }
+  });
+  console.log(newList);
   return {
     type: types.SCAN_NETWORK_SUCCESS,
     payload: {
@@ -192,8 +204,22 @@ export function sendCommand(eon, command, commandArgs = []) {
 export function scanNetwork() {
   return (dispatch, getState) => {
     dispatch(BEGIN_scanNetwork());
-    // console.warn("Starting scan...");
     return new Promise((resolve,reject) => {
+      let foundItem;
+      let tryCount = 0;
+      // while (!foundItem || tryCount >= 100) {
+      // netList.findFirst('OnePlus', {}, (err, obj) => {
+      //   console.log(obj);
+      //   resolve(obj);
+        // if (obj.vendor === "OnePlus Technology (Shenzhen) Co., Ltd") {
+          // console.warn("FOUND");
+          // foundItem = obj;
+          // 
+          // skip;
+        // }
+      // });
+      // }
+    
       netList.scan({}, (err, arr) => {
         if(err!=null) {
           dispatch(FAIL_scanNetwork(err));
@@ -203,7 +229,7 @@ export function scanNetwork() {
         var eonResults = arr.filter(item => item.vendor === "OnePlus Technology (Shenzhen) Co., Ltd");
         // console.warn(aliveResults);
         if (eonResults.length) {
-          dispatch(SUCCESS_scanNetwork(eonResults));
+          dispatch(SUCCESS_scanNetwork(eonResults,getState()));
         } else {
           dispatch(NO_FOUND_scanNetwork("Could not find EON on your network."))
         }
@@ -225,16 +251,20 @@ export function addManually(ip_address) {
         ip: ip_address,
         mac: "Unknown"
       }
-    ]));
+    ],getState()));
     dispatch(SELECT_EON(0));
   };
 }
 
 export function retrieveEonFromSettings() {
   return (dispatch, getState) => {
-    dispatch(SUCCESS_scanNetwork([
-      settings.get("selectedEon")
-    ]));
-    dispatch(SELECT_EON(0));
+    let scanResults = settings.get("scanResults");
+    if (scanResults && scanResults.length) {
+      dispatch(SUCCESS_scanNetwork([
+        settings.get("selectedEon")
+      ],getState()));
+      dispatch(SELECT_EON(0));
+    }
+    
   };
 }

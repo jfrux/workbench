@@ -1,11 +1,12 @@
 {
   "name": "openpilot-workbench",
-  "productName": "openpilot-workbench",
+  "productName": "Workbench",
   "version": "0.0.2",
-  "description": "This helps you port your car without knowing everything.",
+  "description": "The Openpilot Workbench is to help people fix problems with EON, Openpilot, etc.",
   "main": "./main.prod.js",
   "author": {
     "name": "jfrux",
+    "email": "support@opc.ai",
     "url": "https://github.com/jfrux"
   },
   "scripts": {

@@ -95,7 +95,7 @@ class ConnectEon extends Component {
       scanningStarted
     } = this.state;
     const statusMesssage = statusMessages[status]
-    
+    console.log(scanResults);
     return (
       <Layout>
         <div className={styles.container + " container"}>
@@ -136,18 +136,22 @@ class ConnectEon extends Component {
           {status === "scanned_no_results" &&
             <button className="mt-5 btn btn-dark btn-block" onClick={this.handleScanNetwork} type="button"><i className="fa fa-sync"></i> Try Again</button>
           }
-          <div className={styles.divider}>
-            or
-          </div>
-          {this.state.manualError &&
-            <div className={styles.manual_error + " alert alert-danger"}>
-              {this.state.manualError}
+          {!scanning &&
+            <div>
+              <div className={styles.divider}>
+                or
+              </div>
+              {this.state.manualError &&
+                <div className={styles.manual_error + " alert alert-danger"}>
+                  {this.state.manualError}
+                </div>
+              }
+              
+              <form onSubmit={this.handleSubmit}>
+                <input type="text" name="ip_address" id="ip_address" value={this.state.value} onChange={this.handleChange} className={styles.add_field + " form-control bg-dark"} placeholder="Add IP Address Manually" />
+              </form>
             </div>
           }
-          
-          <form onSubmit={this.handleSubmit}>
-            <input type="text" name="ip_address" id="ip_address" value={this.state.value} onChange={this.handleChange} className={styles.add_field + " form-control bg-dark"} placeholder="Add IP Address Manually" />
-          </form>
         </div>
       </Layout>
     );
