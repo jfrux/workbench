@@ -1,5 +1,6 @@
 const app = require('electron').remote.app
 const SSH = require('node-ssh');
+
 const RSAKey = require('rsa-key');
 const mkdirp = require("mkdirp");
 import path from 'path';
@@ -71,6 +72,15 @@ export function BEGIN_scanNetwork() {
   };
 }
 
+export function FOUND_scanNetwork(result,state) {
+  // settings.set("scanResults",);
+  return {
+    type: types.SCAN_NETWORK_FOUND,
+    payload: {
+      result
+    }
+  };
+}
 export function SUCCESS_scanNetwork(results,state) {
   settings.set("scanResults",results);
   return {
@@ -193,16 +203,46 @@ export function sendCommand(eon, command, commandArgs = []) {
 export function scanNetwork() {
   return (dispatch, getState) => {
     dispatch(BEGIN_scanNetwork());
-    let found = false;
-
+    let scanCount = 0;
+    let foundCount = 0;
+    let found = [];
+    // let scannerTimeout = setTimeout(() => {
+    //   dispatch(FAIL_scanNetwork());
+    // },10000);
+    console.log(getState());
+    try {
       netList.scanEach({}, (err, obj) => {
+        scanCount++;
         console.log(obj);
-        
         if (obj.vendor === "OnePlus Technology (Shenzhen) Co., Ltd") {
-          dispatch(SUCCESS_scanNetwork([obj],getState()));
-          found = true;
+          let { scanResults } = getState().eonList;
+          // if (scanResults) {
+            // var foundExisting = scanResults.filter((result) => {
+            //   result.mac === obj.mac;
+            // })
+          scanResults.push(obj);
+          found.push(obj);
+          console.log(scanResults);
+          settings.set("scanResults",scanResults);
+          dispatch(SUCCESS_scanNetwork(scanResults,getState()));
+          // found = true;
+          // scanner = null;
+        }
+        console.log("Scan #" + scanCount);
+        if (scanCount === 253) {
+          console.warn('scan done... found...',found.length);
+          if (found.length === 0) {
+            dispatch(NOT_FOUND_scanNetwork(scanResults,getState()));
+          } else {
+            dispatch(SUCCESS_scanNetwork(scanResults,getState()));
+          }
         }
       });
+    } catch(e) {
+      console.warn("Error scanning...",e);
+      dispatch(FAIL_scanNetwork([obj],getState()));
+    }
+    // console.log(scanner);
   };
 }
 
@@ -226,10 +266,9 @@ export function addManually(ip_address) {
 export function retrieveEonFromSettings() {
   return (dispatch, getState) => {
     let scanResults = settings.get("scanResults");
+    console.warn("Getting saved eons from settings...",scanResults);
     if (scanResults && scanResults.length) {
-      dispatch(SUCCESS_scanNetwork([
-        settings.get("selectedEon")
-      ],getState()));
+      dispatch(SUCCESS_scanNetwork(scanResults,getState()));
       dispatch(SELECT_EON(0));
     }
     

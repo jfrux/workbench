@@ -4,7 +4,7 @@ import settings from 'electron-settings';
 
 const initialState = {
   scanError: null,
-  scanResults: null,
+  scanResults: [],
   scanning: false,
   selectedEon: null,
   status: "not_scanned",
@@ -21,49 +21,59 @@ export default function eonListReducer(state = initialState, action) {
     /* SSH Connections might should be moved to EON reducer */
     case types.CONNECT_SSH:
       return {
+        ...state,
         sshStatus: "connecting"
       };
     case types.CONNECT_SSH_SUCCESS:
       return {
+        ...state,
         sshStatus: "connected"
       };
     case types.CONNECT_SSH_FAIL:
       return {
+        ...state,
         sshStatus: "failed",
         sshError: ""
       };
     case types.SSH_COMMAND:
       return {
+        ...state,
         sshCommand: action.payload.command,
         sshCommandStatus: "executing"
       };
     case types.SSH_COMMAND_RESPONSE:
       return {
+        ...state,
         sshCommand: action.payload.response,
         sshCommandStatus: "executing"
       };
     case types.SSH_COMMAND_COMPLETE:
       return {
+        ...state,
         sshCommand: null,
         sshCommandStatus: "success"
       };
     case types.SSH_COMMAND_FAIL:
       return {
+        ...state,
         sshCommand: null,
         sshCommandStatus: "failed",
         sshCommandError: action.payload.error
       };
     case types.CONNECT_SSH_SUCCESS:
       return {
+        ...state,
         sshStatus: "connected"
       };
     case types.CONNECT_SSH_FAIL:
       return {
+        ...state,
         sshStatus: "failed",
         sshError: ""
       };
     case types.SCAN_NETWORK:
       return {
+        ...state,
         status: "scanning",
         scanning: true
       };
@@ -83,6 +93,13 @@ export default function eonListReducer(state = initialState, action) {
         status: "scanned_has_results",
         scanResults: action.payload.results,
         scanning: false
+      };
+    case types.SCAN_NETWORK_FOUND:
+      return {
+        ...state,
+        status: "scanned_has_results",
+        scanResults: action.payload.results,
+        scanning: true
       };
     case types.SCAN_NETWORK_FAIL:
       return {

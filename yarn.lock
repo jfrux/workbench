@@ -6718,6 +6718,10 @@ node-arp@^1.0.5:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/node-arp/-/node-arp-1.0.6.tgz#8ab4f6fff1c57e147a20a32a1e39e577aeb45898"
 
+node-cidr@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/node-cidr/-/node-cidr-1.0.0.tgz#b7317cfcfe0c026f9e545838ca3125dd8d3f67d7"
+
 node-forge@0.7.5:
   version "0.7.5"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.7.5.tgz#6c152c345ce11c52f465c2abd957e8639cd674df"

@@ -11,7 +11,7 @@
   },
   "scanned_has_results": {
     "title": "Connect to EON",
-    "subtext": "We found one or more EONs on the local network.",
+    "subtext": "You now have %scanResultsLength% EON profiles saved.",
     "subsubtext": "You may also scan again to discover more EON."
   },
   "scanned_no_results": {
@@ -23,5 +23,10 @@
     "title": "Let's get started",
     "subtext": "Workbench needs to locate EON on the local network.",
     "subsubtext": "Press the button below to rip it and stick it."
+  },
+  "scanned_error": {
+    "title": "An error occurred during scanning...",
+    "subtext": "Check your network connection and try again.",
+    "subsubtext": ""
   }
 }

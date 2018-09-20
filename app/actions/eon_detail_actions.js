@@ -101,6 +101,14 @@ export function RESPONSE_tmuxPipe(lines, state) {
           // console.warn("Parsing:",m[1]);
           // console.warn(m[1],m[2]);
           payload[m[1]] = m[2].replace(/\"/g,'');
+
+          if (m[1] === "usbOnline") {
+            if (m[2] === "true") {
+
+            } else {
+
+            }
+          }
         }
         break;
       case "PROCESS":
@@ -120,7 +128,7 @@ export function RESPONSE_tmuxPipe(lines, state) {
         break;
     }
   });
-
+  console.log(lines);
   newArray.push(lines);
   
   payload.tmuxLog = newArray;

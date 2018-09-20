@@ -18,6 +18,8 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <script src="http://localhost:8097"></script>
     <script>
       {
         const scripts = [];
@@ -35,7 +37,6 @@
             ? 'http://localhost:' + port + '/dist/renderer.dev.js'
             : './dist/renderer.prod.js'
         );
-
         document.write(
           scripts
             .map(script => `<script defer src="${script}"><\/script>`)

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 const app = require('electron').remote.app
+import { Redirect } from 'react-router';
 import routes from '../../constants/routes.json';
 import styles from './Styles.scss';
 import PropTypes from 'prop-types';
@@ -26,7 +27,8 @@ const propTypes = {
   vehicleConnection: PropTypes.string,
   standardProcesses: PropTypes.object,
   thermal: PropTypes.object,
-  connectedProcesses: PropTypes.object
+  connectedProcesses: PropTypes.object,
+  network: PropTypes.string
 };
 
 class EonDetail extends Component {
@@ -47,7 +49,6 @@ class EonDetail extends Component {
         this.props.history.push(routes.EON_LIST);
       }
     }, 3000);
-    
   }
   componentWillUnmount() {
     this.props.closeTmux();
@@ -58,15 +59,19 @@ class EonDetail extends Component {
   }
   
   render() {
-    const { standardProcesses, thermal, eon, connectedProcesses, vehicleConnection, tmuxAttached } = this.props;
+    const { network, standardProcesses, thermal, eon, connectedProcesses, vehicleConnection, tmuxAttached } = this.props;
+    console.warn(vehicleConnection);
     const vehicleConnectionInfo = vehicleConnectionStatuses[vehicleConnection];
     const processKeys = Object.keys(standardProcesses).sort();
     const connectedKeys = Object.keys(connectedProcesses).sort();
     const thermalKeys = Object.keys(thermalInfo).sort();
-
+    if (network === 'disconnected') {
+      <Redirect to={routes.EON_LIST} />
+    }
     if (!tmuxAttached) {
       return <LoadingIndicator className={styles.loading_overlay} />;
     }
+    
     // THERMAL ITEMS
     const thermals = thermalKeys.map((key) => {
       let thermalDetails = thermalInfo[key];
@@ -155,6 +160,11 @@ class EonDetail extends Component {
                       <span className={styles.connection_message}>{vehicleConnectionInfo.label}</span>
                     </div>
                   }
+                  {!vehicleConnectionInfo && 
+                    <div className={styles.connection}>
+                      <span className={styles.connection_message}>Vehicle not connected.</span>
+                    </div>
+                  }
                   
                   <Link className={styles.disconnect_button + " btn btn-outline-danger"} to={routes.EON_LIST}>
                     Disconnect
@@ -165,7 +175,7 @@ class EonDetail extends Component {
           }
           
           <div className="row">
-             <div className="col-md-4">
+             <div className="col-sm-12 col-md-4">
               <div className={styles.state_header}>
                 In Vehicle
               </div>
@@ -173,7 +183,7 @@ class EonDetail extends Component {
                 {processesInVehicle}
               </div>
             </div>
-            <div className="col-md-4">
+            <div className="col-sm-12 col-md-4">
               <div className={styles.state_header}>
                 Base Processes
               </div>
@@ -181,7 +191,7 @@ class EonDetail extends Component {
                 {processes}
               </div>
             </div>
-            <div className="col-md-4">
+            <div className="col-sm-12 col-md-4">
               <div className={styles.state_header}>
                 Thermal
               </div>

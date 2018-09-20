@@ -1,10 +1,12 @@
 // @flow
 import React, { Component } from 'react';
 import styles from './Styles.scss';
+import { Redirect } from 'react-router';
 import Eon from "../../images/device-icons/eon.svg";
 import PropTypes from 'prop-types';
 import routes from '../../constants/routes.json';
 import Layout from '../Layout';
+import NoConnection from './NoConnection';
 import LoadingIndicator from '../LoadingIndicator';
 import statusMessages from '../../constants/scan_status_messages.json';
 const propTypes = {
@@ -12,8 +14,10 @@ const propTypes = {
   scanResults: PropTypes.array,
   scanError: PropTypes.string,
   scanning: PropTypes.bool,
-  status: PropTypes.string
+  status: PropTypes.string,
+  network: PropTypes.string
 };
+
 function ValidateIPaddress(ipaddress) 
 {
  if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress))
@@ -58,13 +62,17 @@ class ConnectEon extends Component {
       scanResults,
       scanError,
       scanning,
-      status
+      status,
+      network
     } = this.props;
     const {
       scanningStarted
     } = this.state;
     const statusMesssage = statusMessages[status]
     console.log(scanResults);
+    if (network === 'disconnected') {
+      return <NoConnection />
+    }
     return (
       <Layout>
         <div className={styles.container + " container"}>
@@ -72,12 +80,12 @@ class ConnectEon extends Component {
             {statusMesssage.title}
           </h3>
           <h5 className={styles.subtext + " no-select"}>
-            {statusMesssage.subtext}
+            {statusMesssage.subtext.replace("%scanResultsLength%",scanResults.length)}
           </h5>
           <div className={styles.subsubtext + " no-select"}>
             {statusMesssage.subsubtext}
           </div>
-          {scanResults &&
+          {!scanning && scanResults &&
             <div className={styles.results + " btn-group-vertical"}>
               {scanResults.map((item,index) => {
                 return (<button key={index} className={styles.results_button + " btn btn-dark btn-block"} onClick={() => this.handleSelectEon(index)}>
@@ -92,6 +100,7 @@ class ConnectEon extends Component {
           {scanning &&
             <div className={styles.loading_overlay}>
               <LoadingIndicator />
+              <button className="mt-5 btn btn-dark btn-block" onClick={this.handleCancelScan}>Cancel</button>
             </div>
           }
 

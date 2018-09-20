@@ -9,7 +9,8 @@ function mapStateToProps(state) {
     scanResults: state.eonList.scanResults,
     scanError: state.eonList.scanError,
     scanning: state.eonList.scanning,
-    status: state.eonList.status
+    status: state.eonList.status,
+    network: state.networkConnection.status
   };
 }
 
