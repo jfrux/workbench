@@ -1,3 +1,3 @@
-export const PROCESS = /running\ ([A-Za-z]+)\ \<Process\(([A-Za-z]+)\,\ ([a-z]+)\)\>/gi;
-export const VEHICLE_CONNECTION = /(waiting for board\.\.\.|waiting for fingerprint\.\.\.)/gi;
+export const PROCESS = /running\ ([A-Za-z]+)\ \<Process\(([A-Za-z]+)\,\ ([a-z]+)\)\>/gmi;
+export const VEHICLE_CONNECTION = /(waiting for board\.\.\.|waiting for fingerprint\.\.\.)/gmi;
 export const THERMAL = /(logMonoTime|thermal|cpu0|batteryStatus|cpu1|cpu2|cpu3|mem|gpu|bat|freeSpace|batteryPercent|batteryStatus|fanSpeed|started|usbOnline|startedTs|thermalStatus|batteryCurrent|batteryVoltage)\s\=\s([a-z0-9A-Z\"\.]+)/gmi

@@ -6,6 +6,7 @@ import * as commands from '../constants/commands.json';
 import * as regex from '../constants/tmux_regex';
 import * as vehicle_connection_statuses from '../constants/vehicle_connection_statuses.json';
 // ACTION CREATORS
+
 export function BEGIN_install() {
   console.log("dispatched BEGIN_scanNetwork");
 
@@ -83,6 +84,7 @@ export function RESPONSE_tmuxPipe(lines, state) {
   if (!tmuxStartedAt) {
     payload.tmuxStartedAt = new Date();
   }
+
   tmuxLog.forEach((item) => {
     newArray.push(item.trim());
   });
@@ -96,6 +98,7 @@ export function RESPONSE_tmuxPipe(lines, state) {
           if (m.index === regex.lastIndex) {
             regex.lastIndex++;
           }
+          // console.warn("Parsing:",m[1]);
           // console.warn(m[1],m[2]);
           payload[m[1]] = m[2].replace(/\"/g,'');
         }
@@ -111,7 +114,6 @@ export function RESPONSE_tmuxPipe(lines, state) {
         }
         break;
       case "VEHICLE_CONNECTION":
-        // console.warn("Parsing:",key);
         if ((m = regex[key].exec(lines)) !== null) {
           payload.vehicleConnection = m[0];
         }

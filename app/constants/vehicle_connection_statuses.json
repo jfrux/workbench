@@ -1,6 +1,18 @@
 {
   "waiting for board...": {
-    "label": "Vehicle not connected.",
+    "label": "Vehicle not connected",
     "description": "Connect to panda for vehicle functions."
+  },
+  "waiting for fingerprint...": {
+    "label": "Vehicle missing fingerprint",
+    "description": "Could not find matching fingerprint."
+  },
+  "Started": {
+    "label": "Vehicle started",
+    "description": "The vehicle is now running."
+  },
+  "Not Started": {
+    "label": "Vehicle not started.",
+    "description": "The vehicle is now running."
   }
 }
