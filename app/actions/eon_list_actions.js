@@ -210,12 +210,12 @@ export function scanNetwork() {
     // console.log(getState());
     netList.scanEach({}, (err, obj) => {
       scanCount++;
-      // console.log(obj);
+      console.log(obj);
       if (obj.vendor === "OnePlus Technology (Shenzhen) Co., Ltd") {
         let { scanResults } = getState().eonList;
         // if (scanResults) {
         var foundExisting = scanResults.filter((result) => {
-          return result.mac === obj.mac;
+          return (result.mac === obj.mac) && (result.ip === obj.ip);
         })
         // console.warn("Found existing:",foundExisting);
         if (!foundExisting.length) {
