@@ -9,13 +9,15 @@ import Layout from '../Layout';
 import NoConnection from './NoConnection';
 import LoadingIndicator from '../LoadingIndicator';
 import statusMessages from '../../constants/scan_status_messages.json';
+import * as networkMethods from '../../actions/network_connection_actions';
 const propTypes = {
   scanNetwork: PropTypes.func,
   scanResults: PropTypes.array,
   scanError: PropTypes.string,
   scanning: PropTypes.bool,
   status: PropTypes.string,
-  network: PropTypes.string
+  network: PropTypes.string,
+  networkIp: PropTypes.string
 };
 
 function ValidateIPaddress(ipaddress) 
@@ -63,13 +65,14 @@ class ConnectEon extends Component {
       scanError,
       scanning,
       status,
-      network
+      network,
+      networkIp
     } = this.props;
     const {
       scanningStarted
     } = this.state;
     const statusMesssage = statusMessages[status]
-    console.log(scanResults);
+    // console.log(scanResults);
     if (network === 'disconnected') {
       return <NoConnection />
     }
@@ -79,7 +82,7 @@ class ConnectEon extends Component {
           <h3 className={styles.title + " no-select"}>
             {statusMesssage.title}
           </h3>
-          <h5 className={styles.subtext + " no-select"}>
+          <h5 className={styles.subtext + " no-select" + " " + styles[status]}>
             {statusMesssage.subtext.replace("%scanResultsLength%",scanResults.length)}
           </h5>
           <div className={styles.subsubtext + " no-select"}>
@@ -88,7 +91,8 @@ class ConnectEon extends Component {
           {!scanning && scanResults &&
             <div className={styles.results + " btn-group-vertical"}>
               {scanResults.map((item,index) => {
-                return (<button key={index} className={styles.results_button + " btn btn-dark btn-block"} onClick={() => this.handleSelectEon(index)}>
+                const isSameNetwork = networkMethods.isSameNetwork(networkIp,item.ip);
+                return (<button key={index} disabled={!isSameNetwork} className={styles.results_button + " btn btn-dark btn-block"} onClick={() => this.handleSelectEon(index)}>
                 <span className={styles.eon_icon}><Eon width="100%" height="100%" /></span>
                 <span className={styles.results_button_ip}>{item.ip}</span>
                 <span className={styles.results_button_mac}>{item.mac}</span>
@@ -100,7 +104,6 @@ class ConnectEon extends Component {
           {scanning &&
             <div className={styles.loading_overlay}>
               <LoadingIndicator />
-              <button className="mt-5 btn btn-dark btn-block" onClick={this.handleCancelScan}>Cancel</button>
             </div>
           }
 

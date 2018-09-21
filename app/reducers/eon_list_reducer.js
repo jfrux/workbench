@@ -112,7 +112,6 @@ export default function eonListReducer(state = initialState, action) {
       return {
         ...state,
         status: "scanned_no_results",
-        scanError: action.payload.err,
         scanning: false
       };
     default:

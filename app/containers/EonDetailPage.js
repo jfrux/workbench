@@ -56,6 +56,7 @@ function mapStateToProps(state) {
     tmuxLog: state.eonDetail.tmuxLog,
     tmuxStartedAt: state.eonDetail.tmuxStartedAt,
     network: state.networkConnection.status,
+    networkIp: state.networkConnection.ip,
     vehicleConnection: state.eonDetail.vehicleConnection,
     standardProcesses,
     thermal,

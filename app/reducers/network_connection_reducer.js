@@ -3,7 +3,8 @@ import * as types from '../constants/network_connection_action_types'
 import settings from 'electron-settings';
 
 const initialState = {
-  status: null
+  status: null,
+  ip: null
 };
 
 export default function eonListReducer(state = initialState, action) {
@@ -12,12 +13,14 @@ export default function eonListReducer(state = initialState, action) {
     case types.CONNECTED:
       return {
         ...state,
-        status: "connected"
+        status: "connected",
+        ip: action.payload.ip
       };
     case types.DISCONNECTED:
       return {
         ...state,
-        status: "disconnected"
+        status: "disconnected",
+        ip: null
       };
     default:
       return state;

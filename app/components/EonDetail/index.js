@@ -60,7 +60,7 @@ class EonDetail extends Component {
   
   render() {
     const { network, standardProcesses, thermal, eon, connectedProcesses, vehicleConnection, tmuxAttached } = this.props;
-    console.warn(vehicleConnection);
+    // console.warn(vehicleConnection);
     const vehicleConnectionInfo = vehicleConnectionStatuses[vehicleConnection];
     const processKeys = Object.keys(standardProcesses).sort();
     const connectedKeys = Object.keys(connectedProcesses).sort();
@@ -160,9 +160,14 @@ class EonDetail extends Component {
                       <span className={styles.connection_message}>{vehicleConnectionInfo.label}</span>
                     </div>
                   }
-                  {!vehicleConnectionInfo && 
+                  {!vehicleConnectionInfo && !(thermal.usbOnline === "true") && 
                     <div className={styles.connection}>
                       <span className={styles.connection_message}>Vehicle not connected.</span>
+                    </div>
+                  }
+                  {thermal.usbOnline === "true" && 
+                    <div className={styles.connection_connected}>
+                      <span className={styles.connection_message}>Vehicle Connected</span>
                     </div>
                   }
                   

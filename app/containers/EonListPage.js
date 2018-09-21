@@ -10,6 +10,7 @@ function mapStateToProps(state) {
     scanError: state.eonList.scanError,
     scanning: state.eonList.scanning,
     status: state.eonList.status,
+    networkIp: state.networkConnection.ip,
     network: state.networkConnection.status
   };
 }

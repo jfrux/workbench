@@ -90,19 +90,17 @@ export function SUCCESS_scanNetwork(results,state) {
     }
   };
 }
+export function NOT_FOUND_scanNetwork() {
+  // settings.set("scanResults",results);
+  console.warn("DISPATCHING");
+  return {
+    type: types.SCAN_NETWORK_NOT_FOUND,
+  };
+}
 
 export function FAIL_scanNetwork(err) {
   return {
     type: types.SCAN_NETWORK_FAIL,
-    payload: {
-      err
-    }
-  };
-}
-
-export function NO_FOUND_scanNetwork(err) {
-  return {
-    type: types.SCAN_NETWORK_NOT_FOUND,
     payload: {
       err
     }
@@ -209,39 +207,34 @@ export function scanNetwork() {
     // let scannerTimeout = setTimeout(() => {
     //   dispatch(FAIL_scanNetwork());
     // },10000);
-    console.log(getState());
-    try {
-      netList.scanEach({}, (err, obj) => {
-        scanCount++;
-        console.log(obj);
-        if (obj.vendor === "OnePlus Technology (Shenzhen) Co., Ltd") {
-          let { scanResults } = getState().eonList;
-          // if (scanResults) {
-            // var foundExisting = scanResults.filter((result) => {
-            //   result.mac === obj.mac;
-            // })
+    // console.log(getState());
+    netList.scanEach({}, (err, obj) => {
+      scanCount++;
+      // console.log(obj);
+      if (obj.vendor === "OnePlus Technology (Shenzhen) Co., Ltd") {
+        let { scanResults } = getState().eonList;
+        // if (scanResults) {
+        var foundExisting = scanResults.filter((result) => {
+          return result.mac === obj.mac;
+        })
+        // console.warn("Found existing:",foundExisting);
+        if (!foundExisting.length) {
           scanResults.push(obj);
-          found.push(obj);
-          console.log(scanResults);
-          settings.set("scanResults",scanResults);
-          dispatch(SUCCESS_scanNetwork(scanResults,getState()));
-          // found = true;
-          // scanner = null;
         }
-        console.log("Scan #" + scanCount);
-        if (scanCount === 253) {
-          console.warn('scan done... found...',found.length);
-          if (found.length === 0) {
-            dispatch(NOT_FOUND_scanNetwork(scanResults,getState()));
-          } else {
-            dispatch(SUCCESS_scanNetwork(scanResults,getState()));
-          }
-        }
-      });
-    } catch(e) {
-      console.warn("Error scanning...",e);
-      dispatch(FAIL_scanNetwork([obj],getState()));
-    }
+        found.push(obj);
+        // console.log(scanResults);
+        settings.set("scanResults",scanResults);
+        dispatch(SUCCESS_scanNetwork(scanResults,getState()));
+        // found = true;
+        // scanner = null;
+      }
+      console.log("Scan #" + scanCount);
+      if (scanCount >= 253) {
+        console.warn('scan done... found...',found.length);
+        dispatch(NOT_FOUND_scanNetwork());
+      }
+    });
+    
     // console.log(scanner);
   };
 }
