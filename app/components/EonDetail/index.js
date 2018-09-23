@@ -12,6 +12,8 @@ import Layout from '../Layout';
 import LoadingIndicator from '../LoadingIndicator';
 import ConnectedTime from './ConnectedTime';
 import ReactResizeDetector from 'react-resize-detector';
+import { LineChart, PieChart } from 'react-chartkick'
+import Battery from './Widgets/Battery';
 
 const propTypes = {
   install: PropTypes.func,
@@ -65,6 +67,8 @@ class EonDetail extends Component {
     const processKeys = Object.keys(standardProcesses).sort();
     const connectedKeys = Object.keys(connectedProcesses).sort();
     const thermalKeys = Object.keys(thermalInfo).sort();
+
+    
     if (network === 'disconnected') {
       <Redirect to={routes.EON_LIST} />
     }
@@ -199,6 +203,9 @@ class EonDetail extends Component {
             <div className="col-sm-12 col-md-4">
               <div className={styles.state_header}>
                 Thermal
+              </div>
+              <div className={styles.widget_list}>
+                <Battery />
               </div>
               <div className={styles.state_list}>
                 {thermals}

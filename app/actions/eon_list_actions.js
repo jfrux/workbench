@@ -1,31 +1,31 @@
-const app = require('electron').remote.app
-const SSH = require('node-ssh');
-
-const RSAKey = require('rsa-key');
-const mkdirp = require("mkdirp");
 import path from 'path';
 import fs from 'fs';
-const netList = require('network-list');
-const dns = require("dns"); 
 import settings from 'electron-settings';
 import * as types from '../constants/eon_list_action_types'
+import * as networkActions from './network_connection_actions';
+const portscanner = require('portscanner');
+const app = require('electron').remote.app
+const SSH = require('node-ssh');
+const RSAKey = require('rsa-key');
+const netList = require('network-list');
+const mkdirp = require("mkdirp");
 
 // SSH ACTION CREATORS
 export function BEGIN_connectSSH() {
   return {
-    types: types.CONNECT_SSH
+    type: types.CONNECT_SSH
   }
 }
 
 export function SUCCESS_connectSSH() {
   return {
-    types: types.CONNECT_SSH_SUCCESS
+    type: types.CONNECT_SSH_SUCCESS
   }
 }
 
 export function FAIL_connectSSH(err) {
   return {
-    types: types.CONNECT_SSH_FAIL,
+    type: types.CONNECT_SSH_FAIL,
     payload: {
       err
     }
@@ -34,19 +34,19 @@ export function FAIL_connectSSH(err) {
 
 export function BEGIN_sshCommand() {
   return {
-    types: types.SSH_COMMAND
+    type: types.SSH_COMMAND
   }
 }
 
 export function SUCCESS_sshCommand() {
   return {
-    types: types.SSH_COMMAND_SUCCESS
+    type: types.SSH_COMMAND_SUCCESS
   }
 }
 
 export function RESPONSE_sshCommand(stdout,stderr) {
   return {
-    types: types.SSH_COMMAND_RESPONSE,
+    type: types.SSH_COMMAND_RESPONSE,
     payload: {
       stderr,
       stdout
@@ -56,7 +56,7 @@ export function RESPONSE_sshCommand(stdout,stderr) {
 
 export function FAIL_sshCommand(err) {
   return {
-    types: types.SSH_COMMAND_FAIL,
+    type: types.SSH_COMMAND_FAIL,
     payload: {
       err
     }
@@ -72,17 +72,31 @@ export function BEGIN_scanNetwork() {
   };
 }
 
-export function FOUND_scanNetwork(result,state) {
-  // settings.set("scanResults",);
+export function FOUND_scanNetwork(obj,state) {
+  let { scanResults } = state.eonList;
+  console.warn("FOUND_scanNetwork:",obj);
+  var foundExisting = scanResults.filter((result) => {
+    return (result.mac === obj.mac) && (result.ip === obj.ip);
+  });
+  console.warn("foundExisting:",foundExisting);
+  if (!foundExisting.length) {
+    scanResults.push(obj);
+  }
+
+  // found.push(obj);
+
+  settings.set("scanResults",scanResults);
+
   return {
     type: types.SCAN_NETWORK_FOUND,
     payload: {
-      result
+      result: obj
     }
   };
 }
+
 export function SUCCESS_scanNetwork(results,state) {
-  settings.set("scanResults",results);
+  console.log("SUCCESS_scanNetwork:",results);
   return {
     type: types.SCAN_NETWORK_SUCCESS,
     payload: {
@@ -174,10 +188,13 @@ export function sendPiped(eon, command, commandArgs = [], stdOut = () => {}, std
           stdOut(chunk.toString('utf8'));
         },
         onStderr(chunk) {
-          // console.log(chunk.toString('utf8'));
+          console.warn("CONNECTION ERROR!");
           stdErr(chunk.toString('utf8'));
         },
       });
+    }).catch((err) => {
+      dispatch(FAIL_connectSSH(err));
+      // console.warn("ERROR CONNECTING:",err);
     });
   };
 }
@@ -204,36 +221,53 @@ export function scanNetwork() {
     let scanCount = 0;
     let foundCount = 0;
     let found = [];
-    // let scannerTimeout = setTimeout(() => {
-    //   dispatch(FAIL_scanNetwork());
-    // },10000);
-    // console.log(getState());
-    netList.scanEach({}, (err, obj) => {
-      scanCount++;
-      console.log(obj);
-      if (obj.vendor === "OnePlus Technology (Shenzhen) Co., Ltd") {
-        let { scanResults } = getState().eonList;
-        // if (scanResults) {
-        var foundExisting = scanResults.filter((result) => {
-          return (result.mac === obj.mac) && (result.ip === obj.ip);
+    const ips = networkActions.getIpsForScan(getState().networkConnection.ip);
+    console.log(ips);
+    const totalIps = ips.length * 254;
+    let percentageComplete = 0;
+    console.log("Total ips to scan:", totalIps);
+    ips.forEach((ip) => {
+      // console.log("Checking ip:",ip);
+      netList.scanEach({
+        ip: ip
+      }, (err, obj) => {
+        scanCount++;
+        percentageComplete = scanCount / totalIps;
+        console.log("[" + scanCount + "] [" + percentageComplete + "] " + obj.ip + ": " + obj.vendor);
+        // console.log("Scan #" + scanCount);
+        dispatch({
+          type: types.SCAN_NETWORK_PROGRESS,
+          payload: {
+            percentage: Math.round(percentageComplete * 100)
+          }
         })
-        // console.warn("Found existing:",foundExisting);
-        if (!foundExisting.length) {
-          scanResults.push(obj);
+        if (obj.vendor === "OnePlus Technology (Shenzhen) Co., Ltd") {
+          let { scanResults } = getState().eonList;
+          // if (scanResults) {
+          var foundExisting = scanResults.filter((result) => {
+            return (result.mac === obj.mac) && (result.ip === obj.ip);
+          });
+          // console.warn("Found existing:",foundExisting);
+          if (!foundExisting.length) {
+            scanResults.push(obj);
+          }
+          found.push(obj);
+          settings.set("scanResults",scanResults);
+          dispatch(SUCCESS_scanNetwork(scanResults,getState()));
+          
         }
-        found.push(obj);
-        // console.log(scanResults);
-        settings.set("scanResults",scanResults);
-        dispatch(SUCCESS_scanNetwork(scanResults,getState()));
         // found = true;
         // scanner = null;
-      }
-      console.log("Scan #" + scanCount);
-      if (scanCount >= 253) {
-        console.warn('scan done... found...',found.length);
-        dispatch(NOT_FOUND_scanNetwork());
-      }
+        if (scanCount >= 762) {
+          console.warn('scan done... found...',found.length);
+          dispatch(NOT_FOUND_scanNetwork());
+        }
+      });
     });
+    // netList.scanEach({}, (err, obj) => {
+    //   
+    //   
+    // });
     
     // console.log(scanner);
   };
@@ -246,12 +280,13 @@ export function selectEon(index) {
 }
 export function addManually(ip_address) {
   return (dispatch, getState) => {
-    dispatch(SUCCESS_scanNetwork([
-      {
-        ip: ip_address,
-        mac: "Unknown"
-      }
-    ],getState()));
+    let { scanResults } = getState().eonList;
+    scanResults.push({
+      ip: ip_address,
+      mac: "Unknown"
+    });
+    settings.set("scanResults",scanResults);
+    dispatch(SUCCESS_scanNetwork(scanResults,getState()));
     dispatch(SELECT_EON(0));
   };
 }
@@ -262,8 +297,7 @@ export function retrieveEonFromSettings() {
     console.warn("Getting saved eons from settings...",scanResults);
     if (scanResults && scanResults.length) {
       dispatch(SUCCESS_scanNetwork(scanResults,getState()));
-      dispatch(SELECT_EON(0));
+      dispatch(selectEon(0));
     }
-    
   };
 }

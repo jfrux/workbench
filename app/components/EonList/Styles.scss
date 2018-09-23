@@ -4,28 +4,86 @@
   left:50%;
   transform:translate(-50%,-50%);
 }
+.react_ip_input {
+  display: inline-block;
+  border: 1px solid #c2c3c9;
+  border-radius: 4px;
+  padding: 5px 8px;
+}
+.form_help_text {
+  color:#555;
+  margin-top:5px;
+  font-size:12px;
+  text-align:center;
+  flex:0 0 100%;
+}
+.react_ip_input .react_ip_input__item {
+  display: inline-block;
+}
+.react_ip_input.has-error {
+  border-color: #a94442;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+}
+
+.react_ip_input input {
+  width: 30px;
+  border: none;
+  outline: none;
+  text-align: center;
+}
 
 .divider {
   text-align:center;
   padding:10px;
   color:#555;
 }
+
 .add_field {
-  border:0;
+  border:0!important;
+  text-align:left;
+  width:160px!important;
+  margin:0 auto;
+}
+
+.ssh_connection_title {
+  text-align:center;
+  display:block;
+  font-size:14px;
+}
+
+.ssh_connection_subtext {
+  text-align:center;
+  display:block;
+  font-size:12px;
+}
+
+.progress {
+  display: -ms-flexbox;
+  display: flex;
+  height: 1rem;
+  overflow: hidden;
+  font-size: .75rem;
+  background-color: rgba(#FFF,0.2);
+  border-radius: .25rem;
+}
+.progress_overlay {
+  margin-top:25px;
+  
 }
 .loading_overlay {
-  position:absolute;
-  top:50%;
-  left:50%;
+  position:relative;
+  // top:50%;
+  // left:50%;
   height:85px;
   width:85px;
-  transform:translate(-50%,-50%);
-  margin-top:100px;
+  margin:25px auto 0 auto;
+  // transform:translate(-50%,-50%);
+  // margin-top:100px;
   /* width:100%;
   height:100%; */
 }
 .scanned_no_results {
-  background-color: crimson;
+  
 }
 .manual_error {
   background-color:transparent!important;
@@ -65,7 +123,10 @@
 /* .results_button:hover .eon_icon {
   opacity: 0.5;
 } */
-
+.form {
+  display:flex;
+  flex-flow:wrap;
+}
 .results_button_ip {
   display:block;
   color:#F7F7F7;

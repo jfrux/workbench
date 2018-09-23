@@ -13,7 +13,8 @@ const initialState = {
   sshCurrentCommand: null,
   sshLog: [],
   sshCommandErrors: null,
-  sshCommandStatus: "idle"
+  sshCommandStatus: "idle",
+  progress: 0
 };
 
 export default function eonListReducer(state = initialState, action) {
@@ -22,18 +23,21 @@ export default function eonListReducer(state = initialState, action) {
     case types.CONNECT_SSH:
       return {
         ...state,
-        sshStatus: "connecting"
+        sshStatus: "connecting",
+        sshConnectionStatus: "connected"
       };
     case types.CONNECT_SSH_SUCCESS:
       return {
         ...state,
-        sshStatus: "connected"
+        sshStatus: "connected",
+        sshConnectionStatus: "connected"
       };
     case types.CONNECT_SSH_FAIL:
       return {
         ...state,
         sshStatus: "failed",
-        sshError: ""
+        sshConnectionError: action.payload.err,
+        sshConnectionStatus: "not_connected_error"
       };
     case types.SSH_COMMAND:
       return {
@@ -75,7 +79,8 @@ export default function eonListReducer(state = initialState, action) {
       return {
         ...state,
         status: "scanning",
-        scanning: true
+        scanning: true,
+        progress: 0
       };
     case types.SELECT_EON:
       const eon = state.scanResults[action.payload.index]
@@ -83,16 +88,17 @@ export default function eonListReducer(state = initialState, action) {
       return {
         ...state,
         status: "eon_selected",
-        // scanResults: [],
         scanError: null,
         selectedEon: eon
       };
     case types.SCAN_NETWORK_SUCCESS:
+      console.log("REDUCER SCAN_NETWORK_SUCCESS:",action.payload.results);
       return {
         ...state,
         status: "scanned_has_results",
         scanResults: action.payload.results,
-        scanning: false
+        scanning: false,
+        progress: 0
       };
     case types.SCAN_NETWORK_FOUND:
       return {
@@ -106,11 +112,18 @@ export default function eonListReducer(state = initialState, action) {
         ...state,
         status: "scanned_error",
         scanError: action.payload.err,
+        progress: 0,
         scanning: false
+      };
+    case types.SCAN_NETWORK_PROGRESS:
+      return {
+        ...state,
+        progress: parseInt(action.payload.percentage)
       };
     case types.SCAN_NETWORK_NOT_FOUND:
       return {
         ...state,
+        progress: 0,
         status: "scanned_no_results",
         scanning: false
       };

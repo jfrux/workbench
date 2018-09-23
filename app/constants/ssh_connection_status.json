@@ -1,0 +1,14 @@
+{
+  "connected": {
+    "title": "Connected",
+    "subtext": "You're now connected to EON"
+  },
+  "not_connected": {
+    "title": "Not Connected",
+    "subtext": ""
+  },
+  "not_connected_error": {
+    "title": "Failed to connect",
+    "subtext": "%sshConnectionError%"
+  }
+}

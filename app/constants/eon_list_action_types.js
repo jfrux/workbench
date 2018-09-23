@@ -1,6 +1,7 @@
 export const SCAN_NETWORK = 'eonList/SCAN_NETWORK'
 export const SCAN_NETWORK_SUCCESS = 'eonList/SCAN_NETWORK_SUCCESS'
 export const SCAN_NETWORK_FOUND = 'eonList/SCAN_NETWORK_FOUND'
+export const SCAN_NETWORK_PROGRESS = 'eonList/SCAN_NETWORK_PROGRESS'
 export const SCAN_NETWORK_FAIL = 'eonList/SCAN_NETWORK_FAIL'
 export const SCAN_NETWORK_NOT_FOUND = 'eonList/SCAN_NETWORK_NOT_FOUND'
 export const SELECT_EON = 'eonList/SELECT_EON'
