@@ -15,7 +15,7 @@ import sshConnectionStatusMessages from '../../constants/ssh_connection_status.j
 import * as networkMethods from '../../actions/network_connection_actions';
 const propTypes = {
   sshConnectionStatus: PropTypes.string,
-  sshConnectionError: PropTypes.string,
+  sshConnectionError: PropTypes.object,
   scanNetwork: PropTypes.func,
   scanResults: PropTypes.array,
   scanError: PropTypes.string,

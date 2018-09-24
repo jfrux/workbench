@@ -47,6 +47,8 @@ function mapStateToProps(state) {
   }
 
   return {
+    sshConnectionError: state.eonList.sshConnectionError,
+    sshConnectionStatus: state.eonList.sshConnectionStatus,
     status: state.eonDetail.status,
     eon: state.eonList.selectedEon,
     pid: state.eonDetail.pid,

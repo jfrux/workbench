@@ -93,31 +93,21 @@ export function RESPONSE_tmuxPipe(lines, state) {
   regexKeys.forEach((key) => {
     switch (key) {
       case "THERMAL":
-        // console.warn("Parsing:",key);
         while ((m = regex[key].exec(lines)) !== null) {
           if (m.index === regex.lastIndex) {
             regex.lastIndex++;
           }
-          // console.warn("Parsing:",m[1]);
-          // console.warn(m[1],m[2]);
-          payload[m[1]] = m[2].replace(/\"/g,'');
+          let mKey = m[1];
 
-          if (m[1] === "usbOnline") {
-            if (m[2] === "true") {
-
-            } else {
-
-            }
-          }
+          if (mKey.startsWith('battery'))
+          payload[mKey] = m[2].replace(/\"/g,'');
         }
         break;
       case "PROCESS":
-        // console.warn("Parsing:",key);
         while ((m = regex[key].exec(lines)) !== null) {
           if (m.index === regex.lastIndex) {
             regex.lastIndex++;
           }
-          // console.warn(m[1],m[3]);
           payload[m[1]] = m[3].replace(/\"/g,'');
         }
         break;
@@ -128,7 +118,6 @@ export function RESPONSE_tmuxPipe(lines, state) {
         break;
     }
   });
-  console.log(lines);
   newArray.push(lines);
   
   payload.tmuxLog = newArray;
@@ -176,7 +165,24 @@ export function closeTmux() {
     dispatch(CLOSE_tmuxPipe());
   }
 }
-
+export function installFork(fork) {
+  return (dispatch, getState) => {
+    dispatch(BEGIN_fetchPid());
+    eonListActions.sendCommand(selectedEon, commands.OPENPILOT_PID).then((result) => {
+      const pid = result.stdout.split('\n')[0].trim();
+      
+      if (result.stderr) {
+        dispatch(FAIL_fetchPid(result.stderr));
+      } else {
+        if (pid && pid.length) {
+          dispatch(SUCCESS_fetchPid(pid));
+        } else {
+          dispatch(FAIL_fetchPid("Openpilot is not running, or too many processes were returned."));
+        }
+      }
+    });
+  }
+}
 export function getOpenpilotPid() {
   return (dispatch, getState) => {
     const { selectedEon } = getState().connectEon;

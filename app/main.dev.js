@@ -47,9 +47,9 @@ const installExtensions = async () => {
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
-  if (process.platform !== 'darwin') {
+  // if (process.platform !== 'darwin') {
     app.quit();
-  }
+  // }
 });
 
 app.on('ready', async () => {
@@ -74,8 +74,8 @@ app.on('ready', async () => {
     backgroundColor: "#000000",
     width,
     height,
-    minHeight: 800,
-    minWidth: 800
+    minHeight: 411,
+    minWidth: 731
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);

@@ -30,7 +30,8 @@ export default function eonListReducer(state = initialState, action) {
       return {
         ...state,
         sshStatus: "connected",
-        sshConnectionStatus: "connected"
+        sshConnectionStatus: "connected",
+        sshConnectionError: null
       };
     case types.CONNECT_SSH_FAIL:
       return {
@@ -80,24 +81,30 @@ export default function eonListReducer(state = initialState, action) {
         ...state,
         status: "scanning",
         scanning: true,
+        sshConnectionStatus: "not_connected",
+        sshConnectionError: null,
         progress: 0
       };
     case types.SELECT_EON:
-      const eon = state.scanResults[action.payload.index]
-      settings.set('selectedEon', eon)
+      const eon = state.scanResults[action.payload.index];
+      settings.set('selectedEon', eon);
       return {
         ...state,
         status: "eon_selected",
         scanError: null,
+        sshConnectionStatus: "not_connected",
+        sshConnectionError: null,
         selectedEon: eon
       };
     case types.SCAN_NETWORK_SUCCESS:
-      console.log("REDUCER SCAN_NETWORK_SUCCESS:",action.payload.results);
+      // console.log("REDUCER SCAN_NETWORK_SUCCESS:",action.payload.results);
       return {
         ...state,
         status: "scanned_has_results",
         scanResults: action.payload.results,
         scanning: false,
+        sshConnectionStatus: "not_connected",
+        sshConnectionError: null,
         progress: 0
       };
     case types.SCAN_NETWORK_FOUND:
@@ -105,6 +112,8 @@ export default function eonListReducer(state = initialState, action) {
         ...state,
         status: "scanned_has_results",
         scanResults: action.payload.results,
+        sshConnectionStatus: "not_connected",
+        sshConnectionError: null,
         scanning: true
       };
     case types.SCAN_NETWORK_FAIL:
@@ -112,6 +121,8 @@ export default function eonListReducer(state = initialState, action) {
         ...state,
         status: "scanned_error",
         scanError: action.payload.err,
+        sshConnectionStatus: "not_connected",
+        sshConnectionError: null,
         progress: 0,
         scanning: false
       };
