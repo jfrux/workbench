@@ -145,10 +145,12 @@ export function CLOSE_tmuxPipe() {
 
 export function pipeTmux() {
   return (dispatch, getState) => {
-    const { selectedEon } = getState().eonList;
-    if (selectedEon) {
+    const { selectedEon, scanResults } = getState().eonList;
+    const eon = scanResults[selectedEon];
+    console.warn("pipeTmux to:",eon);
+    if (eon) {
       dispatch(OPEN_tmuxPipe());
-      dispatch(eonListActions.sendPiped(selectedEon, commands.PIPE_TMUX, [], (resp) => {
+      dispatch(eonListActions.sendPiped(eon, commands.PIPE_TMUX, [], (resp) => {
         dispatch(RESPONSE_tmuxPipe(resp,getState()));
       }, (err) => {
         dispatch(FAIL_tmuxPipe(err));
@@ -162,6 +164,7 @@ export function closeTmux() {
     if (app && app.tmuxClient) {
       app.tmuxClient.dispose();
     }
+    dispatch(eonListActions.DESELECT_EON());
     dispatch(CLOSE_tmuxPipe());
   }
 }

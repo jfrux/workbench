@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 const app = require('electron').remote.app
 import PropTypes from 'prop-types';
 import formatTime from '../../utils/format-time';
-import styles from './ConnectedTime.css';
+import styles from './ConnectedTime.scss';
 const propTypes = {
   tmuxStartedAt: PropTypes.date
 };

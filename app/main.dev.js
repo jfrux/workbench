@@ -11,7 +11,7 @@
  */
 import { app, BrowserWindow } from 'electron';
 import MenuBuilder from './menu';
-import settings from 'electron-settings';
+// import settings from 'electron-settings';
 app.commandLine.appendSwitch('--enable-viewport-meta', 'true');
 let mainWindow = null;
 
@@ -53,11 +53,11 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', async () => {
-  if (!settings.get("windowBounds")) {
-    settings.set("windowBounds", { width: 800, height: 800 })
-  }
-  console.log("Settings are stored in:\n" + settings.file());
-  let { width, height } = settings.get('windowBounds');
+  // if (!settings.get("windowBounds")) {
+    // settings.set("windowBounds", { width: 800, height: 800 })
+  // }
+  // console.log("Settings are stored in:\n" + settings.file());
+  // let { width, height } = settings.get('windowBounds');
 
   // console.warn("width:",width);
   // console.warn("height:",height);
@@ -72,21 +72,23 @@ app.on('ready', async () => {
     // show: false,
     titleBarStyle: 'hiddenInset',
     backgroundColor: "#000000",
-    width,
-    height,
-    minHeight: 411,
-    minWidth: 731
+    width: 540,
+    height: 640,
+    maxWidth: 540,
+    maxHeight: 640,
+    minWidth: 540,
+    minHeight: 640
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
-  mainWindow.on('resize', () => {
+  // mainWindow.on('resize', () => {
     // console.log(store.get('windowBounds'));
     // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with
     // the height, width, and x and y coordinates.
-    let { width, height } = mainWindow.getBounds();
+    // let { width, height } = mainWindow.getBounds();
     // Now that we have them, save them using the `set` method.
-    settings.set('windowBounds', { width, height });
-  });
+    // settings.set('windowBounds', { width, height });
+  // });
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on('did-finish-load', () => {

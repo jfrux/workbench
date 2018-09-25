@@ -30,11 +30,11 @@ function filterDepWithoutEntryPoints(dep: string): boolean {
 
 export default {
   externals: [
-    ...Object.keys(externals || {}),
+    ...Object.keys(externals || {'socket.io-client':'io'}),
     ...Object.keys(possibleExternals || {}).filter(filterDepWithoutEntryPoints)
   ],
-
   module: {
+    noParse: [ /socket.io-client/ ],
     rules: [
       {
         test: /\.jsx?$/,

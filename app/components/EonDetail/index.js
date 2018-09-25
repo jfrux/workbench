@@ -11,11 +11,12 @@ import LoadingIndicator from '../LoadingIndicator';
 import ConnectedTime from './ConnectedTime';
 import { LineChart, PieChart } from 'react-chartkick'
 import Battery from './Widgets/Battery';
+import commands from '../../constants/commands.json';
 import BaseProcessList from './Widgets/BaseProcessList';
 import InVehicleList from './Widgets/InVehicleList';
 import ThermalList from './Widgets/ThermalList';
-import InstallFork from './Widgets/InstallFork';
-
+import TaskDialog from '../TaskDialog';
+import io from 'socket.io-client';
 const propTypes = {
   install: PropTypes.func,
   eon: PropTypes.object,
@@ -47,6 +48,21 @@ class EonDetail extends Component {
     if (this.props.eon && this.props.pipeTmux) {
       this.props.pipeTmux();
     }
+    if (this.props.eon) {
+      const { eon } = this.props;
+      const socketIoPath = `http://${eon.ip}:4000`;
+      console.warn("Attempting to connect to: " + socketIoPath);
+      const socket = io(socketIoPath);
+      socket.on('connect', function(){
+        console.log("Connected to EON Socket");
+      });
+      socket.on('event', function(data){
+        console.log("Event:",data);
+      });
+      socket.on('disconnect', function(){
+        console.log("Disconnected from EON");
+      });
+    }
     
     // this.tmuxTimeout = setTimeout(() => {
     //   if (!this.props.tmuxAttached) {
@@ -58,17 +74,18 @@ class EonDetail extends Component {
   componentWillUnmount() {
     this.props.closeTmux();
   }
+
   handleInstall = () => {
     // console.warn(this);
     this.props.install();
   }
   
   render() {
-    const { network, thermal, eon, standardProcesses, sshConnectionError, sshConnectionStatus, connectedProcesses, vehicleConnection, tmuxAttached } = this.props;
+    const { network, thermal, eon, selectedEon, standardProcesses, sshConnectionError, sshConnectionStatus, connectedProcesses, vehicleConnection, tmuxAttached } = this.props;
     const vehicleConnectionInfo = vehicleConnectionStatuses[vehicleConnection];
-
-    if (network === 'disconnected' || sshConnectionError) {
-      <Redirect to={routes.EON_LIST} />
+    if (network === 'disconnected' || sshConnectionError || eon == null) {
+      console.warn("SSH CONNECTION ERROR!",sshConnectionError);
+      return (<Redirect to={routes.EON_LIST} />)
     }
 
     if (!tmuxAttached) {
@@ -116,33 +133,31 @@ class EonDetail extends Component {
           }
           
           <div className="row">
-            <div className="col-8">
-              <InstallFork />
+            <div className="col-12">
+            <TaskDialog task="REINSTALL_OPENPILOT" />
             </div>
-            <div className="col-4">
-              <div className="col-12">
-                <div className={styles.state_header}>
-                  In Vehicle
-                </div>
-                <div className={styles.state_list}>
-                  <InVehicleList items={connectedProcesses} />
-                </div>
+            <div className="col-12">
+              <div className={styles.state_header}>
+                In Vehicle
               </div>
-              <div className="col-12">
-                <div className={styles.state_header}>
-                  Base Processes
-                </div>
-                <div className={styles.state_list}>
-                  <BaseProcessList items={standardProcesses} />
-                </div>
+              <div className={styles.state_list}>
+                <InVehicleList items={connectedProcesses} />
               </div>
-              <div className="col-12">
-                <div className={styles.state_header}>
-                  Thermal
-                </div>
-                <div className={styles.state_list}>
-                  <ThermalList items={thermal} />
-                </div>
+            </div>
+            <div className="col-12">
+              <div className={styles.state_header}>
+                Base Processes
+              </div>
+              <div className={styles.state_list}>
+                <BaseProcessList items={standardProcesses} />
+              </div>
+            </div>
+            <div className="col-12">
+              <div className={styles.state_header}>
+                Thermal
+              </div>
+              <div className={styles.state_list}>
+                <ThermalList items={thermal} />
               </div>
             </div>
           </div>

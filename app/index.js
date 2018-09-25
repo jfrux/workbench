@@ -5,11 +5,12 @@ import Root from './containers/Root';
 import { configureStore, history } from './store/configureStore';
 import './app.global.css';
 
-const store = configureStore();
+console.warn(configureStore);
+const { store, persistor } = configureStore();
 
 render(
   <AppContainer>
-    <Root store={store} history={history} />
+    <Root persistor={persistor} store={store} history={history} />
   </AppContainer>,
   document.getElementById('root')
 );

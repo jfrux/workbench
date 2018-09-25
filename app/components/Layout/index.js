@@ -22,14 +22,13 @@ class Layout extends React.PureComponent {
         <div className={styles.header + " no-select"}>
         {!hideLogo && 
           <div className={styles.brand}>
-            <Logo />
+            {process.env.NODE_ENV !== "development" && <Logo />}
           </div>
         }
         </div>
         <div className={styles.content}>
           {this.props.children}
         </div>
-        <div className={styles.footer + " no-select"}>Built with <i className={styles.heart + " fa fa-heart"} /> by <a href="#" onClick={() => this.handleOpenOPC()}>The Openpilot Community</a></div>
       </div>
     );
   }

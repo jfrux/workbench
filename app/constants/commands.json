@@ -1,12 +1,6 @@
 {
   "OPENPILOT_PID": "ps -ef | grep chffr | grep -v grep | awk '{print $1}'",
-  "PIPE_TMUX": "rm -f /tmp/tmuxpipe && mkfifo /tmp/tmuxpipe && tmux pipe-pane -o 'cat >> /tmp/tmuxpipe' && cat /tmp/tmuxpipe",
-  "INSTALL_FORK": [
-    "cd /data",
-    "mv ./openpilot ./openpilot-%key%.bak"
-  ],
-  "FINGERPRINT": [
-    "/data/openpilot/selfdrive/boardd/boardd",
-    "cd /data/openpilot/selfdrive && PYTHONPATH=/data/openpilot PREPAREONLY=1 /data/openpilot/selfdrive/debug/get_fingerprint.py"
-  ]
+  "PIPE_TMUX": "rm -f /tmp/tmuxpipe;mkfifo /tmp/tmuxpipe;tmux pipe-pane -o 'cat >> /tmp/tmuxpipe';cat /tmp/tmuxpipe",
+  "INSTALL_FORK": "cd /data;mv ./openpilot ./openpilot.bak;git clone %git_url% openpilot;cd openpilot;git checkout %git_branch%",
+  "FINGERPRINT": "cd /data/openpilot/selfdrive;PYTHONPATH=/data/openpilot PREPAREONLY=1 /data/openpilot/selfdrive/debug/get_fingerprint.py"
 }

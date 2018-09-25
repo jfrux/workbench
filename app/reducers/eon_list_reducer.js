@@ -37,6 +37,7 @@ export default function eonListReducer(state = initialState, action) {
       return {
         ...state,
         sshStatus: "failed",
+        selectedEon: null,
         sshConnectionError: action.payload.err,
         sshConnectionStatus: "not_connected_error"
       };
@@ -74,7 +75,8 @@ export default function eonListReducer(state = initialState, action) {
       return {
         ...state,
         sshStatus: "failed",
-        sshError: ""
+        sshError: "",
+        selectedEon: null
       };
     case types.SCAN_NETWORK:
       return {
@@ -85,16 +87,33 @@ export default function eonListReducer(state = initialState, action) {
         sshConnectionError: null,
         progress: 0
       };
+    case types.CHECK_EON_STATUS:
+      return {
+        ...state,
+        scanResults
+      };
     case types.SELECT_EON:
       const eon = state.scanResults[action.payload.index];
-      settings.set('selectedEon', eon);
+      console.warn("REDUCER SELECT_EON:",eon);
+      settings.set('selectedEon', action.payload.index);
       return {
         ...state,
         status: "eon_selected",
         scanError: null,
         sshConnectionStatus: "not_connected",
         sshConnectionError: null,
-        selectedEon: eon
+        selectedEon: action.payload.index
+      };
+    case types.DESELECT_EON:
+      // const eon = state.scanResults[action.payload.index];
+      settings.set('selectedEon', null);
+      return {
+        ...state,
+        status: "not_selected",
+        scanError: null,
+        sshConnectionStatus: "not_connected",
+        sshConnectionError: null,
+        selectedEon: null
       };
     case types.SCAN_NETWORK_SUCCESS:
       // console.log("REDUCER SCAN_NETWORK_SUCCESS:",action.payload.results);
@@ -111,15 +130,17 @@ export default function eonListReducer(state = initialState, action) {
       return {
         ...state,
         status: "scanned_has_results",
-        scanResults: action.payload.results,
+        newResults: action.payload.found,
+        // scanResults: action.payload.results,
         sshConnectionStatus: "not_connected",
         sshConnectionError: null,
-        scanning: true
+        scanning: false
       };
     case types.SCAN_NETWORK_FAIL:
       return {
         ...state,
         status: "scanned_error",
+        newResults: null,
         scanError: action.payload.err,
         sshConnectionStatus: "not_connected",
         sshConnectionError: null,
@@ -135,6 +156,7 @@ export default function eonListReducer(state = initialState, action) {
       return {
         ...state,
         progress: 0,
+        newResults: [],
         status: "scanned_no_results",
         scanning: false
       };

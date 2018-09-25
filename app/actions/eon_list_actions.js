@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import settings from 'electron-settings';
+import routes from '../constants/routes.json';
 import * as types from '../constants/eon_list_action_types'
 import * as networkActions from './network_connection_actions';
 const portscanner = require('portscanner');
@@ -9,6 +10,7 @@ const SSH = require('node-ssh');
 const RSAKey = require('rsa-key');
 const netList = require('network-list');
 const mkdirp = require("mkdirp");
+const isPortReachable = require('is-port-reachable');
 
 // SSH ACTION CREATORS
 export function BEGIN_connectSSH() {
@@ -72,25 +74,11 @@ export function BEGIN_scanNetwork() {
   };
 }
 
-export function FOUND_scanNetwork(obj,state) {
-  let { scanResults } = state.eonList;
-  console.warn("FOUND_scanNetwork:",obj);
-  var foundExisting = scanResults.filter((result) => {
-    return (result.mac === obj.mac) && (result.ip === obj.ip);
-  });
-  console.warn("foundExisting:",foundExisting);
-  if (!foundExisting.length) {
-    scanResults.push(obj);
-  }
-
-  // found.push(obj);
-
-  settings.set("scanResults",scanResults);
-
+export function FOUND_scanNetwork(foundResults,state) {
   return {
     type: types.SCAN_NETWORK_FOUND,
     payload: {
-      result: obj
+      found: foundResults
     }
   };
 }
@@ -128,6 +116,12 @@ export function SELECT_EON(index) {
     payload: {
       index
     }
+  };
+}
+
+export function DESELECT_EON(index) {
+  return {
+    type: types.DESELECT_EON
   };
 }
 
@@ -173,6 +167,7 @@ RsVMUiFgloWGHETOy0Qvc5AwtqTJFLTD1Wza2uBilSVIEsg6Y83Gickh+ejOmEsY
 
 export function sendPiped(eon, command, commandArgs = [], stdOut = () => {}, stdErr = () => {}) {
   const privateKey = getPrivateKey();
+  console.log(privateKey);
   app.tmuxClient = new SSH();
   return (dispatch, getState) => {
     return app.tmuxClient.connect({
@@ -199,20 +194,35 @@ export function sendPiped(eon, command, commandArgs = [], stdOut = () => {}, std
   };
 }
 
-export function sendCommand(eon, command, commandArgs = []) {
+export function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, stdErr = () => {}) {
   const privateKey = getPrivateKey();
-  const sshClient = new SSH();
-  // console.log("Connecting...");
-  return sshClient.connect({
-    host: eon.ip,
-    username: 'root',
-    port: 8022,
-    privateKey: privateKey
-  }).then(() => {
-    return sshClient.execCommand(command, commandArgs, {
-      cwd: '/'
+  app.sshClient = new SSH();
+  return (dispatch, getState) => {
+    console.warn("Connecting to EON...");
+    return app.sshClient.connect({
+      host: eon.ip,
+      username: 'root',
+      port: 8022,
+      privateKey: privateKey
+    }).then(() => {
+      console.warn("Dispatching command:\n",command)
+      console.warn("To EON:\n",eon);
+      return app.sshClient.exec(command, commandArgs, {
+        cwd: '/',
+        onStdout(chunk) {
+          console.warn("stdOut:",chunk.toString('utf8'));
+          stdOut(chunk.toString('utf8'));
+        },
+        onStderr(chunk) {
+          console.warn("stdErr:",chunk.toString('utf8'));
+          stdErr(chunk.toString('utf8'));
+        },
+      });
+    }).catch((err) => {
+      dispatch(FAIL_connectSSH(err));
+      // console.warn("ERROR CONNECTING:",err);
     });
-  });
+  };
 }
 
 export function scanNetwork() {
@@ -252,6 +262,7 @@ export function scanNetwork() {
             scanResults.push(obj);
           }
           found.push(obj);
+
           settings.set("scanResults",scanResults);
           dispatch(SUCCESS_scanNetwork(scanResults,getState()));
           
@@ -259,8 +270,13 @@ export function scanNetwork() {
         // found = true;
         // scanner = null;
         if (scanCount >= 762) {
-          console.warn('scan done... found...',found.length);
-          dispatch(NOT_FOUND_scanNetwork());
+          if (found.length) {
+            console.warn('scan done... found...',found.length);
+            dispatch(FOUND_scanNetwork());
+          } else {
+            console.warn('scan done... found...',found.length);
+            dispatch(NOT_FOUND_scanNetwork());
+          }
         }
       });
     });
@@ -290,14 +306,51 @@ export function addManually(ip_address) {
     dispatch(SELECT_EON(0));
   };
 }
-
+export function checkExistingEONStatuses() {
+  return (dispatch, getState) => {
+    const { scanResults } = getState().eonList;
+    scanResults.forEach((eon) => {
+      //check if available.
+      dispatch({
+        type: types.CHECK_EON_STATUS,
+        payload: {
+          eon
+        }
+      });
+      isPortReachable(8022, {
+        host: eon.ip
+      }).then(reachable => {
+        if (reachable) {
+          dispatch({
+            type: types.CHECK_EON_STATUS_ONLINE,
+            payload: {
+              eon
+            }
+          });
+        } else {
+          dispatch({
+            type: types.CHECK_EON_STATUS_OFFLINE,
+            payload: {
+              eon
+            }
+          });
+        }
+        //=> true
+      });
+    });
+  }
+}
 export function retrieveEonFromSettings() {
   return (dispatch, getState) => {
-    let scanResults = settings.get("scanResults");
+    let scanResults = getState().eonList.scanResults;
+    // let selectedEon = parseInt(settings.get("selectedEon")) || null;
     console.warn("Getting saved eons from settings...",scanResults);
-    if (scanResults && scanResults.length) {
-      dispatch(SUCCESS_scanNetwork(scanResults,getState()));
-      dispatch(selectEon(0));
-    }
+    // if (scanResults && scanResults.length) {
+    //   dispatch(SUCCESS_scanNetwork(scanResults,getState()));
+    //   dispatch(selectEon(selectedEon));
+    //   // if (selectedEon) {
+    //   //   this.props.history.push(routes.EON_DETAIL);
+    //   // }
+    // }
   };
 }

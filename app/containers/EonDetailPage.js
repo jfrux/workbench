@@ -50,7 +50,7 @@ function mapStateToProps(state) {
     sshConnectionError: state.eonList.sshConnectionError,
     sshConnectionStatus: state.eonList.sshConnectionStatus,
     status: state.eonDetail.status,
-    eon: state.eonList.selectedEon,
+    eon: state.eonList.scanResults[state.eonList.selectedEon],
     pid: state.eonDetail.pid,
     fetchingPid: state.eonDetail.fetchingPid,
     tmuxAttached: state.eonDetail.tmuxAttached,

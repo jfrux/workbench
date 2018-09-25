@@ -10,9 +10,11 @@ import NoConnection from './NoConnection';
 import ProgressBar from './ProgressBar';
 import LoadingIndicator from '../LoadingIndicator';
 // import IpInput from './IpInput';
+import { Container, ListGroup, ListGroupItem } from 'reactstrap';
 import statusMessages from '../../constants/scan_status_messages.json';
 import sshConnectionStatusMessages from '../../constants/ssh_connection_status.json';
 import * as networkMethods from '../../actions/network_connection_actions';
+import TaskDialog from '../TaskDialog';
 const propTypes = {
   sshConnectionStatus: PropTypes.string,
   sshConnectionError: PropTypes.object,
@@ -21,6 +23,7 @@ const propTypes = {
   scanError: PropTypes.string,
   scanning: PropTypes.bool,
   status: PropTypes.string,
+  selectedEon: PropTypes.any,
   network: PropTypes.string,
   networkIp: PropTypes.string,
   progress: PropTypes.any
@@ -61,6 +64,7 @@ class EonList extends Component {
     event.preventDefault();
   }
   handleSelectEon = (index) => {
+    console.warn("Clicked EON");
     this.props.selectEon(index);
     this.props.history.push(routes.EON_DETAIL);
   }
@@ -73,6 +77,7 @@ class EonList extends Component {
       status,
       network,
       networkIp,
+      selectedEon,
       progress
     } = this.props;
 
@@ -85,13 +90,17 @@ class EonList extends Component {
     if (sshConnectionStatus === "not_connected") {
       sshConnectionMessage = null;
     }
+    if (selectedEon !== null) {
+      // console.warn("SSH CONNECTION ERROR!",sshConnectionError);
+      return (<Redirect to={routes.EON_DETAIL} />); 
+    }
     if (network === 'disconnected') {
       return <NoConnection />
     }
-    
+    console.log("status:",status);
     return (
       <Layout>
-        <div className={styles.container + " container"}>
+        <Container fluid={true}>
           <h3 className={styles.title + " no-select"}>
             {statusMessage.title}
           </h3>
@@ -112,22 +121,25 @@ class EonList extends Component {
               {statusMessage.subsubtext}
             </div>
           }
+          <button className={styles.scan_button + " mt-2 btn btn-dark"} onClick={this.handleScanNetwork} type="button"><i className="fa fa-sync"></i></button>
+         
+          
+          <ListGroup className={"mt-3"}>
+            {scanResults.map((item,index) => {
+              // const isSameNetwork = networkMethods.isSameNetwork(networkIp,item.ip);
+              return (<ListGroupItem key={index} onClick={() => { this.handleSelectEon(index)}} className={styles.results_button + " bg-dark text-light"} tag="button">
+                  <span className={styles.eon_icon}><Eon width="100%" height="100%" /></span>
+                  <span className={styles.results_details}>
+                    <span className={styles.results_button_ip}>{item.ip}</span>
+                    <span className={styles.results_button_mac}>{item.mac}</span>
+                  </span>
+                  <span className={styles.results_button_selected}><i className="fa fa-chevron-right"></i></span>
+                </ListGroupItem>)
+            })}
+          </ListGroup>
 
-          {!scanning && scanResults &&
-            <div className={styles.results + " btn-group-vertical"}>
-              {scanResults.map((item,index) => {
-                const isSameNetwork = networkMethods.isSameNetwork(networkIp,item.ip);
-                return (<button key={index} className={styles.results_button + " btn btn-dark btn-block"} onClick={() => this.handleSelectEon(index)}>
-                <span className={styles.eon_icon}><Eon width="100%" height="100%" /></span>
-                <span className={styles.results_button_ip}>{item.ip}</span>
-                <span className={styles.results_button_mac}>{item.mac}</span>
-                <span className={styles.results_button_selected}><i className="fa fa-chevron-right"></i></span>
-              </button>)
-              })}
-            </div>
-          }
           {scanning &&
-            <div>
+            <div className={styles.loader_wrap}>
               <div className={styles.loading_overlay}>
                 <LoadingIndicator />
               </div>
@@ -136,19 +148,7 @@ class EonList extends Component {
               </div>
             </div>
           }
-
-          {status === "eon_selected" &&
-            <button className="mt-2 btn btn-dark btn-block" onClick={this.handleScanNetwork} type="button"><i className="fa fa-sync"></i> Refresh List</button>
-          }
-          {status === "not_scanned" &&
-            <button className="mt-2 btn btn-dark btn-block" onClick={this.handleScanNetwork} type="button"><i className="fa fa-sync"></i> Begin Scan</button>
-          }
-          {status === "scanned_has_results" &&
-            <button className="mt-2 btn btn-dark btn-block" onClick={this.handleScanNetwork} type="button"><i className="fa fa-sync"></i> Scan Again</button>
-          }
-          {status === "scanned_no_results" &&
-            <button className="mt-2 btn btn-dark btn-block" onClick={this.handleScanNetwork} type="button"><i className="fa fa-sync"></i> Try Again</button>
-          }
+          
           {!scanning &&
             <div>
               <div className={styles.divider}>
@@ -171,7 +171,7 @@ class EonList extends Component {
               </form>
             </div>
           }
-        </div>
+        </Container>
       </Layout>
     );
   }

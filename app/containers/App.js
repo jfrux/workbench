@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import EonDetail from '../components/EonDetail';
 import * as NetworkConnectionActions from '../actions/network_connection_actions';
+
 function mapStateToProps(state) {
   return {}
 }

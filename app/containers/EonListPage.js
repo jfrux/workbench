@@ -2,7 +2,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Eons from '../components/EonList';
 import * as eonListActions from '../actions/eon_list_actions';
-
 function mapStateToProps(state) {
   return {
     sshConnectionStatus: state.eonList.sshConnectionStatus,
@@ -12,6 +11,7 @@ function mapStateToProps(state) {
     scanError: state.eonList.scanError,
     scanning: state.eonList.scanning,
     status: state.eonList.status,
+    selectedEon: state.eonList.selectedEon,
     networkIp: state.networkConnection.ip,
     network: state.networkConnection.status,
     progress: state.eonList.progress
