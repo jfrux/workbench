@@ -98,10 +98,9 @@ class EonDetail extends Component {
     const vehicleConnectionInfo = vehicleConnectionStatuses[vehicleConnection];
     // const { usbOnline } = thermal;
     if (network === 'disconnected' || eon == null) {
-      console.warn("SSH CONNECTION ERROR!",sshConnectionError);
+      // console.warn("SSH CONNECTION ERROR!",sshConnectionError);
       return (<Redirect to={routes.EON_LIST} />)
     }
-    console.log(eon);
     // if (!tmuxAttached) {
     //   return <LoadingIndicator className={styles.loading_overlay} />;
     // }
@@ -110,7 +109,6 @@ class EonDetail extends Component {
       stateBlocks = <LoadingOverlay />
     } else {
       stateBlocks = currentStateKeys.map((key) => {
-        console.log(key);
         const items = this.props[key];
         return (<Card key={key} className={styles.state_card}>
           <CardBody className={styles.state_card_body}>

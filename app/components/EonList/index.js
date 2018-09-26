@@ -47,6 +47,9 @@ class EonList extends Component {
       scanningStarted: false
     }
   }
+  componentWillMount() {
+    this.props.resetScanNetwork();
+  }
   handleScanNetwork = () => {
     this.props.scanNetwork();
   }

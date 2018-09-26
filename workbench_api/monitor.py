@@ -29,6 +29,7 @@ def main():
   data = {}
   republish_socks = {}
 
+  logcan = messaging.sub_sock(context, service_list['can'].port)
   for m in args.socket if len(args.socket) > 0 else service_list:
     if m in service_list:
       port = service_list[m].port
@@ -40,18 +41,32 @@ def main():
     sock = messaging.sub_sock(context, port, poller, addr=args.addr)
     if args.proxy:
       republish_socks[sock] = messaging.pub_sock(context, port)
-
+  fingerprint_msgs = {}
   while 1:
     polld = poller.poll(timeout=1000)
+    
     for sock, mode in polld:
       if mode != zmq.POLLIN:
         continue
       msg = sock.recv()
+      lc = messaging.recv_sock(logcan, True)
+      for c in lc.can:
+        # read also msgs sent by EON on CAN bus 0x80 and filter out the
+        # addr with more than 11 bits
+        if c.src%0x80 == 0 and c.address < 0x800:
+          fingerprint_msgs[c.address] = len(c.dat)
+
+      fingerprint = ', '.join("\"%d\": %d" % v for v in sorted(fingerprint_msgs.items()))
+      fingerprint = '{' + fingerprint + '}'
+      # print fingerprint
       evt = log.Event.from_bytes(msg)
       if sock in republish_socks:
         republish_socks[sock].send(msg)
       # print evt
-      service_whitelist = ["thermal","health","gpsLocation","can","live100"]
+      fingerprint_json = json.loads(fingerprint)
+      print fingerprint_json
+      data['fingerprint'] = json.dumps(fingerprint_json)
+      service_whitelist = ["thermal","health","gpsLocation"]
       # THERMAL
       # if evt.which() == 'thermal':
       #   data['thermal'] = evt.thermal.to_dict()

@@ -198,7 +198,6 @@ export function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, s
   const privateKey = getPrivateKey();
   app.sshClient = new SSH();
   return (dispatch, getState) => {
-    console.warn("Connecting to EON...");
     return app.sshClient.connect({
       host: eon.ip,
       username: 'root',
@@ -340,7 +339,7 @@ export function checkExistingEONStatuses() {
     });
   }
 }
-function resetScanNetwork() {
+export function resetScanNetwork() {
   return {
     type: types.SCAN_NETWORK_RESET
   }
