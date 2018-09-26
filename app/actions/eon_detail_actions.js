@@ -32,6 +32,30 @@ export function FAIL_install(err) {
   };
 }
 
+
+export function BEGIN_uninstall() {
+  console.log("dispatched BEGIN_scanNetwork");
+
+  return {
+    type: types.UNINSTALL
+  };
+}
+
+export function SUCCESS_uninstall() {
+  return {
+    type: types.UNINSTALL_SUCCESS
+  };
+}
+
+export function FAIL_uninstall(err) {
+  return {
+    type: types.UNINSTALL_FAIL,
+    payload: {
+      err
+    }
+  };
+}
+
 export function BEGIN_fetchPid() {
   return {
     type: types.FETCH_PID
@@ -58,7 +82,7 @@ export function FAIL_fetchPid(error) {
 
 export function OPEN_REQUEST_EON_STATE() {
   return {
-    type: types.TMUX_PIPE
+    type: types.EON_STATE
   };
 }
 
@@ -85,37 +109,15 @@ function testJSON(text){
   }
 }
 export function RESPONSE_REQUEST_EON_STATE(eonState, state) {
-  // const { eonDetail } = state;
-  // const { tmuxLogLimit, tmuxLog, tmuxStartedAt } = eonDetail;
-  // let newArray = limitedLogArray(tmuxLogLimit);
-  // let regexKeys;
-  // let payload = {};
-  // let m;
-  // let jsonLines = lines.split('\n');
-  // jsonLines.forEach((line) => {
-  //   if (testJSON(line)) {
-  //     // console.log(line + '\n');
-  //     let jsonResp = JSON.parse(line);
-  //     console.warn("Received: ", Object.keys(jsonResp)[0]);
-  //     payload = {
-  //       ...payload,
-  //       ...jsonResp
-  //     }
-  //   }
-  // })
-
-  // if (!tmuxStartedAt) {
-  //   payload.tmuxStartedAt = new Date();
-  // }
   return {
-    type: types.TMUX_PIPE_RESPONSE,
+    type: types.EON_STATE_RESPONSE,
     payload: eonState
   };
 }
 
 export function FAIL_REQUEST_EON_STATE(error) {
   return {
-    type: types.TMUX_PIPE_FAIL,
+    type: types.EON_STATE_FAIL,
     payload: {
       error
     }
@@ -124,7 +126,7 @@ export function FAIL_REQUEST_EON_STATE(error) {
 
 export function CLOSE_REQUEST_EON_STATE() {
   return {
-    type: types.TMUX_PIPE_CLOSE
+    type: types.EON_STATE_CLOSE
   };
 }
 
@@ -187,63 +189,30 @@ export function installFork(fork) {
     });
   }
 }
-// export function getOpenpilotPid() {
-//   return (dispatch, getState) => {
-//     const { selectedEon } = getState().connectEon;
-//     dispatch(BEGIN_fetchPid());
-//     eonListActions.sendCommand(selectedEon, commands.OPENPILOT_PID).then((result) => {
-//       const pid = result.stdout.split('\n')[0].trim();
-      
-//       if (result.stderr) {
-//         dispatch(FAIL_fetchPid(result.stderr));
-//       } else {
-//         if (pid && pid.length) {
-//           dispatch(SUCCESS_fetchPid(pid));
-//         } else {
-//           dispatch(FAIL_fetchPid("Openpilot is not running, or too many processes were returned."));
-//         }
-//       }
-//     });
-//   }
-// }
 
-const createPoller = (interval, initialDelay) => {
-  console.warn("createPoller", interval, initialDelay);
-  pollerId = null;
-  let poller = () => {};
-  return fn => {
-    poller = () => {
-      pollerId = window.setTimeout(poller, interval);
-      return fn();
-    };
-    if (initialDelay) {
-      return pollerId = window.setTimeout(poller, interval);
-    }
-    return poller();
-  };
-};
-
-export const createPollingAction = (action, interval, initialDelay) => {
-  const poll = createPoller(action, initialDelay);
-  console.warn("createPollingAction");
-  return () => (dispatch, getState) => poll(() => action(dispatch, getState));
-};
 export function fetchEonState(eon) {
   return (dispatch, getState) => {
-    fetch(`http://${eon.ip}:8080/state`)
-      .then(res => {
-        console.warn("Response received...",res);
-        return res.json()
-      })
-      .then(json => {
-        console.warn("JSON parsed...",json);
-        dispatch(RESPONSE_REQUEST_EON_STATE(json, getState()))
-      }).catch((err) => {
-        dispatch(FAIL_REQUEST_EON_STATE(err))
-      });
+    const { polling } = getState().eonDetail
+    setTimeout(() => {
+      fetch(`http://${eon.ip}:8080/state.json`)
+        .then(res => {
+          return res.json()
+        })
+        .then(json => {
+          dispatch(RESPONSE_REQUEST_EON_STATE(json, getState()));
+          if (polling) {
+            dispatch(fetchEonState(eon));
+          }
+        }).catch((err) => {
+          dispatch(FAIL_REQUEST_EON_STATE(err))
+          if (polling) {
+            dispatch(fetchEonState(eon));
+          }
+        });
+    },2000)
   }
 }
-export function install(eon) {
+export function install() {
   return (dispatch, getState) => {
     const { selectedEon, scanResults } = getState().eonList;
 
@@ -267,20 +236,23 @@ export function install(eon) {
     // dispatch(BEGIN_install());
   };
 }
+
 export function uninstall() {
   return (dispatch, getState) => {
-    // dispatch(BEGIN_install());
-    // dispatch(eonListActions.sendCommand(eon, commands.INSTALL_API, [], (resp) => {
-    //   console.info("Installing...", resp);
-
-    //   app.sshClient.dispose();
-    //   dispatch(SUCCESS_install());
-    // }, (err) => {
-    //   console.warn("Error was thrown while installing...")
-    // }));
-    // console.warn("Starting Api install...");
+    const { selectedEon, scanResults } = getState().eonList;
+    const eon = scanResults[selectedEon];
+    console.warn("Starting Api UNINSTALL...");
+    dispatch(BEGIN_uninstall());
+    dispatch(eonListActions.sendCommand(eon, commands.UNINSTALL_API, [], (resp) => {
+      console.info("UNINSTALLING...", resp);
+      app.sshClient.dispose();
+      dispatch(SUCCESS_uninstall());
+      
+      console.warn("API Uninstalled");
+    }, (err) => {
+      console.warn("Error was thrown while installing...")
+    }));
     // app.installClient = new SSH();
     // dispatch(BEGIN_install());
-    
   };
 }

@@ -158,6 +158,11 @@
 
 .results_button {
   display:block;
+  border-radius:0!important;
+  background-color:rgba(#FFF,0.05)!important;
+  &:hover {
+    background-color:rgba(#FFF,0.1)!important;
+  }
 }
 
 /* .results_button:hover .eon_icon {

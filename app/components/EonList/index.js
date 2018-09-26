@@ -99,40 +99,19 @@ class EonList extends Component {
     }
     console.log("status:",status);
     return (
-      <Layout>
-        <Container fluid={true}>
-          {statusMessage &&
-            <div>
-              <h3 className={styles.title + " no-select"}>
-                {statusMessage.title}
-              </h3>
-              
-              <h5 className={styles.subtext + " no-select" + " " + styles[status]}>
-                {statusMessage.subtext.replace("%scanResultsLength%",scanResults.length)}
-              </h5>
-            
+      <Layout title="Workbench">
           {sshConnectionMessage && 
             <div className={styles.ssh_message}>
               <span className={styles.ssh_connection_title}>{sshConnectionMessage.title}</span>
               <span className={styles.ssh_connection_subtext}>{sshConnectionMessage.subtext.replace("%sshConnectionError%",sshConnectionError)}</span>
             </div>
           }
-
-          {!sshConnectionMessage && 
-            <div className={styles.subsubtext + " no-select"}>
-              {statusMessage.subsubtext}
-            </div>
-          }
-          </div>
-          }
-          {!scanning && 
-          <button className={styles.scan_button + " mt-2 btn btn-dark"} onClick={this.handleScanNetwork} type="button"><i className="fa fa-sync"></i></button>
-          }
+          
           {scanResults && 
-            <ListGroup className={"mt-3"}>
+            <ListGroup>
               {scanResults.map((item,index) => {
                 // const isSameNetwork = networkMethods.isSameNetwork(networkIp,item.ip);
-                return (<ListGroupItem key={index} onClick={() => { this.handleSelectEon(index)}} className={styles.results_button + " bg-dark text-light"} tag="button">
+                return (<ListGroupItem key={index} onClick={() => { this.handleSelectEon(index)}} className={styles.results_button} tag="button">
                     <span className={styles.eon_icon}><Eon width="100%" height="100%" /></span>
                     <span className={styles.results_details}>
                       <span className={styles.results_button_ip}>{item.ip}</span>
@@ -143,8 +122,9 @@ class EonList extends Component {
               })}
             </ListGroup>
           }
+
           {!scanning && scanResults.length === 0 && 
-            <ListGroup className={"mt-3"}>
+            <ListGroup>
                 <ListGroupItem onClick={() => { this.handleScanNetwork()}} className={styles.new_scan_button + " bg-primary text-light"} tag="button">
                   <span className={styles.results_details}>
                     Begin Scan
@@ -185,7 +165,6 @@ class EonList extends Component {
               </form>
             </div>
           }
-        </Container>
       </Layout>
     );
   }

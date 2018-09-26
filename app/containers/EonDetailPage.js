@@ -4,10 +4,6 @@ import EonDetail from '../components/EonDetail';
 import * as EonActions from '../actions/eon_detail_actions';
 
 function mapStateToProps(state) {
-  const healthState = state.eonDetail.health;
-  const serviceState = state.eonDetail.service;
-  const thermalState = state.eonDetail.thermal;
-
   return {
     sshConnectionError: state.eonList.sshConnectionError,
     sshConnectionStatus: state.eonList.sshConnectionStatus,
@@ -22,9 +18,10 @@ function mapStateToProps(state) {
     network: state.networkConnection.status,
     networkIp: state.networkConnection.ip,
     vehicleConnection: state.eonDetail.vehicleConnection,
-    healthState,
-    thermalState,
-    serviceState
+    thermal: state.eonDetail.thermal,
+    health: state.eonDetail.health,
+    gpsLocation: state.eonDetail.gpsLocation,
+    currentStateKeys: state.eonDetail.currentStateKeys
   };
 }
 

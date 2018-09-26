@@ -7,7 +7,31 @@
   height:100%; */
   text-align: center;
 }
-
+.title {
+  line-height:36px;
+  color:rgba(#FFF,0.7);
+  font-size:15px;
+}
+.top_bar {
+  height:36px;
+  background-color:#212121;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  width:100%;
+  z-index:2;
+  text-align:center;
+}
+.left_bar {
+  position:fixed;
+  left:0;
+  top:0;
+  width:50px;
+  height:100%;
+  background-color:darken(#212121,5);
+  z-index:1;
+}
 .app_wrapper {
   padding-top:0;
   overflow:auto;
@@ -15,6 +39,10 @@
   width:100%;
   position:fixed;
   
+}
+.content {
+  padding-top:36px;
+  padding-left:50px;
 }
 .header {
   display:flex;

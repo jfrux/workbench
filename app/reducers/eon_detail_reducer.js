@@ -7,93 +7,53 @@ const defaultTmuxLogLength = 300;
 const initialState = {
   updated: null,
   vehicleConnection: null,
-  service: {},
-  health: {},
-  thermal: {
-    cpu0: null,
-    cpu1: null,
-    cpu2: null,
-    cpu3: null,
-    mem: null,
-    gpu: null,
-    bat: null,
-    freeSpace: null,
-    batteryPercent: null,
-    batteryStatus: null,
-    fanSpeed: null,
-    started: null,
-    usbOnline: null,
-    startedTs: null,
-    thermalStatus: null,
-    batteryCurrent: null,
-    batteryVoltage: null
-  },
-  logMessage: {}
+  service: null,
+  health: null,
+  thermal: null,
+  currentStateKeys: []
 };
 
 export default function eonDetailReducer(state = initialState, action) {
   switch (action.type) {
-    case types.TMUX_PIPE:
+    case types.EON_STATE:
       return {
         ...state,
         tmuxAttached: false,
         tmuxLog: []
       }
-    case types.TMUX_PIPE_RESPONSE:
+    case types.EON_STATE_RESPONSE:
+    console.warn()
       return {
         ...state,
         ...action.payload,
+        currentStateKeys: Object.keys(action.payload),
         tmuxAttached: true,
         tmuxError: null
 
       }
 
-    case types.TMUX_PIPE_FAIL:
+    case types.EON_STATE_FAIL:
       return {
         ...state,
         tmuxAttached: false,
+        currentStateKeys: [],
+        service: null,
+        health: null,
+        thermal: null,
         tmuxError: action.payload.error,
         tmuxLog: []
       }
     
-    case types.TMUX_PIPE_CLOSE:
+    case types.EON_STATE_CLOSE:
       return {
         ...state,
         tmuxAttached: false,
         tmuxError: null,
         tmuxLog: [],
-        updated: null,
-        logcatd: null,
-        pandad: null,
-        thermald: null,
-        ui: null,
-        uploader: null,
-        tombstoned: null,
-        logmessaged: null,
-        controlsd: null,
-        visiond: null,
-        gpsd: null,
-        vehicleConnection: null,
-        tmuxStartedAt: null,
-        logMonoTime: null,
+        service: null,
+        health: null,
         thermal: null,
-        cpu0: null,
-        cpu1: null,
-        cpu2: null,
-        cpu3: null,
-        mem: null,
-        gpu: null,
-        bat: null,
-        freeSpace: null,
-        batteryPercent: null,
-        batteryStatus: null,
-        fanSpeed: null,
-        started: null,
-        usbOnline: null,
-        startedTs: null,
-        thermalStatus: null,
-        batteryCurrent: null,
-        batteryVoltage: null
+        currentStateKeys: []
       }
 
     case types.FETCH_PID:
@@ -115,6 +75,34 @@ export default function eonDetailReducer(state = initialState, action) {
         pid: null,
         pidError: action.payload.error,
         fetchingPid: false
+      }
+    case types.INSTALL:
+      return {
+        ...state
+      }
+    case types.INSTALL_SUCCESS:
+      return {
+        ...state,
+        polling: true
+      }
+    case types.INSTALL_FAIL:
+      return {
+        ...state,
+        polling: false
+      }
+    case types.UNINSTALL:
+      return {
+        ...state
+      }
+    case types.UNINSTALL_SUCCESS:
+      return {
+        ...state,
+        polling: false
+      }
+    case types.UNINSTALL_FAIL:
+      return {
+        ...state,
+        polling: false
       }
     default:
       return state;

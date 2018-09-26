@@ -43,6 +43,44 @@
   font-weight:400;
   font-size:16px;
 }
+.state_card {
+  background-color:rgba(#FFF,0.1)!important;
+  margin-bottom:10px;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+}
+.state_card_header {
+  border-radius:0!important;
+  background-color:#1d1d1d!important;
+}
+.state_card_list_group {
+  border:0!important;
+  border-radius:0!important;
+}
+.state_card_list_group_item {
+  border-radius:0!important;
+  padding:3!important;
+  margin-bottom:initial!important;
+  border:0!important;
+  background-color: rgba(#313131,1)!important;
+  font-size:12px!important;
+  position:relative;
+  &:after {
+    content:"";
+    bottom:0;
+    left:0;
+    right:0;
+    position:absolute;
+    height:1px;
+    width:100%;
+    background-color:rgba(#FFF,0.05);
+  }
+}
+.state_card_body {
+  padding:0!important;
+  background-color:rgba(#212121,1);
+}
 .subtext {
   font-weight:200;
 }
@@ -52,7 +90,7 @@
   position:absolute;
   top:25px;
   left:0;
-  width:200px;
+  width:50px;
 }
 .subsubtext {
   font-weight:200;
@@ -88,14 +126,17 @@
   @extend .connection;
   background-color:GREEN;
 }
-.state_list {
-  display:table;
-  width:100%;
-}
 .widget_list {
   display:block;
   // height:400px;
   // width:400px;
+}
+
+.state_list {
+  display:table;
+  width:100%;
+  padding:0;
+  margin:0;
 }
 .state_spinner {
   height: 100%;
@@ -106,9 +147,6 @@
   width:100%;
   height:100%;
 }
-.state_item {
-  display:table-row;
-}
 .state_loading_icon_wrap {
   width: 16px;
   height: 16px;
@@ -117,20 +155,28 @@
 }
 
 .state_label,.state_status {
-  display:table-cell;
+  flex:0 0 50%;
   white-space:nowrap;
-  border-bottom: 1px solid #555;
+  // border-bottom: 1px solid #555;
   vertical-align: middle;
   width:50%;
+  font-size:12px;
+  padding:0 15px;
+}
+.state_item {
+  display:flex;
 }
 .state_label {
   font-weight:200;
   text-align:right;
-  padding:3px 15px;
+  padding:0;
   color:#888;
+  flex:0 0 25%;
 }
 .state_status {
   /* color:#28a745; */
+
+  flex:0 0 75%;
 }
 .state_status_started {
   color:#28a745;

@@ -13,8 +13,9 @@ import { LineChart, PieChart } from 'react-chartkick'
 import Battery from './Widgets/Battery';
 import commands from '../../constants/commands.json';
 import StateList from './StateList';
+import LoadingOverlay from '../LoadingOverlay';
 import TaskDialog from '../TaskDialog';
-import { Row, Col, Card, CardBody, CardText, CardTitle, CardSubtitle } from 'reactstrap';
+import { Row, CardHeader, Col, Card, CardBody, CardText, CardTitle, CardSubtitle, ListGroup, ListGroupItem } from 'reactstrap';
 // import io from 'socket.io-client';
 const propTypes = {
   install: PropTypes.func,
@@ -31,10 +32,10 @@ const propTypes = {
   vehicleStartedAt: PropTypes.string,
   vehicleConnection: PropTypes.string,
   healthState: PropTypes.object,
-  thermalState: PropTypes.object,
-  serviceState: PropTypes.object,
-  gpsState: PropTypes.object,
-  network: PropTypes.string
+  thermal: PropTypes.object,
+  gpsLocation: PropTypes.object,
+  network: PropTypes.string,
+  currentStateKeys: PropTypes.array
 };
 
 class EonDetail extends Component {
@@ -84,7 +85,7 @@ class EonDetail extends Component {
     // }, 3000);
   }
   componentWillUnmount() {
-    clearTimeout(this.pollTimeout);
+    this.props.uninstall();
   }
 
   // handleInstall = () => {
@@ -93,8 +94,9 @@ class EonDetail extends Component {
   // }
   
   render() {
-    const { network, tmuxStartedAt, thermalState, serviceState, eon, selectedEon, healthState, sshConnectionError, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
+    const { network, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
     const vehicleConnectionInfo = vehicleConnectionStatuses[vehicleConnection];
+    // const { usbOnline } = thermal;
     if (network === 'disconnected' || eon == null) {
       console.warn("SSH CONNECTION ERROR!",sshConnectionError);
       return (<Redirect to={routes.EON_LIST} />)
@@ -103,76 +105,25 @@ class EonDetail extends Component {
     // if (!tmuxAttached) {
     //   return <LoadingIndicator className={styles.loading_overlay} />;
     // }
+    let stateBlocks;
+    if (!currentStateKeys.length) {
+      stateBlocks = <LoadingOverlay />
+    } else {
+      stateBlocks = currentStateKeys.map((key) => {
+        console.log(key);
+        const items = this.props[key];
+        return (<Card key={key} className={styles.state_card}>
+          <CardBody className={styles.state_card_body}>
+            <CardHeader className={styles.state_card_header}>{key}</CardHeader>
+            <StateList items={items} />
+          </CardBody>
+        </Card>)
+      });
+    }
     
     return (
-      <Layout hideLogo={true}>
-        <div className={styles.container + " container-fluid"}>
-          {eon && 
-            <Row>
-              <Col>
-                <div className={styles.eon_bar}>
-                  <h3 className={styles.title + " no-select"}>
-                    Connected to EON
-                  </h3>
-                  <h5 className={styles.subtext + " no-select"}>
-                    {this.props.eon.ip}
-                  </h5>
-                  <div className={styles.subsubtext + " no-select"}>
-                    {this.props.eon.mac}
-                  </div>
-                  {vehicleConnectionInfo &&
-                    <div className={styles.connection}>
-                      <span className={styles.connection_message}>{vehicleConnectionInfo.label}</span>
-                    </div>
-                  }
-                  {!vehicleConnectionInfo && !(thermalState.usbOnline === "true") && 
-                    <div className={styles.connection}>
-                      <span className={styles.connection_message}>Vehicle not connected.</span>
-                    </div>
-                  }
-                  {thermalState.usbOnline === "true" && 
-                    <div className={styles.connection_connected}>
-                      <span className={styles.connection_message}>Vehicle Connected</span>
-                    </div>
-                  }
-                  <Link className={styles.disconnect_button + " btn btn-outline-danger"} to={routes.EON_LIST}>
-                    Disconnect
-                  </Link>
-                </div>
-              </Col>
-            </Row>
-          }
-          
-          <Card className="bg-dark text-light">
-            <CardBody>
-              <CardTitle>Thermal</CardTitle>
-              <CardSubtitle></CardSubtitle>
-              <CardText>
-                <StateList items={thermalState} />
-              </CardText>
-            </CardBody>
-          </Card>
-
-          <Card className="bg-dark text-light">
-            <CardBody>
-              <CardTitle>Health</CardTitle>
-              <CardSubtitle></CardSubtitle>
-              <CardText>
-                <StateList items={healthState} />
-              </CardText>
-            </CardBody>
-          </Card>
-
-          <Card className="bg-dark text-light">
-            <CardBody>
-              <CardTitle>GPS</CardTitle>
-              <CardSubtitle></CardSubtitle>
-              <CardText>
-                <StateList items={gpsState} />
-              </CardText>
-            </CardBody>
-          </Card>
-        </div>
+      <Layout title={this.props.eon.ip} hideLogo={true}>
+        {stateBlocks}
       </Layout>
     );
   }

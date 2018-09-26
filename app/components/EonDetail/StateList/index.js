@@ -1,42 +1,57 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import LoadingIndicator from '../../LoadingIndicator';
-import styles from './Styles.scss';
+import styles from '../Styles.scss';
 import stateInfo from '../../../constants/state_details.json';
-
+import { ListGroup, ListGroupItem } from 'reactstrap';
 const propTypes = {
   items: PropTypes.string
 };
-
 class StateList extends Component {
   render() {
     const { items } = this.props;
-    const itemKeys = Object.keys(stateInfo).sort();
-
-    return (itemKeys.map((key) => {
-      let stateDetails = stateInfo[key];
-      let stateImg = stateInfo['iconImg'];
-      let stateIcon = stateInfo['iconClassName'];
+    const stateInfoKeys = Object.keys(stateInfo).sort();
+    const itemKeys = Object.keys(items).sort();
+    let itemBlocks = itemKeys.map((key) => {
+      let stateDetails, stateImg, stateIcon, stateStatus;
+      if (stateInfoKeys.includes(key)) {
+        stateDetails = stateInfo[key];
+        stateImg = stateInfo['iconImg'];
+        stateIcon = stateInfo['iconClassName'];
+        stateStatus = items[key];
+      } else {
+        stateDetails = {
+          "label": key,
+          "description": "State of " + key,
+          "iconImg": "",
+          "iconClassName": "fa fa-info"
+        };
+        stateImg = stateDetails['iconImg'];
+        stateIcon = stateDetails['iconClassName'];
+        stateStatus = items[key];
+      }
+      
       if (!items) {
         return;
       }
-      let stateStatus = items[key];
-
-      return (
-        <span key={key} className={styles.state_item}>
-          <span className={styles.state_label}><i className={stateIcon}></i> {stateDetails.label}</span>
-          {stateStatus &&
+      if (!stateStatus) {
+        return;
+      }
+      return (<ListGroupItem key={key} className={styles.state_card_list_group_item}>
+          <span key={key} className={styles.state_item}>
+            <span className={styles.state_label}>
+              <i className={stateIcon}></i> 
+              {stateDetails.label}
+            </span>
+            {stateStatus &&
             <span className={styles.state_status}>
               {stateStatus}
             </span>
-          }
-          {!stateStatus &&
-            <span className={styles.state_loading_icon_wrap}>
-            </span>
-          }
-        </span>
-      )
-    }));
+            }
+          </span>
+        </ListGroupItem>);
+    });
+    return (<ListGroup className={styles.state_card_list_group}>{itemBlocks}</ListGroup>);
   }
 }
 

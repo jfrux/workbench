@@ -9,7 +9,7 @@ import rootReducer from '../reducers';
 import rootSaga from '../sagas'
 import * as eonListActions from '../actions/eon_list_actions';
 import * as eonDetailActions from '../actions/eon_detail_actions';
-
+import persistConfig from './persist';
 
 //PERSISTED STORAGE
 import { createMigrate, persistReducer, persistStore } from 'redux-persist'
