@@ -171,7 +171,7 @@ def rest_server():
         http_server.serve_forever()
     except KeyboardInterrupt:
         pass
-    print 'Stopping HTTP server'
+    # print 'Stopping HTTP server'
     http_server.server_close()
 
 
