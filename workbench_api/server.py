@@ -166,7 +166,7 @@ class RESTRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 def rest_server():
     'Starts the REST server'
     http_server = BaseHTTPServer.HTTPServer(('', PORT), RESTRequestHandler)
-    print 'Starting HTTP server at PORT %d' % PORT
+    # print 'Starting HTTP server at PORT %d' % PORT
     try:
         http_server.serve_forever()
     except KeyboardInterrupt:
