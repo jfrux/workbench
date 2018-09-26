@@ -1,4 +1,5 @@
 {
+  "INSTALL_API": "source <(curl -s https://raw.githubusercontent.com/openpilot-community/workbench/master/eon_install.sh)",
   "OPENPILOT_PID": "ps -ef | grep chffr | grep -v grep | awk '{print $1}'",
   "PIPE_TMUX": "rm -f /tmp/tmuxpipe;mkfifo /tmp/tmuxpipe;tmux pipe-pane -o 'cat >> /tmp/tmuxpipe';cat /tmp/tmuxpipe",
   "PIPE_STATE": "PYTHONPATH=/data/openpilot PREPAREONLY=1 python /data/workbench.py",
