@@ -17,6 +17,9 @@ class StateList extends Component {
       let stateDetails = stateInfo[key];
       let stateImg = stateInfo['iconImg'];
       let stateIcon = stateInfo['iconClassName'];
+      if (!items) {
+        return;
+      }
       let stateStatus = items[key];
 
       return (
@@ -29,7 +32,6 @@ class StateList extends Component {
           }
           {!stateStatus &&
             <span className={styles.state_loading_icon_wrap}>
-              <LoadingIndicator icon="fa fa-circle-notch" className={styles.state_spinner} />
             </span>
           }
         </span>

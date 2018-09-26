@@ -44,15 +44,23 @@ class EonDetail extends Component {
       processesAndThermalsHeight: 0
     }
   }
+  createTimeout = () => {
+    this.pollTimeout = setTimeout(() => {
+      this.props.fetchEonState(this.props.eon);
+    },2000);
+  }
   componentDidMount() {
+    const { eon, install } = this.props;
     console.log("eon:",this.props.eon);
     // if (this.props.eon && this.props.pipeState) {
     //   this.props.pipeState();
     // }
-    if (this.props.eon && this.props.install) {
-      this.props.install();
+    if (eon && this.props.install) {
+      this.props.install(eon);
+
+      this.createTimeout();
     }
-    // if (this.props.eon) {
+    // if (eon) {
     //   const { eon } = this.props;
     //   const socketIoPath = `http://${eon.ip}:4000`;
     //   console.warn("Attempting to connect to: " + socketIoPath);
@@ -76,7 +84,7 @@ class EonDetail extends Component {
     // }, 3000);
   }
   componentWillUnmount() {
-    // this.props.closeTmux();
+    clearTimeout(this.pollTimeout);
   }
 
   // handleInstall = () => {
@@ -135,7 +143,7 @@ class EonDetail extends Component {
             </Row>
           }
           
-          <Card>
+          <Card className="bg-dark text-light">
             <CardBody>
               <CardTitle>Thermal</CardTitle>
               <CardSubtitle></CardSubtitle>
@@ -145,7 +153,7 @@ class EonDetail extends Component {
             </CardBody>
           </Card>
 
-          <Card>
+          <Card className="bg-dark text-light">
             <CardBody>
               <CardTitle>Health</CardTitle>
               <CardSubtitle></CardSubtitle>
@@ -155,7 +163,7 @@ class EonDetail extends Component {
             </CardBody>
           </Card>
 
-          <Card>
+          <Card className="bg-dark text-light">
             <CardBody>
               <CardTitle>GPS</CardTitle>
               <CardSubtitle></CardSubtitle>

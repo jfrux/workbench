@@ -210,11 +210,11 @@ export function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, s
       return app.sshClient.exec(command, commandArgs, {
         cwd: '/',
         onStdout(chunk) {
-          // console.warn("stdOut:",chunk.toString('utf8'));
+          console.warn("stdOut:",chunk.toString('utf8'));
           stdOut(chunk.toString('utf8'));
         },
         onStderr(chunk) {
-          // console.warn("stdErr:",chunk.toString('utf8'));
+          console.warn("stdErr:",chunk.toString('utf8'));
           stdErr(chunk.toString('utf8'));
         },
       });

@@ -78,7 +78,7 @@ class RESTRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         self.routes = {
             r'^/$': {'file': 'data/index.html', 'media_type': 'text/html'},
-            r'^/state$': {'file': 'data/state.json', 'media_type': 'application/json'}
+            r'^/state.json$': {'file': 'data/state.json', 'media_type': 'application/json'}
         }
         
         return BaseHTTPServer.BaseHTTPRequestHandler.__init__(self, *args, **kwargs)
