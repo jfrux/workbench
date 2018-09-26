@@ -9,6 +9,7 @@ const initialState = {
   vehicleConnection: null,
   service: null,
   health: null,
+  fingerprint: null,
   thermal: null,
   currentStateKeys: []
 };
@@ -22,7 +23,6 @@ export default function eonDetailReducer(state = initialState, action) {
         tmuxLog: []
       }
     case types.EON_STATE_RESPONSE:
-    console.warn()
       return {
         ...state,
         ...action.payload,
@@ -40,6 +40,7 @@ export default function eonDetailReducer(state = initialState, action) {
         service: null,
         health: null,
         thermal: null,
+        fingerprint: null,
         tmuxError: action.payload.error,
         tmuxLog: []
       }
@@ -52,29 +53,9 @@ export default function eonDetailReducer(state = initialState, action) {
         tmuxLog: [],
         service: null,
         health: null,
+        fingerprint: null,
         thermal: null,
         currentStateKeys: []
-      }
-
-    case types.FETCH_PID:
-      return {
-        ...state,
-        fetchingPid: true,
-        pid: null
-      }
-    case types.FETCH_PID_SUCCESS:
-      return {
-        ...state,
-        pid: action.payload.pid,
-        pidError: null,
-        fetchingPid: false
-      }
-    case types.FETCH_PID_FAIL:
-      return {
-        ...state,
-        pid: null,
-        pidError: action.payload.error,
-        fetchingPid: false
       }
     case types.INSTALL:
       return {
