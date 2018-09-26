@@ -7,5 +7,5 @@ mv ./workbench_api ./workbench
 chmod +x /data/workbench/launch.sh
 chmod +x /data/workbench/workbenchd.py
 
-tmux kill-session -t "workbench"
+tmux kill-session -t "workbench" || echo "tmux session does not exist yet"
 tmux new-session -d -s "workbench" /data/workbench/launch.sh
