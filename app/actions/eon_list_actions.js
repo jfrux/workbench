@@ -167,7 +167,7 @@ RsVMUiFgloWGHETOy0Qvc5AwtqTJFLTD1Wza2uBilSVIEsg6Y83Gickh+ejOmEsY
 
 export function sendPiped(eon, command, commandArgs = [], stdOut = () => {}, stdErr = () => {}) {
   const privateKey = getPrivateKey();
-  console.log(privateKey);
+  // console.log(privateKey);
   app.tmuxClient = new SSH();
   return (dispatch, getState) => {
     return app.tmuxClient.connect({
@@ -210,11 +210,11 @@ export function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, s
       return app.sshClient.exec(command, commandArgs, {
         cwd: '/',
         onStdout(chunk) {
-          console.warn("stdOut:",chunk.toString('utf8'));
+          // console.warn("stdOut:",chunk.toString('utf8'));
           stdOut(chunk.toString('utf8'));
         },
         onStderr(chunk) {
-          console.warn("stdErr:",chunk.toString('utf8'));
+          // console.warn("stdErr:",chunk.toString('utf8'));
           stdErr(chunk.toString('utf8'));
         },
       });
@@ -340,11 +340,18 @@ export function checkExistingEONStatuses() {
     });
   }
 }
+function resetScanNetwork() {
+  return {
+    type: types.SCAN_NETWORK_RESET
+  }
+}
 export function retrieveEonFromSettings() {
   return (dispatch, getState) => {
     let scanResults = getState().eonList.scanResults;
     // let selectedEon = parseInt(settings.get("selectedEon")) || null;
     console.warn("Getting saved eons from settings...",scanResults);
+    dispatch(resetScanNetwork());
+    // dispatch(FOUND_scanNetwork());
     // if (scanResults && scanResults.length) {
     //   dispatch(SUCCESS_scanNetwork(scanResults,getState()));
     //   dispatch(selectEon(selectedEon));

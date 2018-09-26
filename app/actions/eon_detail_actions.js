@@ -1,5 +1,6 @@
 import settings from 'electron-settings';
 const app = require('electron').remote.app
+const path = require("path");
 import * as types from '../constants/eon_detail_action_types'
 import * as eonListActions from './eon_list_actions';
 import * as commands from '../constants/commands.json';
@@ -73,7 +74,18 @@ const limitedLogArray = function(length) {
   }
   return array;
 }
-
+function testJSON(text){
+  if (typeof text!=="string"){
+      return false;
+  }
+  try{
+      JSON.parse(text);
+      return true;
+  }
+  catch (error){
+      return false;
+  }
+}
 export function RESPONSE_tmuxPipe(lines, state) {
   const { eonDetail } = state;
   const { tmuxLogLimit, tmuxLog, tmuxStartedAt } = eonDetail;
@@ -81,47 +93,22 @@ export function RESPONSE_tmuxPipe(lines, state) {
   let regexKeys;
   let payload = {};
   let m;
+  let jsonLines = lines.split('\n');
+  jsonLines.forEach((line) => {
+    if (testJSON(line)) {
+      // console.log(line + '\n');
+      let jsonResp = JSON.parse(line);
+      console.warn("Received: ", Object.keys(jsonResp)[0]);
+      payload = {
+        ...payload,
+        ...jsonResp
+      }
+    }
+  })
+
   if (!tmuxStartedAt) {
     payload.tmuxStartedAt = new Date();
   }
-
-  tmuxLog.forEach((item) => {
-    newArray.push(item.trim());
-  });
-
-  regexKeys = Object.keys(regex);
-  regexKeys.forEach((key) => {
-    switch (key) {
-      case "THERMAL":
-        while ((m = regex[key].exec(lines)) !== null) {
-          if (m.index === regex.lastIndex) {
-            regex.lastIndex++;
-          }
-          let mKey = m[1];
-
-          if (mKey.startsWith('battery'))
-          payload[mKey] = m[2].replace(/\"/g,'');
-        }
-        break;
-      case "PROCESS":
-        while ((m = regex[key].exec(lines)) !== null) {
-          if (m.index === regex.lastIndex) {
-            regex.lastIndex++;
-          }
-          payload[m[1]] = m[3].replace(/\"/g,'');
-        }
-        break;
-      case "VEHICLE_CONNECTION":
-        if ((m = regex[key].exec(lines)) !== null) {
-          payload.vehicleConnection = m[0];
-        }
-        break;
-    }
-  });
-  newArray.push(lines);
-  
-  payload.tmuxLog = newArray;
-
   return {
     type: types.TMUX_PIPE_RESPONSE,
     payload
@@ -159,6 +146,22 @@ export function pipeTmux() {
   }
 }
 
+export function pipeState() {
+  return (dispatch, getState) => {
+    const { selectedEon, scanResults } = getState().eonList;
+    const eon = scanResults[selectedEon];
+    console.warn("pipeState to:",eon);
+    if (eon) {
+      dispatch(OPEN_tmuxPipe());
+      dispatch(eonListActions.sendCommand(eon, commands.PIPE_STATE, [], (resp) => {
+        dispatch(RESPONSE_tmuxPipe(resp,getState()));
+      }, (err) => {
+        // dispatch(FAIL_tmuxPipe(err));
+        console.warn("err:",err);
+      }));
+    }
+  }
+}
 export function closeTmux() {
   return (dispatch, getState) => {
     if (app && app.tmuxClient) {
@@ -208,22 +211,15 @@ export function getOpenpilotPid() {
 
 export function install() {
   return (dispatch, getState) => {
+    const privateKey = eonListActions.getPrivateKey();
+    console.warn("Starting Api install...");
+    app.installClient = new SSH();
     // dispatch(BEGIN_install());
-    eonListActions.sendCommand(getState())
-
-    console.warn("Starting install...");
-    // ssh.exec('echo "Node.js"', {
-    //     out: console.log.bind(console)
-    // })
-    // .exec('echo "is"', {
-    //     out: console.log.bind(console)
-    // })
-    // .exec('echo "awesome!"', {
-    //     out: console.log.bind(console)
-    // })
-    // .start();
-    // return new Promise((resolve,reject) => {
-      
-    // });
+    app.installClient.putFile(path.join(app.getAppPath(),'workbench.zip'), '/data').then(function() {
+      console.log("Workbench API Zip file sent to EON.")
+    }, function(error) {
+      console.log("ERROR WHILE sending Workbench API Zip file sent to EON.")
+      console.log(error)
+    })
   };
 }

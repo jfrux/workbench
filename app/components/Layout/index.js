@@ -12,9 +12,9 @@ class Layout extends React.PureComponent {
   handleOpenOPC() {
     shell.openExternal('https://opc.ai/');
   }
-  componentDidMount() {
-    this.props.retrieveEonFromSettings();
-  }
+  // componentDidMount() {
+  //   // this.props.retrieveEonFromSettings();
+  // }
   render() {
     const { backBtn, hideLogo, selectedEon } = this.props;
     return (
@@ -22,7 +22,7 @@ class Layout extends React.PureComponent {
         <div className={styles.header + " no-select"}>
         {!hideLogo && 
           <div className={styles.brand}>
-            {process.env.NODE_ENV !== "development" && <Logo />}
+           
           </div>
         }
         </div>

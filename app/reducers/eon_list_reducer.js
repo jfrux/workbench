@@ -3,8 +3,8 @@ import * as types from '../constants/eon_list_action_types'
 import settings from 'electron-settings';
 
 const initialState = {
-  scanError: null,
   scanResults: [],
+  scanError: null,
   scanning: false,
   selectedEon: null,
   status: "not_scanned",
@@ -85,6 +85,21 @@ export default function eonListReducer(state = initialState, action) {
         scanning: true,
         sshConnectionStatus: "not_connected",
         sshConnectionError: null,
+        progress: 0
+      };
+    case types.SCAN_NETWORK_RESET:
+      return {
+        ...state,
+        scanError: null,
+        scanning: false,
+        selectedEon: null,
+        status: "not_scanned",
+        sshConnectionStatus: "not_connected",
+        sshConnectionError: null,
+        sshCurrentCommand: null,
+        sshLog: [],
+        sshCommandErrors: null,
+        sshCommandStatus: "idle",
         progress: 0
       };
     case types.CHECK_EON_STATUS:

@@ -1,4 +1,9 @@
 {
+  "selected_eon": {
+    "title": "Select an EON",
+    "subtext": "There are existing devices from previous scans below.",
+    "subsubtext": "Scan again to discover newly connected EON."
+  },
   "not_selected": {
     "title": "Select an EON",
     "subtext": "There are existing devices from previous scans below.",

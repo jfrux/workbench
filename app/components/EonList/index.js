@@ -90,10 +90,10 @@ class EonList extends Component {
     if (sshConnectionStatus === "not_connected") {
       sshConnectionMessage = null;
     }
-    if (selectedEon !== null) {
-      // console.warn("SSH CONNECTION ERROR!",sshConnectionError);
-      return (<Redirect to={routes.EON_DETAIL} />); 
-    }
+    // if (selectedEon !== null) {
+    //   // console.warn("SSH CONNECTION ERROR!",sshConnectionError);
+    //   return (<Redirect to={routes.EON_DETAIL} />); 
+    // }
     if (network === 'disconnected') {
       return <NoConnection />
     }
@@ -101,14 +101,16 @@ class EonList extends Component {
     return (
       <Layout>
         <Container fluid={true}>
-          <h3 className={styles.title + " no-select"}>
-            {statusMessage.title}
-          </h3>
-          
-          <h5 className={styles.subtext + " no-select" + " " + styles[status]}>
-            {statusMessage.subtext.replace("%scanResultsLength%",scanResults.length)}
-          </h5>
-
+          {statusMessage &&
+            <div>
+              <h3 className={styles.title + " no-select"}>
+                {statusMessage.title}
+              </h3>
+              
+              <h5 className={styles.subtext + " no-select" + " " + styles[status]}>
+                {statusMessage.subtext.replace("%scanResultsLength%",scanResults.length)}
+              </h5>
+            
           {sshConnectionMessage && 
             <div className={styles.ssh_message}>
               <span className={styles.ssh_connection_title}>{sshConnectionMessage.title}</span>
@@ -121,23 +123,35 @@ class EonList extends Component {
               {statusMessage.subsubtext}
             </div>
           }
+          </div>
+          }
+          {!scanning && 
           <button className={styles.scan_button + " mt-2 btn btn-dark"} onClick={this.handleScanNetwork} type="button"><i className="fa fa-sync"></i></button>
-         
-          
-          <ListGroup className={"mt-3"}>
-            {scanResults.map((item,index) => {
-              // const isSameNetwork = networkMethods.isSameNetwork(networkIp,item.ip);
-              return (<ListGroupItem key={index} onClick={() => { this.handleSelectEon(index)}} className={styles.results_button + " bg-dark text-light"} tag="button">
-                  <span className={styles.eon_icon}><Eon width="100%" height="100%" /></span>
+          }
+          {scanResults && 
+            <ListGroup className={"mt-3"}>
+              {scanResults.map((item,index) => {
+                // const isSameNetwork = networkMethods.isSameNetwork(networkIp,item.ip);
+                return (<ListGroupItem key={index} onClick={() => { this.handleSelectEon(index)}} className={styles.results_button + " bg-dark text-light"} tag="button">
+                    <span className={styles.eon_icon}><Eon width="100%" height="100%" /></span>
+                    <span className={styles.results_details}>
+                      <span className={styles.results_button_ip}>{item.ip}</span>
+                      <span className={styles.results_button_mac}>{item.mac}</span>
+                    </span>
+                    <span className={styles.results_button_selected}><i className="fa fa-chevron-right"></i></span>
+                  </ListGroupItem>)
+              })}
+            </ListGroup>
+          }
+          {!scanning && scanResults.length === 0 && 
+            <ListGroup className={"mt-3"}>
+                <ListGroupItem onClick={() => { this.handleScanNetwork()}} className={styles.new_scan_button + " bg-primary text-light"} tag="button">
                   <span className={styles.results_details}>
-                    <span className={styles.results_button_ip}>{item.ip}</span>
-                    <span className={styles.results_button_mac}>{item.mac}</span>
+                    Begin Scan
                   </span>
-                  <span className={styles.results_button_selected}><i className="fa fa-chevron-right"></i></span>
-                </ListGroupItem>)
-            })}
-          </ListGroup>
-
+                </ListGroupItem>
+            </ListGroup>
+          }
           {scanning &&
             <div className={styles.loader_wrap}>
               <div className={styles.loading_overlay}>

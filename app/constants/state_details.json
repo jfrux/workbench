@@ -1,4 +1,94 @@
 {
+  "updated": {
+    "label": "Updater",
+    "description": "An openpilot process...",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "logcatd": {
+    "label": "Logcat",
+    "description": "An openpilot process...",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "pandad": {
+    "label": "Panda",
+    "description": "An openpilot process...",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "thermald": {
+    "label": "Thermal",
+    "description": "An openpilot process...",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "ui": {
+    "label": "UI",
+    "description": "An openpilot process...",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "uploader": {
+    "label": "Upload",
+    "description": "An openpilot process...",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "calibrationd": {
+    "label": "Calibration",
+    "description": "Calibration service...",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "tombstoned": {
+    "label": "Tombstone",
+    "description": "An openpilot process...",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "logmessaged": {
+    "label": "LogMessage",
+    "description": "An openpilot process...",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "controlsd": {
+    "label": "Controls",
+    "description": "This process is responsible for interfacing with the vehicle.",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "visiond": {
+    "label": "Vision",
+    "description": "The Comma.ai Vision System is responsible for interpreting the camera image and sending commands openpilot needs to make vehicle maneuvering decisions.",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "gpsd": {
+    "label": "GPS",
+    "description": "Service worker for the GPS",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "sensord": {
+    "label": "Sensor",
+    "description": "Service worker for the SensorD",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "orbd": {
+    "label": "Orb",
+    "description": "Service worker for the OrbD",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "ubloxd": {
+    "label": "ubloxd",
+    "description": "Service worker for the ubloxd",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
   "logMonoTime": {
     "label": "Log Mono Time",
     "description": "Stat for logMonoTime",

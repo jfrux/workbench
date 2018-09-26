@@ -9,6 +9,7 @@ import LoadingOverlay from '../components/LoadingOverlay'
 export default class Root extends Component {
   render() {
     const { store, history, persistor } = this.props;
+    // persistor.purgeAll()
     return (
       <Provider store={store}>
         <PersistGate loading={<LoadingOverlay />} persistor={persistor} history={history}>
