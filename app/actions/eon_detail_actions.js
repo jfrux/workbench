@@ -56,11 +56,6 @@ export function FAIL_uninstall(err) {
   };
 }
 
-export function OPEN_REQUEST_EON_STATE() {
-  return {
-    type: types.EON_STATE
-  };
-}
 
 const limitedLogArray = function(length) {
   var array = new Array();
@@ -84,13 +79,18 @@ function testJSON(text){
       return false;
   }
 }
+
+export function OPEN_REQUEST_EON_STATE() {
+  return {
+    type: types.EON_STATE
+  };
+}
 export function RESPONSE_REQUEST_EON_STATE(eonState, state) {
   return {
     type: types.EON_STATE_RESPONSE,
     payload: eonState
   };
 }
-
 export function FAIL_REQUEST_EON_STATE(error) {
   return {
     type: types.EON_STATE_FAIL,
@@ -99,10 +99,34 @@ export function FAIL_REQUEST_EON_STATE(error) {
     }
   };
 }
-
 export function CLOSE_REQUEST_EON_STATE() {
   return {
     type: types.EON_STATE_CLOSE
+  };
+}
+
+export function GET_FINGERPRINT() {
+  return {
+    type: types.GET_FINGERPRINT
+  };
+}
+export function RESPONSE_GET_FINGERPRINT(eonState, state) {
+  return {
+    type: types.GET_FINGERPRINT_RESPONSE,
+    payload: eonState
+  };
+}
+export function FAIL_GET_FINGERPRINT(error) {
+  return {
+    type: types.GET_FINGERPRINT_FAIL,
+    payload: {
+      error
+    }
+  };
+}
+export function CLOSE_GET_FINGERPRINT() {
+  return {
+    type: types.GET_FINGERPRINT_CLOSE
   };
 }
 
@@ -166,6 +190,31 @@ export function CLOSE_REQUEST_EON_STATE() {
 //   }
 // }
 
+export function fetchFingerprint() {
+  return (dispatch, getState) => {
+    const { selectedEon, scanResults } = getState().eonList;
+    const eon = scanResults[selectedEon];
+    const { polling } = getState().eonDetail
+    setTimeout(() => {
+      fetch(`http://${eon.ip}:8080/fingerprint.json`)
+        .then(res => {
+          return res.json()
+        })
+        .then(json => {
+          dispatch(RESPONSE_GET_FINGERPRINT(json, getState()));
+          if (polling) {
+            dispatch(fetchFingerprint());
+          }
+        }).catch((err) => {
+          dispatch(FAIL_GET_FINGERPRINT(err))
+          if (polling) {
+            dispatch(fetchFingerprint());
+          }
+        });
+    },2000)
+  }
+}
+
 export function fetchEonState() {
   return (dispatch, getState) => {
     const { selectedEon, scanResults } = getState().eonList;
@@ -202,9 +251,8 @@ export function install() {
 
       app.sshClient.dispose();
       dispatch(SUCCESS_install());
-      setTimeout(() => {
-        dispatch(fetchEonState(eon));
-      },2500)
+      dispatch(fetchEonState());
+      dispatch(fetchFingerprint());
       
       console.warn("API Now Running on EON");
     }, (err) => {

@@ -52,7 +52,7 @@
 }
 .state_card_header {
   border-radius:0!important;
-  background-color:#1d1d1d!important;
+  background-color:darken(#03111C,1)!important;
 }
 .state_card_list_group {
   border:0!important;
@@ -63,7 +63,7 @@
   padding:3!important;
   margin-bottom:initial!important;
   border:0!important;
-  background-color: rgba(#313131,1)!important;
+  background-color: darken(#03111C,3)!important;
   font-size:12px!important;
   position:relative;
   &:after {
@@ -79,7 +79,7 @@
 }
 .state_card_body {
   padding:0!important;
-  background-color:rgba(#212121,1);
+  background-color:darken(#03111C,5);
 }
 .subtext {
   font-weight:200;
@@ -171,12 +171,12 @@
   text-align:right;
   padding:0;
   color:#888;
-  flex:0 0 25%;
+  flex:0 0 30%;
 }
 .state_status {
   /* color:#28a745; */
 
-  flex:0 0 75%;
+  flex:0 0 70%;
 }
 .state_status_started {
   color:#28a745;

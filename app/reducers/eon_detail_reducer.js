@@ -16,6 +16,27 @@ const initialState = {
 
 export default function eonDetailReducer(state = initialState, action) {
   switch (action.type) {
+    case types.GET_FINGERPRINT:
+      return {
+        ...state
+      }
+    case types.GET_FINGERPRINT_RESPONSE:
+      return {
+        ...state,
+        fingerprint: action.payload
+      }
+
+    case types.GET_FINGERPRINT_FAIL:
+      return {
+        ...state,
+        fingerprint: null
+      }
+    
+    case types.GET_FINGERPRINT_CLOSE:
+      return {
+        ...state,
+        fingerprint: null
+      }
     case types.EON_STATE:
       return {
         ...state,
@@ -40,7 +61,6 @@ export default function eonDetailReducer(state = initialState, action) {
         service: null,
         health: null,
         thermal: null,
-        fingerprint: null,
         tmuxError: action.payload.error,
         tmuxLog: []
       }
@@ -53,7 +73,6 @@ export default function eonDetailReducer(state = initialState, action) {
         tmuxLog: [],
         service: null,
         health: null,
-        fingerprint: null,
         thermal: null,
         currentStateKeys: []
       }

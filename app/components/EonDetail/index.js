@@ -29,6 +29,7 @@ const propTypes = {
   thermal: PropTypes.object,
   gpsLocation: PropTypes.object,
   network: PropTypes.string,
+  fingerprint: PropTypes.any,
   currentStateKeys: PropTypes.array
 };
 
@@ -88,12 +89,15 @@ class EonDetail extends Component {
   // }
   
   render() {
-    const { network, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
+    const { network, fingerprint, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
     const vehicleConnectionInfo = vehicleConnectionStatuses[vehicleConnection];
     // const { usbOnline } = thermal;
     if (network === 'disconnected' || eon == null) {
       // console.warn("SSH CONNECTION ERROR!",sshConnectionError);
       return (<Redirect to={routes.EON_LIST} />)
+    }
+    if (fingerprint) {
+      currentStateKeys.push('fingerprint');
     }
     // if (!tmuxAttached) {
     //   return <LoadingIndicator className={styles.loading_overlay} />;

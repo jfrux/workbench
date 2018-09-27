@@ -53,19 +53,19 @@ class Layout extends React.PureComponent {
 
         <div className={styles.left_bar}>
           <Nav className={"mt-5"}>
-            <NavItem>
-              <NavLink className={"text-light"} onClick={this.handleScanNetwork}><i className={"fa fa-sync" + (scanning ? " fa-spin" : "")}></i></NavLink>
+            <NavItem className={styles.nav_item}>
+              <NavLink className={styles.nav_link} onClick={this.handleScanNetwork}><i className={"fa fa-sync" + (scanning ? " fa-spin" : "")}></i></NavLink>
             </NavItem>
-            <NavItem>
-              <NavLink tag={Link} to={routes.EON_LIST} className={"text-light"}><i className="fas fa-list"></i></NavLink>
+            <NavItem className={styles.nav_item}>
+              <NavLink tag={Link} to={routes.EON_LIST} className={styles.nav_link}><i className="fas fa-list"></i></NavLink>
             </NavItem>
           </Nav>
           <Nav className={styles.bottom_nav}>
-            <NavItem>
-              <NavLink className={"text-light"} onClick={() => this.handleOpenUrl("https://comma.ai/")}><Comma style={{height: 18, width: 18 }} /></NavLink>
+            <NavItem className={styles.nav_item}>
+              <NavLink className={styles.nav_link} onClick={() => this.handleOpenUrl("https://comma.ai/")}><Comma style={{height: 18, width: 18 }} /></NavLink>
             </NavItem>
-            <NavItem>
-              <NavLink className={"text-light"} onClick={() => this.handleOpenUrl("https://github.com/openpilot-community/workbench")}><i className="fab fa-github"></i></NavLink>
+            <NavItem className={styles.nav_item}>
+              <NavLink className={styles.nav_link} onClick={() => this.handleOpenUrl("https://github.com/openpilot-community/workbench")}><i className="fab fa-github"></i></NavLink>
             </NavItem>
           </Nav>
         </div>

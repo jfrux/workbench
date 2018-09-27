@@ -161,8 +161,7 @@ body {
   position: relative;
   color: white;
   height: 100vh;
-  background-color: #232c39;
-  background-image: linear-gradient(45deg, rgba(0,0,0, 0.5) 10%, rgba(0,0,0, 1));
+  background-color:#000;
   /* font-family: Arial, Helvetica, Helvetica Neue, serif; */
   overflow-y: hidden;
   

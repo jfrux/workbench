@@ -125,9 +125,94 @@
     "iconImg": "",
     "iconClassName": "fa fa-info"
   },
+  "accuracy": {
+    "label": "Accuracy",
+    "description": "Stat for mem",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "altitude": {
+    "label": "Altitude",
+    "description": "Stat for Altitude",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "flags": {
+    "label": "Flags",
+    "description": "Stat for Flags",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "latitude": {
+    "label": "Latitude",
+    "description": "Stat for Latitude",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "longitude": {
+    "label": "Longitude",
+    "description": "Stat for Longitude",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "source": {
+    "label": "GPS Source",
+    "description": "Stat for GPS Source",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "timestamp": {
+    "label": "GPS Timestamp",
+    "description": "Stat for GPS Timestamp",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "current": {
+    "label": "Current",
+    "description": "Stat for Current",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "voltage": {
+    "label": "Voltage",
+    "description": "Stat for Voltage",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "startedSignalDetected": {
+    "label": "Started Signal Detected",
+    "description": "Stat for Started Signal Detected",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "controlsAllowed": {
+    "label": "Controls Allowed",
+    "description": "Stat for Controls Allowed",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
   "gpu": {
     "label": "GPU",
     "description": "Stat for gpu",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+
+  "isGreyPanda": {
+    "label": "Grey Panda",
+    "description": "Detecting Grey Panda",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "chargerDisabled": {
+    "label": "Charger Disabled",
+    "description": "Charger Disabled",
+    "iconImg": "",
+    "iconClassName": "fa fa-info"
+  },
+  "gasInterceptorDetected": {
+    "label": "Gas Pedal Interceptor",
+    "description": "Detecting Gas Pedal Interceptor",
     "iconImg": "",
     "iconClassName": "fa fa-info"
   },
