@@ -110,10 +110,11 @@ export function GET_FINGERPRINT() {
     type: types.GET_FINGERPRINT
   };
 }
-export function RESPONSE_GET_FINGERPRINT(eonState, state) {
+export function RESPONSE_GET_FINGERPRINT(fingerprint, state) {
+  console.warn("fingerprint",fingerprint);
   return {
     type: types.GET_FINGERPRINT_RESPONSE,
-    payload: eonState
+    payload: fingerprint
   };
 }
 export function FAIL_GET_FINGERPRINT(error) {
