@@ -20,14 +20,8 @@ import { Row, CardHeader, Col, Card, CardBody, CardText, CardTitle, CardSubtitle
 const propTypes = {
   install: PropTypes.func,
   eon: PropTypes.object,
-  pid: PropTypes.string,
-  fetchingPid: PropTypes.bool,
   sshConnectionError: PropTypes.object,
   sshConnectionStatus: PropTypes.string,
-  tmuxError: PropTypes.string,
-  tmuxAttached: PropTypes.bool,
-  tmuxLog: PropTypes.array,
-  tmuxStartedAt: PropTypes.any,
   vehicleStarted: PropTypes.string,
   vehicleStartedAt: PropTypes.string,
   vehicleConnection: PropTypes.string,
@@ -85,7 +79,7 @@ class EonDetail extends Component {
     // }, 3000);
   }
   componentWillUnmount() {
-    this.props.uninstall();
+    // this.props.uninstall();
   }
 
   // handleInstall = () => {

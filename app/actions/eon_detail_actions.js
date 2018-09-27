@@ -56,30 +56,6 @@ export function FAIL_uninstall(err) {
   };
 }
 
-export function BEGIN_fetchPid() {
-  return {
-    type: types.FETCH_PID
-  };
-}
-
-export function SUCCESS_fetchPid(results) {
-  return {
-    type: types.FETCH_PID_SUCCESS,
-    payload: {
-      pid: results
-    }
-  };
-}
-
-export function FAIL_fetchPid(error) {
-  return {
-    type: types.FETCH_PID_FAIL,
-    payload: {
-      error
-    }
-  };
-}
-
 export function OPEN_REQUEST_EON_STATE() {
   return {
     type: types.EON_STATE
@@ -171,27 +147,29 @@ export function CLOSE_REQUEST_EON_STATE() {
 //     dispatch(CLOSE_REQUEST_EON_STATE());
 //   }
 // }
-export function installFork(fork) {
-  return (dispatch, getState) => {
-    dispatch(BEGIN_fetchPid());
-    eonListActions.sendCommand(selectedEon, commands.OPENPILOT_PID).then((result) => {
-      const pid = result.stdout.split('\n')[0].trim();
+// export function installFork(fork) {
+//   return (dispatch, getState) => {
+//     dispatch(BEGIN_fetchPid());
+//     eonListActions.sendCommand(selectedEon, commands.OPENPILOT_PID).then((result) => {
+//       const pid = result.stdout.split('\n')[0].trim();
       
-      if (result.stderr) {
-        dispatch(FAIL_fetchPid(result.stderr));
-      } else {
-        if (pid && pid.length) {
-          dispatch(SUCCESS_fetchPid(pid));
-        } else {
-          dispatch(FAIL_fetchPid("Openpilot is not running, or too many processes were returned."));
-        }
-      }
-    });
-  }
-}
+//       if (result.stderr) {
+//         dispatch(FAIL_fetchPid(result.stderr));
+//       } else {
+//         if (pid && pid.length) {
+//           dispatch(SUCCESS_fetchPid(pid));
+//         } else {
+//           dispatch(FAIL_fetchPid("Openpilot is not running, or too many processes were returned."));
+//         }
+//       }
+//     });
+//   }
+// }
 
-export function fetchEonState(eon) {
+export function fetchEonState() {
   return (dispatch, getState) => {
+    const { selectedEon, scanResults } = getState().eonList;
+    const eon = scanResults[selectedEon];
     const { polling } = getState().eonDetail
     setTimeout(() => {
       fetch(`http://${eon.ip}:8080/state.json`)
@@ -240,6 +218,8 @@ export function install() {
 export function uninstall() {
   return (dispatch, getState) => {
     const { selectedEon, scanResults } = getState().eonList;
+    console.warn("scanResults:",scanResults);
+    console.warn("selectedEon:",selectedEon);
     const eon = scanResults[selectedEon];
     console.warn("Starting Api UNINSTALL...");
     dispatch(BEGIN_uninstall());
