@@ -13,6 +13,12 @@ Available for
 - Mac
 - Ubuntu / Debian
 
+## Coming soon (hopefully)
+
+- [ ] Checking if Panda is flashed
+- [ ] Output if Vehicle Detected by Fingerprint
+- [ ] A general "health" check view to make it easier to know if things are okay.
+
 ## Roadmap / Ideas
 
 - [x] Proof of concept
