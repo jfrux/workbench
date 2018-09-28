@@ -1,17 +1,25 @@
-<div align="center">
-<img src="https://slack-imgs.com/?c=1&url=https%3A%2F%2Fmedia.giphy.com%2Fmedia%2FpOFUyfk12E6GjqFOMa%2Fgiphy.gif" />
-</div>
 
-## How to install
+# [Workbench](https://opc.ai/workbench)
+<!-- [![Travis](https://img.shields.io/travis/openpilot-community/workbench.svg?style=flat-square&label=Travis+CI)](https://travis-ci.org/openpilot-community/workbench)
+[![CircleCI](https://img.shields.io/circleci/project/openpilot-community/workbench/desktop.svg?style=flat-square&label=CircleCI)](https://circleci.com/gh/openpilot-community/workbench)
+![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/ow6duui01jcsag3l?svg=true) -->
+[![license](https://img.shields.io/github/license/openpilot-community/workbench.svg)](https://github.com/openpilot-community/workbench/blob/master/LICENSE)
 
-Grab the latest release from the Releases screen:
-https://github.com/openpilot-community/workbench/releases
 
-Available for
+Workbench is a desktop application to help you manage your Comma EON(s) as well as assisting with installing Openpilot.
+It also has a goal of providing easier porting of new vehicles.
 
-- Windows
-- Mac
-- Ubuntu / Debian
+> It's in its infancy so it doesn't actually fulfill that mission above quite yet but it's getting better by the day.
+
+## Usage
+
+Download the latest version from the links below.
+- [Windows](https://github.com/openpilot-community/workbench/releases/latest)
+- [Mac OS](https://github.com/openpilot-community/workbench/releases/latest)
+- [Ubuntu / Debian](https://github.com/openpilot-community/workbench/releases/latest)
+
+### Usage
+> IMPORTANT: Workbench manages your EON over SSH.  You must enable SSH in your Settings on EON.
 
 # Features
 
