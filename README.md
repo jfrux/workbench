@@ -13,20 +13,20 @@ Available for
 - Mac
 - Ubuntu / Debian
 
-## Roadmap
+## Roadmap / Ideas
 
 - [x] Proof of concept
-  - [x] Can connect to EON
-  - [x] Can display basic tmux data
-  - [x] Can scan network for EON
-- [ ] Pull in thermal details to EON screen.
-- [ ] Add first tool, get fingerprint.
+- [x] Can connect to EON
+- [x] Can display basic tmux data
+- [x] Can scan network for EON
+- [x] Pull in thermal details to EON screen.
+- [x] Add first tool, get fingerprint.
 - [ ] Add addl tools as we see fit...
-  - [ ] Install a fork of Openpilot from a git url
-  - [ ] Reinstall Comma Openpilot Release2
-  - [ ] Backup videos
-  - [ ] Review videos
-  - [ ] Monitor uploads
+- [ ] Install a fork of Openpilot from a git url
+- [ ] Reinstall Comma Openpilot Release2
+- [ ] Backup videos
+- [ ] Review videos
+- [ ] Monitor uploads
 
 ## Contributing
 
