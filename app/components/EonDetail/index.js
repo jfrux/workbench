@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-const app = require('electron').remote.app
+const app = require('electron').remote.app;
 import Textarea from 'react-textarea-autosize';
 import { Redirect } from 'react-router';
 import routes from '../../constants/routes.json';
@@ -10,7 +10,7 @@ import vehicleConnectionStatuses from '../../constants/vehicle_connection_status
 import Layout from '../Layout';
 import LoadingIndicator from '../LoadingIndicator';
 // import ConnectedTime from './ConnectedTime';
-import { LineChart, PieChart } from 'react-chartkick'
+import { LineChart, PieChart } from 'react-chartkick';
 import Battery from './Widgets/Battery';
 import commands from '../../constants/commands.json';
 import StateList from './StateList';
@@ -40,7 +40,7 @@ class EonDetail extends Component {
     super(props);
     this.state = {
       processesAndThermalsHeight: 0
-    }
+    };
   }
   createTimeout = () => {
     this.pollTimeout = setTimeout(() => {
@@ -96,7 +96,7 @@ class EonDetail extends Component {
     // const { usbOnline } = thermal;
     if (network === 'disconnected' || eon == null) {
       // console.warn("SSH CONNECTION ERROR!",sshConnectionError);
-      return (<Redirect to={routes.EON_LIST} />)
+      return (<Redirect to={routes.EON_LIST} />);
     }
     if (fingerprint) {
       currentStateKeys.push('fingerprint');
@@ -106,7 +106,7 @@ class EonDetail extends Component {
     // }
     let stateBlocks;
     if (!currentStateKeys.length) {
-      stateBlocks = <LoadingOverlay />
+      stateBlocks = <LoadingOverlay />;
     } else {
       stateBlocks = currentStateKeys.map((key) => {
         const items = this.props[key];
@@ -115,7 +115,7 @@ class EonDetail extends Component {
             <CardHeader className={styles.state_card_header}>{key}</CardHeader>
             <StateList items={items} />
           </CardBody>
-        </Card>)
+        </Card>);
       });
     }
     

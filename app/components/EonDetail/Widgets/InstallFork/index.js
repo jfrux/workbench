@@ -14,11 +14,11 @@ class InstallFork extends ShellTaskBase {
     super();
     this.state = {
       
-    }
+    };
   }
   // render() {
   //   return (button);
   // }
 }
 
-export default InstallFork
+export default InstallFork;

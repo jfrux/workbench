@@ -13,7 +13,7 @@ export function getBaseIp(ip,octets=3) {
     if (aIp.length > 0) {
       baseIp = aIp.slice(0, -1).join('.');
       lastSegment = aIp.pop();
-      counter--
+      counter--;
     }
   }
   return {baseIp,lastSegment: parseInt(lastSegment)};
@@ -43,7 +43,7 @@ function getNeighborNetworks(ip) {
   return {
     afterNetwork: getAfterOctet(ip),
     beforeNetwork: getBeforeOctet(ip)
-  }
+  };
 }
 
 export function getIpsForScan(ip) {
@@ -72,10 +72,7 @@ export function getIpsForScan(ip) {
   //   });
   // });
   
-  
 }
-
-
 
 export function isSameNetwork(ip,otherIp) {
   return (getBaseIp(ip) === getBaseIp(otherIp));
@@ -93,12 +90,12 @@ export function setupNetworkEvents() {
         }
       }) : dispatch({
         type: "network/DISCONNECTED"
-      })
-    }
+      });
+    };
 
-    window.addEventListener('online',  alertOnlineStatus)
-    window.addEventListener('offline',  alertOnlineStatus)
+    window.addEventListener('online',  alertOnlineStatus);
+    window.addEventListener('offline',  alertOnlineStatus);
 
     alertOnlineStatus();
-  }
+  };
 }

@@ -5,4 +5,4 @@ export default {
   storage,
   stateReconciler: autoMergeLevel2,
   blacklist: ['router','networkConnection','eonDetail','eonList.scanning','eonList.scanError','eonList.sshConnectionStatus','eonList.sshConnectionError','eonList.progress']
-}
+};

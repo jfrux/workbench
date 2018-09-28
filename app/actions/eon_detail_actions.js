@@ -1,7 +1,7 @@
 import settings from 'electron-settings';
-const app = require('electron').remote.app
+const app = require('electron').remote.app;
 const path = require("path");
-import * as types from '../constants/eon_detail_action_types'
+import * as types from '../constants/eon_detail_action_types';
 import * as eonListActions from './eon_list_actions';
 import * as commands from '../constants/commands.json';
 import * as regex from '../constants/tmux_regex';
@@ -32,7 +32,6 @@ export function FAIL_install(err) {
   };
 }
 
-
 export function BEGIN_uninstall() {
   // console.log("dispatched BEGIN_scanNetwork");
 
@@ -56,7 +55,6 @@ export function FAIL_uninstall(err) {
   };
 }
 
-
 const limitedLogArray = function(length) {
   var array = new Array();
   array.push = function () {
@@ -64,9 +62,9 @@ const limitedLogArray = function(length) {
       this.shift();
     }
     return Array.prototype.push.apply(this,arguments);
-  }
+  };
   return array;
-}
+};
 function testJSON(text){
   if (typeof text!=="string"){
       return false;
@@ -116,9 +114,9 @@ export function RESPONSE_GET_FINGERPRINT(fingerprint, state) {
     type: types.GET_FINGERPRINT_RESPONSE,
     payload: {
       fingerprint: fingerprint,
-      fingerprintString: "[{\n" + Object.keys(fingerprint).sort((a, b) => { return parseInt(a)-parseInt(b)}).map((key) => { let fgpiece = fingerprint[key]; return `${key}: ${fgpiece}`;}).join(", ") + "\n}]"
+      fingerprintString: "[{\n" + Object.keys(fingerprint).sort((a, b) => { return parseInt(a)-parseInt(b);}).map((key) => { let fgpiece = fingerprint[key]; return `${key}: ${fgpiece}`;}).join(", ") + "\n}]"
     }
-  }
+  };
 }
 export function FAIL_GET_FINGERPRINT(error) {
   return {
@@ -198,11 +196,11 @@ export function fetchFingerprint() {
   return (dispatch, getState) => {
     const { selectedEon, scanResults } = getState().eonList;
     const eon = scanResults[selectedEon];
-    const { polling } = getState().eonDetail
+    const { polling } = getState().eonDetail;
     setTimeout(() => {
       fetch(`http://${eon.ip}:8080/fingerprint.json`)
         .then(res => {
-          return res.json()
+          return res.json();
         })
         .then(json => {
           dispatch(RESPONSE_GET_FINGERPRINT(json, getState()));
@@ -210,24 +208,24 @@ export function fetchFingerprint() {
             dispatch(fetchFingerprint());
           }
         }).catch((err) => {
-          dispatch(FAIL_GET_FINGERPRINT(err))
+          dispatch(FAIL_GET_FINGERPRINT(err));
           if (polling) {
             dispatch(fetchFingerprint());
           }
         });
-    },2000)
-  }
+    },2000);
+  };
 }
 
 export function fetchEonState() {
   return (dispatch, getState) => {
     const { selectedEon, scanResults } = getState().eonList;
     const eon = scanResults[selectedEon];
-    const { polling } = getState().eonDetail
+    const { polling } = getState().eonDetail;
     setTimeout(() => {
       fetch(`http://${eon.ip}:8080/state.json`)
         .then(res => {
-          return res.json()
+          return res.json();
         })
         .then(json => {
           dispatch(RESPONSE_REQUEST_EON_STATE(json, getState()));
@@ -235,13 +233,13 @@ export function fetchEonState() {
             dispatch(fetchEonState(eon));
           }
         }).catch((err) => {
-          dispatch(FAIL_REQUEST_EON_STATE(err))
+          dispatch(FAIL_REQUEST_EON_STATE(err));
           if (polling) {
             dispatch(fetchEonState(eon));
           }
         });
-    },2000)
-  }
+    },2000);
+  };
 }
 export function install() {
   return (dispatch, getState) => {
@@ -260,7 +258,7 @@ export function install() {
       
       console.warn("API Now Running on EON");
     }, (err) => {
-      console.warn("Error was thrown while installing...")
+      console.warn("Error was thrown while installing...");
     }));
     // app.installClient = new SSH();
     // dispatch(BEGIN_install());
@@ -282,7 +280,7 @@ export function uninstall() {
       
       console.warn("API Uninstalled");
     }, (err) => {
-      console.warn("Error was thrown while installing...")
+      console.warn("Error was thrown while installing...");
     }));
     // app.installClient = new SSH();
     // dispatch(BEGIN_install());

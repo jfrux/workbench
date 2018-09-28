@@ -1,6 +1,6 @@
 import settings from 'electron-settings';
-const app = require('electron').remote.app
-import * as types from '../constants/shell_task_action_types'
+const app = require('electron').remote.app;
+import * as types from '../constants/shell_task_action_types';
 import * as shellActions from './task_actions';
 import * as commands from '../constants/commands.json';
 
@@ -40,7 +40,7 @@ RsVMUiFgloWGHETOy0Qvc5AwtqTJFLTD1Wza2uBilSVIEsg6Y83Gickh+ejOmEsY
   }
   const key = new RSAKey(fs.readFileSync(filePath));
   
-  return key.exportKey('private', 'pem', 'pkcs1') 
+  return key.exportKey('private', 'pem', 'pkcs1'); 
 }
 
 // ACTION CREATORS

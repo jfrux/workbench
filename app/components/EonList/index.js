@@ -33,9 +33,9 @@ function ValidateIPaddress(ipaddress)
 {
  if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress))
   {
-    return (true)
+    return (true);
   }
-  return (false)
+  return (false);
 }
 
 class EonList extends Component {
@@ -45,7 +45,7 @@ class EonList extends Component {
       value: '',
       manualError: '',
       scanningStarted: false
-    }
+    };
   }
   componentWillMount() {
     this.props.resetScanNetwork();
@@ -98,7 +98,7 @@ class EonList extends Component {
     //   return (<Redirect to={routes.EON_DETAIL} />); 
     // }
     if (network === 'disconnected') {
-      return <NoConnection />
+      return <NoConnection />;
     }
     console.log("status:",status);
     return (
@@ -114,21 +114,21 @@ class EonList extends Component {
             <ListGroup>
               {scanResults.map((item,index) => {
                 // const isSameNetwork = networkMethods.isSameNetwork(networkIp,item.ip);
-                return (<ListGroupItem key={index} onClick={() => { this.handleSelectEon(index)}} className={styles.results_button} tag="button">
+                return (<ListGroupItem key={index} onClick={() => { this.handleSelectEon(index);}} className={styles.results_button} tag="button">
                     <span className={styles.eon_icon}><Eon width="100%" height="100%" /></span>
                     <span className={styles.results_details}>
                       <span className={styles.results_button_ip}>{item.ip}</span>
                       <span className={styles.results_button_mac}>{item.mac}</span>
                     </span>
                     <span className={styles.results_button_selected}><i className="fa fa-chevron-right"></i></span>
-                  </ListGroupItem>)
+                  </ListGroupItem>);
               })}
             </ListGroup>
           }
 
           {!scanning && scanResults.length === 0 && 
             <ListGroup>
-                <ListGroupItem onClick={() => { this.handleScanNetwork()}} className={styles.new_scan_button + " bg-primary text-light"} tag="button">
+                <ListGroupItem onClick={() => { this.handleScanNetwork();}} className={styles.new_scan_button + " bg-primary text-light"} tag="button">
                   <span className={styles.results_details}>
                     Begin Scan
                   </span>
@@ -174,6 +174,5 @@ class EonList extends Component {
 }
 
 EonList.propTypes = propTypes;
-
 
 export default EonList;

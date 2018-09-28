@@ -12,4 +12,4 @@ class Battery extends Component {
   }
 }
 
-export default Battery
+export default Battery;

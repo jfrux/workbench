@@ -18,7 +18,7 @@ class StateBlock extends Component {
         <span className={styles.state_block_value}>{value}</span>
         <span className={styles.state_block_label}>{label}</span>
       </span>
-    </div>
+    </div>;
   }
 }
 

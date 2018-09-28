@@ -1,5 +1,5 @@
 /* reducer for managing list of eons and scanning for eons */
-import * as types from '../constants/network_connection_action_types'
+import * as types from '../constants/network_connection_action_types';
 import settings from 'electron-settings';
 
 const initialState = {

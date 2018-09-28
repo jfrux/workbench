@@ -1,22 +1,21 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import createSagaMiddleware from 'redux-saga'
+import createSagaMiddleware from 'redux-saga';
 import { createHashHistory } from 'history';
 import { routerMiddleware, routerActions } from 'react-router-redux';
 import { createLogger } from 'redux-logger';
 import rootReducer from '../reducers';
-import rootSaga from '../sagas'
+import rootSaga from '../sagas';
 import * as eonListActions from '../actions/eon_list_actions';
 import * as eonDetailActions from '../actions/eon_detail_actions';
 import persistConfig from './persist';
 
 //PERSISTED STORAGE
-import { createMigrate, persistReducer, persistStore } from 'redux-persist'
+import { createMigrate, persistReducer, persistStore } from 'redux-persist';
 
 const history = createHashHistory();
 
-
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 const router = routerMiddleware(history);
 
 const enhancer = compose(
@@ -25,7 +24,7 @@ const enhancer = compose(
   applyMiddleware(router),
 );
 
-const sagaMiddleware = createSagaMiddleware()
+const sagaMiddleware = createSagaMiddleware();
 
 const configureStore = (initialState) => {
   // Redux Configuration

@@ -59,7 +59,6 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(taskActions, dispatch);
 }
 
-
 class TaskDialog extends Component {
   constructor(props) {
     super(props);

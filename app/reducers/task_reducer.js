@@ -1,5 +1,5 @@
 /* reducer for managing list of eons and scanning for eons */
-import * as types from '../constants/task_action_types'
+import * as types from '../constants/task_action_types';
 import settings from 'electron-settings';
 
 const initialState = {
@@ -22,17 +22,17 @@ export default function taskReducer(state = initialState, action) {
       return {
         ...state,
         taskLog: action.payload.message
-      }
+      };
     case types.TASK_COMPLETE:
       return {
         ...state,
         status: "complete"
-      }
+      };
     case types.TASK_STOP:
       return {
         ...state,
         status: "stopped"
-      }
+      };
     default:
       return state;
   }

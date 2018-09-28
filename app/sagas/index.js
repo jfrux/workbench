@@ -8,5 +8,5 @@ import { taskSagas } from './task_sagas';
 export default function* rootSaga(dispatch) {
   yield all([
     taskSagas()
-  ])
+  ]);
 }

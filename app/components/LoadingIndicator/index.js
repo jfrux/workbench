@@ -5,7 +5,7 @@ class LoadingIndicator extends Component {
   render() {
     return (<span className={this.props.className}>
       <IndicatorIcon icon={this.props.icon} />
-    </span>)
+    </span>);
   }
 }
 

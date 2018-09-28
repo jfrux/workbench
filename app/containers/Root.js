@@ -1,10 +1,10 @@
 // @flow
 import React, { Component } from 'react';
-import { PersistGate } from 'redux-persist/integration/react'
+import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import Routes from '../Routes';
-import LoadingOverlay from '../components/LoadingOverlay'
+import LoadingOverlay from '../components/LoadingOverlay';
 
 export default class Root extends Component {
   render() {

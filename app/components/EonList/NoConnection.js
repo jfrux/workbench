@@ -11,12 +11,11 @@ const propTypes = {
   
 };
 
-
 class NoConnection extends Component {
   render() {
     return (
     <LoadingOverlay message="Network Not Connected" message2="Connect to the same network as an EON" />
-    )
+    );
   }
 }
 

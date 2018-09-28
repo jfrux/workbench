@@ -40,7 +40,6 @@ cache:
     - node_modules
     - app/node_modules
     - $(npm config get prefix)/lib/node_modules
-    - flow-typed
     - $HOME/.cache/electron
     - $HOME/.cache/electron-builder
     - $HOME/docker
@@ -77,9 +76,8 @@ before_script:
 script:
   - yarn package
   - yarn lint
-  - yarn flow
-  - yarn test
-  - yarn test-e2e
+  # - yarn test
+  # - yarn test-e2e
   # On Linux, check if packaging to windows works
   # NOTE: Remove this if your project has native dependencies
   - |

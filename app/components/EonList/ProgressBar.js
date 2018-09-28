@@ -12,7 +12,7 @@ class ProgressBar extends Component {
       <div className={styles.progress}>
         <div className="progress-bar progress-bar-striped bg-warning progress-bar-animated" role="progressbar" aria-valuenow={progress} aria-valuemin="0" aria-valuemax="100" style={{ width: progress + "%" }}></div>
       </div>
-    )
+    );
   }
 }
 

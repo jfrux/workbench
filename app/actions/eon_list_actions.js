@@ -2,10 +2,10 @@ import path from 'path';
 import fs from 'fs';
 import settings from 'electron-settings';
 import routes from '../constants/routes.json';
-import * as types from '../constants/eon_list_action_types'
+import * as types from '../constants/eon_list_action_types';
 import * as networkActions from './network_connection_actions';
 const portscanner = require('portscanner');
-const app = require('electron').remote.app
+const app = require('electron').remote.app;
 const SSH = require('node-ssh');
 const RSAKey = require('rsa-key');
 const netList = require('network-list');
@@ -16,13 +16,13 @@ const isPortReachable = require('is-port-reachable');
 export function BEGIN_connectSSH() {
   return {
     type: types.CONNECT_SSH
-  }
+  };
 }
 
 export function SUCCESS_connectSSH() {
   return {
     type: types.CONNECT_SSH_SUCCESS
-  }
+  };
 }
 
 export function FAIL_connectSSH(err) {
@@ -31,19 +31,19 @@ export function FAIL_connectSSH(err) {
     payload: {
       err
     }
-  }
+  };
 }
 
 export function BEGIN_sshCommand() {
   return {
     type: types.SSH_COMMAND
-  }
+  };
 }
 
 export function SUCCESS_sshCommand() {
   return {
     type: types.SSH_COMMAND_SUCCESS
-  }
+  };
 }
 
 export function RESPONSE_sshCommand(stdout,stderr) {
@@ -53,7 +53,7 @@ export function RESPONSE_sshCommand(stdout,stderr) {
       stderr,
       stdout
     }
-  }
+  };
 }
 
 export function FAIL_sshCommand(err) {
@@ -62,7 +62,7 @@ export function FAIL_sshCommand(err) {
     payload: {
       err
     }
-  }
+  };
 }
 
 // LOCATE ACTION CREATORS
@@ -108,7 +108,6 @@ export function FAIL_scanNetwork(err) {
     }
   };
 }
-
 
 export function SELECT_EON(index) {
   return {
@@ -162,7 +161,7 @@ RsVMUiFgloWGHETOy0Qvc5AwtqTJFLTD1Wza2uBilSVIEsg6Y83Gickh+ejOmEsY
   }
   const key = new RSAKey(fs.readFileSync(filePath));
   
-  return key.exportKey('private', 'pem', 'pkcs1') 
+  return key.exportKey('private', 'pem', 'pkcs1'); 
 }
 
 export function sendPiped(eon, command, commandArgs = [], stdOut = () => {}, stdErr = () => {}) {
@@ -204,7 +203,7 @@ export function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, s
       port: 8022,
       privateKey: privateKey
     }).then(() => {
-      console.warn("Dispatching command:\n",command)
+      console.warn("Dispatching command:\n",command);
       console.warn("To EON:\n",eon);
       return app.sshClient.exec(command, commandArgs, {
         cwd: '/',
@@ -249,7 +248,7 @@ export function scanNetwork() {
           payload: {
             percentage: Math.round(percentageComplete * 100)
           }
-        })
+        });
         if (obj.vendor === "OnePlus Technology (Shenzhen) Co., Ltd") {
           let { scanResults } = getState().eonList;
           // if (scanResults) {
@@ -337,12 +336,12 @@ export function checkExistingEONStatuses() {
         //=> true
       });
     });
-  }
+  };
 }
 export function resetScanNetwork() {
   return {
     type: types.SCAN_NETWORK_RESET
-  }
+  };
 }
 export function retrieveEonFromSettings() {
   return (dispatch, getState) => {

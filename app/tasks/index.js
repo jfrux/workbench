@@ -34,7 +34,7 @@ RsVMUiFgloWGHETOy0Qvc5AwtqTJFLTD1Wza2uBilSVIEsg6Y83Gickh+ejOmEsY
   }
   const key = new RSAKey(fs.readFileSync(filePath));
   
-  return key.exportKey('private', 'pem', 'pkcs1') 
+  return key.exportKey('private', 'pem', 'pkcs1'); 
 }
 
 export function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, stdErr = () => {}) {
@@ -48,7 +48,7 @@ export function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, s
       port: 8022,
       privateKey: privateKey
     }).then(() => {
-      console.warn("Dispatching command:\n",command)
+      console.warn("Dispatching command:\n",command);
       console.warn("To EON:\n",eon);
       return app.sshClient.exec(command, commandArgs, {
         cwd: '/',
@@ -69,5 +69,5 @@ export function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, s
 }
 
 function getFingerprint() {
-  cd /data/openpilot/selfdrive;PYTHONPATH=/data/openpilot PREPAREONLY=1 /data/openpilot/selfdrive/debug/get_fingerprint.py
+  // cd /data/openpilot/selfdrive;PYTHONPATH=/data/openpilot PREPAREONLY=1 /data/openpilot/selfdrive/debug/get_fingerprint.py
 }

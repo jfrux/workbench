@@ -20,7 +20,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem } from 'reactstrap';
-const { shell } = require('electron')
+const { shell } = require('electron');
 class Layout extends React.PureComponent {
   
   constructor(props) {

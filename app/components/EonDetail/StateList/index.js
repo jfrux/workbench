@@ -33,7 +33,7 @@ class StateList extends Component {
         
       }
       if (typeof stateStatus === 'boolean') {
-        stateStatus = <i className="fas fa-check"></i>
+        stateStatus = <i className="fas fa-check"></i>;
       }
       if (!items) {
         return;

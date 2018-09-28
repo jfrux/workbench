@@ -5,7 +5,7 @@ import EonDetail from '../components/EonDetail';
 import * as NetworkConnectionActions from '../actions/network_connection_actions';
 
 function mapStateToProps(state) {
-  return {}
+  return {};
 }
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(NetworkConnectionActions, dispatch);
