@@ -242,6 +242,7 @@
     "react-textarea-autosize": "^7.0.4",
     "reactstrap": "^6.4.0",
     "redux": "^4.0.0",
+    "redux-electron-ipc": "^1.1.13",
     "redux-orm": "^0.12.1",
     "redux-orm-proptypes": "^0.1.0",
     "redux-persist": "^5.10.0",

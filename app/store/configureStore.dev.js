@@ -2,6 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga'
 import { createHashHistory } from 'history';
+import createIpc, { send } from 'redux-electron-ipc';
 import { routerMiddleware, routerActions } from 'react-router-redux';
 import { createLogger } from 'redux-logger';
 import rootReducer from '../reducers';
@@ -14,8 +15,6 @@ import persistConfig from './persist';
 import { createMigrate, persistReducer, persistStore } from 'redux-persist'
 
 const history = createHashHistory();
-
-
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 const router = routerMiddleware(history);
 
@@ -24,6 +23,10 @@ const enhancer = compose(
   applyMiddleware(createSagaMiddleware),
   applyMiddleware(router),
 );
+
+const ipc = createIpc({
+  'scannerResponse': eonListActions.SUCCESS_scanNetwork
+});
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -35,6 +38,7 @@ const configureStore = (initialState) => {
   // Thunk Middleware
   middleware.push(sagaMiddleware);
   middleware.push(thunk);
+  middleware.push(ipc);
 
   // Logging Middleware
   const logger = createLogger({

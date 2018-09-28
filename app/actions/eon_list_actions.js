@@ -4,13 +4,16 @@ import settings from 'electron-settings';
 import routes from '../constants/routes.json';
 import * as types from '../constants/eon_list_action_types'
 import * as networkActions from './network_connection_actions';
-const portscanner = require('portscanner');
 const app = require('electron').remote.app
 const SSH = require('node-ssh');
 const RSAKey = require('rsa-key');
-const netList = require('network-list');
-const mkdirp = require("mkdirp");
+
+const localDevices = require('local-devices');
+const networkList = require('network-list');
 const isPortReachable = require('is-port-reachable');
+const portscanner = require('portscanner');
+
+const mkdirp = require("mkdirp");
 
 // SSH ACTION CREATORS
 export function BEGIN_connectSSH() {
@@ -227,59 +230,8 @@ export function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, s
 export function scanNetwork() {
   return (dispatch, getState) => {
     dispatch(BEGIN_scanNetwork());
-    let scanCount = 0;
-    let foundCount = 0;
-    let found = [];
-    const ips = networkActions.getIpsForScan(getState().networkConnection.ip);
-    // console.log(ips);
-    const totalIps = ips.length * 254;
-    let percentageComplete = 0;
-    // console.log("Total ips to scan:", totalIps);
-    ips.forEach((ip) => {
-      // console.log("Checking ip:",ip);
-      netList.scanEach({
-        ip: ip
-      }, (err, obj) => {
-        scanCount++;
-        percentageComplete = scanCount / totalIps;
-        // console.log("[" + scanCount + "] [" + percentageComplete + "] " + obj.ip + ": " + obj.vendor);
-        // console.log("Scan #" + scanCount);
-        dispatch({
-          type: types.SCAN_NETWORK_PROGRESS,
-          payload: {
-            percentage: Math.round(percentageComplete * 100)
-          }
-        })
-        if (obj.vendor === "OnePlus Technology (Shenzhen) Co., Ltd") {
-          let { scanResults } = getState().eonList;
-          // if (scanResults) {
-          var foundExisting = scanResults.filter((result) => {
-            return (result.mac === obj.mac) && (result.ip === obj.ip);
-          });
-          // console.warn("Found existing:",foundExisting);
-          if (!foundExisting.length) {
-            scanResults.push(obj);
-          }
-          found.push(obj);
-
-          settings.set("scanResults",scanResults);
-          dispatch(SUCCESS_scanNetwork(scanResults,getState()));
-          
-        }
-        // found = true;
-        // scanner = null;
-        if (scanCount >= 762) {
-          if (found.length) {
-            console.warn('scan done... found...',found.length);
-            dispatch(FOUND_scanNetwork());
-          } else {
-            console.warn('scan done... found...',found.length);
-            dispatch(NOT_FOUND_scanNetwork());
-          }
-        }
-      });
-    });
-    // netList.scanEach({}, (err, obj) => {
+    
+    // networkList.scanEach({}, (err, obj) => {
     //   
     //   
     // });
