@@ -45,7 +45,7 @@ class TaskButton extends Component {
             };
         })
       .catch(() => {
-        console.log('cancel');
+        // console.log('cancel');
       });
     })).then((responses) => {
       console.warn("responses:",responses);

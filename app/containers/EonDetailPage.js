@@ -22,7 +22,8 @@ function mapStateToProps(state) {
     health: state.eonDetail.health,
     gpsLocation: state.eonDetail.gpsLocation,
     fingerprint: state.eonDetail.fingerprint,
-    currentStateKeys: state.eonDetail.currentStateKeys
+    currentStateKeys: state.eonDetail.currentStateKeys,
+    fingerprintString: state.eonDetail.fingerprintString
   };
 }
 

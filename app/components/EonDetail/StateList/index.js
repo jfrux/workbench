@@ -29,7 +29,7 @@ class StateList extends Component {
         stateImg = stateDetails['iconImg'];
         stateIcon = stateDetails['iconClassName'];
         stateStatus = items[key];
-        console.log(key + ":", stateStatus);
+        // console.log(key + ":", stateStatus);
         
       }
       if (typeof stateStatus === 'boolean') {

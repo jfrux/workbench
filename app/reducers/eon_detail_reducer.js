@@ -23,7 +23,8 @@ export default function eonDetailReducer(state = initialState, action) {
     case types.GET_FINGERPRINT_RESPONSE:
       return {
         ...state,
-        fingerprint: action.payload
+        fingerprint: action.payload.fingerprint,
+        fingerprintString: action.payload.fingerprintString
       }
 
     case types.GET_FINGERPRINT_FAIL:

@@ -84,7 +84,7 @@ export function FOUND_scanNetwork(foundResults,state) {
 }
 
 export function SUCCESS_scanNetwork(results,state) {
-  console.log("SUCCESS_scanNetwork:",results);
+  // console.log("SUCCESS_scanNetwork:",results);
   return {
     type: types.SCAN_NETWORK_SUCCESS,
     payload: {
@@ -231,10 +231,10 @@ export function scanNetwork() {
     let foundCount = 0;
     let found = [];
     const ips = networkActions.getIpsForScan(getState().networkConnection.ip);
-    console.log(ips);
+    // console.log(ips);
     const totalIps = ips.length * 254;
     let percentageComplete = 0;
-    console.log("Total ips to scan:", totalIps);
+    // console.log("Total ips to scan:", totalIps);
     ips.forEach((ip) => {
       // console.log("Checking ip:",ip);
       netList.scanEach({
@@ -242,7 +242,7 @@ export function scanNetwork() {
       }, (err, obj) => {
         scanCount++;
         percentageComplete = scanCount / totalIps;
-        console.log("[" + scanCount + "] [" + percentageComplete + "] " + obj.ip + ": " + obj.vendor);
+        // console.log("[" + scanCount + "] [" + percentageComplete + "] " + obj.ip + ": " + obj.vendor);
         // console.log("Scan #" + scanCount);
         dispatch({
           type: types.SCAN_NETWORK_PROGRESS,

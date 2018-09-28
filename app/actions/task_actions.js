@@ -49,23 +49,23 @@ export function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, s
   const privateKey = getPrivateKey();
   app.sshClient = new SSH();
   return (dispatch, getState) => {
-    console.warn("Connecting to EON...");
+    // console.warn("Connecting to EON...");
     return app.sshClient.connect({
       host: eon.ip,
       username: 'root',
       port: 8022,
       privateKey: privateKey
     }).then(() => {
-      console.warn("Dispatching command:\n",command)
-      console.warn("To EON:\n",eon);
+      // console.warn("Dispatching command:\n",command)
+      // console.warn("To EON:\n",eon);
       return app.sshClient.exec(command, commandArgs, {
         cwd: '/',
         onStdout(chunk) {
-          console.warn("stdOut:",chunk.toString('utf8'));
+          // console.warn("stdOut:",chunk.toString('utf8'));
           stdOut(chunk.toString('utf8'));
         },
         onStderr(chunk) {
-          console.warn("stdErr:",chunk.toString('utf8'));
+          // console.warn("stdErr:",chunk.toString('utf8'));
           stdErr(chunk.toString('utf8'));
         },
       });

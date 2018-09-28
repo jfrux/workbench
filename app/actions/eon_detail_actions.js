@@ -10,7 +10,7 @@ import * as vehicle_connection_statuses from '../constants/vehicle_connection_st
 // ACTION CREATORS
 let pollerId;
 export function BEGIN_install() {
-  console.log("dispatched BEGIN_scanNetwork");
+  // console.log("dispatched BEGIN_scanNetwork");
 
   return {
     type: types.INSTALL
@@ -34,7 +34,7 @@ export function FAIL_install(err) {
 
 
 export function BEGIN_uninstall() {
-  console.log("dispatched BEGIN_scanNetwork");
+  // console.log("dispatched BEGIN_scanNetwork");
 
   return {
     type: types.UNINSTALL
@@ -111,11 +111,14 @@ export function GET_FINGERPRINT() {
   };
 }
 export function RESPONSE_GET_FINGERPRINT(fingerprint, state) {
-  console.warn("fingerprint",fingerprint);
+  // console.warn("fingerprint",fingerprint);
   return {
     type: types.GET_FINGERPRINT_RESPONSE,
-    payload: fingerprint
-  };
+    payload: {
+      fingerprint: fingerprint,
+      fingerprintString: "[{\n" + Object.keys(fingerprint).sort((a, b) => { return parseInt(a)-parseInt(b)}).map((key) => { let fgpiece = fingerprint[key]; return `${key}: ${fgpiece}`;}).join(", ") + "\n}]"
+    }
+  }
 }
 export function FAIL_GET_FINGERPRINT(error) {
   return {

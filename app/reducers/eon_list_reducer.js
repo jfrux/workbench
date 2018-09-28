@@ -109,7 +109,7 @@ export default function eonListReducer(state = initialState, action) {
       };
     case types.SELECT_EON:
       const eon = state.scanResults[action.payload.index];
-      console.warn("REDUCER SELECT_EON:",eon);
+      // console.warn("REDUCER SELECT_EON:",eon);
       settings.set('selectedEon', action.payload.index);
       return {
         ...state,

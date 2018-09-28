@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 const app = require('electron').remote.app
+import Textarea from 'react-textarea-autosize';
 import { Redirect } from 'react-router';
 import routes from '../../constants/routes.json';
 import styles from './Styles.scss';
@@ -30,7 +31,8 @@ const propTypes = {
   gpsLocation: PropTypes.object,
   network: PropTypes.string,
   fingerprint: PropTypes.any,
-  currentStateKeys: PropTypes.array
+  currentStateKeys: PropTypes.array,
+  fingerprintString: PropTypes.string
 };
 
 class EonDetail extends Component {
@@ -47,7 +49,7 @@ class EonDetail extends Component {
   }
   componentDidMount() {
     const { eon, install } = this.props;
-    console.log("eon:",this.props.eon);
+    // console.log("eon:",this.props.eon);
     // if (this.props.eon && this.props.pipeState) {
     //   this.props.pipeState();
     // }
@@ -89,7 +91,7 @@ class EonDetail extends Component {
   // }
   
   render() {
-    const { network, fingerprint, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
+    const { network, fingerprint, fingerprintString, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
     const vehicleConnectionInfo = vehicleConnectionStatuses[vehicleConnection];
     // const { usbOnline } = thermal;
     if (network === 'disconnected' || eon == null) {
@@ -119,6 +121,14 @@ class EonDetail extends Component {
     
     return (
       <Layout title={this.props.eon.ip} hideLogo={true}>
+        {fingerprintString && 
+          <Card className={styles.state_card}>
+            <CardBody className={styles.state_card_body}>
+              <CardHeader className={styles.state_card_header}>Fingerprint</CardHeader>
+              <Textarea autoFocus className={styles.fingerprint_input + " form-control text-light"} rows="4">{fingerprintString}</Textarea>
+            </CardBody>
+          </Card>
+          }
         {stateBlocks}
       </Layout>
     );

@@ -1,7 +1,7 @@
 {
   "name": "openpilot-workbench",
   "productName": "Workbench",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "The Openpilot Workbench is to help people fix problems with EON, Openpilot, etc.",
   "scripts": {
     "zip_api": "zip -r workbench.zip ./workbench_api",
@@ -239,6 +239,7 @@
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-router-redux": "^5.0.0-alpha.6",
+    "react-textarea-autosize": "^7.0.4",
     "reactstrap": "^6.4.0",
     "redux": "^4.0.0",
     "redux-orm": "^0.12.1",

@@ -67,7 +67,7 @@ class EonList extends Component {
     event.preventDefault();
   }
   handleSelectEon = (index) => {
-    console.warn("Clicked EON");
+    // console.warn("Clicked EON");
     this.props.selectEon(index);
     this.props.history.push(routes.EON_DETAIL);
   }
