@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://media.giphy.com/media/9S1x6c9x2cWG0xPApj/giphy.gif" />
+<img src="https://slack-imgs.com/?c=1&url=https%3A%2F%2Fmedia.giphy.com%2Fmedia%2FpOFUyfk12E6GjqFOMa%2Fgiphy.gif" />
 </div>
 
 ## How to install
