@@ -13,20 +13,24 @@ Available for
 - Mac
 - Ubuntu / Debian
 
-## Coming soon (hopefully)
+# Features
 
-- [ ] Checking if Panda is flashed
+- [x] Connects to EON via SSH (automatically, installs key for you)
+- [x] Displays Thermal
+- [x] Displays Health
+- [x] Displays GPS Location Info
+- [x] Installs a basic API to EON for more accurate data fetching. (see `workbench_api` directory)
+- [x] Can scan network for EON and find it quickly
+- [x] Retrieves fingerprint and places it in a textbox.
+
+## Todos Pipeline
+
+- [ ] Check if Panda is flashed
 - [ ] Output if Vehicle Detected by Fingerprint
 - [ ] A general "health" check view to make it easier to know if things are okay.
 
-## Roadmap / Ideas
+## Ideas / Concepts
 
-- [x] Proof of concept
-- [x] Can connect to EON
-- [x] Can display basic tmux data
-- [x] Can scan network for EON
-- [x] Pull in thermal details to EON screen.
-- [x] Add first tool, get fingerprint.
 - [ ] Add addl tools as we see fit...
 - [ ] Install a fork of Openpilot from a git url
 - [ ] Reinstall Comma Openpilot Release2
