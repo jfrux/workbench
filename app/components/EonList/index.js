@@ -84,6 +84,7 @@ class EonList extends Component {
       selectedEon,
       progress
     } = this.props;
+    const { manualError } = this.state;
     const scanResultsList = Object.keys(scanResults);
     const eonList = Object.keys(eons);
     // console.log("scanResults:",scanResults);
@@ -107,7 +108,8 @@ class EonList extends Component {
             </CardBody>
           </Card>
         </Collapse>
-        <Collapse isOpen={this.state.manualError.length}>
+        
+        <Collapse isOpen={manualError.length > 0}>
           <Card body inverse color="danger" className={styles.error_message}>
             <CardBody className={styles.error_message_body}>
               {this.state.manualError}
