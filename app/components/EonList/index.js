@@ -86,10 +86,10 @@ class EonList extends Component {
     } = this.props;
     const scanResultsList = Object.keys(scanResults);
     const eonList = Object.keys(eons);
-    console.log("scanResults:",scanResults);
-    console.log("scanResultsList:",scanResultsList);
-    console.log("eons:",eons);
-    console.log("eonList:",eonList);
+    // console.log("scanResults:",scanResults);
+    // console.log("scanResultsList:",scanResultsList);
+    // console.log("eons:",eons);
+    // console.log("eonList:",eonList);
     // if (selectedEon !== null) {
     //   // console.warn("SSH CONNECTION ERROR!",sshConnectionError);
     //   return (<Redirect to={routes.EON_DETAIL} />); 
@@ -101,8 +101,8 @@ class EonList extends Component {
     return (
       <Layout title="Workbench">
         <Collapse isOpen={scanning}>
-          <Card>
-            <CardBody>
+          <Card body inverse color="primary" className={styles.scanning_message}>
+            <CardBody className={styles.scanning_message_body}>
               Scanning for EON...
             </CardBody>
           </Card>
@@ -150,27 +150,15 @@ class EonList extends Component {
             </ListGroup>
           }
         </div>
-
-        {!scanning && scanResults.length === 0 && 
-          <ListGroup>
-              <ListGroupItem onClick={() => { this.handleScanNetwork();}} className={styles.new_scan_button + " bg-primary text-light"} tag="button">
-                <span className={styles.results_details}>
-                  Begin Scan
-                </span>
-              </ListGroupItem>
-          </ListGroup>
-        }
           
-        {!scanning &&
+          <Collapse isOpen={!scanning}>
           <div className={styles.add_form_area}>
-            
             <form onSubmit={this.handleSubmit} className={styles.form}>
               <input type="text" className={styles.add_field + " form-control"} value={this.state.value} onChange={this.handleChange} placeholder="___.___.___.___" />
               <button className={styles.add_ip_button + " btn btn-primary"} type="submit"><i className="fa fa-plus"></i></button>
             </form>
-            
           </div>
-        }
+          </Collapse>
       </Layout>
     );
   }

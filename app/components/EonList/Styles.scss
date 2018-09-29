@@ -52,12 +52,12 @@
   border-radius:0!important;
 }
 
-.error_message {
+.error_message,.scanning_message {
   padding:0!important;
   border-radius:0!important;
 }
-.error_message_body {
-  padding:10px 15px!important;
+.error_message_body,.scanning_message_body {
+  padding:5px 5px!important;
 }
 .add_field {
   border:0!important;
