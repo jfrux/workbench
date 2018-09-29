@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Logo from "../../images/logo.svg";
 import Comma from "../../images/comma.svg";
 import styles from './Styles.scss';
-import * as eonListActions from '../../actions/eon_list_actions';
+import * as networkScannerActions from '../../actions/network_scanner_actions';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import routes from '../../constants/routes.json';
@@ -32,7 +32,7 @@ class Layout extends React.PureComponent {
     };
   }
   handleScanNetwork = () => {
-    this.props.scanNetwork();
+    this.props.BEGIN_scanNetwork();
   }
   handleOpenUrl(url) {
     shell.openExternal(url);
@@ -81,12 +81,12 @@ class Layout extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     selectedEon: state.eonList.selectedEon,
-    scanning: state.eonList.scanning
+    scanning: state.networkScanner.scanning
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(eonListActions, dispatch);
+  return bindActionCreators(networkScannerActions, dispatch);
 }
 
 export default connect(

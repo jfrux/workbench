@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import styles from './Styles.scss';
-import { Redirect } from 'react-router';
 import Eon from "../../images/device-icons/eon.svg";
 import PropTypes from 'prop-types';
 import routes from '../../constants/routes.json';
@@ -9,17 +8,13 @@ import Layout from '../Layout';
 import NoConnection from './NoConnection';
 import ProgressBar from './ProgressBar';
 import LoadingIndicator from '../LoadingIndicator';
-// import IpInput from './IpInput';
-import { Container, ListGroup, ListGroupItem } from 'reactstrap';
+import { Container, ListGroup, Collapse, Card, CardBody, ListGroupItem } from 'reactstrap';
 import statusMessages from '../../constants/scan_status_messages.json';
 import sshConnectionStatusMessages from '../../constants/ssh_connection_status.json';
-import * as networkMethods from '../../actions/network_connection_actions';
-import TaskDialog from '../TaskDialog';
+
 const propTypes = {
-  sshConnectionStatus: PropTypes.string,
-  sshConnectionError: PropTypes.object,
   scanNetwork: PropTypes.func,
-  scanResults: PropTypes.array,
+  scanResults: PropTypes.object,
   scanError: PropTypes.string,
   scanning: PropTypes.bool,
   status: PropTypes.string,
@@ -51,7 +46,7 @@ class EonList extends Component {
     this.props.resetScanNetwork();
   }
   handleScanNetwork = () => {
-    this.props.scanNetwork();
+    this.props.BEGIN_scanNetwork();
   }
   handleChange = (event) => {
     this.setState({value: event.target.value});
@@ -59,7 +54,13 @@ class EonList extends Component {
   handleSubmit = (event) => {
     const { value } = this.state;
     if (ValidateIPaddress(value)) {
-      this.props.addManually(value);
+      this.setState({
+        manualError: ''
+      })
+      this.props.ADD_EON({
+        ip: value,
+        mac: "00:00:00:00:00"
+      });
       this.setState({value: ''});
     } else {
       this.setState({manualError: "Invalid IP Address"});
@@ -67,7 +68,6 @@ class EonList extends Component {
     event.preventDefault();
   }
   handleSelectEon = (index) => {
-    // console.warn("Clicked EON");
     this.props.selectEon(index);
     this.props.history.push(routes.EON_DETAIL);
   }
@@ -79,20 +79,17 @@ class EonList extends Component {
       scanning,
       status,
       network,
+      eons,
       networkIp,
       selectedEon,
       progress
     } = this.props;
-
-    const {
-      scanningStarted
-    } = this.state;
-    let sshConnectionMessage = sshConnectionStatusMessages[sshConnectionStatus];
-    const statusMessage = statusMessages[status];
-
-    if (sshConnectionStatus === "not_connected") {
-      sshConnectionMessage = null;
-    }
+    const scanResultsList = Object.keys(scanResults);
+    const eonList = Object.keys(eons);
+    console.log("scanResults:",scanResults);
+    console.log("scanResultsList:",scanResultsList);
+    console.log("eons:",eons);
+    console.log("eonList:",eonList);
     // if (selectedEon !== null) {
     //   // console.warn("SSH CONNECTION ERROR!",sshConnectionError);
     //   return (<Redirect to={routes.EON_DETAIL} />); 
@@ -100,74 +97,80 @@ class EonList extends Component {
     if (network === 'disconnected') {
       return <NoConnection />;
     }
-    console.log("status:",status);
+    
     return (
       <Layout title="Workbench">
-          {sshConnectionMessage && 
-            <div className={styles.ssh_message}>
-              <span className={styles.ssh_connection_title}>{sshConnectionMessage.title}</span>
-              <span className={styles.ssh_connection_subtext}>{sshConnectionMessage.subtext.replace("%sshConnectionError%",sshConnectionError)}</span>
-            </div>
-          }
-          
-          {scanResults && 
+        <Collapse isOpen={scanning}>
+          <Card>
+            <CardBody>
+              Scanning for EON...
+            </CardBody>
+          </Card>
+        </Collapse>
+        <Collapse isOpen={this.state.manualError.length}>
+          <Card body inverse color="danger" className={styles.error_message}>
+            <CardBody className={styles.error_message_body}>
+              {this.state.manualError}
+            </CardBody>
+          </Card>
+        </Collapse>
+        
+        <div className={styles.found_eons}>
+          {scanResultsList && 
             <ListGroup>
-              {scanResults.map((item,index) => {
-                // const isSameNetwork = networkMethods.isSameNetwork(networkIp,item.ip);
-                return (<ListGroupItem key={index} onClick={() => { this.handleSelectEon(index);}} className={styles.results_button} tag="button">
+              {scanResultsList.map((key,index) => {
+                let scanResult = scanResults[key]
+                return (<ListGroupItem key={index} onClick={() => { this.handleSelectEon(eon.id);}} className={styles.results_button} tag="button">
                     <span className={styles.eon_icon}><Eon width="100%" height="100%" /></span>
                     <span className={styles.results_details}>
-                      <span className={styles.results_button_ip}>{item.ip}</span>
-                      <span className={styles.results_button_mac}>{item.mac}</span>
+                      <span className={styles.results_button_ip}>{scanResult.ip}</span>
+                      <span className={styles.results_button_mac}>{scanResult.mac}</span>
                     </span>
                     <span className={styles.results_button_selected}><i className="fa fa-chevron-right"></i></span>
                   </ListGroupItem>);
               })}
             </ListGroup>
           }
+        </div>
 
-          {!scanning && scanResults.length === 0 && 
+        <div className={styles.existing_eons}>
+          {eons && 
             <ListGroup>
-                <ListGroupItem onClick={() => { this.handleScanNetwork();}} className={styles.new_scan_button + " bg-primary text-light"} tag="button">
-                  <span className={styles.results_details}>
-                    Begin Scan
-                  </span>
-                </ListGroupItem>
+              {eonList.map((key,index) => {
+                let eon = eons[key];
+                return (<ListGroupItem key={index} onClick={() => { this.handleSelectEon(eon.id);}} className={styles.results_button} tag="button">
+                    <span className={styles.eon_icon}><Eon width="100%" height="100%" /></span>
+                    <span className={styles.results_details}>
+                      <span className={styles.results_button_ip}>{eon.ip}</span>
+                      <span className={styles.results_button_mac}>{eon.mac}</span>
+                    </span>
+                    <span className={styles.results_button_selected}><i className="fa fa-chevron-right"></i></span>
+                  </ListGroupItem>);
+              })}
             </ListGroup>
           }
-          {scanning &&
-            <div className={styles.loader_wrap}>
-              <div className={styles.loading_overlay}>
-                <LoadingIndicator />
-              </div>
-              <div className={styles.progress_overlay}>
-                <ProgressBar progress={progress} />
-              </div>
-            </div>
-          }
+        </div>
+
+        {!scanning && scanResults.length === 0 && 
+          <ListGroup>
+              <ListGroupItem onClick={() => { this.handleScanNetwork();}} className={styles.new_scan_button + " bg-primary text-light"} tag="button">
+                <span className={styles.results_details}>
+                  Begin Scan
+                </span>
+              </ListGroupItem>
+          </ListGroup>
+        }
           
-          {!scanning &&
-            <div>
-              <div className={styles.divider}>
-                or
-              </div>
-              {this.state.manualError &&
-                <div className={styles.manual_error + " alert alert-danger"}>
-                  {this.state.manualError}
-                </div>
-              }
-              
-              <form onSubmit={this.handleSubmit} className={styles.form}>
-                <input type="text" className={styles.add_field + " form-control text-light bg-dark"} value={this.state.value} onChange={this.handleChange} placeholder="___ . ___ . ___ . ___" />
-                {this.state.value && 
-                  <div className={styles.form_help_text}>Press Enter to add</div>
-                }
-                {!this.state.value && 
-                  <div className={styles.form_help_text}>Add an EON manually by typing the IP address below</div>
-                }
-              </form>
-            </div>
-          }
+        {!scanning &&
+          <div className={styles.add_form_area}>
+            
+            <form onSubmit={this.handleSubmit} className={styles.form}>
+              <input type="text" className={styles.add_field + " form-control"} value={this.state.value} onChange={this.handleChange} placeholder="___.___.___.___" />
+              <button className={styles.add_ip_button + " btn btn-primary"} type="submit"><i className="fa fa-plus"></i></button>
+            </form>
+            
+          </div>
+        }
       </Layout>
     );
   }

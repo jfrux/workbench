@@ -4,6 +4,11 @@
   left:50%;
   transform:translate(-50%,-50%);
 }
+.add_form_area {
+  background-color:rgba(#FFF,0.05)!important;
+  color:#FFF;
+  
+}
 .react_ip_input {
   display: inline-block;
   border: 1px solid #c2c3c9;
@@ -11,11 +16,14 @@
   padding: 5px 8px;
 }
 .form_help_text {
-  color:#555;
+  color:rgba(#FFF,0.2);
   margin-top:5px;
   font-size:12px;
   text-align:center;
   flex:0 0 100%;
+  margin-bottom:10px;
+  border-top:1px solid rgba(#000,0.1);
+  padding-top:10px;
 }
 .react_ip_input .react_ip_input__item {
   display: inline-block;
@@ -37,12 +45,29 @@
   padding:10px;
   color:#555;
 }
+.add_ip_button {
+  flex: 0 0 15%;
+  background-color:rgba(#000,0.2)!important;
+  border:0!important;
+  border-radius:0!important;
+}
 
+.error_message {
+  padding:0!important;
+  border-radius:0!important;
+}
+.error_message_body {
+  padding:10px 15px!important;
+}
 .add_field {
   border:0!important;
   text-align:left;
-  width:160px!important;
+  // width:100%!important;
   margin:0 auto;
+  flex:0 0 85%;
+  background:transparent!important;
+  text-align:center!important;
+  box-shadow:none!important;
 }
 
 .ssh_connection_title {
@@ -176,7 +201,7 @@
 } */
 .form {
   display:flex;
-  flex-flow:wrap;
+  // flex-flow:wrap;
 }
 .results_button_ip {
   display:block;

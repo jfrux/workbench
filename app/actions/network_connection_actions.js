@@ -82,7 +82,7 @@ export function setupNetworkEvents() {
   return (dispatch, getState) => {
     const alertOnlineStatus = () => {
       let currentIp = IpUtil.address();
-     navigator.onLine ? dispatch({
+      navigator.onLine ? dispatch({
         type: "network/CONNECTED",
         payload: {
           ip: currentIp

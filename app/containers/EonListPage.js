@@ -1,25 +1,24 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Eons from '../components/EonList';
+import * as networkScannerActions from '../actions/network_scanner_actions';
 import * as eonListActions from '../actions/eon_list_actions';
 function mapStateToProps(state) {
   return {
-    sshConnectionStatus: state.eonList.sshConnectionStatus,
-    sshConnectionError: state.eonList.sshConnectionError,
-    scanNetwork: state.eonList.scanNetwork,
-    scanResults: state.eonList.scanResults,
-    scanError: state.eonList.scanError,
-    scanning: state.eonList.scanning,
-    status: state.eonList.status,
+    scanResults: state.networkScanner.scanResults,
+    scanError: state.networkScanner.scanError,
+    scanning: state.networkScanner.scanning,
+    status: state.networkScanner.status,
     selectedEon: state.eonList.selectedEon,
     networkIp: state.networkConnection.ip,
     network: state.networkConnection.status,
-    progress: state.eonList.progress
+    progress: state.networkScanner.progress,
+    eons: state.eonList.eons
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(eonListActions, dispatch);
+  return bindActionCreators({...eonListActions,...networkScannerActions},dispatch);
 }
 
 export default connect(

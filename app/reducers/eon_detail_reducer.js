@@ -11,11 +11,76 @@ const initialState = {
   health: null,
   fingerprint: null,
   thermal: null,
-  currentStateKeys: []
+  currentStateKeys: [],
+  workbenchInstalled: false,
+  sshConnectionStatus: "not_connected",
+  sshConnectionError: null,
+  sshCurrentCommand: null,
+  sshLog: [],
+  sshCommandErrors: null,
+  sshCommandStatus: "idle"
 };
 
 export default function eonDetailReducer(state = initialState, action) {
   switch (action.type) {
+    case types.CONNECT_SSH:
+      return {
+        ...state,
+        sshStatus: "connecting",
+        sshConnectionStatus: "connected"
+      };
+    case types.CONNECT_SSH_SUCCESS:
+      return {
+        ...state,
+        sshStatus: "connected",
+        sshConnectionStatus: "connected",
+        sshConnectionError: null
+      };
+    case types.CONNECT_SSH_FAIL:
+      return {
+        ...state,
+        sshStatus: "failed",
+        selectedEon: null,
+        sshConnectionError: action.payload.err,
+        sshConnectionStatus: "not_connected_error"
+      };
+    case types.SSH_COMMAND:
+      return {
+        ...state,
+        sshCommand: action.payload.command,
+        sshCommandStatus: "executing"
+      };
+    case types.SSH_COMMAND_RESPONSE:
+      return {
+        ...state,
+        sshCommand: action.payload.response,
+        sshCommandStatus: "executing"
+      };
+    case types.SSH_COMMAND_COMPLETE:
+      return {
+        ...state,
+        sshCommand: null,
+        sshCommandStatus: "success"
+      };
+    case types.SSH_COMMAND_FAIL:
+      return {
+        ...state,
+        sshCommand: null,
+        sshCommandStatus: "failed",
+        sshCommandError: action.payload.error
+      };
+    case types.CONNECT_SSH_SUCCESS:
+      return {
+        ...state,
+        sshStatus: "connected"
+      };
+    case types.CONNECT_SSH_FAIL:
+      return {
+        ...state,
+        sshStatus: "failed",
+        sshError: "",
+        selectedEon: null
+      };
     case types.GET_FINGERPRINT:
       return {
         ...state
