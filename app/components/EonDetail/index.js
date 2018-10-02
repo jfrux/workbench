@@ -30,6 +30,8 @@ const propTypes = {
   thermal: PropTypes.object,
   gpsLocation: PropTypes.object,
   network: PropTypes.string,
+  tmuxError: PropTypes.any,
+  sshStatus: PropTypes.any,
   fingerprint: PropTypes.any,
   currentStateKeys: PropTypes.array,
   fingerprintString: PropTypes.string
@@ -82,6 +84,7 @@ class EonDetail extends Component {
     // }, 3000);
   }
   componentWillUnmount() {
+    this.props.STOP_POLLING();
     // this.props.uninstall();
   }
 
@@ -91,11 +94,11 @@ class EonDetail extends Component {
   // }
   
   render() {
-    const { network, fingerprint, fingerprintString, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
+    const { network, fingerprint, tmuxError, fingerprintString, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshStatus, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
     const vehicleConnectionInfo = vehicleConnectionStatuses[vehicleConnection];
     // const { usbOnline } = thermal;
+    console.warn("sshConnectionError:",sshConnectionError);
     if (network === 'disconnected' || eon == null) {
-      // console.warn("SSH CONNECTION ERROR!",sshConnectionError);
       return (<Redirect to={routes.EON_LIST} />);
     }
     if (fingerprint) {
@@ -125,7 +128,7 @@ class EonDetail extends Component {
           <Card className={styles.state_card}>
             <CardBody className={styles.state_card_body}>
               <CardHeader className={styles.state_card_header}>Fingerprint</CardHeader>
-              <Textarea autoFocus className={styles.fingerprint_input + " form-control text-light"} rows="4">{fingerprintString}</Textarea>
+              <Textarea autoFocus className={styles.fingerprint_input + " form-control text-light"} rows="4" defaultValue={fingerprintString} />
             </CardBody>
           </Card>
           }

@@ -25,3 +25,5 @@ export const SSH_COMMAND = 'eon/SSH_COMMAND';
 export const SSH_COMMAND_SUCCESS = 'eon/SSH_COMMAND_SUCCESS';
 export const SSH_COMMAND_RESPONSE = 'eon/SSH_COMMAND_RESPONSE';
 export const SSH_COMMAND_FAIL = 'eon/SSH_COMMAND_FAIL';
+
+export const STOP_POLLING = 'eon/STOP_POLLING';

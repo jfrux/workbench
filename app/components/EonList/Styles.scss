@@ -9,6 +9,15 @@
   color:#FFF;
   
 }
+
+.list_group_header {
+  font-size:11px;
+  text-transform:uppercase;
+  margin-top:10px;
+  line-height:20px;
+  display:block;
+  color:rgba(#FFF,0.5);
+}
 .react_ip_input {
   display: inline-block;
   border: 1px solid #c2c3c9;
@@ -168,6 +177,7 @@
   right:15px;
   top:50%;
   transform: translateY(-50%);
+  color:#FFF!important;
 }
 
 .ssh_message {
@@ -189,12 +199,19 @@
 
 .results_button {
   display:block;
+  min-height:68px;
   border-radius:0!important;
   background-color:rgba(#FFF,0.05)!important;
   &:hover {
     background-color:rgba(#FFF,0.1)!important;
   }
+
+  .fa {
+    color:#FFF!important;
+  }
 }
+
+.results_button_selected 
 
 /* .results_button:hover .eon_icon {
   opacity: 0.5;

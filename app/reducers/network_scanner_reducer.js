@@ -10,7 +10,7 @@ const initialState = {
   scanCount: 0,
   maxCount: 762
 };
-
+const deleteProperty = ({[key]: _, ...newObj}, key) => newObj;
 export default function eonListReducer(state = initialState, action) {
   switch (action.type) {
     case types.SCAN_NETWORK_COMPLETE:
@@ -26,27 +26,23 @@ export default function eonListReducer(state = initialState, action) {
         status: "scanning",
         scanning: true,
         progress: 0,
+        scanResults: {},
         scanCount: 0,
         maxCount: 762
       };
     
     case types.SCAN_NETWORK_PROGRESS:
       return {
-        ...state,
-        // progress: parseInt(action.payload.percentage)
+        ...state
       };
 
     case types.SCAN_NETWORK_RESULT:
-      // console.log("REDUCER SCAN_NETWORK_SUCCESS:",action.payload.results);
       return {
         ...state,
-        // status: "scanned_has_results",
         scanResults: {
           ...state.scanResults,
-          ...action.payload
+          ...action.payload.eon
         },
-        // scanning: false,
-        // progress: 0
       };
     case types.SCAN_NETWORK_FAIL:
       return {
@@ -74,6 +70,13 @@ export default function eonListReducer(state = initialState, action) {
         sshCommandStatus: "idle",
         progress: 0
       };
+    case types.REMOVE_SCANNED_RESULT:
+      console.log("deleting property",state.scanResults,action.payload.id);
+      console.log("deleted property",deleteProperty(state.scanResults,action.payload.id));
+      return {
+        ...state,
+        scanResults: deleteProperty(state.scanResults,action.payload.id)
+      }
     default:
       return state;
   }

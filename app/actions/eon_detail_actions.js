@@ -1,10 +1,12 @@
 import settings from 'electron-settings';
 const app = require('electron').remote.app;
-const path = require("path");
+const RSAKey = require('rsa-key');
+const mkdirp = require("mkdirp");
+import path from 'path';
+import fs from 'fs';
 import * as types from '../constants/eon_detail_action_types';
-import * as eonListActions from './eon_list_actions';
 import * as commands from '../constants/commands.json';
-import * as regex from '../constants/tmux_regex';
+
 const SSH = require('node-ssh');
 import * as vehicle_connection_statuses from '../constants/vehicle_connection_statuses.json';
 // ACTION CREATORS
@@ -113,7 +115,7 @@ export function RESPONSE_GET_FINGERPRINT(fingerprint, state) {
   return {
     type: types.GET_FINGERPRINT_RESPONSE,
     payload: {
-      fingerprint: fingerprint,
+      // fingerprint: fingerprint,
       fingerprintString: "[{\n" + Object.keys(fingerprint).sort((a, b) => { return parseInt(a)-parseInt(b);}).map((key) => { let fgpiece = fingerprint[key]; return `${key}: ${fgpiece}`;}).join(", ") + "\n}]"
     }
   };
@@ -214,6 +216,12 @@ export function RESPONSE_sshCommand(stdout,stderr) {
   };
 }
 
+export function STOP_POLLING() {
+  return {
+    type: types.STOP_POLLING
+  };
+}
+
 export function FAIL_sshCommand(err) {
   return {
     type: types.SSH_COMMAND_FAIL,
@@ -282,8 +290,8 @@ export function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, s
 }
 // export function pipeTmux() {
 //   return (dispatch, getState) => {
-//     const { selectedEon, scanResults } = getState().eonList;
-//     const eon = scanResults[selectedEon];
+//     const { selectedEon, eons } = getState().eonList;
+//     const eon = eons[selectedEon];
 //     console.warn("pipeTmux to:",eon);
 //     if (eon) {
 //       dispatch(OPEN_REQUEST_EON_STATE());
@@ -298,8 +306,8 @@ export function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, s
 
 // export function pipeState() {
 //   return (dispatch, getState) => {
-//     const { selectedEon, scanResults } = getState().eonList;
-//     const eon = scanResults[selectedEon];
+//     const { selectedEon, eons } = getState().eonList;
+//     const eon = eons[selectedEon];
 //     console.warn("pipeState to:",eon);
 //     if (eon) {
 //       dispatch(OPEN_REQUEST_EON_STATE());
@@ -342,8 +350,8 @@ export function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, s
 
 export function fetchFingerprint() {
   return (dispatch, getState) => {
-    const { selectedEon, scanResults } = getState().eonList;
-    const eon = scanResults[selectedEon];
+    const { selectedEon, eons } = getState().eonList;
+    const eon = eons[selectedEon];
     const { polling } = getState().eonDetail;
     setTimeout(() => {
       fetch(`http://${eon.ip}:8080/fingerprint.json`)
@@ -364,11 +372,13 @@ export function fetchFingerprint() {
     },2000);
   };
 }
-
+export function stopPolling() {
+  dispatch(STOP_POLLING);
+}
 export function fetchEonState() {
   return (dispatch, getState) => {
-    const { selectedEon, scanResults } = getState().eonList;
-    const eon = scanResults[selectedEon];
+    const { selectedEon, eons } = getState().eonList;
+    const eon = eons[selectedEon];
     const { polling } = getState().eonDetail;
     setTimeout(() => {
       fetch(`http://${eon.ip}:8080/state.json`)
@@ -391,12 +401,12 @@ export function fetchEonState() {
 }
 export function install() {
   return (dispatch, getState) => {
-    const { selectedEon, scanResults } = getState().eonList;
+    const { selectedEon, eons } = getState().eonList;
 
-    const eon = scanResults[selectedEon];
+    const eon = eons[selectedEon];
     console.warn("Starting Api install...");
     dispatch(BEGIN_install());
-    dispatch(eonListActions.sendCommand(eon, commands.INSTALL_API, [], (resp) => {
+    dispatch(sendCommand(eon, commands.INSTALL_API, [], (resp) => {
       console.info("Installing...", resp);
 
       app.sshClient.dispose();
@@ -415,13 +425,11 @@ export function install() {
 
 export function uninstall() {
   return (dispatch, getState) => {
-    const { selectedEon, scanResults } = getState().eonList;
-    console.warn("scanResults:",scanResults);
-    console.warn("selectedEon:",selectedEon);
-    const eon = scanResults[selectedEon];
+    const { selectedEon, eons } = getState().eonList;
+    const eon = eons[selectedEon];
     console.warn("Starting Api UNINSTALL...");
     dispatch(BEGIN_uninstall());
-    dispatch(eonListActions.sendCommand(eon, commands.UNINSTALL_API, [], (resp) => {
+    dispatch(sendCommand(eon, commands.UNINSTALL_API, [], (resp) => {
       console.info("UNINSTALLING...", resp);
       app.sshClient.dispose();
       dispatch(SUCCESS_uninstall());

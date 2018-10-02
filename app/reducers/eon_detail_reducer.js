@@ -23,6 +23,13 @@ const initialState = {
 
 export default function eonDetailReducer(state = initialState, action) {
   switch (action.type) {
+    case types.STOP_POLLING:
+      return {
+        ...state,
+        polling: false,
+        sshConnectionStatus: "not_connected",
+        sshConnectionError: null
+      };
     case types.CONNECT_SSH:
       return {
         ...state,

@@ -1,4 +1,4 @@
-import { all, take, call, fork, put, takeLatest, select } from 'redux-saga/effects';
+import { all, take, call, fork, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
 import IpUtil from "ip";
 import * as eonListTypes from '../constants/eon_list_action_types';
@@ -7,14 +7,14 @@ import * as networkScannerActions from '../actions/network_scanner_actions';
 import * as networkActions from '../actions/network_connection_actions';
 import * as eonListActions from '../actions/eon_list_actions';
 
+const arp = require('node-arp');
 const evilscan = require('evilscan');
 
 function getScanner(cidrStr) {
   const scanner = new evilscan({
     target: cidrStr,
     port:'8022',
-    status:'TROU', // Timeout, Refused, Open, Unreachable
-    banner:true
+    status:'O'
   });
   return scanner;
 }
@@ -25,6 +25,31 @@ function* read(scanner) {
   while (true) {
     let action = yield take(channel);
     yield put(action);
+  }
+}
+
+function fetchMacAddress(action) {
+  console.log("fetching mac address: ",action);
+  return new Promise((resolve,reject) => {
+    arp.getMAC(action.payload.ip, function(err, mac) {
+      if (!err) {
+        resolve(mac);
+      } else {
+        reject(err);
+      }
+    });
+  });
+}
+
+function* getResultInfo(action) {
+  let mac_address;
+  console.warn("Starting getResultInfo",action);
+  yield put(networkScannerActions.MAC_ADDRESS_REQUEST());
+  try {
+    mac_address = yield call(fetchMacAddress,action);
+    yield put(networkScannerActions.MAC_ADDRESS_SUCCESS(mac_address));
+  } catch (e) {
+    yield put(networkScannerActions.MAC_ADDRESS_ERROR(e));
   }
 }
 
@@ -68,6 +93,7 @@ function* scanNetwork() {
 // EXPORT ROOT SAGA
 export function* scannerSagas() {
   yield all([
-    yield takeLatest(types.SCAN_NETWORK, scanNetwork)
+    yield takeLatest(types.SCAN_NETWORK, scanNetwork),
+    yield takeEvery(types.SCAN_NETWORK_RESULT, getResultInfo)
   ]);
 }

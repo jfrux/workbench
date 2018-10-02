@@ -51,12 +51,22 @@ class EonList extends Component {
   handleChange = (event) => {
     this.setState({value: event.target.value});
   }
+  addEon = (eon) => {
+    this.props.REMOVE_SCANNED_RESULT(eon.id);
+    this.props.ADD_EON({
+      ip: eon.ip,
+      mac: "00:00:00:00:00"
+    });
+  }
   handleSubmit = (event) => {
     const { value } = this.state;
     if (ValidateIPaddress(value)) {
       this.setState({
         manualError: ''
-      })
+      });
+      this.props.ADDED_EON({
+        ip: value
+      });
       this.props.ADD_EON({
         ip: value,
         mac: "00:00:00:00:00"
@@ -87,10 +97,10 @@ class EonList extends Component {
     const { manualError } = this.state;
     const scanResultsList = Object.keys(scanResults);
     const eonList = Object.keys(eons);
-    // console.log("scanResults:",scanResults);
-    // console.log("scanResultsList:",scanResultsList);
-    // console.log("eons:",eons);
-    // console.log("eonList:",eonList);
+    console.log("scanResults:",scanResults);
+    console.log("scanResultsList:",scanResultsList);
+    console.log("eons:",eons);
+    console.log("eonList:",eonList);
     // if (selectedEon !== null) {
     //   // console.warn("SSH CONNECTION ERROR!",sshConnectionError);
     //   return (<Redirect to={routes.EON_DETAIL} />); 
@@ -118,28 +128,48 @@ class EonList extends Component {
         </Collapse>
         
         <div className={styles.found_eons}>
-          {scanResultsList && 
+          {(scanResultsList.length > 0) && 
+            <span>
+            <div className={styles.list_group_header}>
+              Found {scanResults.length} New EON(s)
+            </div>
             <ListGroup>
               {scanResultsList.map((key,index) => {
-                let scanResult = scanResults[key]
-                return (<ListGroupItem key={index} onClick={() => { this.handleSelectEon(eon.id);}} className={styles.results_button} tag="button">
-                    <span className={styles.eon_icon}><Eon width="100%" height="100%" /></span>
-                    <span className={styles.results_details}>
-                      <span className={styles.results_button_ip}>{scanResult.ip}</span>
-                      <span className={styles.results_button_mac}>{scanResult.mac}</span>
-                    </span>
-                    <span className={styles.results_button_selected}><i className="fa fa-chevron-right"></i></span>
-                  </ListGroupItem>);
+                let scanResult = scanResults[key];
+                // console.log("scanResult:",scanResult);
+                if (scanResult) {
+                  return (<ListGroupItem key={index} onClick={() => { this.addEon(scanResult);}} className={styles.results_button} tag="button">
+                      <span className={styles.eon_icon}><Eon width="100%" height="100%" /></span>
+                      <span className={styles.results_details}>
+                        <span className={styles.results_button_ip}>{scanResult.ip}</span>
+                        <span className={styles.results_button_mac}>{scanResult.mac}</span>
+                      </span>
+                      <span className={styles.results_button_selected}><i className="fa fa-plus"></i></span>
+                    </ListGroupItem>);
+                } else {
+                  return (
+                    <ListGroupItem key={index} onClick={() => { this.handleSelectEon(scanResult.id);}} className={styles.results_button} tag="button">
+                    </ListGroupItem>
+                  )
+                }
               })}
             </ListGroup>
+            </span>
           }
         </div>
 
         <div className={styles.existing_eons}>
           {eons && 
+            <span>
+            {(scanResultsList.length > 0) &&
+              <div className={styles.list_group_header}>
+                Previously Added EONs
+              </div>
+            }
             <ListGroup>
               {eonList.map((key,index) => {
                 let eon = eons[key];
+                console.log("eon:",eon);
                 return (<ListGroupItem key={index} onClick={() => { this.handleSelectEon(eon.id);}} className={styles.results_button} tag="button">
                     <span className={styles.eon_icon}><Eon width="100%" height="100%" /></span>
                     <span className={styles.results_details}>
@@ -150,6 +180,7 @@ class EonList extends Component {
                   </ListGroupItem>);
               })}
             </ListGroup>
+            </span>
           }
         </div>
           

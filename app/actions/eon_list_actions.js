@@ -1,9 +1,5 @@
-import path from 'path';
-import fs from 'fs';
-import settings from 'electron-settings';
-import routes from '../constants/routes.json';
+
 import * as types from '../constants/eon_list_action_types';
-import * as networkActions from './network_connection_actions';
 
 const app = require('electron').remote.app;
 const SSH = require('node-ssh');
@@ -16,21 +12,23 @@ function revisedRandId() {
 
 export function ADD_EON(eon) {
   let randomId = revisedRandId();
-  let newEon = {
-  }
+  let newEon = {};
+
   newEon[randomId] = {
     ...eon,
     id: randomId
-  }
+  };
+  
   return {
     type: types.ADD_EON,
     payload: {
       eon: newEon
     }
-  }
+  };
 }
 
 export function SELECT_EON(index) {
+  console.warn("SELECT_EON:",index);
   return {
     type: types.SELECT_EON,
     payload: {
@@ -47,7 +45,8 @@ export function DESELECT_EON(index) {
 
 export function selectEon(eon) {
   return (dispatch, getState) => {
-    dispatch(SELECT_EON(eon.id));
+    console.log("Selecting eon",eon);
+    dispatch(SELECT_EON(eon));
   };
 }
 export function checkExistingEONStatuses() {
