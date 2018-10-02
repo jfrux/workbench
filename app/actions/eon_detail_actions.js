@@ -230,6 +230,7 @@ export function FAIL_sshCommand(err) {
     }
   };
 }
+
 export function sendPiped(eon, command, commandArgs = [], stdOut = () => {}, stdErr = () => {}) {
   const privateKey = getPrivateKey();
   // console.log(privateKey);
@@ -288,6 +289,8 @@ export function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, s
     });
   };
 }
+
+
 // export function pipeTmux() {
 //   return (dispatch, getState) => {
 //     const { selectedEon, eons } = getState().eonList;

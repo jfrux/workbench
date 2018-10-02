@@ -1,8 +1,8 @@
 import * as types from '../constants/network_scanner_action_types';
-
 function revisedRandId() {
   return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
 }
+
 export function BEGIN_scanNetwork() {
   return {
     type: types.SCAN_NETWORK
@@ -11,13 +11,14 @@ export function BEGIN_scanNetwork() {
 
 export function RESULT_scanNetwork(result) {
   let randomId = revisedRandId();
-  let newEon = {
-  }
+  let newEon = {}
   if (result.status !== "open") {
+    // console.warn("NOT 'open' " + result.ip,result);
     return {
-      type: types.SCAN_RESULT_ERROR
+      type: types.SCAN_NETWORK_PROGRESS
     }
   }
+  console.warn("OPEN " + result.ip,result);
   newEon[randomId] = {
     ...result,
     id: randomId

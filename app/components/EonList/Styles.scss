@@ -55,7 +55,7 @@
   color:#555;
 }
 .add_ip_button {
-  flex: 0 0 15%;
+  flex: 0 0 20%;
   background-color:rgba(#000,0.2)!important;
   border:0!important;
   border-radius:0!important;
@@ -73,7 +73,7 @@
   text-align:left;
   // width:100%!important;
   margin:0 auto;
-  flex:0 0 85%;
+  flex:0 0 80%;
   background:transparent!important;
   text-align:center!important;
   box-shadow:none!important;
@@ -211,20 +211,6 @@
   }
 }
 
-.results_button_selected 
-
-/* .results_button:hover .eon_icon {
-  opacity: 0.5;
-} */
-.form {
-  display:flex;
-  // flex-flow:wrap;
-}
-.results_button_ip {
-  display:block;
-  color:#F7F7F7;
-}
-
 .results_button_mac {
   display:block;
   color:#888;
@@ -246,4 +232,13 @@
   text-align:center;
   font-weight:200;
   color:#555;
+}
+
+.form {
+  display:flex;
+}
+
+.results_button_ip {
+  display:block;
+  color:#F7F7F7!important;
 }

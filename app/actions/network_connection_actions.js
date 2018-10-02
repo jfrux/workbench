@@ -49,28 +49,29 @@ function getNeighborNetworks(ip) {
 export function getIpsForScan(ip) {
   const { afterNetwork, beforeNetwork } = getNeighborNetworks(ip);
   const baseIpsToScan = [getBaseIp(ip,3).baseIp,beforeNetwork,afterNetwork]; 
+  // const baseIpsToScan = [getBaseIp(ip,3).baseIp]; 
 
   return baseIpsToScan;
-  // return new Promise((resolve,reject) => {
-  //   let newIps = [];
-  //   return Promise.all(baseIpsToScan.map((net) => {
-  //     return new Promise((resolve,reject) => {
-  //       let ips = [];
-  //       var IPEmitter = require('iprange').IPEmitter;
-  //       var emitter = new IPEmitter(net + '/24');
-  //       emitter.on('ip',(ip) => {
-  //         ips.push(ip);
-  //       });
-  //       emitter.on('end', function() {
-  //         resolve(ips);
-  //       });
-  //     });
-  //   })).then((ips) => {
-  //     var merged = [].concat.apply([], ips);
+  return new Promise((resolve,reject) => {
+    let newIps = [];
+    return Promise.all(baseIpsToScan.map((net) => {
+      return new Promise((resolve,reject) => {
+        let ips = [];
+        var IPEmitter = require('iprange').IPEmitter;
+        var emitter = new IPEmitter(net + '/24');
+        emitter.on('ip',(ip) => {
+          ips.push(ip);
+        });
+        emitter.on('end', function() {
+          resolve(ips);
+        });
+      });
+    })).then((ips) => {
+      var merged = [].concat.apply([], ips);
 
-  //     resolve(merged);
-  //   });
-  // });
+      resolve(merged);
+    });
+  });
   
 }
 
