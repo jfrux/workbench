@@ -7,7 +7,6 @@ const mkdirp = require("mkdirp");
 import path from 'path';
 import fs from 'fs';
 import * as commands from '../constants/commands.json';
-
 const SSH = require('node-ssh');
 import * as eonListTypes from '../constants/eon_list_action_types';
 import * as types from '../constants/network_scanner_action_types';
@@ -15,6 +14,7 @@ import * as networkScannerActions from '../actions/network_scanner_actions';
 import * as networkActions from '../actions/network_connection_actions';
 import * as eonListActions from '../actions/eon_list_actions';
 import * as eonDetailActions from '../actions/eon_detail_actions';
+
 const arp = require('node-arp');
 const evilscan = require('evilscan');
 
@@ -109,26 +109,44 @@ function* scanNetwork() {
   // evilscan logic
   ips = ips.map((ip) => { return `${ip}.0/24`; });
   const scanner = yield call(getScanner, `${ips[0]}/24`);
-  // const scanner2 = yield call(getScanner, ips[1]);
-  // const scanner3 = yield call(getScanner, ips[2]);
-  yield fork(read, scanner);
-  // yield fork(read, scanner2);
-  // yield fork(read, scanner3);
+  const scanner2 = yield call(getScanner, ips[1]);
+  const scanner3 = yield call(getScanner, ips[2]);
+  try {
+    yield fork(read, scanner);
+  } catch (e) {
+    console.warn("Errors in check #1");
+  }
+  try {
+    yield fork(read, scanner2);
+  } catch (e) {
+    console.warn("Errors in check #2");
+  }
+  try {
+    yield fork(read, scanner3);
+  } catch(e) {
+    console.warn("Errors in check #3");
+  }
 
   // ssh check logic
-  // for (let ipItem of ips) {
-  //   try {
-  //     let result = yield fork(checkSsh,ipItem);
-  //     console.warn(result.stdout);
-  //     yield put(networkScannerActions.RESULT_scanNetwork({ ip: ipItem }))
-  //   } catch (e) {
-  //     yield put(networkScannerActions.PROGRESS_scanNetwork());
-  //   }
-  // }
-  // yield Promise.all(ips.map((ip) => {
-  //   console.log('Checking...',ip); 
-  //   return call(eonDetailActions.checkSsh,ip); 
-  // }));
+  for (let ipItem of ips) {
+    try {
+      let result = yield fork(checkSsh,ipItem);
+      console.warn(result.stdout);
+      yield put(networkScannerActions.RESULT_scanNetwork({ ip: ipItem }))
+    } catch (e) {
+      yield put(networkScannerActions.PROGRESS_scanNetwork());
+    }
+  }
+  
+    yield Promise.all(ips.map((ip) => {
+      console.log('Checking...',ip);
+      try {
+        return call(eonDetailActions.checkSsh,ip);
+      } catch(e) {
+        console.warn("Nothing found at ",ip);
+      }
+    }));
+      
   
 }
 

@@ -5,5 +5,6 @@
   "PIPE_TMUX": "rm -f /tmp/tmuxpipe;mkfifo /tmp/tmuxpipe;tmux pipe-pane -o 'cat >> /tmp/tmuxpipe';cat /tmp/tmuxpipe",
   "PIPE_STATE": "PYTHONPATH=/data/openpilot PREPAREONLY=1 python /data/workbench.py",
   "INSTALL_FORK": "cd /data;mv ./openpilot ./openpilot.bak;git clone %git_url% openpilot;cd openpilot;git checkout %git_branch%",
-  "FINGERPRINT": "cd /data/openpilot/selfdrive;PYTHONPATH=/data/openpilot PREPAREONLY=1 /data/openpilot/selfdrive/debug/get_fingerprint.py"
+  "FINGERPRINT": "cd /data/openpilot/selfdrive;PYTHONPATH=/data/openpilot PREPAREONLY=1 /data/openpilot/selfdrive/debug/get_fingerprint.py",
+  "OPEN_ANDROID_SETTINGS": "am start -a android.settings.SETTINGS"
 }

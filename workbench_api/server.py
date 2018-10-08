@@ -79,6 +79,11 @@ class RESTRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         self.routes = {
             r'^/$': {'file': 'data/index.html', 'media_type': 'text/html'},
             r'^/state.json$': {'file': 'data/state.json', 'media_type': 'application/json'},
+            r'^/auth.json$': {'file': '../data/ai.comma.plus.offroad/files/persistStore/persist-auth', 'media_type': 'application/json'},
+            r'^/drives.json$': {'file': '../data/ai.comma.plus.offroad/files/persistStore/persist-drives', 'media_type': 'application/json'},
+            r'^/goals.json$': {'file': '../data/ai.comma.plus.offroad/files/persistStore/persist-goals', 'media_type': 'application/json'},
+            r'^/settings.json$': {'file': '../data/ai.comma.plus.offroad/files/persistStore/persist-settings', 'media_type': 'application/json'},
+            r'^/updater.json$': {'file': '../data/ai.comma.plus.offroad/files/persistStore/persist-updater', 'media_type': 'application/json'},
             r'^/fingerprint.json$': {'file': 'data/fingerprint.json', 'media_type': 'application/json'}
         }
         

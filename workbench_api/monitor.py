@@ -52,7 +52,7 @@ def main():
       if sock in republish_socks:
         republish_socks[sock].send(msg)
       # print evt
-      service_whitelist = ["thermal","health","gpsLocation"]
+      service_whitelist = ["thermal", "health", "gpsLocation", "carState", "carControl"]
       # THERMAL
       # if evt.which() == 'thermal':
       #   data['thermal'] = evt.thermal.to_dict()

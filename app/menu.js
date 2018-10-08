@@ -189,7 +189,7 @@ export default class MenuBuilder {
     };
 
     const subMenuView =
-      process.env.NODE_ENV === 'development' ? subMenuViewDev : subMenuViewProd;
+      process.env.NODE_ENV === 'development' ? subMenuViewDev : subMenuViewDev;
 
     return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
   }
