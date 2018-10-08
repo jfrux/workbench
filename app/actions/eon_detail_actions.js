@@ -67,6 +67,7 @@ const limitedLogArray = function(length) {
   };
   return array;
 };
+
 function testJSON(text){
   if (typeof text!=="string"){
       return false;
@@ -78,6 +79,35 @@ function testJSON(text){
   catch (error){
       return false;
   }
+}
+
+// AUTH REQUEST
+export function AUTH_REQUEST() {
+  return {
+    type: types.AUTH_REQUEST
+  };
+}
+export function AUTH_REQUEST_SUCCESS(authResponse) {
+  authResponse.commaUser = JSON.parse(authResponse.commaUser);
+  authResponse.googleUser = JSON.parse(authResponse.googleUser);
+  return {
+    type: types.AUTH_REQUEST_SUCCESS,
+    payload: authResponse
+  };
+}
+export function AUTH_REQUEST_FAIL(error) {
+  return {
+    type: types.AUTH_REQUEST_FAIL,
+    payload: {
+      error
+    }
+  };
+}
+
+export function CLOSE_REQUEST_EON_STATE() {
+  return {
+    type: types.EON_STATE_CLOSE
+  };
 }
 
 export function OPEN_REQUEST_EON_STATE() {
@@ -97,11 +127,6 @@ export function FAIL_REQUEST_EON_STATE(error) {
     payload: {
       error
     }
-  };
-}
-export function CLOSE_REQUEST_EON_STATE() {
-  return {
-    type: types.EON_STATE_CLOSE
   };
 }
 
@@ -290,66 +315,31 @@ export function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, s
   };
 }
 
+export function getAuth() {
+  return (dispatch, getState) => {
+    const { selectedEon, eons } = getState().eonList;
+    const { auth } = getState().eonDetail;
+    const eon = eons[selectedEon];
 
-// export function pipeTmux() {
-//   return (dispatch, getState) => {
-//     const { selectedEon, eons } = getState().eonList;
-//     const eon = eons[selectedEon];
-//     console.warn("pipeTmux to:",eon);
-//     if (eon) {
-//       dispatch(OPEN_REQUEST_EON_STATE());
-//       dispatch(eonListActions.sendPiped(eon, commands.PIPE_TMUX, [], (resp) => {
-//         dispatch(RESPONSE_REQUEST_EON_STATE(resp,getState()));
-//       }, (err) => {
-//         dispatch(FAIL_REQUEST_EON_STATE(err));
-//       }));
-//     }
-//   }
-// }
-
-// export function pipeState() {
-//   return (dispatch, getState) => {
-//     const { selectedEon, eons } = getState().eonList;
-//     const eon = eons[selectedEon];
-//     console.warn("pipeState to:",eon);
-//     if (eon) {
-//       dispatch(OPEN_REQUEST_EON_STATE());
-//       dispatch(eonListActions.sendCommand(eon, commands.PIPE_STATE, [], (resp) => {
-//         dispatch(RESPONSE_REQUEST_EON_STATE(resp,getState()));
-//       }, (err) => {
-//         // dispatch(FAIL_REQUEST_EON_STATE(err));
-//         console.warn("err:",err);
-//       }));
-//     }
-//   }
-// }
-// export function closeTmux() {
-//   return (dispatch, getState) => {
-//     if (app && app.tmuxClient) {
-//       app.tmuxClient.dispose();
-//     }
-//     dispatch(eonListActions.DESELECT_EON());
-//     dispatch(CLOSE_REQUEST_EON_STATE());
-//   }
-// }
-// export function installFork(fork) {
-//   return (dispatch, getState) => {
-//     dispatch(BEGIN_fetchPid());
-//     eonListActions.sendCommand(selectedEon, commands.OPENPILOT_PID).then((result) => {
-//       const pid = result.stdout.split('\n')[0].trim();
-      
-//       if (result.stderr) {
-//         dispatch(FAIL_fetchPid(result.stderr));
-//       } else {
-//         if (pid && pid.length) {
-//           dispatch(SUCCESS_fetchPid(pid));
-//         } else {
-//           dispatch(FAIL_fetchPid("Openpilot is not running, or too many processes were returned."));
-//         }
-//       }
-//     });
-//   }
-// }
+    dispatch(AUTH_REQUEST());
+    setTimeout(() => {
+      fetch(`http://${eon.ip}:8080/auth.json`)
+        .then(res => {
+          return res.json();
+        })
+        .then(json => {
+          console.log("AUTH REQUEST",json);
+          dispatch(AUTH_REQUEST_SUCCESS(json));
+        }).catch((err) => {
+          console.log("AUTH ERROR",err);
+          if (!auth) {
+            dispatch(getAuth());
+            dispatch(AUTH_REQUEST_FAIL(err));
+          }
+        });
+    },2000);
+  };
+}
 
 export function fetchFingerprint() {
   return (dispatch, getState) => {

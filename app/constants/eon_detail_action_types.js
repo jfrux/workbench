@@ -5,6 +5,10 @@ export const UNINSTALL = 'eon/UNINSTALL';
 export const UNINSTALL_SUCCESS = 'eon/UNINSTALL_SUCCESS';
 export const UNINSTALL_FAIL = 'eon/UNINSTALL_FAIL';
 
+export const AUTH_REQUEST = 'eon/AUTH_REQUEST';
+export const AUTH_REQUEST_SUCCESS = 'eon/AUTH_REQUEST_SUCCESS';
+export const AUTH_REQUEST_FAIL = 'eon/AUTH_REQUEST_FAIL';
+
 export const EON_STATE = 'eon/EON_STATE';
 export const EON_STATE_OPEN = 'eon/EON_STATE_OPEN';
 export const EON_STATE_CLOSE = 'eon/EON_STATE_CLOSE';

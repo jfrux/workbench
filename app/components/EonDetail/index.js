@@ -19,6 +19,7 @@ import TaskDialog from '../TaskDialog';
 import { Row, CardHeader, Col, Card, CardBody, CardText, CardTitle, CardSubtitle, ListGroup, ListGroupItem } from 'reactstrap';
 // import io from 'socket.io-client';
 const propTypes = {
+  auth: PropTypes.object,
   install: PropTypes.func,
   eon: PropTypes.object,
   sshConnectionError: PropTypes.object,
@@ -57,6 +58,11 @@ class EonDetail extends Component {
     // }
     if (eon && this.props.install) {
       this.props.install(eon);
+
+      this.createTimeout();
+    }
+    if (eon && this.props.getAuth) {
+      this.props.getAuth();
 
       this.createTimeout();
     }

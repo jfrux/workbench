@@ -11,6 +11,7 @@ const initialState = {
   health: null,
   fingerprint: null,
   thermal: null,
+  auth: null,
   currentStateKeys: [],
   workbenchInstalled: false,
   sshConnectionStatus: "not_connected",
@@ -23,6 +24,24 @@ const initialState = {
 
 export default function eonDetailReducer(state = initialState, action) {
   switch (action.type) {
+    case types.AUTH_REQUEST:
+      return {
+        ...state,
+        requestingAuth: true
+      };
+    case types.AUTH_REQUEST_SUCCESS:
+
+      return {
+        ...state,
+        requestingAuth: false,
+        auth: action.payload
+      };
+    case types.AUTH_REQUEST_FAIL:
+      return {
+        ...state,
+        requestingAuth: false,
+        authRequestError: action.payload
+      };
     case types.STOP_POLLING:
       return {
         ...state,
