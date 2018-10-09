@@ -112,8 +112,8 @@ class EonList extends Component {
     return (
       <Layout title="Workbench">
         <Collapse isOpen={scanning}>
-          <Card body inverse color="primary" className={styles.scanning_message}>
-            <CardBody className={styles.scanning_message_body}>
+          <Card body inverse className={"scanning-message"}>
+            <CardBody className={"scanning-message-body"}>
               Scanning for EON...
             </CardBody>
           </Card>

@@ -16,6 +16,7 @@
   background-color:rgb(2, 9, 14)!important;
   border:0!important;
 }
+
 .loading_overlay {
   position: absolute;
   top: 50%;
@@ -47,45 +48,6 @@
 .title {
   font-weight:400;
   font-size:16px;
-}
-.state_card {
-  background-color:rgba(#FFF,0.1)!important;
-  margin-bottom:10px;
-  padding:0!important;
-  border:0!important;
-  border-radius:0!important;
-}
-.state_card_header {
-  border-radius:0!important;
-  text-transform:capitalize;
-  background-color:darken(#03111C,1)!important;
-}
-.state_card_list_group {
-  border:0!important;
-  border-radius:0!important;
-}
-.state_card_list_group_item {
-  border-radius:0!important;
-  padding:3!important;
-  margin-bottom:initial!important;
-  border:0!important;
-  background-color: darken(#03111C,3)!important;
-  font-size:12px!important;
-  position:relative;
-  &:after {
-    content:"";
-    bottom:0;
-    left:0;
-    right:0;
-    position:absolute;
-    height:1px;
-    width:100%;
-    background-color:rgba(#FFF,0.05);
-  }
-}
-.state_card_body {
-  padding:0!important;
-  background-color:darken(#03111C,5);
 }
 .subtext {
   font-weight:200;

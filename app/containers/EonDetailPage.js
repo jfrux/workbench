@@ -5,6 +5,10 @@ import * as EonActions from '../actions/eon_detail_actions';
 
 function mapStateToProps(state) {
   return {
+    activeTab: state.eonDetail.activeTab,
+    devices: state.eonDetail.devices,
+    routes: state.eonDetail.routes,
+    isLoggedIn: state.eonDetail.auth ? state.eonDetail.auth.isLoggedIn : false,
     sshConnectionError: state.eonList.sshConnectionError,
     sshConnectionStatus: state.eonList.sshConnectionStatus,
     status: state.eonDetail.status,

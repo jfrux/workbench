@@ -57,29 +57,29 @@ export function FAIL_uninstall(err) {
   };
 }
 
-const limitedLogArray = function(length) {
-  var array = new Array();
-  array.push = function () {
-    if (this.length >= length) {
-      this.shift();
-    }
-    return Array.prototype.push.apply(this,arguments);
-  };
-  return array;
-};
+// const limitedLogArray = function(length) {
+//   var array = new Array();
+//   array.push = function () {
+//     if (this.length >= length) {
+//       this.shift();
+//     }
+//     return Array.prototype.push.apply(this,arguments);
+//   };
+//   return array;
+// };
 
-function testJSON(text){
-  if (typeof text!=="string"){
-      return false;
-  }
-  try{
-      JSON.parse(text);
-      return true;
-  }
-  catch (error){
-      return false;
-  }
-}
+// function testJSON(text){
+//   if (typeof text!=="string"){
+//       return false;
+//   }
+//   try{
+//       JSON.parse(text);
+//       return true;
+//   }
+//   catch (error){
+//       return false;
+//   }
+// }
 
 // AUTH REQUEST
 export function AUTH_REQUEST() {
@@ -99,6 +99,49 @@ export function AUTH_REQUEST_FAIL(error) {
   return {
     type: types.AUTH_REQUEST_FAIL,
     payload: {
+      error
+    }
+  };
+}
+
+// DRIVE MODAL
+export function OPEN_DRIVE(driveIndex) {
+  return {
+    type: types.OPEN_DRIVE,
+    payload: driveIndex
+  };
+}
+export function CLOSE_DRIVE() {
+  return {
+    type: types.CLOSE_DRIVE
+  };
+}
+// ROUTES REQUEST
+export function API_REQUEST(endpoint) {
+  return {
+    type: types.API_REQUEST
+  };
+}
+export function API_REQUEST_SUCCESS(endpoint, json) {
+  let payload = {};
+  
+  let hasOwnKey = Object.keys(json).includes(endpoint);
+  console.warn("Has Own Key:",hasOwnKey);
+  if (hasOwnKey) {
+    payload = json;
+  } else {
+    payload[endpoint] = json;
+  }
+  return {
+    type: types.API_REQUEST_SUCCESS,
+    payload
+  };
+}
+export function API_REQUEST_FAIL(endpoint, error) {
+  return {
+    type: types.API_REQUEST_FAIL,
+    payload: {
+      endpoint,
       error
     }
   };
@@ -197,12 +240,21 @@ RsVMUiFgloWGHETOy0Qvc5AwtqTJFLTD1Wza2uBilSVIEsg6Y83Gickh+ejOmEsY
   
   return key.exportKey('private', 'pem', 'pkcs1'); 
 }
+
+export function CHANGE_TAB(tab) {
+  return {
+    type: types.CHANGE_TAB,
+    payload: tab
+  };
+}
+
 // SSH ACTION CREATORS
 export function BEGIN_connectSSH() {
   return {
     type: types.CONNECT_SSH
   };
 }
+
 
 export function SUCCESS_connectSSH() {
   return {
@@ -315,32 +367,6 @@ export function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, s
   };
 }
 
-export function getAuth() {
-  return (dispatch, getState) => {
-    const { selectedEon, eons } = getState().eonList;
-    const { auth } = getState().eonDetail;
-    const eon = eons[selectedEon];
-
-    dispatch(AUTH_REQUEST());
-    setTimeout(() => {
-      fetch(`http://${eon.ip}:8080/auth.json`)
-        .then(res => {
-          return res.json();
-        })
-        .then(json => {
-          console.log("AUTH REQUEST",json);
-          dispatch(AUTH_REQUEST_SUCCESS(json));
-        }).catch((err) => {
-          console.log("AUTH ERROR",err);
-          if (!auth) {
-            dispatch(getAuth());
-            dispatch(AUTH_REQUEST_FAIL(err));
-          }
-        });
-    },2000);
-  };
-}
-
 export function fetchFingerprint() {
   return (dispatch, getState) => {
     const { selectedEon, eons } = getState().eonList;
@@ -404,10 +430,6 @@ export function install() {
 
       app.sshClient.dispose();
       dispatch(SUCCESS_install());
-      dispatch(fetchEonState());
-      dispatch(fetchFingerprint());
-      
-      console.warn("API Now Running on EON");
     }, (err) => {
       console.warn("Error was thrown while installing...");
     }));

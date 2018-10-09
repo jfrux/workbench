@@ -195,3 +195,144 @@ a:hover {
   text-decoration: none;
   cursor: pointer;
 } */
+
+.drive-viewer {
+  padding:0;
+  margin:0;
+  .modal-header {
+    border:0;
+  }
+  .modal-content {
+    border:0;
+    background-color:#03111C;
+  }
+}
+
+.list-group-item {
+  padding:0;
+  border-radius:0;
+  background-color: #03111C;
+  color:#FFF;
+  display:block;
+  height:100%;
+  width:100%;
+  &:hover {
+    color:#FFF;
+    background-color: lighten(#03111C,10);
+  }
+  &:first-child,&:last-child {
+    border-radius:0;
+  }
+
+}
+.list-group.route-list {
+  border-radius:0;
+  display:flex;
+  width:100%;
+  .LazyLoad {
+    display:flex;
+    flex:0 0 100%;
+  }
+  .list-group-item {
+    height:70px;
+    width:100%;
+    display:block;
+    display:flex;
+    flex:0 0 100%;
+    .thumbnail {
+      flex: 0 0 25%;
+      vertical-align:middle;
+      padding:10px;
+      border-bottom:1px solid rgba(#FFF,0.1);
+      width:25%;
+      img {
+        height:50px;
+      }
+    }
+    .details {
+      padding:10px;
+      flex: 0 0 75%;
+      font-size:13px;
+      border-bottom:1px solid rgba(#FFF,0.1);
+      vertical-align:middle;
+    }
+  }
+}
+
+.card {
+  background-color:rgba(#FFF,0.1)!important;
+  margin-bottom:10px;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+}
+.card-header {
+  border-radius:0!important;
+  text-transform:capitalize;
+  padding: 3px 10px;
+  background-color:darken(#03111C,10);
+  color:#444;
+  font-size:12px;
+  text-transform:uppercase;
+}
+.card-list-group {
+  border:0!important;
+  border-radius:0!important;
+}
+.card-list-group-item {
+  border-radius:0!important;
+  padding:3!important;
+  margin-bottom:initial!important;
+  border:0!important;
+  background-color: darken(#03111C,3)!important;
+  font-size:12px!important;
+  position:relative;
+  &:after {
+    content:"";
+    bottom:0;
+    left:0;
+    right:0;
+    position:absolute;
+    height:1px;
+    width:100%;
+    background-color:rgba(#FFF,0.05);
+  }
+}
+.card-body {
+  padding:0!important;
+  background-color:darken(#03111C,5);
+}
+.nav {
+  border-bottom:0!important;
+}
+
+.nav-tabs {
+  .nav-link {
+    background-color:#03111C;
+    color:#FFF;
+    border:0;
+    border-radius:0;
+    cursor:pointer;
+
+    &.active {
+      color:#FFF;
+      background-color:lighten(#03111C,10);
+      border:0;
+      border-radius:0;
+    }
+    &:hover {
+      border:0;
+    }
+  }
+}
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+  color:#FFF;
+  background-color:lighten(#03111C,10);
+  border:0;
+  border-radius:0;
+}
+.nav-tabs .nav-link:hover, .nav-tabs .nav-link:focus {
+  // border-color: #e9ecef #e9ecef #dee2e6;
+  border:0;
+}

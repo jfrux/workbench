@@ -5,9 +5,13 @@ import settings from 'electron-settings';
 const defaultTmuxLogLength = 300;
 
 const initialState = {
+  activeTab: '1',
   updated: null,
   vehicleConnection: null,
   service: null,
+  routes: null,
+  devices: null,
+  activeDrive: null,
   health: null,
   fingerprint: null,
   thermal: null,
@@ -24,23 +28,41 @@ const initialState = {
 
 export default function eonDetailReducer(state = initialState, action) {
   switch (action.type) {
+    case types.CHANGE_TAB:
+      return {
+        ...state,
+        activeTab: action.payload
+      };
     case types.AUTH_REQUEST:
       return {
         ...state,
         requestingAuth: true
       };
     case types.AUTH_REQUEST_SUCCESS:
-
       return {
         ...state,
         requestingAuth: false,
-        auth: action.payload
+        auth: action.payload,
+        authRequestError: null
       };
     case types.AUTH_REQUEST_FAIL:
       return {
         ...state,
         requestingAuth: false,
         authRequestError: action.payload
+      };
+    case types.API_REQUEST:
+      return {
+        ...state
+      };
+    case types.API_REQUEST_SUCCESS:
+      return {
+        ...state,
+        ...action.payload
+      };
+    case types.API_REQUEST_FAIL:
+      return {
+        ...state
       };
     case types.STOP_POLLING:
       return {
@@ -195,6 +217,16 @@ export default function eonDetailReducer(state = initialState, action) {
       return {
         ...state,
         polling: false
+      };
+    case types.OPEN_DRIVE:
+      return {
+        ...state,
+        activeDrive: action.payload
+      };
+    case types.CLOSE_DRIVE:
+      return {
+        ...state,
+        activeDrive: null
       };
     default:
       return state;

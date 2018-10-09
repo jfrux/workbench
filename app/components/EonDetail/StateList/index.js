@@ -41,7 +41,7 @@ class StateList extends Component {
       if (!stateStatus) {
         return;
       }
-      return (<ListGroupItem key={key} className={styles.state_card_list_group_item}>
+      return (<ListGroupItem key={key} className={"card-list-group-item"}>
           <span key={key} className={styles.state_item}>
             <span className={styles.state_label}>
               <i className={stateIcon}></i> 

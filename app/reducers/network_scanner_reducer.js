@@ -3,9 +3,9 @@ import * as types from '../constants/network_scanner_action_types';
 import settings from 'electron-settings';
 
 const initialState = {
-  scanning: false,
+  scanning: true,
   scanResults: {},
-  status: "not_scanned",
+  status: "scanning",
   progress: 0,
   scanCount: 0,
   maxCount: 762

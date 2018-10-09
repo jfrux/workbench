@@ -4,10 +4,17 @@ export const INSTALL_FAIL = 'eon/INSTALL_FAIL';
 export const UNINSTALL = 'eon/UNINSTALL';
 export const UNINSTALL_SUCCESS = 'eon/UNINSTALL_SUCCESS';
 export const UNINSTALL_FAIL = 'eon/UNINSTALL_FAIL';
-
+export const CHANGE_TAB = 'eon/CHANGE_TAB';
 export const AUTH_REQUEST = 'eon/AUTH_REQUEST';
 export const AUTH_REQUEST_SUCCESS = 'eon/AUTH_REQUEST_SUCCESS';
 export const AUTH_REQUEST_FAIL = 'eon/AUTH_REQUEST_FAIL';
+
+export const OPEN_DRIVE = 'eon/OPEN_DRIVE';
+export const CLOSE_DRIVE = 'eon/CLOSE_DRIVE';
+
+export const API_REQUEST = 'eon/API_REQUEST';
+export const API_REQUEST_SUCCESS = 'eon/API_REQUEST_SUCCESS';
+export const API_REQUEST_FAIL = 'eon/API_REQUEST_FAIL';
 
 export const EON_STATE = 'eon/EON_STATE';
 export const EON_STATE_OPEN = 'eon/EON_STATE_OPEN';
