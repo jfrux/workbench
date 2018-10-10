@@ -22,7 +22,7 @@ export function ADD_EON(eon) {
   return {
     type: types.ADD_EON,
     payload: {
-      eon: newEon
+      ...newEon
     }
   };
 }

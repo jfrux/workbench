@@ -37,11 +37,11 @@ export function MAC_ADDRESS_REQUEST() {
   };
 }
 
-export function MAC_ADDRESS_SUCCESS(data) {
+export function MAC_ADDRESS_SUCCESS(eon) {
   return {
     type: types.MAC_ADDRESS_SUCCESS,
     payload: {
-      eon: data
+      ...eon
     }
   };
 }

@@ -36,10 +36,11 @@ function* read(scanner) {
   }
 }
 
-function fetchMacAddress(action) {
-  console.log("fetching mac address: ",action);
+function fetchMacAddress(eon) {
+  // console.log("fetching mac address: ",action);
   return new Promise((resolve,reject) => {
-    arp.getMAC(action.payload.ip, function(err, mac) {
+    console.warn("Checking MAC of ",eon.ip);
+    arp.getMAC(eon.ip, function(err, mac) {
       if (!err) {
         resolve(mac);
       } else {
@@ -50,12 +51,22 @@ function fetchMacAddress(action) {
 }
 
 function* getResultInfo(action) {
+  const { networkScanner } = yield select();
+  const { scanResults } = networkScanner;
+  const { eon } = action.payload;
+  const eonId = Object.keys(eon)[0]
+  const eonObj = eon[eonId];
+  let result = {};
   let mac_address;
   console.warn("Starting getResultInfo",action);
   yield put(networkScannerActions.MAC_ADDRESS_REQUEST());
   try {
-    mac_address = yield call(fetchMacAddress,action);
-    yield put(networkScannerActions.MAC_ADDRESS_SUCCESS(mac_address));
+    mac_address = yield call(fetchMacAddress,eonObj);
+    result[eonId] = {
+      ...scanResults[eonId],
+      mac: mac_address
+    };
+    yield put(networkScannerActions.MAC_ADDRESS_SUCCESS(result));
   } catch (e) {
     yield put(networkScannerActions.MAC_ADDRESS_ERROR(e));
   }
@@ -64,7 +75,7 @@ function* getResultInfo(action) {
 export function* createScannerEventChannel(scanner) {
   return eventChannel(emit => {
     const scanError = (data) => {
-      emit(networkScannerActions.FAIL_scanNetwork(new Error(data.toString())));
+      emit(networkScannerActions.FAIL_scanNetwork(data.toString()));
     };
     
     const scanResult = (data) => {
@@ -88,11 +99,12 @@ export function* createScannerEventChannel(scanner) {
     };
   });
 }
+
 function* checkSsh(ip) {
   const sshConn = new SSH();
   const privateKey = eonDetailActions.getPrivateKey();
-  console.log("Checking ssh for " + ip);
-  console.log("Dispatch check for ssh on " + ip);
+  // console.log("Checking ssh for " + ip);
+  // console.log("Dispatch check for ssh on " + ip);
 
   return sshConn.connect({
     host: ip,
@@ -101,11 +113,12 @@ function* checkSsh(ip) {
     privateKey: privateKey
   });
 }
+
 // function* scan
 function* scanNetwork() {
   const ip = IpUtil.address();
   let ips = yield networkActions.getIpsForScan(ip);
-  console.log(ips);
+  // console.log(ips);
   // evilscan logic
   ips = ips.map((ip) => { return `${ip}.0/24`; });
   const scanner = yield call(getScanner, `${ips[0]}/24`);
@@ -131,28 +144,31 @@ function* scanNetwork() {
   for (let ipItem of ips) {
     try {
       let result = yield fork(checkSsh,ipItem);
-      console.warn(result.stdout);
+      // console.warn(result.stdout);
       yield put(networkScannerActions.RESULT_scanNetwork({ ip: ipItem }))
     } catch (e) {
       yield put(networkScannerActions.PROGRESS_scanNetwork());
     }
   }
   
-    yield Promise.all(ips.map((ip) => {
-      console.log('Checking...',ip);
-      try {
-        return call(eonDetailActions.checkSsh,ip);
-      } catch(e) {
-        console.warn("Nothing found at ",ip);
-      }
-    }));
-      
-  
+  // yield Promise.all(ips.map((ip) => {
+  //   // console.log('Checking...',ip);
+  //   try {
+  //     return call(eonDetailActions.checkSsh,ip);
+  //   } catch(e) {
+  //     console.warn("Nothing found at ",ip);
+  //   }
+  // }));
+}
+
+function* checkExistingEon() {
+
 }
 
 // EXPORT ROOT SAGA
 export function* scannerSagas() {
   yield all([
+    // yield takeLatest(eonListTypes.EON_LIST_UPDATE, checkExistingEon),
     yield takeLatest(types.SCAN_NETWORK, scanNetwork),
     yield takeEvery(types.SCAN_NETWORK_RESULT, getResultInfo)
   ]);

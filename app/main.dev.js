@@ -111,10 +111,10 @@ app.on('ready', async () => {
     // show: false,
     titleBarStyle: 'hiddenInset',
     backgroundColor: "#000000",
-    width: 540,
-    height: 640,
-    maxWidth: 540,
-    maxHeight: 640,
+    // width: 540,
+    // height: 640,
+    // maxWidth: 540,
+    // maxHeight: 640,
     minWidth: 540,
     minHeight: 640
   });

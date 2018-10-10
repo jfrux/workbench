@@ -7,7 +7,7 @@ function mapStateToProps(state) {
   return {
     activeTab: state.eonDetail.activeTab,
     devices: state.eonDetail.devices,
-    routes: state.eonDetail.routes,
+    drives: state.eonDetail.routes,
     isLoggedIn: state.eonDetail.auth ? state.eonDetail.auth.isLoggedIn : false,
     sshConnectionError: state.eonList.sshConnectionError,
     sshConnectionStatus: state.eonList.sshConnectionStatus,
@@ -25,6 +25,8 @@ function mapStateToProps(state) {
     vehicleConnection: state.eonDetail.vehicleConnection,
     thermal: state.eonDetail.thermal,
     health: state.eonDetail.health,
+    carState: state.eonDetail.carState,
+    carControl: state.eonDetail.carControl,
     gpsLocation: state.eonDetail.gpsLocation,
     fingerprint: state.eonDetail.fingerprint,
     currentStateKeys: state.eonDetail.currentStateKeys,

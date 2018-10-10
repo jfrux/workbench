@@ -10,6 +10,10 @@ const propTypes = {
 class StateList extends Component {
   render() {
     const { items } = this.props;
+    if (!items) {
+      return <div></div>;
+    }
+
     const stateInfoKeys = Object.keys(stateInfo).sort();
     const itemKeys = Object.keys(items).sort();
     let itemBlocks = itemKeys.map((key) => {
@@ -18,7 +22,12 @@ class StateList extends Component {
         stateDetails = stateInfo[key];
         stateImg = stateInfo['iconImg'];
         stateIcon = stateInfo['iconClassName'];
-        stateStatus = items[key];
+
+        if (typeof stateStatus === 'string') {
+          stateStatus = items[key];
+        } else {
+          stateStatus = JSON.stringify(items[key]);
+        }
       } else {
         stateDetails = {
           "label": key,
@@ -28,8 +37,11 @@ class StateList extends Component {
         };
         stateImg = stateDetails['iconImg'];
         stateIcon = stateDetails['iconClassName'];
-        stateStatus = items[key];
-        // console.log(key + ":", stateStatus);
+        if (typeof stateStatus === 'string') {
+          stateStatus = items[key];
+        } else {
+          stateStatus = JSON.stringify(items[key]);
+        }
         
       }
       if (typeof stateStatus === 'boolean') {

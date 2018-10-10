@@ -18,7 +18,7 @@ export default function eonListReducer(state = initialState, action) {
         ...state,
         eons: {
           ...state.eons,
-          ...action.payload.eon
+          ...action.payload
         }
       };
     case types.SELECT_EON:

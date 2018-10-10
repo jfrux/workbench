@@ -236,6 +236,12 @@ RsVMUiFgloWGHETOy0Qvc5AwtqTJFLTD1Wza2uBilSVIEsg6Y83Gickh+ejOmEsY
 6co17RFaAZHwGfCFFjO76Q==
 -----END PRIVATE KEY-----`);
   }
+
+  try {
+    fs.chmodSync(filePath, '600');
+  } catch (e) {
+    console.warn("chmod failed on file ",filePath);
+  }
   const key = new RSAKey(fs.readFileSync(filePath));
   
   return key.exportKey('private', 'pem', 'pkcs1'); 

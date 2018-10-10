@@ -9,7 +9,7 @@ const initialState = {
   updated: null,
   vehicleConnection: null,
   service: null,
-  routes: null,
+  drives: null,
   devices: null,
   activeDrive: null,
   health: null,

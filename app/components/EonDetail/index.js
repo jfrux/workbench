@@ -27,7 +27,7 @@ import { Row, CardHeader,TabContent, Nav, NavItem, NavLink, TabPane, Col, Card, 
 // import io from 'socket.io-client';
 const propTypes = {
   activeTab: PropTypes.string,
-  routes: PropTypes.any,
+  drives: PropTypes.any,
   devices: PropTypes.any,
   isLoggedIn: PropTypes.any,
   apiRequest: PropTypes.func,
@@ -74,10 +74,10 @@ class EonDetail extends Component {
     this.props.OPEN_DRIVE(driveIndex);
   }
   render() {
-    const { activeTab, network, fingerprint, routes, devices, tmuxError, fingerprintString, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshStatus, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
+    const { activeTab, network, fingerprint, devices, tmuxError, fingerprintString, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshStatus, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
     const vehicleConnectionInfo = vehicleConnectionStatuses[vehicleConnection];
     // const { usbOnline } = thermal;
-    console.warn("sshConnectionError:",sshConnectionError);
+    // console.warn("sshConnectionError:",sshConnectionError);
     if (network === 'disconnected' || eon == null) {
       return (<Redirect to={routes.EON_LIST} />);
     }
@@ -89,7 +89,7 @@ class EonDetail extends Component {
     // }
     let stateBlocks;
     if (!currentStateKeys.length) {
-      stateBlocks = <LoadingOverlay />;
+      // stateBlocks = <LoadingOverlay />;
     } else {
       stateBlocks = currentStateKeys.map((key) => {
         const items = this.props[key];
@@ -181,7 +181,7 @@ class EonDetail extends Component {
           </TabPane>
           <TabPane tabId="4">
             {fingerprintString && 
-            <Card className={styles.state_card}>
+            <Card className={"state-card" + " " + styles.state_card}>
               <CardBody className={styles.state_card_body}>
                 <CardHeader className={styles.state_card_header}>Fingerprint</CardHeader>
                 <Textarea autoFocus className={styles.fingerprint_input + " form-control text-light"} rows="4" defaultValue={fingerprintString} />
