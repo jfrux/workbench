@@ -15,6 +15,7 @@ const initialState = {
   health: null,
   fingerprint: null,
   thermal: null,
+  installError: null,
   auth: null,
   currentStateKeys: [],
   workbenchInstalled: false,
@@ -202,6 +203,7 @@ export default function eonDetailReducer(state = initialState, action) {
     case types.INSTALL_FAIL:
       return {
         ...state,
+        installError: action.payload.err,
         polling: false
       };
     case types.UNINSTALL:

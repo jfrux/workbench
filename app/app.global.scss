@@ -25,6 +25,55 @@
   z-index: 100;
 }
 
+.nav_link {
+  color:#FFF!important;
+  opacity:0.5;
+  cursor: pointer;
+  &:hover {
+    opacity:1;
+  }
+}
+
+.add_field {
+  border:0!important;
+  text-align:left;
+  // width:100%!important;
+  margin:0;
+  
+  background:transparent!important;
+  text-align:center!important;
+  box-shadow:none!important;
+  display:block;
+  height:100%;
+  width:100%;
+}
+.add_ip_button {
+  padding:0!important;
+  margin:0;
+  line-height: 30px;
+  background-color:rgba(#000,0.2)!important;
+  border:0!important;
+  border-radius:0!important;
+  text-align:center;
+  display:block;
+  height:100%;
+  width:100%;
+  border-right:1px solid rgba(#FFF,0.05)!important;
+}
+
+.refresh_button {
+  padding:0!important;
+  margin:0;
+  line-height: 30px;
+  background-color:rgba(#000,0.2)!important;
+  border:0!important;
+  text-align:center;
+  border-radius:0!important;
+  text-align:center;
+  display:block;
+  height:100%;
+  width:100%;
+}
 .smalltalk + .smalltalk {
   transition: ease 1s;
   display: none;

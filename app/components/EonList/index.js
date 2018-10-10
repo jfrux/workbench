@@ -5,10 +5,11 @@ import Eon from "../../images/device-icons/eon.svg";
 import PropTypes from 'prop-types';
 import routes from '../../constants/routes.json';
 import Layout from '../Layout';
+import classnames from 'classnames';
 import NoConnection from './NoConnection';
 import ProgressBar from './ProgressBar';
 import LoadingIndicator from '../LoadingIndicator';
-import { Container, ListGroup, Collapse, Card, CardBody, ListGroupItem } from 'reactstrap';
+import { Container, ListGroup, Collapse, Card, CardBody, Nav, NavItem, NavLink, ListGroupItem, Form, Button, FormGroup, Label, FormFeedback, FormText, InputGroup, InputGroupAddon, InputGroupText, Input} from 'reactstrap';
 import statusMessages from '../../constants/scan_status_messages.json';
 import sshConnectionStatusMessages from '../../constants/ssh_connection_status.json';
 
@@ -52,11 +53,7 @@ class EonList extends Component {
     this.setState({value: event.target.value});
   }
   addEon = (eon) => {
-    this.props.REMOVE_SCANNED_RESULT(eon.id);
-    this.props.ADD_EON({
-      ip: eon.ip,
-      mac: "00:00:00:00:00"
-    });
+    this.props.ADD_EON(eon);
   }
   handleSubmit = (event) => {
     const { value } = this.state;
@@ -64,12 +61,12 @@ class EonList extends Component {
       this.setState({
         manualError: ''
       });
-      this.props.ADDED_EON({
-        ip: value
-      });
-      this.props.ADD_EON({
+      // this.props.ADDED_EON({
+      //   ip: value
+      // });
+      this.addEon({
         ip: value,
-        mac: "00:00:00:00:00"
+        mac: null
       });
       this.setState({value: ''});
     } else {
@@ -108,9 +105,30 @@ class EonList extends Component {
     if (network === 'disconnected') {
       return <NoConnection />;
     }
-    
+    const contextActions = [
+      <NavItem key={1} className={styles.nav_item}>
+        <NavLink className={classnames({ nav_link: true, disabled: scanning })} onClick={this.handleScanNetwork}>
+          <i className={"fa fa-sync" + (scanning ? " fa-spin" : "")}></i>
+        </NavLink>
+      </NavItem>
+    ];
     return (
-      <Layout title="Workbench">
+      <Layout title="Workbench" contextActions={contextActions}>
+        <Collapse isOpen={!scanning}>
+          <div className={styles.add_form_area}>
+            <Form inline onSubmit={this.handleSubmit} className={"p-0 m-0"}>
+              <FormGroup className={"col col-8 p-0 h-100"}>
+                <Input placeholder="___.___.___.___" className={"add_field d-block w-100"} value={this.state.value} onChange={this.handleChange} />
+              </FormGroup>
+              <FormGroup className={"col col-2 p-0 h-100"}>
+                <Button className={"add_ip_button"} type="submit"><i className="fa fa-plus"></i></Button>
+              </FormGroup>
+              <FormGroup className={"col col-2 p-0 h-100"}>
+                <Button className={"refresh_button"} type="button" onClick={this.handleScanNetwork}><i className="fa fa-sync"></i> Scan</Button>
+              </FormGroup>
+            </Form>
+          </div>
+        </Collapse>
         <Collapse isOpen={scanning}>
           <Card body inverse className={"scanning-message"}>
             <CardBody className={"scanning-message-body"}>
@@ -141,8 +159,8 @@ class EonList extends Component {
                   return (<ListGroupItem key={index} onClick={() => { this.addEon(scanResult);}} className={styles.results_button} tag="button">
                       <span className={styles.eon_icon}><Eon width="100%" height="100%" /></span>
                       <span className={styles.results_details}>
-                        <span className={styles.results_button_ip}>{scanResult.ip}</span>
-                        <span className={styles.results_button_mac}>{scanResult.mac}</span>
+                        <span className={styles.results_button_ip}>{scanResult.mac}</span>
+                        <span className={styles.results_button_mac}>{scanResult.ip}</span>
                       </span>
                       <span className={styles.results_button_selected}><i className="fa fa-plus"></i></span>
                     </ListGroupItem>);
@@ -173,8 +191,8 @@ class EonList extends Component {
                 return (<ListGroupItem key={index} onClick={() => { this.handleSelectEon(eon.id);}} className={styles.results_button} tag="button">
                     <span className={styles.eon_icon}><Eon width="100%" height="100%" /></span>
                     <span className={styles.results_details}>
-                      <span className={styles.results_button_ip}>{eon.ip}</span>
-                      <span className={styles.results_button_mac}>{eon.mac}</span>
+                      <span className={styles.results_button_ip}>{eon.mac}</span>
+                      <span className={styles.results_button_mac}>{eon.ip}</span>
                     </span>
                     <span className={styles.results_button_selected}><i className="fa fa-chevron-right"></i></span>
                   </ListGroupItem>);
@@ -184,14 +202,10 @@ class EonList extends Component {
           }
         </div>
           
-          <Collapse isOpen={!scanning}>
-          <div className={styles.add_form_area}>
-            <form onSubmit={this.handleSubmit} className={styles.form}>
-              <input type="text" className={styles.add_field + " form-control"} value={this.state.value} onChange={this.handleChange} placeholder="___.___.___.___" />
-              <button className={styles.add_ip_button + " btn btn-primary"} type="submit"><i className="fa fa-plus"></i></button>
-            </form>
-          </div>
-          </Collapse>
+          
+          {!eonList.length && !scanResultsList.length &&
+            <p style={{padding:'15px'}}><strong>You haven't added any EON</strong><br />Start by scanning your network by clicking the refresh icon to the left.</p>
+          }
       </Layout>
     );
   }

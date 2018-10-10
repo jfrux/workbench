@@ -14,7 +14,6 @@ const deleteProperty = ({[key]: _, ...newObj}, key) => newObj;
 export default function eonListReducer(state = initialState, action) {
   switch (action.type) {
     case types.MAC_ADDRESS_SUCCESS:
-    console.warn("mac reducer");
       return {
         ...state,
         scanResults: {
@@ -45,14 +44,14 @@ export default function eonListReducer(state = initialState, action) {
         ...state
       };
 
-    case types.SCAN_NETWORK_RESULT:
-      return {
-        ...state,
-        scanResults: {
-          ...state.scanResults,
-          ...action.payload.eon
-        },
-      };
+    // case types.SCAN_NETWORK_RESULT:
+    //   return {
+    //     ...state,
+    //     scanResults: {
+    //       ...state.scanResults,
+    //       ...action.payload.eon
+    //     },
+    //   };
     case types.SCAN_NETWORK_FAIL:
       return {
         ...state,

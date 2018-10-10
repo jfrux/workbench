@@ -15,6 +15,10 @@ import * as networkActions from '../actions/network_connection_actions';
 import * as eonListActions from '../actions/eon_list_actions';
 import * as eonDetailActions from '../actions/eon_detail_actions';
 
+function revisedRandId() {
+  return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
+}
+
 const arp = require('node-arp');
 const evilscan = require('evilscan');
 
@@ -41,10 +45,11 @@ function fetchMacAddress(eon) {
   return new Promise((resolve,reject) => {
     console.warn("Checking MAC of ",eon.ip);
     arp.getMAC(eon.ip, function(err, mac) {
+      // console.warn("Mac Lookup Error:",err,arguments);
       if (!err) {
         resolve(mac);
       } else {
-        reject(err);
+        reject(new Error("Failed to get Mac Address: Unknown host"));
       }
     });
   });
@@ -150,26 +155,60 @@ function* scanNetwork() {
       yield put(networkScannerActions.PROGRESS_scanNetwork());
     }
   }
-  
-  // yield Promise.all(ips.map((ip) => {
-  //   // console.log('Checking...',ip);
-  //   try {
-  //     return call(eonDetailActions.checkSsh,ip);
-  //   } catch(e) {
-  //     console.warn("Nothing found at ",ip);
-  //   }
-  // }));
 }
 
-function* checkExistingEon() {
+function* handleAddEon(action) {
+  const { eonList } = yield select();
+  const { eons } = eonList; 
+  let { payload } = action;
+  let randomId = revisedRandId();
+  
+  let newEon = {};
+  console.warn("Attempting to add eon: ", action);
+  
+  try {
+    if (!payload.mac) {
+      const mac_address = yield call(fetchMacAddress, payload);
+      payload = {
+        ...payload,
+        mac: mac_address
+      };
+    }
+    
+    const existingEons = Object.keys(eons).filter((key) => {
+      const eon = eons[key];
+      return eon.mac === payload.mac;
+    });
 
+    if (existingEons.length > 0) {
+      let topEonKey = existingEons[0];
+      newEon[topEonKey] = {
+        ...eons[topEonKey],
+        ip: payload.ip
+      };
+      yield put(eonListActions.ADD_EON_ALREADY_EXISTS(newEon));
+      yield put(networkScannerActions.REMOVE_SCANNED_RESULT(payload.id));
+    } else {
+      if (!payload.id) {
+        newEon[randomId] = {
+          ...payload,
+          id: randomId
+        };
+      }
+      yield put(eonListActions.ADD_EON_SUCCESS(newEon));
+      yield put(networkScannerActions.REMOVE_SCANNED_RESULT(payload.id));
+    }
+  } catch (e) {
+    console.warn("FAILED TO ADD EON",e);
+    yield put(eonListActions.ADD_EON_FAILED(newEon,e));
+  }
 }
 
 // EXPORT ROOT SAGA
 export function* scannerSagas() {
   yield all([
-    // yield takeLatest(eonListTypes.EON_LIST_UPDATE, checkExistingEon),
+    yield takeEvery(eonListTypes.ADD_EON,handleAddEon),
     yield takeLatest(types.SCAN_NETWORK, scanNetwork),
-    yield takeEvery(types.SCAN_NETWORK_RESULT, getResultInfo)
+    yield takeEvery(types.SCAN_NETWORK_RESULT, handleAddEon)
   ]);
 }

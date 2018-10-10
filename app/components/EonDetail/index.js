@@ -28,6 +28,7 @@ import { Row, CardHeader,TabContent, Nav, NavItem, NavLink, TabPane, Col, Card, 
 const propTypes = {
   activeTab: PropTypes.string,
   drives: PropTypes.any,
+  installError: PropTypes.any,
   devices: PropTypes.any,
   isLoggedIn: PropTypes.any,
   apiRequest: PropTypes.func,
@@ -74,11 +75,11 @@ class EonDetail extends Component {
     this.props.OPEN_DRIVE(driveIndex);
   }
   render() {
-    const { activeTab, network, fingerprint, devices, tmuxError, fingerprintString, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshStatus, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
+    const { activeTab, network, fingerprint, drives, devices, installError, tmuxError, fingerprintString, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshStatus, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
     const vehicleConnectionInfo = vehicleConnectionStatuses[vehicleConnection];
     // const { usbOnline } = thermal;
     // console.warn("sshConnectionError:",sshConnectionError);
-    if (network === 'disconnected' || eon == null) {
+    if (network === 'disconnected' || eon == null || installError) {
       return (<Redirect to={routes.EON_LIST} />);
     }
     if (fingerprint) {
@@ -89,7 +90,7 @@ class EonDetail extends Component {
     // }
     let stateBlocks;
     if (!currentStateKeys.length) {
-      // stateBlocks = <LoadingOverlay />;
+      stateBlocks = <LoadingOverlay />;
     } else {
       stateBlocks = currentStateKeys.map((key) => {
         const items = this.props[key];
@@ -103,17 +104,17 @@ class EonDetail extends Component {
     }
     // vidurl example:
     // https://video.comma.ai/hls/0812e2149c1b5609/0ccfd8331dfb6f5280753837cefc9d26_2018-10-06--19-56-04/index.m3u8
-    let routesList;
-    if (routes) {
-      const routesKeys = Object.keys(routes).sort(function(a, b){
+    let drivesList;
+    if (drives) {
+      const drivesKeys = Object.keys(drives).sort(function(a, b){
         let parsedA = moment(a, "YYYY-MM-DD--HH-mm-SS");
         let parsedB = moment(b, "YYYY-MM-DD--HH-mm-SS");
         // console.log("a",parsedA);
         // console.log("b",parsedB);
         return parsedB.valueOf()-parsedA.valueOf();
       });
-      routesList = routesKeys.map((key) => {
-        const route = routes[key];
+      drivesList = drivesKeys.map((key) => {
+        const route = drives[key];
         const thumbnail = `${commaEndpoints.Thumbnail.Base}${commaEndpoints.Thumbnail.Endpoint.tiny.replace(":segment_string",route.sig_path)}`;
         return (<LazyLoad key={key} height={70}>
           <ListGroupItem tag="a" href="#" onClick={(ev) => {this.openDrive(key); ev.preventDefault(); return false;}}>
@@ -128,40 +129,52 @@ class EonDetail extends Component {
     }
 
     let devicesList;
+
     if (devices) {
       // const devicesKeys = Object.keys(devices);
       devicesList = devices.map((device,index) => {
         return (<div key={index}>{device.alias} {device.device_type}</div>);
       });
     }
+    const contextActions = [
+      <NavItem key={1} className={styles.nav_item}>
+        <NavLink tag={Link} to={routes.EON_LIST} className={"nav_link"}><i className="fas fa-chevron-left"></i></NavLink>
+      </NavItem>
+    ];
+
     return (
-      <Layout title={this.props.eon.ip} hideLogo={true}>
+      <Layout title={this.props.eon.ip} contextActions={contextActions}>
         <DriveViewer />
         <Nav tabs className={styles.tabs_list}>
           <NavItem>
             <NavLink
-              className={classnames({active: activeTab === '1'})}
-              onClick={() => { this.setTab('1'); }}>
+              className={classnames({active:  currentStateKeys.length && activeTab === '1',
+              disabled: !currentStateKeys.length})}
+              onClick={() => { this.setTab('1'); }}
+              >
               EON
             </NavLink>
           </NavItem>
           <NavItem>
             <NavLink
-              className={classnames({active: activeTab === '2'})}
+              className={classnames({active:  currentStateKeys.length && activeTab === '2',
+              disabled: !currentStateKeys.length})}
               onClick={() => { this.setTab('2'); }}>
               Drives
             </NavLink>
           </NavItem>
           <NavItem>
             <NavLink
-              className={classnames({active: activeTab === '3'})}
+              className={classnames({active:  currentStateKeys.length && activeTab === '3',
+              disabled: !currentStateKeys.length})}
               onClick={() => { this.setTab('3'); }}>
               Devices
             </NavLink>
           </NavItem>
           <NavItem>
             <NavLink
-              className={classnames({active: activeTab === '4'})}
+              className={classnames({active:  currentStateKeys.length && activeTab === '4',
+              disabled: !currentStateKeys.length})}
               onClick={() => { this.setTab('4'); }}>
               Vehicle
             </NavLink>
@@ -173,7 +186,7 @@ class EonDetail extends Component {
           </TabPane>
           <TabPane tabId="2">
             <ListGroup className={"route-list"}>
-            {routesList}
+            {drivesList}
             </ListGroup>
           </TabPane>
           <TabPane tabId="3">

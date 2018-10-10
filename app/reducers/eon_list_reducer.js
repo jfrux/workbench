@@ -4,6 +4,9 @@ import settings from 'electron-settings';
 
 const initialState = {
   eons: {},
+  eonToAdd: null,
+  addingEonError: null,
+  addingEon: false,
   selectedEon: null
 };
 export default function eonListReducer(state = initialState, action) {
@@ -16,10 +19,40 @@ export default function eonListReducer(state = initialState, action) {
     case types.ADD_EON:
       return {
         ...state,
+        addingEon: true,
+        addingEonError: null,
+        eonToAdd: {
+          ...action.payload
+        }
+      };
+    case types.ADD_EON_SUCCESS:
+      return {
+        ...state,
+        addingEon: false,
+        eonToAdd: null,
+        addingEonError: null,
         eons: {
           ...state.eons,
           ...action.payload
         }
+      };
+    case types.ADD_EON_ALREADY_EXISTS:
+      return {
+        ...state,
+        addingEon: false,
+        addingEonError: null,
+        eonToAdd: null,
+        eons: {
+          ...state.eons,
+          ...action.payload
+        }
+      };
+    case types.ADD_EON_FAILED:
+      return {
+        ...state,
+        addingEon: false,
+        addingEonError: action.payload.error,
+        eonToAdd: null
       };
     case types.SELECT_EON:
       // const eon = state.scanResults[action.payload.index];

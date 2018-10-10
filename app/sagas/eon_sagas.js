@@ -34,7 +34,9 @@ function* fetchApiRequest(endpoint) {
   try {
     const req = yield call(apiRequest,endpoint,state);
     const res = yield req.json();
-
+    if (endpoint === 'routes') {
+      endpoint = 'drives';
+    }
     yield put(eonDetailActions.API_REQUEST_SUCCESS(endpoint, res));
   } catch(e) {
     yield put(eonDetailActions.API_REQUEST_FAIL(e));
@@ -128,12 +130,15 @@ function* handleTabChange(action) {
       break;
   }
 }
+
+
 // EXPORT ROOT SAGA
 export function* eonSagas() {
   console.warn("types:",types);
   yield all([
+    // yield takeEvery(types.INSTALL_FAIL,fetchAuth),
     yield takeEvery(types.INSTALL_SUCCESS,fetchAuth),
-    yield takeEvery(types.INSTALL_SUCCESS,fetchState),
+    yield takeEvery(types.AUTH_REQUEST_SUCCESS,fetchState),
     yield takeEvery(types.AUTH_REQUEST_FAIL,fetchAuth),
     yield takeEvery(types.EON_STATE_FAIL,fetchState),
     yield takeEvery(types.GET_FINGERPRINT_FAIL,fetchFingerprint),

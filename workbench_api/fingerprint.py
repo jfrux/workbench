@@ -18,6 +18,9 @@ def main():
   context = zmq.Context()
   logcan = messaging.sub_sock(context, service_list['can'].port)
   msgs = {}
+  # WRITE EMPTY FILE
+  f = open("/data/workbench/data/fingerprint.json", 'w+')
+  f.write('{}');
   while True:
     lc = messaging.recv_sock(logcan, True)
     for c in lc.can:
@@ -31,7 +34,6 @@ def main():
 
     # print "number of messages:", len(msgs)
     # print "fingerprint", fingerprint
-
     f = open("/data/workbench/data/fingerprint.json", 'w+')
     f.write(fingerprint)
     time.sleep(0.25)

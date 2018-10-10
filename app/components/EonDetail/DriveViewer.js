@@ -28,7 +28,7 @@ class DriveViewer extends Component {
       return (
         <div>
           <Modal isOpen={activeDrive !== null} toggle={this.close} className={"drive-viewer"}>
-            <ModalHeader toggle={this.close}>{driveData.start_geocode} to {driveData.end_geocode} on {driveData.start_time}</ModalHeader>
+            <ModalHeader>{driveData.start_geocode} to {driveData.end_geocode} on {driveData.start_time}</ModalHeader>
             <ModalBody>
               {activeDrive && driveVideoUrl &&
                 <ReactPlayer 
@@ -42,8 +42,7 @@ class DriveViewer extends Component {
               }
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" onClick={this.toggle}>Do Something</Button>{' '}
-              <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+              <Button color="secondary" onClick={this.close}>Close</Button>
             </ModalFooter>
           </Modal>
         </div>
@@ -60,7 +59,7 @@ function mapStateToProps(state) {
   let activeDriveData;
   let driveVideoUrl;
   if (activeDrive) {
-    activeDriveData = state.eonDetail.routes[activeDrive];
+    activeDriveData = state.eonDetail.drives[activeDrive];
     driveVideoUrl = `${commaEndpoints.Video.Base}${commaEndpoints.Video.Endpoint.hls.replace(':segment_string',activeDriveData.sig_path)}`;
   }
 

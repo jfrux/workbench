@@ -124,13 +124,17 @@ export function API_REQUEST(endpoint) {
 }
 export function API_REQUEST_SUCCESS(endpoint, json) {
   let payload = {};
-  
+  let endpointCheck = JSON.parse(JSON.stringify(endpoint));
+  console.warn("endpointCheck:",endpointCheck);
+  if (endpointCheck === 'drives') {
+    endpoint = 'routes';
+  }
   let hasOwnKey = Object.keys(json).includes(endpoint);
   console.warn("Has Own Key:",hasOwnKey);
   if (hasOwnKey) {
-    payload = json;
+    payload[endpointCheck] = json[endpoint];
   } else {
-    payload[endpoint] = json;
+    payload[endpointCheck] = json;
   }
   return {
     type: types.API_REQUEST_SUCCESS,
@@ -437,6 +441,8 @@ export function install() {
       app.sshClient.dispose();
       dispatch(SUCCESS_install());
     }, (err) => {
+      
+      dispatch(FAIL_install());
       console.warn("Error was thrown while installing...");
     }));
     // app.installClient = new SSH();

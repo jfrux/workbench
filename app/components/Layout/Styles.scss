@@ -14,13 +14,9 @@
   color:rgba(#FFF,0.7);
   font-size:15px;
 }
-.nav_link {
-  color:#FFF!important;
-  opacity:0.5;
-  cursor: pointer;
-  &:hover {
-    opacity:1;
-  }
+.bottom_nav {
+  position:absolute;
+  bottom:0;
 }
 .nav_item {
   display:block;
@@ -35,6 +31,7 @@
   left:0;
   right:0;
   width:100%;
+  -webkit-app-region: drag;
   z-index:2;
   text-align:center;
 }
@@ -43,6 +40,7 @@
   left:0;
   top:0;
   width:50px;
+  -webkit-app-region: drag;
   height:100%;
   background-color:rgba(#000,0.3335);
   z-index:1;

@@ -28,7 +28,9 @@ def main():
   args = parser.parse_args()
   data = {}
   republish_socks = {}
-
+  # WRITE EMPTY FILE
+  f = open("/data/workbench/data/fingerprint.json", 'w+')
+  f.write('{}');
   for m in args.socket if len(args.socket) > 0 else service_list:
     if m in service_list:
       port = service_list[m].port

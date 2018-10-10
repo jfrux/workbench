@@ -7,7 +7,8 @@ function mapStateToProps(state) {
   return {
     activeTab: state.eonDetail.activeTab,
     devices: state.eonDetail.devices,
-    drives: state.eonDetail.routes,
+    drives: state.eonDetail.drives,
+    installError: state.eonDetail.installError,
     isLoggedIn: state.eonDetail.auth ? state.eonDetail.auth.isLoggedIn : false,
     sshConnectionError: state.eonList.sshConnectionError,
     sshConnectionStatus: state.eonList.sshConnectionStatus,

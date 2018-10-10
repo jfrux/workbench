@@ -6,23 +6,37 @@ const SSH = require('node-ssh');
 const RSAKey = require('rsa-key');
 const mkdirp = require("mkdirp");
 
-function revisedRandId() {
-  return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
-}
-
 export function ADD_EON(eon) {
-  let randomId = revisedRandId();
-  let newEon = {};
-
-  newEon[randomId] = {
-    ...eon,
-    id: randomId
-  };
-  
   return {
     type: types.ADD_EON,
+    payload: eon
+  };
+}
+
+export function ADD_EON_SUCCESS(eon) {
+  return {
+    type: types.ADD_EON_SUCCESS,
     payload: {
-      ...newEon
+      ...eon
+    }
+  };
+}
+
+export function ADD_EON_FAILED(eon, error) {
+  return {
+    type: types.ADD_EON_FAILED,
+    payload: {
+      eonToAdd: eon,
+      addingEonError: error
+    }
+  };
+}
+
+export function ADD_EON_ALREADY_EXISTS(eon) {
+  return {
+    type: types.ADD_EON_ALREADY_EXISTS,
+    payload: {
+      ...eon
     }
   };
 }
@@ -83,6 +97,7 @@ export function checkExistingEONStatuses() {
     });
   };
 }
+
 export function retrieveEonFromSettings() {
   return (dispatch, getState) => {
     let scanResults = getState().eonList.scanResults;

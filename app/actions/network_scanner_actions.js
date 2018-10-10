@@ -18,16 +18,14 @@ export function RESULT_scanNetwork(result) {
       type: types.SCAN_NETWORK_PROGRESS
     }
   }
-  console.warn("OPEN " + result.ip,result);
-  newEon[randomId] = {
-    ...result,
-    id: randomId
-  }
+  // console.warn("OPEN " + result.ip,result);
+  // newEon[randomId] = {
+  //   ...result,
+  //   id: randomId
+  // }
   return {
     type: types.SCAN_NETWORK_RESULT,
-    payload: {
-      eon: newEon
-    }
+    payload: result
   };
 }
 
