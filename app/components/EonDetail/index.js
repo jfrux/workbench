@@ -26,6 +26,8 @@ import DriveViewer from './DriveViewer';
 import { Row, CardHeader,TabContent, Nav, NavItem, NavLink, TabPane, Col, Card, CardBody, CardText, CardTitle, CardSubtitle, ListGroup, ListGroupItem } from 'reactstrap';
 // import io from 'socket.io-client';
 const propTypes = {
+  stateRequestFatal: PropTypes.bool,
+  stateRequestAttempts: PropTypes.number,
   activeTab: PropTypes.string,
   drives: PropTypes.any,
   installError: PropTypes.any,
@@ -75,11 +77,11 @@ class EonDetail extends Component {
     this.props.OPEN_DRIVE(driveIndex);
   }
   render() {
-    const { activeTab, network, fingerprint, drives, devices, installError, tmuxError, fingerprintString, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshStatus, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
+    const { activeTab, installing, network, fingerprint, stateRequestFatal, stateRequestAttempts, drives, devices, installError, tmuxError, fingerprintString, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshStatus, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
     const vehicleConnectionInfo = vehicleConnectionStatuses[vehicleConnection];
     // const { usbOnline } = thermal;
     // console.warn("sshConnectionError:",sshConnectionError);
-    if (network === 'disconnected' || eon == null || installError) {
+    if (network === 'disconnected' || eon == null || installError || stateRequestFatal) {
       return (<Redirect to={routes.EON_LIST} />);
     }
     if (fingerprint) {
@@ -89,14 +91,21 @@ class EonDetail extends Component {
     //   return <LoadingIndicator className={styles.loading_overlay} />;
     // }
     let stateBlocks;
-    if (!currentStateKeys.length) {
-      stateBlocks = <LoadingOverlay />;
+    let loadingMessage = "Connecting...";
+
+    if (!installing && stateRequestAttempts > 0) {
+      loadingMessage = loadingMessage + " (retrying " + stateRequestAttempts + ")";
+    } else {
+      loadingMessage = "Setting up EON for Workbench...";
+    }
+    if (installing || !currentStateKeys.length) {
+      stateBlocks = <LoadingOverlay message={loadingMessage} />;
     } else {
       stateBlocks = currentStateKeys.map((key) => {
         const items = this.props[key];
-        return (<Card key={key} className={styles.state_card}>
-          <CardBody className={styles.state_card_body}>
-            <CardHeader className={styles.state_card_header}>{key}</CardHeader>
+        return (<Card key={key} className={"state-card"}>
+          <CardBody className={"state-card-body"}>
+            <CardHeader className={"state-card-header"}>{key}</CardHeader>
             <StateList items={items} />
           </CardBody>
         </Card>);
@@ -194,12 +203,20 @@ class EonDetail extends Component {
           </TabPane>
           <TabPane tabId="4">
             {fingerprintString && 
-            <Card className={"state-card" + " " + styles.state_card}>
-              <CardBody className={styles.state_card_body}>
-                <CardHeader className={styles.state_card_header}>Fingerprint</CardHeader>
+            <Card className={"state-card"}>
+              <CardBody className={"state-card-body"}>
+                <CardHeader className={"state-card-header"}>Fingerprint</CardHeader>
                 <Textarea autoFocus className={styles.fingerprint_input + " form-control text-light"} rows="4" defaultValue={fingerprintString} />
               </CardBody>
             </Card>
+            }
+            {!fingerprintString && 
+              <Card className={"state-card"}>
+                <CardBody className={"state-card-body"}>
+                  <CardHeader className={"state-card-header"}>Fingerprint</CardHeader>
+                  <p>Waiting for vehicle...</p>
+                </CardBody>
+              </Card>
             }
           </TabPane>
         </TabContent>

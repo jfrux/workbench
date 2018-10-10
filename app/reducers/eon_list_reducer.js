@@ -4,6 +4,7 @@ import settings from 'electron-settings';
 
 const initialState = {
   eons: {},
+  error: null,
   eonToAdd: null,
   addingEonError: null,
   addingEon: false,
@@ -16,11 +17,22 @@ export default function eonListReducer(state = initialState, action) {
         ...state,
         scanResults
       };
+    case types.ADD_ERROR:
+      return {
+        ...state,
+        error: action.payload
+      };
+    case types.ADDING_EON:
+      return {
+        ...state,
+        addingEon: true
+      };
     case types.ADD_EON:
       return {
         ...state,
         addingEon: true,
         addingEonError: null,
+        error: null,
         eonToAdd: {
           ...action.payload
         }
@@ -31,6 +43,7 @@ export default function eonListReducer(state = initialState, action) {
         addingEon: false,
         eonToAdd: null,
         addingEonError: null,
+        error: null,
         eons: {
           ...state.eons,
           ...action.payload
@@ -41,6 +54,7 @@ export default function eonListReducer(state = initialState, action) {
         ...state,
         addingEon: false,
         addingEonError: null,
+        error: null,
         eonToAdd: null,
         eons: {
           ...state.eons,
@@ -60,6 +74,7 @@ export default function eonListReducer(state = initialState, action) {
       // settings.set('selectedEon', action.payload.index);
       return {
         ...state,
+        error: null,
         // status: "eon_selected",
         // scanError: null,
         // sshConnectionStatus: "not_connected",

@@ -14,6 +14,9 @@ import statusMessages from '../../constants/scan_status_messages.json';
 import sshConnectionStatusMessages from '../../constants/ssh_connection_status.json';
 
 const propTypes = {
+  foundCount: PropTypes.number,
+  addingEon: PropTypes.bool,
+  error: PropTypes.string,
   scanNetwork: PropTypes.func,
   scanResults: PropTypes.object,
   scanError: PropTypes.string,
@@ -85,6 +88,9 @@ class EonList extends Component {
       scanResults,
       scanning,
       status,
+      foundCount,
+      addingEon,
+      error,
       network,
       eons,
       networkIp,
@@ -94,10 +100,10 @@ class EonList extends Component {
     const { manualError } = this.state;
     const scanResultsList = Object.keys(scanResults);
     const eonList = Object.keys(eons);
-    console.log("scanResults:",scanResults);
-    console.log("scanResultsList:",scanResultsList);
-    console.log("eons:",eons);
-    console.log("eonList:",eonList);
+    // console.log("scanResults:",scanResults);
+    // console.log("scanResultsList:",scanResultsList);
+    // console.log("eons:",eons);
+    // console.log("eonList:",eonList);
     // if (selectedEon !== null) {
     //   // console.warn("SSH CONNECTION ERROR!",sshConnectionError);
     //   return (<Redirect to={routes.EON_DETAIL} />); 
@@ -129,22 +135,25 @@ class EonList extends Component {
             </Form>
           </div>
         </Collapse>
-        <Collapse isOpen={scanning}>
-          <Card body inverse className={"scanning-message"}>
+
+        <Collapse className={"message"} isOpen={scanning}>
+          <Card body inverse color="primary" className={"scanning-message"}>
             <CardBody className={"scanning-message-body"}>
               Scanning for EON...
+              {foundCount > 0 &&
+                <div>Found {foundCount} EON on the network...</div>
+              }
             </CardBody>
           </Card>
         </Collapse>
         
-        <Collapse isOpen={manualError.length > 0}>
+        <Collapse className={"message"} isOpen={error && error.length > 0}>
           <Card body inverse color="danger" className={styles.error_message}>
             <CardBody className={styles.error_message_body}>
-              {this.state.manualError}
+              {error}
             </CardBody>
           </Card>
         </Collapse>
-        
         <div className={styles.found_eons}>
           {(scanResultsList.length > 0) && 
             <span>
@@ -187,7 +196,7 @@ class EonList extends Component {
             <ListGroup>
               {eonList.map((key,index) => {
                 let eon = eons[key];
-                console.log("eon:",eon);
+                // console.log("eon:",eon);
                 return (<ListGroupItem key={index} onClick={() => { this.handleSelectEon(eon.id);}} className={styles.results_button} tag="button">
                     <span className={styles.eon_icon}><Eon width="100%" height="100%" /></span>
                     <span className={styles.results_details}>

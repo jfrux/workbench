@@ -6,9 +6,23 @@ const SSH = require('node-ssh');
 const RSAKey = require('rsa-key');
 const mkdirp = require("mkdirp");
 
+export function ADD_ERROR(error) {
+  return {
+    type: types.ADD_ERROR,
+    payload: error
+  };
+}
+
 export function ADD_EON(eon) {
   return {
     type: types.ADD_EON,
+    payload: eon
+  };
+}
+
+export function ADDING_EON(eon) {
+  return {
+    type: types.ADDING_EON,
     payload: eon
   };
 }

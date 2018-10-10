@@ -56,11 +56,11 @@ function stateRequest(eon) {
 }
 
 function* fetchState() {
-  console.warn("fetching state...");
   const state = yield select();
   const { selectedEon, eons } = state.eonList;
-  const { polling } = state.eonDetail;
+  const { polling, stateRequestAttempts } = state.eonDetail;
   const eon = eons[selectedEon];
+
   yield put(eonDetailActions.OPEN_REQUEST_EON_STATE());
   try {
     const req = yield call(stateRequest,eon);
@@ -69,12 +69,16 @@ function* fetchState() {
     yield put(eonDetailActions.RESPONSE_REQUEST_EON_STATE(res));
 
     if (polling) {
-      yield delay(2000);
+      yield delay(1000);
       yield call(fetchState);
     }
   } catch(e) {
-    yield delay(2000);
-    yield put(eonDetailActions.FAIL_REQUEST_EON_STATE(e));
+    if (polling && stateRequestAttempts <= 10) {
+      yield delay(500);
+      yield put(eonDetailActions.FAIL_REQUEST_EON_STATE(e));
+    } else {
+      yield put(eonDetailActions.FATAL_REQUEST_EON_STATE());
+    }
   }
 }
 
@@ -90,7 +94,7 @@ function* fetchAuth() {
 
     yield put(eonDetailActions.AUTH_REQUEST_SUCCESS(res));
   } catch(e) {
-    yield delay(2000);
+    yield delay(500);
     yield put(eonDetailActions.AUTH_REQUEST_FAIL(e));
   }
 }
@@ -99,6 +103,7 @@ function* fetchFingerprint() {
   console.warn("fetching fingerprint...");
   const state = yield select();
   const { selectedEon, eons } = state.eonList;
+  const { polling, stateRequestAttempts } = state.eonDetail;
   const eon = eons[selectedEon];
   yield put(eonDetailActions.GET_FINGERPRINT());
 
@@ -106,10 +111,15 @@ function* fetchFingerprint() {
     const req = yield call(fingerprintRequest,eon);
     const res = yield req.json();
 
-    yield put(eonDetailActions.RESPONSE_GET_FINGERPRINT(endpoint, res));
+    if (polling) {
+      yield delay(1000);
+      yield put(eonDetailActions.RESPONSE_GET_FINGERPRINT(endpoint, res));
+    }
   } catch(e) {
-    yield delay(2000);
-    yield put(eonDetailActions.FAIL_GET_FINGERPRINT(e));
+    if (polling) {
+      yield delay(500);
+      yield put(eonDetailActions.FAIL_GET_FINGERPRINT(e));
+    }
   }
 };
 
@@ -130,21 +140,19 @@ function* handleTabChange(action) {
       break;
   }
 }
-
-
+function* addEonListError() {
+  yield put(eonListActions.ADD_ERROR("Failed to connect to your EON.  Sometimes due to network instability it can take longer than we were willing to wait.  If the problem persists, try rebooting EON."));
+}
 // EXPORT ROOT SAGA
 export function* eonSagas() {
   console.warn("types:",types);
   yield all([
-    // yield takeEvery(types.INSTALL_FAIL,fetchAuth),
-    yield takeEvery(types.INSTALL_SUCCESS,fetchAuth),
-    yield takeEvery(types.AUTH_REQUEST_SUCCESS,fetchState),
-    yield takeEvery(types.AUTH_REQUEST_FAIL,fetchAuth),
-    yield takeEvery(types.EON_STATE_FAIL,fetchState),
-    yield takeEvery(types.GET_FINGERPRINT_FAIL,fetchFingerprint),
-    yield takeLatest(types.CHANGE_TAB, handleTabChange),
-    // yield takeLatest(types.AUTH_REQUEST_SUCCESS, fetchApiRequests),
-    yield takeEvery(types.EON_STATE_FAIL, failedSshConnection),
-    yield takeEvery(types.CONNECT_SSH_FAIL, failedSshConnection)
+    yield takeLatest(types.EON_STATE_FATAL,addEonListError),
+    yield takeLatest(types.INSTALL_SUCCESS,fetchAuth),
+    yield takeLatest(types.INSTALL_SUCCESS,fetchState),
+    yield takeLatest(types.AUTH_REQUEST_FAIL,fetchAuth),
+    yield takeLatest(types.EON_STATE_FAIL,fetchState),
+    yield takeLatest(types.GET_FINGERPRINT_FAIL,fetchFingerprint),
+    yield takeLatest(types.CHANGE_TAB, handleTabChange)
   ]);
 }

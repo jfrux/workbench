@@ -15,9 +15,12 @@ const initialState = {
   health: null,
   fingerprint: null,
   thermal: null,
+  installing: false,
   installError: null,
   auth: null,
   currentStateKeys: [],
+  stateRequestAttempts: 0,
+  stateRequestFatal: false,
   workbenchInstalled: false,
   sshConnectionStatus: "not_connected",
   sshConnectionError: null,
@@ -156,6 +159,7 @@ export default function eonDetailReducer(state = initialState, action) {
       return {
         ...state,
         tmuxAttached: false,
+        stateRequestFatal: false,
         tmuxLog: []
       };
     case types.EON_STATE_RESPONSE:
@@ -164,6 +168,8 @@ export default function eonDetailReducer(state = initialState, action) {
         ...action.payload,
         currentStateKeys: Object.keys(action.payload),
         tmuxAttached: true,
+        stateRequestAttempts: 0,
+        stateRequestFatal: false,
         tmuxError: null
 
       };
@@ -176,9 +182,22 @@ export default function eonDetailReducer(state = initialState, action) {
         service: null,
         health: null,
         thermal: null,
+        stateRequestAttempts: state.stateRequestAttempts+1,
         tmuxError: action.payload.error,
         tmuxLog: []
       };
+    
+      case types.EON_STATE_FATAL:
+        return {
+          ...state,
+          tmuxAttached: false,
+          currentStateKeys: [],
+          service: null,
+          health: null,
+          thermal: null,
+          tmuxLog: [],
+          stateRequestFatal: true
+        };
     
     case types.EON_STATE_CLOSE:
       return {
@@ -193,16 +212,19 @@ export default function eonDetailReducer(state = initialState, action) {
       };
     case types.INSTALL:
       return {
-        ...state
+        ...state,
+        installing: true
       };
     case types.INSTALL_SUCCESS:
       return {
         ...state,
+        installing: false,
         polling: true
       };
     case types.INSTALL_FAIL:
       return {
         ...state,
+        installing: false,
         installError: action.payload.err,
         polling: false
       };

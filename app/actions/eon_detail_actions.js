@@ -151,6 +151,11 @@ export function API_REQUEST_FAIL(endpoint, error) {
   };
 }
 
+export function FATAL_REQUEST_EON_STATE() {
+  return {
+    type: types.EON_STATE_FATAL
+  };
+}
 export function CLOSE_REQUEST_EON_STATE() {
   return {
     type: types.EON_STATE_CLOSE
@@ -441,7 +446,6 @@ export function install() {
       app.sshClient.dispose();
       dispatch(SUCCESS_install());
     }, (err) => {
-      
       dispatch(FAIL_install());
       console.warn("Error was thrown while installing...");
     }));

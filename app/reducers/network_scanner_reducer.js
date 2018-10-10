@@ -8,7 +8,8 @@ const initialState = {
   status: "scanning",
   progress: 0,
   scanCount: 0,
-  maxCount: 762
+  maxCount: 762,
+  foundCount: 0
 };
 const deleteProperty = ({[key]: _, ...newObj}, key) => newObj;
 export default function eonListReducer(state = initialState, action) {
@@ -36,6 +37,7 @@ export default function eonListReducer(state = initialState, action) {
         progress: 0,
         scanResults: {},
         scanCount: 0,
+        foundCount: 0,
         maxCount: 762
       };
     
@@ -44,14 +46,11 @@ export default function eonListReducer(state = initialState, action) {
         ...state
       };
 
-    // case types.SCAN_NETWORK_RESULT:
-    //   return {
-    //     ...state,
-    //     scanResults: {
-    //       ...state.scanResults,
-    //       ...action.payload.eon
-    //     },
-    //   };
+    case types.SCAN_NETWORK_RESULT:
+      return {
+        ...state,
+        foundCount: state.foundCount+1
+      };
     case types.SCAN_NETWORK_FAIL:
       return {
         ...state,

@@ -13,10 +13,11 @@ export function RESULT_scanNetwork(result) {
   let randomId = revisedRandId();
   let newEon = {}
   if (result.status !== "open") {
-    // console.warn("NOT 'open' " + result.ip,result);
+    // console.log(result.ip);
     return {
-      type: types.SCAN_NETWORK_PROGRESS
-    }
+      type: types.SCAN_NETWORK_PROGRESS,
+      payload: result
+    };
   }
   // console.warn("OPEN " + result.ip,result);
   // newEon[randomId] = {
@@ -69,6 +70,15 @@ export function SUCCESS_scanNetwork(results,state) {
   };
 }
 
+// COMPLETES THE SEARCH
+export function ADD_TO_LIST(eon) {
+  return {
+    type: types.ADD_TO_LIST,
+    payload: {
+      ...eon
+    }
+  };
+}
 // COMPLETES THE SEARCH
 export function COMPLETE_scanNetwork() {
   return {

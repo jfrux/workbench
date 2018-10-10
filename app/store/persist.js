@@ -4,5 +4,15 @@ export default {
   key: 'root',
   storage,
   stateReconciler: autoMergeLevel2,
-  blacklist: ['router','networkConnection','eonDetail','eonList.scanning','eonList.scanError','eonList.sshConnectionStatus','eonList.sshConnectionError','eonList.progress']
+  blacklist: [
+    'router',
+    'networkConnection',
+    'eonDetail',
+    'eonList.scanning',
+    'eonList.scanError',
+    'eonList.error',
+    'eonList.sshConnectionStatus',
+    'eonList.sshConnectionError',
+    'eonList.progress'
+  ]
 };

@@ -51,11 +51,12 @@
   padding:0!important;
   margin:0;
   line-height: 30px;
-  background-color:rgba(#000,0.2)!important;
+  background-color:rgba(#FFF,0.05)!important;
   border:0!important;
   border-radius:0!important;
   text-align:center;
   display:block;
+  color:rgba(#FFF,0.4);
   height:100%;
   width:100%;
   border-right:1px solid rgba(#FFF,0.05)!important;
@@ -63,9 +64,9 @@
 
 .refresh_button {
   padding:0!important;
-  margin:0;
+  margin:0;color:rgba(#FFF,0.4);
   line-height: 30px;
-  background-color:rgba(#000,0.2)!important;
+  background-color:rgba(#FFF,0.05)!important;
   border:0!important;
   text-align:center;
   border-radius:0!important;
@@ -308,48 +309,57 @@ a:hover {
   }
 }
 
-.card {
+.card.state-card {
   background-color:rgba(#FFF,0.1)!important;
   margin-bottom:10px;
-  padding:0!important;
   border:0!important;
   border-radius:0!important;
-}
-.card-header {
-  border-radius:0!important;
-  text-transform:capitalize;
-  padding: 3px 10px;
-  background-color:darken(#03111C,10);
-  color:#444;
-  font-size:12px;
-  text-transform:uppercase;
-}
-.card-list-group {
-  border:0!important;
-  border-radius:0!important;
-}
-.card-list-group-item {
-  border-radius:0!important;
-  padding:3!important;
-  margin-bottom:initial!important;
-  border:0!important;
-  background-color: darken(#03111C,3)!important;
-  font-size:12px!important;
-  position:relative;
-  &:after {
-    content:"";
-    bottom:0;
-    left:0;
-    right:0;
-    position:absolute;
-    height:1px;
-    width:100%;
-    background-color:rgba(#FFF,0.05);
+
+  .card-header {
+    border-radius:0!important;
+    text-transform:capitalize;
+    padding: 3px 10px;
+    background-color:darken(#03111C,10);
+    color:#888;
+    font-size:12px;
+    text-transform:uppercase;
+  }
+  .card-list-group {
+    border:0!important;
+    border-radius:0!important;
+  }
+  .card-list-group-item {
+    border-radius:0!important;
+    padding:3!important;
+    margin-bottom:initial!important;
+    border:0!important;
+    background-color: darken(#03111C,3)!important;
+    font-size:12px!important;
+    position:relative;
+    &:after {
+      content:"";
+      bottom:0;
+      left:0;
+      right:0;
+      position:absolute;
+      height:1px;
+      width:100%;
+      background-color:rgba(#FFF,0.05);
+    }
+  }
+  .card-body {
+    padding:0!important;
+    background-color:darken(#03111C,5);
   }
 }
-.card-body {
-  padding:0!important;
-  background-color:darken(#03111C,5);
+
+
+.message {
+  border-radius:0;
+  .card-body {
+    padding:5px;
+    border-radius:0;
+  }
 }
 .nav {
   border-bottom:0!important;

@@ -87,16 +87,11 @@ export function* createScannerEventChannel(scanner) {
       emit(networkScannerActions.RESULT_scanNetwork(data));
     };
     
-    const scanProgress = (data) => {
-      emit(networkScannerActions.PROGRESS_scanNetwork(data));
-    };
-    
     const scanComplete = () => {
       emit(networkScannerActions.COMPLETE_scanNetwork());
     };
 
     scanner.on('result', scanResult);
-    scanner.on('progress', scanProgress);
     scanner.on('error', scanError);
     scanner.on('done', scanComplete);
     return () => {
@@ -125,36 +120,26 @@ function* scanNetwork() {
   let ips = yield networkActions.getIpsForScan(ip);
   // console.log(ips);
   // evilscan logic
-  ips = ips.map((ip) => { return `${ip}.0/24`; });
-  const scanner = yield call(getScanner, `${ips[0]}/24`);
-  const scanner2 = yield call(getScanner, ips[1]);
-  const scanner3 = yield call(getScanner, ips[2]);
+  ips = ips.map((ip) => { return `${ip}.0`; });
+  // const scanner = yield call(getScanner, `${ips[0]}/24`);
+  // const scanner2 = yield call(getScanner, ips[1]);
+  const scanner = yield call(getScanner, ips[0] + '/23');
   try {
     yield fork(read, scanner);
   } catch (e) {
     console.warn("Errors in check #1");
   }
-  try {
-    yield fork(read, scanner2);
-  } catch (e) {
-    console.warn("Errors in check #2");
-  }
-  try {
-    yield fork(read, scanner3);
-  } catch(e) {
-    console.warn("Errors in check #3");
-  }
 
   // ssh check logic
-  for (let ipItem of ips) {
-    try {
-      let result = yield fork(checkSsh,ipItem);
-      // console.warn(result.stdout);
-      yield put(networkScannerActions.RESULT_scanNetwork({ ip: ipItem }))
-    } catch (e) {
-      yield put(networkScannerActions.PROGRESS_scanNetwork());
-    }
-  }
+  // for (let ipItem of ips) {
+  //   try {
+  //     let result = yield fork(checkSsh,ipItem);
+  //     // console.warn(result.stdout);
+  //     yield put(networkScannerActions.RESULT_scanNetwork({ ip: ipItem }))
+  //   } catch (e) {
+  //     yield put(networkScannerActions.PROGRESS_scanNetwork());
+  //   }
+  // }
 }
 
 function* handleAddEon(action) {
@@ -165,7 +150,7 @@ function* handleAddEon(action) {
   
   let newEon = {};
   console.warn("Attempting to add eon: ", action);
-  
+  yield put(eonListActions.ADDING_EON());
   try {
     if (!payload.mac) {
       const mac_address = yield call(fetchMacAddress, payload);
@@ -207,8 +192,8 @@ function* handleAddEon(action) {
 // EXPORT ROOT SAGA
 export function* scannerSagas() {
   yield all([
-    yield takeEvery(eonListTypes.ADD_EON,handleAddEon),
+    yield takeLatest(eonListTypes.ADD_EON, handleAddEon),
     yield takeLatest(types.SCAN_NETWORK, scanNetwork),
-    yield takeEvery(types.SCAN_NETWORK_RESULT, handleAddEon)
+    yield takeEvery(types.SCAN_NETWORK_RESULT, handleAddEon),
   ]);
 }
