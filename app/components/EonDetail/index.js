@@ -103,19 +103,19 @@ class EonDetail extends Component {
     } else {
       loadingMessage = "Setting up EON for Workbench...";
     }
-    // if (installing || !currentStateKeys.length) {
-    //   stateBlocks = <LoadingOverlay message={loadingMessage} />;
-    // } else {
-    //   stateBlocks = currentStateKeys.map((key) => {
-    //     const items = this.props[key];
-    //     return (<Card key={key} className={"state-card"}>
-    //       <CardBody className={"state-card-body"}>
-    //         <CardHeader className={"state-card-header"}>{key}</CardHeader>
-    //         <StateList items={items} />
-    //       </CardBody>
-    //     </Card>);
-    //   });
-    // }
+    if (installing || !currentStateKeys.length) {
+      stateBlocks = <LoadingOverlay message={loadingMessage} />;
+    } else {
+      stateBlocks = currentStateKeys.map((key) => {
+        const items = this.props[key];
+        return (<Card key={key} className={"state-card"}>
+          <CardBody className={"state-card-body"}>
+            <CardHeader className={"state-card-header"}>{key}</CardHeader>
+            <StateList items={items} />
+          </CardBody>
+        </Card>);
+      });
+    }
     // vidurl example:
     // https://video.comma.ai/hls/0812e2149c1b5609/0ccfd8331dfb6f5280753837cefc9d26_2018-10-06--19-56-04/index.m3u8
     let drivesList;
@@ -188,7 +188,6 @@ class EonDetail extends Component {
         </Nav>
         <TabContent activeTab={activeTab}>
           <TabPane tabId="1">
-            <ThermalStateList />
             {stateBlocks}
           </TabPane>
           <TabPane tabId="2">

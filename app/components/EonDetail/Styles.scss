@@ -5,7 +5,7 @@
   padding-bottom:30px;
   -webkit-app-region: drag;
 }
-.state_header {
+.state-header {
   width:100%;
   display:table;
   padding:5px 13px;
@@ -98,54 +98,4 @@
   display:block;
   // height:400px;
   // width:400px;
-}
-
-.state_list {
-  display:table;
-  width:100%;
-  padding:0;
-  margin:0;
-}
-.state_spinner {
-  height: 100%;
-  width: 100%;
-  opacity:0.5;
-}
-.state_spinner img {
-  width:100%;
-  height:100%;
-}
-.state_loading_icon_wrap {
-  width: 16px;
-  height: 16px;
-  position: relative;
-  display: block;
-}
-
-.state_label,.state_status {
-  flex:0 0 50%;
-  white-space:nowrap;
-  // border-bottom: 1px solid #555;
-  vertical-align: middle;
-  width:50%;
-  font-size:12px;
-  padding:0 15px;
-}
-.state_item {
-  display:flex;
-}
-.state_label {
-  font-weight:200;
-  text-align:right;
-  padding:0;
-  color:#888;
-  flex:0 0 30%;
-}
-.state_status {
-  /* color:#28a745; */
-
-  flex:0 0 70%;
-}
-.state_status_started {
-  color:#28a745;
 }

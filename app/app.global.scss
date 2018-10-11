@@ -25,6 +25,55 @@
   z-index: 100;
 }
 
+.state-list {
+  display:table;
+  width:100%;
+  padding:0;
+  margin:0;
+}
+.state-spinner {
+  height: 100%;
+  width: 100%;
+  opacity:0.5;
+}
+.state-spinner img {
+  width:100%;
+  height:100%;
+}
+.state-loading-icon-wrap {
+  width: 16px;
+  height: 16px;
+  position: relative;
+  display: block;
+}
+
+.state-label,.state-status {
+  flex:0 0 50%;
+  white-space:nowrap;
+  // border-bottom: 1px solid #555;
+  vertical-align: middle;
+  width:50%;
+  font-size:12px;
+  padding:0 15px;
+}
+.state-item {
+  display:flex;
+}
+.state-label {
+  font-weight:200;
+  text-align:right;
+  padding:0;
+  color:#888;
+  flex:0 0 30%;
+}
+.state-status {
+  /* color:#28a745; */
+
+  flex:0 0 70%;
+}
+.state-status-started {
+  color:#28a745;
+}
 .nav_link {
   color:#FFF!important;
   opacity:0.5;

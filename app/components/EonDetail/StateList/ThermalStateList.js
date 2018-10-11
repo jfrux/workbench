@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import StateList from './index';
 
 const propTypes = {
-  items: PropTypes.string
+  items: PropTypes.array
 };
 
 class ThermalStateList extends StateList {

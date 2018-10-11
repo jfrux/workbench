@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import LoadingIndicator from '../../LoadingIndicator';
 import styles from '../Styles.scss';
 import stateInfo from '../../../constants/state_details.json';
+import StateListItem from './StateListItem';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 const propTypes = {
-  items: PropTypes.string
+  items: PropTypes.array
 };
 class StateList extends Component {
   render() {
@@ -22,7 +23,7 @@ class StateList extends Component {
         stateDetails = stateInfo[key];
         stateImg = stateInfo['iconImg'];
         stateIcon = stateInfo['iconClassName'];
-
+        console.warn("stateDetails:",stateDetails);
         if (typeof stateStatus === 'string') {
           stateStatus = items[key];
         } else {
@@ -53,21 +54,13 @@ class StateList extends Component {
       if (!stateStatus) {
         return;
       }
-      return (<ListGroupItem key={key} className={"card-list-group-item"}>
-          <span key={key} className={styles.state_item}>
-            <span className={styles.state_label}>
-              <i className={stateIcon}></i> 
-              {stateDetails.label}
-            </span>
-            {stateStatus &&
-            <span className={styles.state_status}>
-              {stateStatus}
-            </span>
-            }
-          </span>
-        </ListGroupItem>);
+      return (<StateListItem 
+        key={key} 
+        label={stateDetails.label} 
+        value={stateStatus} 
+      />);
     });
-    return (<ListGroup className={styles.state_card_list_group}>{itemBlocks}</ListGroup>);
+    return (<ListGroup className={"state-card-list-group"}>{itemBlocks}</ListGroup>);
   }
 }
 
