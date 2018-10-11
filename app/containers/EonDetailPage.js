@@ -17,6 +17,7 @@ function mapStateToProps(state) {
     sshConnectionStatus: state.eonList.sshConnectionStatus,
     status: state.eonDetail.status,
     sshStatus: state.eonDetail.sshStatus,
+    selectedEon: state.eonList.selectedEon,
     eon: state.eonList.eons[state.eonList.selectedEon],
     pid: state.eonDetail.pid,
     fetchingPid: state.eonDetail.fetchingPid,

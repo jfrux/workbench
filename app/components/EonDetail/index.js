@@ -20,6 +20,7 @@ import { LineChart, PieChart } from 'react-chartkick';
 import Battery from './Widgets/Battery';
 import commands from '../../constants/commands.json';
 import StateList from './StateList';
+import ThermalStateList from './StateList/ThermalStateList';
 import LoadingOverlay from '../LoadingOverlay';
 import TaskDialog from '../TaskDialog';
 import DriveViewer from './DriveViewer';
@@ -37,6 +38,7 @@ const propTypes = {
   auth: PropTypes.object,
   install: PropTypes.func,
   eon: PropTypes.object,
+  selectedEon: PropTypes.string,
   sshConnectionError: PropTypes.object,
   sshConnectionStatus: PropTypes.string,
   vehicleStarted: PropTypes.string,
@@ -62,9 +64,12 @@ class EonDetail extends Component {
     };
   }
   componentDidMount() {
-    const { eon, install } = this.props;
-    if (eon && this.props.install) {
-      this.props.install(eon);
+    const { eon, SELECT_EON } = this.props;
+    console.log("mounted detail screen");
+    console.log(eon);
+    console.log(SELECT_EON);
+    if (eon && this.props.SELECT_EON) {
+      this.props.SELECT_EON(eon.id);
     }
   }
   componentWillUnmount() {
@@ -98,19 +103,19 @@ class EonDetail extends Component {
     } else {
       loadingMessage = "Setting up EON for Workbench...";
     }
-    if (installing || !currentStateKeys.length) {
-      stateBlocks = <LoadingOverlay message={loadingMessage} />;
-    } else {
-      stateBlocks = currentStateKeys.map((key) => {
-        const items = this.props[key];
-        return (<Card key={key} className={"state-card"}>
-          <CardBody className={"state-card-body"}>
-            <CardHeader className={"state-card-header"}>{key}</CardHeader>
-            <StateList items={items} />
-          </CardBody>
-        </Card>);
-      });
-    }
+    // if (installing || !currentStateKeys.length) {
+    //   stateBlocks = <LoadingOverlay message={loadingMessage} />;
+    // } else {
+    //   stateBlocks = currentStateKeys.map((key) => {
+    //     const items = this.props[key];
+    //     return (<Card key={key} className={"state-card"}>
+    //       <CardBody className={"state-card-body"}>
+    //         <CardHeader className={"state-card-header"}>{key}</CardHeader>
+    //         <StateList items={items} />
+    //       </CardBody>
+    //     </Card>);
+    //   });
+    // }
     // vidurl example:
     // https://video.comma.ai/hls/0812e2149c1b5609/0ccfd8331dfb6f5280753837cefc9d26_2018-10-06--19-56-04/index.m3u8
     let drivesList;
@@ -157,8 +162,8 @@ class EonDetail extends Component {
         <Nav tabs className={styles.tabs_list}>
           <NavItem>
             <NavLink
-              className={classnames({active:  currentStateKeys.length && activeTab === '1',
-              disabled: !currentStateKeys.length})}
+              className={classnames({active: !installing && currentStateKeys.length && activeTab === '1',
+              disabled: installing || !currentStateKeys.length})}
               onClick={() => { this.setTab('1'); }}
               >
               EON
@@ -166,24 +171,16 @@ class EonDetail extends Component {
           </NavItem>
           <NavItem>
             <NavLink
-              className={classnames({active:  currentStateKeys.length && activeTab === '2',
-              disabled: !currentStateKeys.length})}
+              className={classnames({active: !installing && currentStateKeys.length && activeTab === '2',
+              disabled: installing || !currentStateKeys.length})}
               onClick={() => { this.setTab('2'); }}>
-              Drives
+              Panda
             </NavLink>
           </NavItem>
           <NavItem>
             <NavLink
-              className={classnames({active:  currentStateKeys.length && activeTab === '3',
-              disabled: !currentStateKeys.length})}
-              onClick={() => { this.setTab('3'); }}>
-              Devices
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink
-              className={classnames({active:  currentStateKeys.length && activeTab === '4',
-              disabled: !currentStateKeys.length})}
+              className={classnames({active: !installing && currentStateKeys.length && activeTab === '4',
+              disabled: installing || !currentStateKeys.length})}
               onClick={() => { this.setTab('4'); }}>
               Vehicle
             </NavLink>
@@ -191,11 +188,12 @@ class EonDetail extends Component {
         </Nav>
         <TabContent activeTab={activeTab}>
           <TabPane tabId="1">
+            <ThermalStateList />
             {stateBlocks}
           </TabPane>
           <TabPane tabId="2">
             <ListGroup className={"route-list"}>
-            {drivesList}
+              {drivesList}
             </ListGroup>
           </TabPane>
           <TabPane tabId="3">

@@ -1,0 +1,110 @@
+{
+  "carState": {
+    "gearShifter": "drive",
+    "seatbeltUnlatched": false,
+    "vEgoRaw": 1.3195335865020752,
+    "brake": 0.0,
+    "vEgo": 1.313421607017517,
+    "steeringAngle": -2.700000047683716,
+    "leftBlinker": false,
+    "wheelSpeeds": {
+      "rl": 1.3194444179534912,
+      "fr": 1.3222222328186035,
+      "fl": 1.3194444179534912,
+      "rr": 1.3222222328186035
+    },
+    "doorOpen": false,
+    "steeringRate": 0.0,
+    "events": [],
+    "steeringPressed": false,
+    "cruiseState": {
+      "available": true,
+      "speed": 0.0,
+      "speedOffset": -0.2608153820037842,
+      "enabled": false,
+      "standstill": false
+    },
+    "gas": 0.0,
+    "yawRate": -0.0013734507374465466,
+    "steeringTorque": 270.0,
+    "genericToggle": false,
+    "brakeLights": false,
+    "buttonEvents": [],
+    "standstill": false,
+    "gasPressed": false,
+    "rightBlinker": false,
+    "brakePressed": false,
+    "aEgo": 0.011333161033689976,
+    "canMonoTimes": []
+  },
+  "thermal": {
+    "batteryStatus": "Charging",
+    "freeSpace": 0.9211075305938721,
+    "bat": 38900,
+    "usbOnline": true,
+    "batteryCurrent": -420000,
+    "startedTs": 6640816558350,
+    "mem": 695,
+    "cpu2": 733,
+    "cpu3": 730,
+    "cpu0": 704,
+    "cpu1": 695,
+    "fanSpeed": 32768,
+    "batteryVoltage": 3950000,
+    "started": true,
+    "chargerDisabled": false,
+    "batteryPercent": 55,
+    "gpu": 695,
+    "thermalStatus": "green"
+  },
+  "carControl": {
+    "brakeDEPRECATED": 0.0,
+    "gasDEPRECATED": 0.0,
+    "steeringTorqueDEPRECATED": 0.0,
+    "cruiseControl": {
+      "cancel": true,
+      "override": true,
+      "speedOverride": 0.0,
+      "accelOverride": 0.7139999866485596
+    },
+    "actuators": {
+      "brake": -0.0,
+      "gas": 0.013974407687783241,
+      "steerAngle": -6.414829730987549,
+      "steer": -1.0
+    },
+    "active": false,
+    "hudControl": {
+      "leadVisible": true,
+      "setSpeed": 28.88888931274414,
+      "lanesVisible": true,
+      "visualAlert": "none",
+      "audibleAlert": "none",
+      "speedVisible": true
+    },
+    "enabled": true
+  },
+  "health": {
+    "gasInterceptorDetected": true,
+    "controlsAllowed": true,
+    "started": true,
+    "current": 64,
+    "startedSignalDetected": false,
+    "isGreyPanda": true,
+    "voltage": 12052
+  },
+  "gpsLocation": {
+    "bearing": 341.6000061035156,
+    "timestamp": 1539203410000,
+    "altitude": 130.0,
+    "longitude": -84.45107394,
+    "source": "android",
+    "speedAccuracy": 0.0,
+    "flags": 63,
+    "latitude": 39.23660036,
+    "bearingAccuracy": 0.0,
+    "speed": 1.2000000476837158,
+    "verticalAccuracy": 0.0,
+    "accuracy": 9.0
+  }
+}

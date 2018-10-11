@@ -43,7 +43,7 @@ function* read(scanner) {
 function fetchMacAddress(eon) {
   // console.log("fetching mac address: ",action);
   return new Promise((resolve,reject) => {
-    console.warn("Checking MAC of ",eon.ip);
+    // console.warn("Checking MAC of ",eon.ip);
     arp.getMAC(eon.ip, function(err, mac) {
       // console.warn("Mac Lookup Error:",err,arguments);
       if (!err) {
@@ -63,7 +63,7 @@ function* getResultInfo(action) {
   const eonObj = eon[eonId];
   let result = {};
   let mac_address;
-  console.warn("Starting getResultInfo",action);
+  // console.warn("Starting getResultInfo",action);
   yield put(networkScannerActions.MAC_ADDRESS_REQUEST());
   try {
     mac_address = yield call(fetchMacAddress,eonObj);
@@ -127,7 +127,7 @@ function* scanNetwork() {
   try {
     yield fork(read, scanner);
   } catch (e) {
-    console.warn("Errors in check #1");
+    // console.warn("Errors in check #1");
   }
 
   // ssh check logic
@@ -149,7 +149,7 @@ function* handleAddEon(action) {
   let randomId = revisedRandId();
   
   let newEon = {};
-  console.warn("Attempting to add eon: ", action);
+  // console.warn("Attempting to add eon: ", action);
   yield put(eonListActions.ADDING_EON());
   try {
     if (!payload.mac) {
@@ -184,7 +184,7 @@ function* handleAddEon(action) {
       yield put(networkScannerActions.REMOVE_SCANNED_RESULT(payload.id));
     }
   } catch (e) {
-    console.warn("FAILED TO ADD EON",e);
+    // console.warn("FAILED TO ADD EON",e);
     yield put(eonListActions.ADD_EON_FAILED(newEon,e));
   }
 }

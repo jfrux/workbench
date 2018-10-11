@@ -72,6 +72,8 @@ export default function eonDetailReducer(state = initialState, action) {
       return {
         ...state,
         polling: false,
+        stateRequestAttempts: 0,
+        stateRequestFatal: false,
         sshConnectionStatus: "not_connected",
         sshConnectionError: null
       };
@@ -171,7 +173,6 @@ export default function eonDetailReducer(state = initialState, action) {
         stateRequestAttempts: 0,
         stateRequestFatal: false,
         tmuxError: null
-
       };
 
     case types.EON_STATE_FAIL:
@@ -213,6 +214,7 @@ export default function eonDetailReducer(state = initialState, action) {
     case types.INSTALL:
       return {
         ...state,
+        installError: null,
         installing: true
       };
     case types.INSTALL_SUCCESS:

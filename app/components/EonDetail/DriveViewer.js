@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-const app = require('electron').remote.app;
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';

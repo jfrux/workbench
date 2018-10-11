@@ -1,12 +1,21 @@
-import { all, take, call, fork,  put, takeLatest, takeEvery, select } from 'redux-saga/effects';
+import { all, take, call, fork, race,  put, takeLatest, takeEvery, select } from 'redux-saga/effects';
 import { delay, eventChannel } from 'redux-saga';
+const app = require('electron').remote.app;
+const RSAKey = require('rsa-key');
+const mkdirp = require("mkdirp");
+import path from 'path';
+import fs from 'fs';
+import * as routes from '../constants/routes.json';
 import IpUtil from "ip";
+const SSH = require('node-ssh');
 import * as types from '../constants/eon_detail_action_types';
+import * as eonListTypes from '../constants/eon_list_action_types';
 import * as eonListActions from '../actions/eon_list_actions';
 import * as eonDetailActions from '../actions/eon_detail_actions';
 import * as endpoints from '../constants/comma_endpoints.json';
+import * as commands from '../constants/commands.json';
 function* failedSshConnection() {
-  console.warn("failedSshConnection Saga");
+  // console.warn("failedSshConnection Saga");
   yield put(eonListActions.DESELECT_EON);
 }
 function apiRequest(endpoint,state) {
@@ -83,7 +92,7 @@ function* fetchState() {
 }
 
 function* fetchAuth() {
-  console.warn("fetching auth...");
+  // console.warn("fetching auth...");
   const state = yield select();
   const { selectedEon, eons } = state.eonList;
   const eon = eons[selectedEon];
@@ -100,7 +109,7 @@ function* fetchAuth() {
 }
 
 function* fetchFingerprint() {
-  console.warn("fetching fingerprint...");
+  // console.warn("fetching fingerprint...");
   const state = yield select();
   const { selectedEon, eons } = state.eonList;
   const { polling, stateRequestAttempts } = state.eonDetail;
@@ -113,7 +122,7 @@ function* fetchFingerprint() {
 
     if (polling) {
       yield delay(1000);
-      yield put(eonDetailActions.RESPONSE_GET_FINGERPRINT(endpoint, res));
+      yield put(eonDetailActions.RESPONSE_GET_FINGERPRINT(res));
     }
   } catch(e) {
     if (polling) {
@@ -140,19 +149,135 @@ function* handleTabChange(action) {
       break;
   }
 }
+
+function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, stdErr = () => {}) {
+  const privateKey = getPrivateKey();
+  app.sshClient = new SSH();
+  return app.sshClient.connect({
+    host: eon.ip,
+    username: 'root',
+    port: 8022,
+    privateKey: privateKey
+  }).then(() => {
+    // console.warn("Dispatching command:\n",command);
+    // console.warn("To EON:\n",eon);
+    return app.sshClient.exec(command, commandArgs, {
+      cwd: '/',
+      onStdout(chunk) {
+        // console.warn("stdOut:",chunk.toString('utf8'));
+        stdOut(chunk.toString('utf8'));
+      },
+      onStderr(chunk) {
+        // console.warn("stdErr:",chunk.toString('utf8'));
+        stdErr(chunk.toString('utf8'));
+      },
+    });
+  })
+}
+function getPrivateKey() {
+  const userHome = app.getPath('home');
+  mkdirp.sync(path.join(userHome,'.ssh'));
+  const filePath = path.join(userHome,'.ssh','openpilot_rsa');
+  if (!fs.existsSync(filePath)) {
+fs.writeFileSync(filePath,`-----BEGIN PRIVATE KEY-----
+MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC+iXXq30Tq+J5N
+Kat3KWHCzcmwZ55nGh6WggAqECa5CasBlM9VeROpVu3beA+5h0MibRgbD4DMtVXB
+t6gEvZ8nd04E7eLA9LTZyFDZ7SkSOVj4oXOQsT0GnJmKrASW5KslTWqVzTfo2XCt
+Z+004ikLxmyFeBO8NOcErW1pa8gFdQDToH9FrA7kgysic/XVESTOoe7XlzRoe/eZ
+acEQ+jtnmFd21A4aEADkk00Ahjr0uKaJiLUAPatxs2icIXWpgYtfqqtaKF23wSt6
+1OTu6cAwXbOWr3m+IUSRUO0IRzEIQS3z1jfd1svgzSgSSwZ1Lhj4AoKxIEAIc8qJ
+rO4uymCJAgMBAAECggEBAISFevxHGdoL3Z5xkw6oO5SQKO2GxEeVhRzNgmu/HA+q
+x8OryqD6O1CWY4037kft6iWxlwiLOdwna2P25ueVM3LxqdQH2KS4DmlCx+kq6FwC
+gv063fQPMhC9LpWimvaQSPEC7VUPjQlo4tPY6sTTYBUOh0A1ihRm/x7juKuQCWix
+Cq8C/DVnB1X4mGj+W3nJc5TwVJtgJbbiBrq6PWrhvB/3qmkxHRL7dU2SBb2iNRF1
+LLY30dJx/cD73UDKNHrlrsjk3UJc29Mp4/MladKvUkRqNwlYxSuAtJV0nZ3+iFkL
+s3adSTHdJpClQer45R51rFDlVsDz2ZBpb/hRNRoGDuECgYEA6A1EixLq7QYOh3cb
+Xhyh3W4kpVvA/FPfKH1OMy3ONOD/Y9Oa+M/wthW1wSoRL2n+uuIW5OAhTIvIEivj
+6bAZsTT3twrvOrvYu9rx9aln4p8BhyvdjeW4kS7T8FP5ol6LoOt2sTP3T1LOuJPO
+uQvOjlKPKIMh3c3RFNWTnGzMPa0CgYEA0jNiPLxP3A2nrX0keKDI+VHuvOY88gdh
+0W5BuLMLovOIDk9aQFIbBbMuW1OTjHKv9NK+Lrw+YbCFqOGf1dU/UN5gSyE8lX/Q
+FsUGUqUZx574nJZnOIcy3ONOnQLcvHAQToLFAGUd7PWgP3CtHkt9hEv2koUwL4vo
+ikTP1u9Gkc0CgYEA2apoWxPZrY963XLKBxNQecYxNbLFaWq67t3rFnKm9E8BAICi
+4zUaE5J1tMVi7Vi9iks9Ml9SnNyZRQJKfQ+kaebHXbkyAaPmfv+26rqHKboA0uxA
+nDOZVwXX45zBkp6g1sdHxJx8JLoGEnkC9eyvSi0C//tRLx86OhLErXwYcNkCf1it
+VMRKrWYoXJTUNo6tRhvodM88UnnIo3u3CALjhgU4uC1RTMHV4ZCGBwiAOb8GozSl
+s5YD1E1iKwEULloHnK6BIh6P5v8q7J6uf/xdqoKMjlWBHgq6/roxKvkSPA1DOZ3l
+jTadcgKFnRUmc+JT9p/ZbCxkA/ALFg8++G+0ghECgYA8vG3M/utweLvq4RI7l7U7
+b+i2BajfK2OmzNi/xugfeLjY6k2tfQGRuv6ppTjehtji2uvgDWkgjJUgPfZpir3I
+RsVMUiFgloWGHETOy0Qvc5AwtqTJFLTD1Wza2uBilSVIEsg6Y83Gickh+ejOmEsY
+6co17RFaAZHwGfCFFjO76Q==
+-----END PRIVATE KEY-----`);
+  }
+
+  try {
+    fs.chmodSync(filePath, '600');
+  } catch (e) {
+    console.warn("chmod failed on file ",filePath);
+  }
+  const key = new RSAKey(fs.readFileSync(filePath));
+  
+  return key.exportKey('private', 'pem', 'pkcs1'); 
+}
+function sendInstallCommand(eon) {
+  // console.warn("sendInstallCommand",eon);
+  return new Promise((resolve,reject) => {
+    sendCommand(eon, commands.INSTALL_API, [], (resp) => {
+      // console.info("Installing...", resp);
+  
+      app.sshClient.dispose();
+      resolve(resp);
+    }, (err) => {
+      reject(err);
+    }).catch((e) => {
+      reject(e);
+    })
+  });
+}
+function* installWorkbenchApi() {
+  const { eonList } = yield select();
+  const { selectedEon, eons } = eonList;
+  const eon = eons[selectedEon];
+  yield put(eonDetailActions.BEGIN_install());
+  const {installed, timeout} = yield race({
+    installed: call(sendInstallCommand,eon),
+    timeout: call(delay, 15000)
+  });
+
+  if (installed) {
+    // console.warn("Installed!");
+    yield put(eonDetailActions.SUCCESS_install());
+  } else {
+    // console.warn("Timed out waiting to install");
+    yield put(eonListActions.ADD_ERROR("Could not connect to EON"));
+    yield put(eonDetailActions.FAIL_install(new Error("Install timed out...")));
+  }
+}
+
+function* determineIfShouldInstall(action) {
+  const { payload } = action;
+  const { pathname } = payload;
+  const { eonList } = yield select();
+  const { selectedEon, eons } = eonList;
+  if (routes.EON_DETAIL === pathname) {
+    // console.warn("IS DETAIL SCREEN", eons[selectedEon]);
+    yield call(installWorkbenchApi);
+  }
+}
 function* addEonListError() {
   yield put(eonListActions.ADD_ERROR("Failed to connect to your EON.  Sometimes due to network instability it can take longer than we were willing to wait.  If the problem persists, try rebooting EON."));
 }
+
+
 // EXPORT ROOT SAGA
 export function* eonSagas() {
   console.warn("types:",types);
   yield all([
-    yield takeLatest(types.EON_STATE_FATAL,addEonListError),
-    yield takeLatest(types.INSTALL_SUCCESS,fetchAuth),
-    yield takeLatest(types.INSTALL_SUCCESS,fetchState),
-    yield takeLatest(types.AUTH_REQUEST_FAIL,fetchAuth),
-    yield takeLatest(types.EON_STATE_FAIL,fetchState),
-    yield takeLatest(types.GET_FINGERPRINT_FAIL,fetchFingerprint),
-    yield takeLatest(types.CHANGE_TAB, handleTabChange)
+    takeLatest(types.EON_STATE_FATAL,addEonListError),
+    takeLatest("@@router/LOCATION_CHANGE",determineIfShouldInstall),
+    takeLatest(types.INSTALL_SUCCESS,fetchState),
+    takeLatest(types.AUTH_REQUEST_FAIL,fetchAuth),
+    takeLatest(types.EON_STATE_FAIL,fetchState),
+    takeLatest(types.GET_FINGERPRINT_FAIL,fetchFingerprint),
+    takeLatest(types.CHANGE_TAB, handleTabChange)
   ]);
 }
