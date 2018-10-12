@@ -8,22 +8,30 @@ const propTypes = {
   label: PropTypes.label
 };
 
-class StateListItem extends Component {
+class StateListItemBase extends Component {
+  renderLabel = () => {
+    return (<span className={"state-label"}>
+    <i className={classnames({stateIcon: true})}></i> 
+    {this.props.label}
+  </span>);
+  }
+  renderValue = () => {
+    const { value } = this.props;
+    if (value !== null) {
+      return (<span className={"state-value"}>
+        {value + ''}
+      </span>);
+    }
+  }
   render() {
     const { label, icon, value } = this.props;
     return (<ListGroupItem className={"card-list-group-item"}>
       <span className={"state-item"}>
-        <span className={"state-label"}>
-          <i className={classnames({stateIcon: true})}></i> 
-          {capitalize(label)}
-        </span>
-        {value &&
-        <span className={"state-value"}>
-          {value}
-        </span>}
+        {this.renderLabel()}
+        {this.renderValue()}
       </span>
     </ListGroupItem>);
   }
 }
 
-export default StateListItem;
+export default StateListItemBase;

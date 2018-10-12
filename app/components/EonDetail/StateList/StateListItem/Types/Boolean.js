@@ -8,18 +8,16 @@ const propTypes = {
   label: PropTypes.label
 };
 
-class ArrayOfValues extends StateListItemBase {
+class BooleanListItem extends StateListItemBase {
   renderValue = () => {
     const { value } = this.props;
     if (value !== null) {
       return (<span className={"state-value"}>
-      {value.map((item, index) => {
-        return (
-        <span key={index} className={"sub-value"}>{item + ""}</span>);
-      })}
+        {}
+        {value + ''}
       </span>);
     }
   }
 };
 
-export default ArrayOfValues;
+export default BooleanListItem;

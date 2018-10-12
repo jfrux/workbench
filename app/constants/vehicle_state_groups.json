@@ -41,6 +41,7 @@
       ["isMetric", ["eonDetail","openpilotParams","is_metric"], "Base"]
     ], "Base"],
     ["vehicle",[
+      ["Fingerprint", ["eonDetail","fingerprint"], "ArrayOfValues"],
       ["SteerKpV", ["eonDetail","openpilotParams","car","steerKpV"], "ArrayOfValues"],
       ["safetyParam", ["eonDetail","openpilotParams","car","safetyParam"], "Base"],
       ["SteerRatioRear", ["eonDetail","openpilotParams","car","steerRatioRear"], "Base"],
@@ -55,7 +56,7 @@
       ["SteerControlType", ["eonDetail","openpilotParams","car","steerControlType"], "Base"],
       ["radarOffCan", ["eonDetail","openpilotParams","car","radarOffCan"], "Base"],
       ["SteerRatio", ["eonDetail","openpilotParams","car","steerRatio"], "Base"],
-      ["brakeMaxBP", ["eonDetail","openpilotParams","car","brakeMaxBP"], "Base"],
+      ["brakeMaxBP", ["eonDetail","openpilotParams","car","brakeMaxBP"], "ArrayOfValues"],
       ["enableCamera", ["eonDetail","openpilotParams","car","enableCamera"], "Base"],
       ["enableCruise", ["eonDetail","openpilotParams","car","enableCruise"], "Base"],
       ["tireStiffnessFront", ["eonDetail","openpilotParams","car","tireStiffnessFront"], "Base"],
@@ -76,7 +77,7 @@
       ["gasMaxV", ["eonDetail","openpilotParams","car","gasMaxV"], "Base"],
       ["longitudinalKpV", ["eonDetail","openpilotParams","car","longitudinalKpV"], "Base"],
       ["SteerRateCost", ["eonDetail","openpilotParams","car","steerRateCost"], "Base"],
-      ["brakeMaxV", ["eonDetail","openpilotParams","car","brakeMaxV"], "Base"],
+      ["brakeMaxV", ["eonDetail","openpilotParams","car","brakeMaxV"], "ArrayOfValues"],
       ["tireStiffnessRear", ["eonDetail","openpilotParams","car","tireStiffnessRear"], "Base"],
       ["vEgoStopping", ["eonDetail","openpilotParams","car","vEgoStopping"], "Base"],
       ["centerToFront", ["eonDetail","openpilotParams","car","centerToFront"], "Base"],
@@ -92,7 +93,7 @@
       ["directAccelControl", ["eonDetail","openpilotParams","car","directAccelControl"], "Base"]
     ], "Base"],
     ["hud",[
-      ["leadVisible", ["carControl","hudControlLeadVisible"], "Base"],
+      ["Lead Visible", ["carControl","hudControlLeadVisible"], "Boolean"],
       ["setSpeed", ["carControl","hudControlSetSpeed"], "Base"],
       ["lanesVisible", ["carControl","hudControlLanesVisible"], "Base"],
       ["visualAlert", ["carControl","hudControlVisualAlert"], "Base"],
@@ -109,7 +110,7 @@
     ["Steering", [
       ["angle", ["carState","steeringAngle"], "Base"],
       ["rate", ["carState","steeringRate"], "Base"],
-      ["pressed", ["carState","steeringPressed"], "Base"],
+      ["pressed", ["carState","steeringPressed"], "Boolean"],
       ["torque", ["carState","steeringTorque"], "Base"],
       ["turnSignalRight", ["carState","rightBlinker"], "Base"],
       ["turnSignalLeft", ["carState","leftBlinker"], "Base"],
@@ -146,7 +147,7 @@
       ["doorOpen", ["carState","doorOpen"], "Base"]
     ], "Base"],
     ["buttons", [
-      ["buttonEvents", ["carState","buttonEvents"], "Base"],
+      ["buttonEvents", ["carState","buttonEvents"], "ArrayOfValues"],
       ["genericToggle", ["carState","genericToggle"], "Base"]
     ], "Base"],
     ["cruiseControl", [
@@ -164,7 +165,7 @@
   "other": [
     ["misc", [
       ["yawRate", ["carState","yawRate"], "Base"],
-      ["events", ["carState","events"], "Base"],
+      ["events", ["carState","events"], "ArrayOfValues"],
       ["canMonoTimes", ["carState","canMonoTimes"], "Base"],
       ["active", ["carControl","active"], "Base"]
     ], "Base"]

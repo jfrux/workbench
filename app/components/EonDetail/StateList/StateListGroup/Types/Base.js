@@ -13,11 +13,7 @@ class StateListGroup extends Component {
   // OVERRIDE THIS TO SWAP THE INDIVIDUAL GROUP ELEMENT
   renderChild = (child) => {
     const StateListTag = this.components[child.component];
-    if (!Array.isArray(child.value)) {
-      return (<StateListTag key={child.rootKey + "-" + child.key} label={child.key} value={child.value} />);
-    } else {
-      return (<StateListTag key={child.rootKey + "-" + child.key} label={child.key} value={"TODO: No renderer for array"} />);
-    }
+    return (<StateListTag key={child.rootKey + "-" + child.key} label={child.key} value={child.value} />);
   }
   renderChildren = () => {
     const { rootKey, data } = this.props;
