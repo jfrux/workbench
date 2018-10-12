@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import LoadingIndicator from '../../LoadingIndicator';
-import StateListGroup from './StateListGroup';
+import stateListGroupTypes from './StateListGroup/Types';
 import styles from '../Styles.scss';
 import stateInfo from '../../../constants/state_details.json';
 import { Row, CardHeader,TabContent, Nav, NavItem, NavLink, TabPane, Col, Card, CardBody, CardText, CardTitle, CardSubtitle, ListGroup, ListGroupItem } from 'reactstrap';
@@ -13,24 +13,30 @@ const propTypes = {
   items: PropTypes.array
 };
 class StateList extends Component {
-  components = {
-    StateListGroup
-  }
+  components = stateListGroupTypes
   render() {
     let { rootKeys, items, rootKeyToComponent } = this.props;
-
     rootKeys = rootKeys.sort();
     let rootBlocks = rootKeys.map((key) => {
+      if (!key) {
+        console.warn("Received an empty key...");
+        return;
+      }
       // console.warn("rootKey:",key);
       const rootData = this.props[key];
       const rootComponentKey = rootKeyToComponent[key];
       // console.warn("rootComponentKey",rootComponentKey)
-      const StateListGroupTag = this.components[rootComponentKey];
-      // let stateDetails, stateImg, stateIcon, stateStatus;
-      // // console.log(this.props[key]);
-      return (<StateListGroupTag key={key} rootKey={key} data={rootData} />);
+      
+      if (rootComponentKey) {
+        const StateListGroupTag = this.components[rootComponentKey];
+        return (<StateListGroupTag key={key} rootKey={key} data={rootData} />);
+      } else {
+        console.warn(`No component could be found for rootKey ${key}`)
+        return (<StateListGroup key={key} rootKey={key} data={rootData} />);
+      }
+      
     });
-    return (<ListGroup className={"state-card-list-group"}>{rootBlocks}</ListGroup>);
+    return (<div>{rootBlocks}</div>);
   }
 }
 

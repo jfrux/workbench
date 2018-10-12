@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import StateListItem from './index';
+import StateListItemBase from './Base';
 
 const propTypes = {
   value: PropTypes.any,
   label: PropTypes.label
 };
 
-class Temperature extends StateListItem {
-  
+class Temperature extends StateListItemBase {
+  // render() {
+  //   const { label, icon, value } = this.props;
+  // }
 };
 
 export default Temperature;

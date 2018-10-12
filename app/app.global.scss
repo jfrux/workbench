@@ -24,7 +24,19 @@
   
   z-index: 100;
 }
-
+.state-card {
+  margin:10px;
+  .state-card-body {
+    // > div {
+    //   padding:5px 15px;
+    // }
+    .progress {
+      border-radius:0;
+      background-color:#212121;
+      height:30px;
+    }
+  }
+}
 .state-list {
   display:table;
   width:100%;
@@ -263,8 +275,6 @@ body {
   background-color:#000;
   /* font-family: Arial, Helvetica, Helvetica Neue, serif; */
   overflow-y: hidden;
-  
-  -webkit-app-region: drag;
 }
 /* 
 h2 {

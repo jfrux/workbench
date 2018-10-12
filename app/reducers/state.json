@@ -114,5 +114,99 @@
     "monotonicRawNanos": 158729370907063,
     "monotonicNanos": 158729386718353
   },
+  "openpilotParams": {
+    "passive": false,
+    "car": {
+      "steerKpV": [
+        0.3799999952316284
+      ],
+      "safetyParam": 0,
+      "steerRatioRear": 0.0,
+      "steerMaxV": [
+        1.0
+      ],
+      "steerKiV": [
+        0.10999999940395355
+      ],
+      "steerKf": 5.999999848427251e-05,
+      "steerKpBP": [
+        0.0
+      ],
+      "carFingerprint": "HONDA PILOT 2017 TOURING",
+      "steerLimitAlert": true,
+      "minEnableSpeed": -1.0,
+      "enableGasInterceptor": true,
+      "steerControlType": "torque",
+      "radarOffCan": false,
+      "steerRatio": 16.0,
+      "brakeMaxBP": [
+        5.0,
+        20.0
+      ],
+      "enableCamera": true,
+      "enableCruise": false,
+      "tireStiffnessFront": 119815.140625,
+      "minSteerSpeed": 0.0,
+      "longitudinalKiBP": [
+        0.0,
+        35.0
+      ],
+      "stoppingControl": true,
+      "longPidDeadzoneBP": [
+        0.0
+      ],
+      "enableDsu": false,
+      "gasMaxBP": [
+        0.0
+      ],
+      "enableApgs": false,
+      "longitudinalKiV": [
+        0.18000000715255737,
+        0.11999999731779099
+      ],
+      "enableBrakeDEPRECATED": false,
+      "longPidDeadzoneV": [
+        0.0
+      ],
+      "carName": "honda",
+      "safetyModel": 1,
+      "steerKiBP": [
+        0.0
+      ],
+      "steerMaxBP": [
+        0.0
+      ],
+      "gasMaxV": [
+        0.6000000238418579
+      ],
+      "longitudinalKpV": [
+        1.2000000476837158,
+        0.800000011920929,
+        0.5
+      ],
+      "steerRateCost": 0.5,
+      "brakeMaxV": [
+        1.0,
+        0.800000011920929
+      ],
+      "tireStiffnessRear": 131619.265625,
+      "vEgoStopping": 0.0,
+      "centerToFront": 1.1520999670028687,
+      "enableSteerDEPRECATED": false,
+      "longitudinalKpBP": [
+        0.0,
+        5.0,
+        35.0
+      ],
+      "steerKiDEPRECATED": 0.0,
+      "startAccel": 0.5,
+      "wheelbase": 2.809999942779541,
+      "steerKpDEPRECATED": 0.0,
+      "rotationalInertia": 3867.343017578125,
+      "mass": 2087.806396484375,
+      "steerActuatorDelay": 0.10000000149011612,
+      "directAccelControl": false
+    }
+  },
   "logMessage": "{\"msg\": \"   running gpsd <Process(gpsd, started)>\", \"ctx\": {\"version\": \"0.5.4-release\", \"dongle_id\": \"0812e2149c1b5609\", \"dirty\": true, \"is_eon\": true}, \"level\": \"DEBUG\", \"levelnum\": 10, \"name\": \"swaglog\", \"filename\": \"manager.py\", \"lineno\": 349, \"pathname\": \"./manager.py\", \"module\": \"manager\", \"funcName\": \"manager_thread\", \"host\": \"localhost\", \"process\": 1940, \"thread\": 548385533976, \"threadName\": \"MainThread\", \"created\": 1539351372.161438}",
 }

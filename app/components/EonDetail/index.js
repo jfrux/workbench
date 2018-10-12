@@ -57,18 +57,8 @@ const propTypes = {
 };
 
 class EonDetail extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeTab: Object.keys(vehicleStateGroups)[0],
-      processesAndThermalsHeight: 0
-    };
-  }
   componentDidMount() {
     const { eon, SELECT_EON } = this.props;
-    console.log("mounted detail screen");
-    console.log(eon);
-    console.log(SELECT_EON);
     if (eon && this.props.SELECT_EON) {
       this.props.SELECT_EON(eon.id);
     }
@@ -83,7 +73,7 @@ class EonDetail extends Component {
     this.props.OPEN_DRIVE(driveIndex);
   }
   render() {
-    const { activeTab, installing, network, fingerprint, stateRequestFatal, stateRequestAttempts, drives, devices, installError, tmuxError, fingerprintString, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshStatus, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
+    const { installing, activeTab, network, fingerprint, stateRequestFatal, stateRequestAttempts, drives, devices, installError, tmuxError, fingerprintString, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshStatus, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
     const vehicleConnectionInfo = vehicleConnectionStatuses[vehicleConnection];
     // const { usbOnline } = thermal;
     // console.warn("sshConnectionError:",sshConnectionError);
@@ -109,31 +99,32 @@ class EonDetail extends Component {
       return <LoadingOverlay message={loadingMessage} />;
     }
     
-    if (installing || !stateGroupKeys.length) {
-    } else {
-      stateTabs = stateGroupKeys.map((key) => {
-        return (
-          <NavItem key={key + "-tab-link"}>
-            <NavLink
-              className={classnames({active: !installing && stateGroupKeys.length && activeTab === key,
-              disabled: installing || !stateGroupKeys.length})}
-              onClick={() => { this.setTab(key); }}
-              >
-              {key}
-            </NavLink>
-          </NavItem>
-        );
-      });
-      statePanes = stateGroupKeys.map((key) => {
-        const items = vehicleStateGroups[key];
-        return (
-          <TabPane key={key + "-tab-pane"} tabId={key}>
-            <StateList type={key} items={items} />
-          </TabPane>
-        )
-      });
-      
-    }
+    stateTabs = stateGroupKeys.map((key) => {
+      return (
+        <NavItem key={key + "-tab-link"}>
+          <NavLink
+            className={classnames({
+              test: true,
+              active: !installing && stateGroupKeys.length && activeTab === key,
+              disabled: installing || !stateGroupKeys.length
+            })}
+            onClick={() => { this.setTab(key); }}
+            >
+            {key}
+          </NavLink>
+        </NavItem>
+      );
+    });
+    statePanes = stateGroupKeys.map((key) => {
+      const items = vehicleStateGroups[key];
+      return (
+        <TabPane key={key + "-tab-pane"} tabId={key}>
+          {activeTab === key &&
+          <StateList type={key} items={items} />
+          }
+        </TabPane>
+      )
+    });
     // vidurl example:
     // https://video.comma.ai/hls/0812e2149c1b5609/0ccfd8331dfb6f5280753837cefc9d26_2018-10-06--19-56-04/index.m3u8
     let drivesList;
