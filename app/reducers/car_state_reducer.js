@@ -1,24 +1,18 @@
-import * as types from '../constants/eon_detail_action_types';
+import * as types from '../constants/car_state_action_types';
 import settings from 'electron-settings';
 
 const initialState = {
   gearShifter: null,
   seatbeltUnlatched: null,
   vEgoRaw: 0,
-  brake: 0,
   vEgo: 0,
+  brake: 0,
+  gas: 0,
   steeringAngle: 0,
-  leftBlinker: null,
-  wheelSpeedRL: null,
-  wheelSpeedFR: null,
   wheelSpeedFL: null,
+  wheelSpeedFR: null,
+  wheelSpeedRL: null,
   wheelSpeedRR: null,
-  wheelSpeeds: {
-    rl: 0,
-    fr: 0,
-    fl: 0,
-    rr: 0
-  },
   doorOpen: null,
   steeringRate: 0.0,
   events: [],
@@ -28,22 +22,15 @@ const initialState = {
   cruiseSpeedOffset: null,
   cruiseEnabled: null,
   cruiseStandstill: null,
-  cruiseState: {
-    available: null,
-    speed: 0.0,
-    speedOffset: 0,
-    enabled: null,
-    standstill: null
-  },
-  gas: 0,
   yawRate: 0,
   steeringTorque: 0,
   genericToggle: null,
-  brakeLights: null,
   buttonEvents: [],
   standstill: null,
   gasPressed: null,
+  brakeLights: null,
   rightBlinker: null,
+  leftBlinker: null,
   brakePressed: null,
   aEgo: 0,
   canMonoTimes: []
@@ -52,9 +39,19 @@ const initialState = {
 export default function carStateReducer(state = initialState, action) {
   switch (action.type) {
     case types.UPDATE:
+      console.log("actionPayload",action.payload);
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
+        wheelSpeedRL: action.payload.wheelSpeeds ? action.payload.wheelSpeeds.rl : null,
+        wheelSpeedFR: action.payload.wheelSpeeds ? action.payload.wheelSpeeds.fr : null,
+        wheelSpeedFL: action.payload.wheelSpeeds ? action.payload.wheelSpeeds.fl : null,
+        wheelSpeedRR: action.payload.wheelSpeeds ? action.payload.wheelSpeeds.rr : null,
+        cruiseAvailable: action.payload.cruiseState ? action.payload.cruiseState.available : null,
+        cruiseSpeed: action.payload.cruiseState ? action.payload.cruiseState.speed : null,
+        cruiseSpeedOffset: action.payload.cruiseState ? action.payload.cruiseState.speedOffset : null,
+        cruiseEnabled: action.payload.cruiseState ? action.payload.cruiseState.enabled : null,
+        cruiseStandstill: action.payload.cruiseState ? action.payload.cruiseState.standstill : null
       };
     default:
       return state;

@@ -16,6 +16,7 @@ import Layout from '../Layout';
 import LoadingIndicator from '../LoadingIndicator';
 import * as commaEndpoints from '../../constants/comma_endpoints.json';
 // import ConnectedTime from './ConnectedTime';
+import vehicleStateGroups from '../../constants/vehicle_state_groups.json';
 import { LineChart, PieChart } from 'react-chartkick';
 import Battery from './Widgets/Battery';
 import commands from '../../constants/commands.json';
@@ -23,7 +24,7 @@ import StateList from './StateList';
 import ThermalStateList from './StateList/ThermalStateList';
 import LoadingOverlay from '../LoadingOverlay';
 import TaskDialog from '../TaskDialog';
-import DriveViewer from './DriveViewer';
+// import DriveViewer from './DriveViewer';
 import { Row, CardHeader,TabContent, Nav, NavItem, NavLink, TabPane, Col, Card, CardBody, CardText, CardTitle, CardSubtitle, ListGroup, ListGroupItem } from 'reactstrap';
 // import io from 'socket.io-client';
 const propTypes = {
@@ -59,7 +60,7 @@ class EonDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeTab: '1',
+      activeTab: 'eon',
       processesAndThermalsHeight: 0
     };
   }
@@ -92,10 +93,11 @@ class EonDetail extends Component {
     if (fingerprint) {
       currentStateKeys.push('fingerprint');
     }
+    const stateGroupKeys = Object.keys(vehicleStateGroups);
     // if (!tmuxAttached) {
     //   return <LoadingIndicator className={styles.loading_overlay} />;
     // }
-    let stateBlocks;
+    let stateBlocks, stateTabs, statePanes;
     let loadingMessage = "Connecting...";
 
     if (!installing && stateRequestAttempts > 0) {
@@ -103,18 +105,34 @@ class EonDetail extends Component {
     } else {
       loadingMessage = "Setting up EON for Workbench...";
     }
-    if (installing || !currentStateKeys.length) {
-      stateBlocks = <LoadingOverlay message={loadingMessage} />;
+    if (installing || !stateGroupKeys.length) {
+      return <LoadingOverlay message={loadingMessage} />;
+    }
+    
+    if (installing || !stateGroupKeys.length) {
     } else {
-      stateBlocks = currentStateKeys.map((key) => {
-        const items = this.props[key];
-        return (<Card key={key} className={"state-card"}>
-          <CardBody className={"state-card-body"}>
-            <CardHeader className={"state-card-header"}>{key}</CardHeader>
-            <StateList items={items} />
-          </CardBody>
-        </Card>);
+      stateTabs = stateGroupKeys.map((key) => {
+        return (
+          <NavItem key={key + "-tab-link"}>
+            <NavLink
+              className={classnames({active: !installing && stateGroupKeys.length && activeTab === key,
+              disabled: installing || !stateGroupKeys.length})}
+              onClick={() => { this.setTab(key); }}
+              >
+              {key}
+            </NavLink>
+          </NavItem>
+        );
       });
+      statePanes = stateGroupKeys.map((key) => {
+        const items = vehicleStateGroups[key];
+        return (
+          <TabPane key={key + "-tab-pane"} tabId={key}>
+            <StateList type={key} items={items} />
+          </TabPane>
+        )
+      });
+      
     }
     // vidurl example:
     // https://video.comma.ai/hls/0812e2149c1b5609/0ccfd8331dfb6f5280753837cefc9d26_2018-10-06--19-56-04/index.m3u8
@@ -158,64 +176,11 @@ class EonDetail extends Component {
 
     return (
       <Layout title={this.props.eon.ip} contextActions={contextActions}>
-        <DriveViewer />
         <Nav tabs className={styles.tabs_list}>
-          <NavItem>
-            <NavLink
-              className={classnames({active: !installing && currentStateKeys.length && activeTab === '1',
-              disabled: installing || !currentStateKeys.length})}
-              onClick={() => { this.setTab('1'); }}
-              >
-              EON
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink
-              className={classnames({active: !installing && currentStateKeys.length && activeTab === '2',
-              disabled: installing || !currentStateKeys.length})}
-              onClick={() => { this.setTab('2'); }}>
-              Panda
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink
-              className={classnames({active: !installing && currentStateKeys.length && activeTab === '4',
-              disabled: installing || !currentStateKeys.length})}
-              onClick={() => { this.setTab('4'); }}>
-              Vehicle
-            </NavLink>
-          </NavItem>
+          {stateTabs}
         </Nav>
         <TabContent activeTab={activeTab}>
-          <TabPane tabId="1">
-            {stateBlocks}
-          </TabPane>
-          <TabPane tabId="2">
-            <ListGroup className={"route-list"}>
-              {drivesList}
-            </ListGroup>
-          </TabPane>
-          <TabPane tabId="3">
-            {devicesList}
-          </TabPane>
-          <TabPane tabId="4">
-            {fingerprintString && 
-            <Card className={"state-card"}>
-              <CardBody className={"state-card-body"}>
-                <CardHeader className={"state-card-header"}>Fingerprint</CardHeader>
-                <Textarea autoFocus className={styles.fingerprint_input + " form-control text-light"} rows="4" defaultValue={fingerprintString} />
-              </CardBody>
-            </Card>
-            }
-            {!fingerprintString && 
-              <Card className={"state-card"}>
-                <CardBody className={"state-card-body"}>
-                  <CardHeader className={"state-card-header"}>Fingerprint</CardHeader>
-                  <p>Waiting for vehicle...</p>
-                </CardBody>
-              </Card>
-            }
-          </TabPane>
+          {statePanes}
         </TabContent>
       </Layout>
     );

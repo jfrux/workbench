@@ -5,7 +5,9 @@ import * as actions from '../actions/car_state_actions';
 function* handleUpdate(action) {
   const { payload } = action;
   const { carState } = payload;
-  yield put(actions.update(carState));
+  if (carState) {
+    yield put(actions.update(carState));
+  }
 }
 
 export function* carStateSagas() {

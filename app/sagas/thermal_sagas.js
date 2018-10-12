@@ -5,7 +5,10 @@ import * as actions from '../actions/thermal_actions';
 function* handleUpdate(action) {
   const { payload } = action;
   const { thermal } = payload;
-  yield put(actions.update(thermal));
+
+  if (thermal) {
+    yield put(actions.update(thermal));
+  }
 }
 
 export function* thermalSagas() {

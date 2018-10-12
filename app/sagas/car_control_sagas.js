@@ -5,7 +5,10 @@ import * as actions from '../actions/car_control_actions';
 function* handleUpdate(action) {
   const { payload } = action;
   const { carControl } = payload;
-  yield put(actions.update(carControl));
+
+  if (carControl) {
+    yield put(actions.update(carControl));
+  }
 }
 
 export function* carControlSagas() {

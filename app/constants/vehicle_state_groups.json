@@ -1,0 +1,101 @@
+{
+  "eon": [
+    ["battery", [
+      ["bat", ["thermal","bat"], "StateListItem"],
+      ["status", ["thermal","batteryStatus"], "StateListItem"],
+      ["current", ["thermal","batteryCurrent"], "StateListItem"],
+      ["voltage", ["thermal","batteryVoltage"], "StateListItem"],
+      ["percent", ["thermal","batteryPercent"], "StateListItem"]
+    ],"StateListGroup"],
+    ["processors", [
+      ["cpu2", ["thermal","cpu2"], "StateListItem"],
+      ["cpu3", ["thermal","cpu3"], "StateListItem"],
+      ["cpu0", ["thermal","cpu0"], "StateListItem"],
+      ["cpu1", ["thermal","cpu1"], "StateListItem"],
+      ["gpu", ["thermal","gpu"], "StateListItem"]
+    ],"StateListGroup"],
+    ["data", [
+      ["freeSpace", ["thermal","freeSpace"], "StateListItem"],
+      ["memory", ["thermal","mem"], "StateListItem"]
+    ],"StateListGroup"]
+  ],
+  "openpilot": [
+    ["hud",[
+      ["leadVisible", ["carControl","hudControlLeadVisible"], "StateListItem"],
+      ["setSpeed", ["carControl","hudControlSetSpeed"], "StateListItem"],
+      ["lanesVisible", ["carControl","hudControlLanesVisible"], "StateListItem"],
+      ["visualAlert", ["carControl","hudControlVisualAlert"], "StateListItem"],
+      ["audibleAlert", ["carControl","hudControlAudibleAlert"], "StateListItem"],
+      ["speedVisible", ["carControl","hudControlSpeedVisible"], "StateListItem"],
+      ["enabled", ["carControl","enabled"], "StateListItem"]
+    ],"StateListGroup"],
+    ["started", [
+      ["started", ["thermal","started"], "StateListItem"],
+      ["startedTs", ["thermal","startedTs"], "StateListItem"]
+    ],"StateListGroup"]
+  ],
+  "vehicle": [
+    ["steering", [
+      ["angle", ["carState","steeringAngle"], "StateListItem"],
+      ["rate", ["carState","steeringRate"], "StateListItem"],
+      ["pressed", ["carState","steeringPressed"], "StateListItem"],
+      ["torque", ["carState","steeringTorque"], "StateListItem"],
+      ["turnSignalRight", ["carState","rightBlinker"], "StateListItem"],
+      ["turnSignalLeft", ["carState","leftBlinker"], "StateListItem"],
+      ["actuatorAngle", ["carControl","actuatorSteerAngle"], "StateListItem"],
+      ["actuator", ["carControl","actuatorSteer"], "StateListItem"],
+      ["steeringTorqueDEPRECATED", ["carControl","steeringTorqueDEPRECATED"], "StateListItem"]
+    ],"StateListGroup"],
+    ["acceleration", [
+      ["gas", ["carState","gas"], "StateListItem"],
+      ["gasPressed", ["carState","gasPressed"], "StateListItem"],
+      ["wheelSpeedFL", ["carState","wheelSpeedFL"], "StateListItem"],
+      ["wheelSpeedFR", ["carState","wheelSpeedFR"], "StateListItem"],
+      ["wheelSpeedRL", ["carState","wheelSpeedRL"], "StateListItem"],
+      ["wheelSpeedRR", ["carState","wheelSpeedRR"], "StateListItem"],
+      ["standstill", ["carState","standstill"], "StateListItem"],
+      ["actuator", ["carControl","actuatorGas"], "StateListItem"],
+      ["vEgoRaw", ["carState","vEgoRaw"], "StateListItem"],
+      ["vEgo", ["carState","vEgo"], "StateListItem"],
+      ["aEgo", ["carState","aEgo"], "StateListItem"],
+      ["gasDEPRECATED", ["carControl","gasDEPRECATED"], "StateListItem"]
+    ],"StateListGroup"],
+    ["braking", [
+      ["brake", ["carState","brake"], "StateListItem"],
+      ["lights", ["carState","brakeLights"], "StateListItem"],
+      ["pressed", ["carState","brakePressed"], "StateListItem"],
+      ["actuator", ["carControl","actuatorBrake"], "StateListItem"],
+      ["brakeDEPRECATED", ["carControl","brakeDEPRECATED"], "StateListItem"]
+    ],"StateListGroup"],
+    ["gearing", [
+      ["shifterPosition", ["carState","gearShifter"], "StateListItem"]
+    ],"StateListGroup"],
+    ["safety", [
+      ["seatbeltUnlatched", ["carState","seatbeltUnlatched"], "StateListItem"],
+      ["doorOpen", ["carState","doorOpen"], "StateListItem"]
+    ],"StateListGroup"],
+    ["buttons", [
+      ["buttonEvents", ["carState","buttonEvents"], "StateListItem"],
+      ["genericToggle", ["carState","genericToggle"], "StateListItem"]
+    ],"StateListGroup"],
+    ["cruiseControl", [
+      ["available", ["carState","cruiseAvailable"], "StateListItem"],
+      ["speed", ["carState","cruiseSpeed"], "StateListItem"],
+      ["speedOffset", ["carState","cruiseSpeedOffset"], "StateListItem"],
+      ["enabled", ["carState","cruiseEnabled"], "StateListItem"],
+      ["standstill", ["carState","cruiseStandstill"], "StateListItem"],
+      ["cancel", ["carControl","cruiseCancel"], "StateListItem"],
+      ["override", ["carControl","cruiseOverride"], "StateListItem"],
+      ["speedOverride", ["carControl","cruiseSpeedOverride"], "StateListItem"],
+      ["accelOverride", ["carControl","cruiseAccelOverride"], "StateListItem"]
+    ],"StateListGroup"]
+  ],
+  "other": [
+    ["misc", [
+      ["yawRate", ["carState","yawRate"], "StateListItem"],
+      ["events", ["carState","events"], "StateListItem"],
+      ["canMonoTimes", ["carState","canMonoTimes"], "StateListItem"],
+      ["active", ["carControl","active"], "StateListItem"]
+    ],"StateListGroup"]
+  ]
+}

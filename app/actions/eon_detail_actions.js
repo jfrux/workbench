@@ -125,12 +125,12 @@ export function API_REQUEST(endpoint) {
 export function API_REQUEST_SUCCESS(endpoint, json) {
   let payload = {};
   let endpointCheck = JSON.parse(JSON.stringify(endpoint));
-  console.warn("endpointCheck:",endpointCheck);
+  // console.warn("endpointCheck:",endpointCheck);
   if (endpointCheck === 'drives') {
     endpoint = 'routes';
   }
   let hasOwnKey = Object.keys(json).includes(endpoint);
-  console.warn("Has Own Key:",hasOwnKey);
+  // console.warn("Has Own Key:",hasOwnKey);
   if (hasOwnKey) {
     payload[endpointCheck] = json[endpoint];
   } else {
@@ -168,7 +168,7 @@ export function OPEN_REQUEST_EON_STATE() {
   };
 }
 export function RESPONSE_REQUEST_EON_STATE(eonState, state) {
-  console.warn(eonState);
+  // console.warn(eonState);
   return {
     type: types.EON_STATE_RESPONSE,
     payload: eonState
