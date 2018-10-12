@@ -106,5 +106,13 @@
     "speed": 1.2000000476837158,
     "verticalAccuracy": 0.0,
     "accuracy": 9.0
-  }
+  },
+  "clocks": {
+    "modemUptimeMillis": 158732877,
+    "wallTimeNanos": 1539351380065145245,
+    "bootTimeNanos": 158729386717624,
+    "monotonicRawNanos": 158729370907063,
+    "monotonicNanos": 158729386718353
+  },
+  "logMessage": "{\"msg\": \"   running gpsd <Process(gpsd, started)>\", \"ctx\": {\"version\": \"0.5.4-release\", \"dongle_id\": \"0812e2149c1b5609\", \"dirty\": true, \"is_eon\": true}, \"level\": \"DEBUG\", \"levelnum\": 10, \"name\": \"swaglog\", \"filename\": \"manager.py\", \"lineno\": 349, \"pathname\": \"./manager.py\", \"module\": \"manager\", \"funcName\": \"manager_thread\", \"host\": \"localhost\", \"process\": 1940, \"thread\": 548385533976, \"threadName\": \"MainThread\", \"created\": 1539351372.161438}",
 }

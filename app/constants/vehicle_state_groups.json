@@ -20,6 +20,7 @@
     ],"StateListGroup"]
   ],
   "openpilot": [
+    ["params",[]],
     ["hud",[
       ["leadVisible", ["carControl","hudControlLeadVisible"], "StateListItem"],
       ["setSpeed", ["carControl","hudControlSetSpeed"], "StateListItem"],

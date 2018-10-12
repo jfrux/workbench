@@ -6,10 +6,11 @@ const RSAKey = require('rsa-key');
 const mkdirp = require("mkdirp");
 import path from 'path';
 import fs from 'fs';
-import * as commands from '../constants/commands.json';
+import * as routes from '../constants/routes.json';
 const SSH = require('node-ssh');
 import * as eonListTypes from '../constants/eon_list_action_types';
 import * as types from '../constants/network_scanner_action_types';
+import * as networkConnectionTypes from '../constants/network_connection_action_types';
 import * as networkScannerActions from '../actions/network_scanner_actions';
 import * as networkActions from '../actions/network_connection_actions';
 import * as eonListActions from '../actions/eon_list_actions';
@@ -189,11 +190,19 @@ function* handleAddEon(action) {
   }
 }
 
+function* handleConnected(action) {
+  const { router } = yield select();
+
+  if (router.location.pathname !== routes.EON_DETAIL) {
+    yield put(networkScannerActions.BEGIN_scanNetwork());
+  }
+}
 // EXPORT ROOT SAGA
 export function* scannerSagas() {
   yield all([
-    yield takeLatest(eonListTypes.ADD_EON, handleAddEon),
-    yield takeLatest(types.SCAN_NETWORK, scanNetwork),
-    yield takeEvery(types.SCAN_NETWORK_RESULT, handleAddEon),
+    takeLatest(networkConnectionTypes.CONNECTED, handleConnected),
+    takeLatest(eonListTypes.ADD_EON, handleAddEon),
+    takeLatest(types.SCAN_NETWORK, scanNetwork),
+    takeEvery(types.SCAN_NETWORK_RESULT, handleAddEon),
   ]);
 }

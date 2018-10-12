@@ -28,8 +28,6 @@ class StateList extends Component {
       const StateListGroupTag = this.components[rootComponentKey];
       // let stateDetails, stateImg, stateIcon, stateStatus;
       // // console.log(this.props[key]);
-      
-      
       return (<StateListGroupTag key={key} rootKey={key} data={rootData} />);
     });
     return (<ListGroup className={"state-card-list-group"}>{rootBlocks}</ListGroup>);

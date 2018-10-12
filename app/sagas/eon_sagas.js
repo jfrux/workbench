@@ -233,6 +233,7 @@ function sendInstallCommand(eon) {
     })
   });
 }
+
 function* installWorkbenchApi() {
   const { eonList } = yield select();
   const { selectedEon, eons } = eonList;
@@ -242,17 +243,23 @@ function* installWorkbenchApi() {
     installed: call(sendInstallCommand,eon),
     timeout: call(delay, 15000)
   });
-
-  if (installed) {
-    // console.warn("Installed!");
-    yield put(eonDetailActions.SUCCESS_install());
-  } else {
-    // console.warn("Timed out waiting to install");
-    yield put(eonListActions.ADD_ERROR("Could not connect to EON"));
-    yield put(eonDetailActions.FAIL_install(new Error("Install timed out...")));
+  try {
+    if (installed) {
+      // console.warn("Installed!");
+      yield put(eonDetailActions.SUCCESS_install());
+    } else {
+      // console.warn("Timed out waiting to install");
+      yield put(eonListActions.ADD_ERROR("Could not connect to EON"));
+      yield put(eonDetailActions.FAIL_install(new Error("Install timed out...")));
+    }
+  } catch (e) {
+    yield put(eonListActions.ADD_ERROR(e.message));
+    yield put(eonDetailActions.FAIL_install(e));
   }
 }
 
+// TODO: Build a mechanism to remove the need to reinstall each time.
+// Possibly when development slows and is more stable we can add something that doesn't require updates unless something changes in Git.
 function* determineIfShouldInstall(action) {
   const { payload } = action;
   const { pathname } = payload;
@@ -272,8 +279,8 @@ function* addEonListError() {
 export function* eonSagas() {
   console.warn("types:",types);
   yield all([
-    takeLatest(types.EON_STATE_FATAL,addEonListError),
     takeLatest("@@router/LOCATION_CHANGE",determineIfShouldInstall),
+    takeLatest(types.EON_STATE_FATAL,addEonListError),
     takeLatest(types.INSTALL_SUCCESS,fetchState),
     takeLatest(types.AUTH_REQUEST_FAIL,fetchAuth),
     takeLatest(types.EON_STATE_FAIL,fetchState),

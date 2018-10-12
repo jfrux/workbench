@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import LoadingIndicator from '../../LoadingIndicator';
+import LoadingIndicator from '../../../LoadingIndicator';
 import classnames from 'classnames';
-import stateInfo from '../../../constants/state_details.json';
+import stateInfo from '../../../../constants/state_details.json';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 const propTypes = {
   value: PropTypes.any,

@@ -4,13 +4,44 @@ import argparse
 import zmq
 import json
 import time
-
+import os
+from selfdrive.version import version, dirty
+from common.params import Params
 from hexdump import hexdump
 from threading import Thread
-
-from cereal import log
+from selfdrive.config import Conversions as CV
+from selfdrive.car.car_helpers import get_car
+from cereal import car, log
 import selfdrive.messaging as messaging
 from selfdrive.services import service_list
+def merge_state(x, y):
+  z = x.copy()   # start with x's keys and values
+  z.update(y)    # modifies z with y's keys and values & returns None
+  return z
+# HANDLE PYTHON EXCEPTIONS
+def save_exceptions_to_file(exception):
+  f = open("/data/workbench/data/exception.json", 'w+')
+  f.write(json.dumps(exception));
+
+__excepthook__ = sys.excepthook
+def handle_exception(*exc_info):
+  if exc_info[0] not in (KeyboardInterrupt, SystemExit):
+    save_exceptions_to_file(exc_info=exc_info)
+  __excepthook__(*exc_info)
+
+def get_params():
+  params = Params()
+
+  is_metric = params.get("IsMetric") == "1"
+  passive = params.get("Passive") != "0"
+  CP = car.CarParams.from_bytes(params.get("CarParams", block=True))
+
+  data = {
+    "passive": passive,
+    "is_metric": is_metric,
+    "car": CP.to_dict()
+  }
+  return data
 
 def main():
   context = zmq.Context()
@@ -26,11 +57,18 @@ def main():
   parser.add_argument('--addr', default='127.0.0.1')
   parser.add_argument("socket", type=str, nargs='*', help="socket name")
   args = parser.parse_args()
-  data = {}
   republish_socks = {}
-  # WRITE EMPTY FILE
+  # WRITE EMPTY FILES
+  f = open("/data/workbench/data/exception.json", 'w+')
+  f.write('{}');
+  f.close()
   f = open("/data/workbench/data/fingerprint.json", 'w+')
   f.write('{}');
+  f.close()
+  f = open("/data/workbench/data/state.json", 'w+')
+  f.write('{}');
+  f.close()
+  service_whitelist = ["live100", "logMessage", "clocks", "androidLogEntry", "thermal", "health", "gpsLocation", "carState", "carControl"]
   for m in args.socket if len(args.socket) > 0 else service_list:
     if m in service_list:
       port = service_list[m].port
@@ -42,56 +80,41 @@ def main():
     sock = messaging.sub_sock(context, port, poller, addr=args.addr)
     if args.proxy:
       republish_socks[sock] = messaging.pub_sock(context, port)
+  
+  can_messages = {}
   while 1:
     polld = poller.poll(timeout=1000)
-    
+    data = {}
+    state_file = open("/data/workbench/data/state.json", "r")
+    state = json.loads(state_file.read())
+    state_file.close()
     for sock, mode in polld:
       if mode != zmq.POLLIN:
         continue
       msg = sock.recv()
       # print fingerprint
       evt = log.Event.from_bytes(msg)
-      if sock in republish_socks:
-        republish_socks[sock].send(msg)
-      # print evt
-      service_whitelist = ["thermal", "health", "gpsLocation", "carState", "carControl"]
-      # THERMAL
-      # if evt.which() == 'thermal':
-      #   data['thermal'] = evt.thermal.to_dict()
-      # # HEALTH
-      # elif evt.which() == 'health':
-      #   data['health'] = evt.health.to_dict()
-      # # DRIVER MONITORING
-      # elif evt.which() == 'can':
-      #   # print evt.can.to_dict()
-      #   data['can'] = evt.can.to_dict()
-      # # GPS LOCATION
-      # elif evt.which() == 'gpsLocation':
-      #   data['gps'] = evt.gpsLocation.to_dict()
-      # # else:
-
+      
+      if evt.which() == 'can':
+        for c in msg.can:
+          # read also msgs sent by EON on CAN bus 0x80 and filter out the
+          # addr with more than 11 bits
+          if c.src%0x80 == 0 and c.address < 0x800:
+            can_messages[c.address] = len(c.dat)
+        fingerprint = ', '.join("\"%d\": %d" % v for v in sorted(msgs.items()))
+        fingerprint = json.loads('{' + fingerprint + '}')
+        data['fingerprint'] = fingerprint
+      if evt.which() == 'thermal':
+        data['openpilotParams'] = get_params()
       if evt.which() in service_whitelist:
         data[evt.which()] = evt.to_dict()[evt.which()]
-      #   print evt.which()
-        # if evt.which() is not '__getitem__':
-        #   data[evt.which()] = evt[evt.which()].to_dict()
-      # print '\n'
-      # pp.pprint(data, depth=3)
+      
       if any(data):
-        f = open("/data/workbench/data/state.json", 'w+')
-        f.write(json.dumps(data))
+        state_file = open("/data/workbench/data/state.json", "w")
+        state = merge_state(state,data)
+        state_file.write(json.dumps(state))
+        state_file.close()
         time.sleep(0.25)
-      # if not args.no_print:
-      #   if args.pipe:
-      #     sys.stdout.write(msg)
-      #     sys.stdout.flush()
-      #   elif args.raw:
-      #     hexdump(msg)
-      #   elif args.json:
-      #     print(json.loads(msg))
-      #   elif args.dump_json:
-          
-      #     print evt
 
 if __name__ == '__main__':
   main()
