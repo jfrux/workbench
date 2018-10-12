@@ -5,10 +5,10 @@ import fingerprint
 import monitor
 import server
 
-def start_fingerprint():
-  print '[started] Workbench Fingerprinter'
-  fingerprint.main()
-  print '[stopped] Workbench Fingerprinter'
+# def start_fingerprint():
+#   print '[started] Workbench Fingerprinter'
+#   fingerprint.main()
+#   print '[stopped] Workbench Fingerprinter'
   
 def start_monitor():
   print '[started] Workbench Monitor'
@@ -25,5 +25,6 @@ if __name__ == '__main__':
     p1.start()
     p2 = Process(target = start_server)
     p2.start()
-    p3 = Process(target = start_fingerprint)
-    p3.start()
+    # DEPRECATED, NOW IS IN MONITOR
+    # p3 = Process(target = start_fingerprint)
+    # p3.start()

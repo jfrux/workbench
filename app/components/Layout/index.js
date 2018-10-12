@@ -46,26 +46,26 @@ class Layout extends React.PureComponent {
   render() {
     const { backBtn, scanning, title, hideLogo, selectedEon, contextActions } = this.props;
     return (
-      <div className={styles.app_wrapper + (hideLogo ? " thin-wrapper" : "")}>
-        <div className={styles.top_bar + " no-select"}>
-          <span className={styles.title}>{title}</span>
+      <div className={'app-wrapper'}>
+        <div className={'top-bar'}>
+          <span className={'title'}>{title}</span>
         </div>
 
-        <div className={styles.left_bar}>
+        <div className={'left-bar'}>
           <Nav style={{marginTop:'36px'}}>
             {contextActions}
           </Nav>
-          <Nav className={styles.bottom_nav}>
-            <NavItem className={styles.nav_item}>
-              <NavLink className={"nav_link"} onClick={() => this.handleOpenUrl("https://comma.ai/")}><Comma style={{height: 18, width: 18 }} /></NavLink>
+          <Nav className={'bottom-nav'}>
+            <NavItem className={'nav-item'}>
+              <NavLink className={"nav-link"} onClick={() => this.handleOpenUrl("https://comma.ai/")}><Comma style={{height: 18, width: 18 }} /></NavLink>
             </NavItem>
-            <NavItem className={styles.nav_item}>
-              <NavLink className={"nav_link"} onClick={() => this.handleOpenUrl("https://github.com/openpilot-community/workbench")}><i className="fab fa-github"></i></NavLink>
+            <NavItem className={'nav-item'}>
+              <NavLink className={"nav-link"} onClick={() => this.handleOpenUrl("https://github.com/openpilot-community/workbench")}><i className="fab fa-github"></i></NavLink>
             </NavItem>
           </Nav>
         </div>
         
-        <div className={styles.content}>
+        <div className={'content'}>
           {this.props.children}
         </div>
       </div>

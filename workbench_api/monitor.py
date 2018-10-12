@@ -165,12 +165,12 @@ def main():
       evt = log.Event.from_bytes(msg)
       
       if evt.which() == 'can':
-        for c in msg.can:
+        for c in evt.can:
           # read also msgs sent by EON on CAN bus 0x80 and filter out the
           # addr with more than 11 bits
           if c.src%0x80 == 0 and c.address < 0x800:
             can_messages[c.address] = len(c.dat)
-        fingerprint = ', '.join("\"%d\": %d" % v for v in sorted(msgs.items()))
+        fingerprint = ', '.join("\"%d\": %d" % v for v in sorted(can_messages.items()))
         fingerprint = json.loads('{' + fingerprint + '}')
         data['fingerprint'] = fingerprint
       if evt.which() == 'thermal':

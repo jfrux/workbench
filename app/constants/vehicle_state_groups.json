@@ -1,7 +1,8 @@
 {
   "eon": [
     ["battery", [
-      ["temperature", ["thermal","batfriendly"], "Temperature"],
+      ["temperature", ["thermal","batfriendly"], "ProgressBar"],
+      ["thermalColor", ["thermal","thermalStatus"], "Base"],
       ["status", ["thermal","batteryStatus"], "Base"],
       ["current", ["thermal","batteryCurrent"], "Base"],
       ["voltage", ["thermal","batteryVoltage"], "Base"],
@@ -14,11 +15,25 @@
       ["cpu3", ["thermal","cpu3friendly"], "Temperature"],
       ["gpu", ["thermal","gpufriendly"], "Temperature"]
     ], "Base"],
-    ["data", [
+    ["GPS", [
+      ["accuracy", ["eonDetail","gpsLocation","accuracy"], "Base"],
+      ["altitude", ["eonDetail","gpsLocation","altitude"], "Base"],
+      ["bearing", ["eonDetail","gpsLocation","bearing"], "Base"],
+      ["bearingAccuracy", ["eonDetail","gpsLocation","bearingAccuracy"], "Base"],
+      ["flags", ["eonDetail","gpsLocation","flags"], "Base"],
+      ["latitude", ["eonDetail","gpsLocation","latitude"], "Base"],
+      ["longitude", ["eonDetail","gpsLocation","longitude"], "Base"],
+      ["source", ["eonDetail","gpsLocation","source"], "Base"],
+      ["speed", ["eonDetail","gpsLocation","speed"], "Base"],
+      ["speedAccuracy", ["eonDetail","gpsLocation","speedAccuracy"], "Base"],
+      ["timestamp", ["eonDetail","gpsLocation","timestamp"], "Base"],
+      ["verticalAccuracy", ["eonDetail","gpsLocation","verticalAccuracy"], "Base"]
+    ], "Base"],
+    ["storage", [
       ["usedSpace", ["thermal","usedSpaceFriendly"], "Base"],
       ["freeSpace", ["thermal","freeSpaceFriendly"], "Base"],
       ["memory", ["thermal","mem"], "Base"]
-    ], "Base"]
+    ], "Storage"]
   ],
   "openpilot": [
     ["params",[
@@ -26,20 +41,20 @@
       ["isMetric", ["eonDetail","openpilotParams","is_metric"], "Base"]
     ], "Base"],
     ["vehicle",[
-      ["steerKpV", ["eonDetail","openpilotParams","car","steerKpV"], "Base"],
+      ["SteerKpV", ["eonDetail","openpilotParams","car","steerKpV"], "ArrayOfValues"],
       ["safetyParam", ["eonDetail","openpilotParams","car","safetyParam"], "Base"],
-      ["steerRatioRear", ["eonDetail","openpilotParams","car","steerRatioRear"], "Base"],
-      ["steerMaxV", ["eonDetail","openpilotParams","car","steerMaxV"], "Base"],
-      ["steerKiV", ["eonDetail","openpilotParams","car","steerKiV"], "Base"],
-      ["steerKf", ["eonDetail","openpilotParams","car","steerKf"], "Base"],
-      ["steerKpBP", ["eonDetail","openpilotParams","car","steerKpBP"], "Base"],
+      ["SteerRatioRear", ["eonDetail","openpilotParams","car","steerRatioRear"], "Base"],
+      ["SteerMaxV", ["eonDetail","openpilotParams","car","steerMaxV"], "ArrayOfValues"],
+      ["SteerKiV", ["eonDetail","openpilotParams","car","steerKiV"], "ArrayOfValues"],
+      ["SteerKf", ["eonDetail","openpilotParams","car","steerKf"], "Base"],
+      ["SteerKpBP", ["eonDetail","openpilotParams","car","steerKpBP"], "ArrayOfValues"],
       ["carFingerprint", ["eonDetail","openpilotParams","car","carFingerprint"], "Base"],
-      ["steerLimitAlert", ["eonDetail","openpilotParams","car","steerLimitAlert"], "Base"],
+      ["SteerLimitAlert", ["eonDetail","openpilotParams","car","steerLimitAlert"], "Base"],
       ["minEnableSpeed", ["eonDetail","openpilotParams","car","minEnableSpeed"], "Base"],
       ["enableGasInterceptor", ["eonDetail","openpilotParams","car","enableGasInterceptor"], "Base"],
-      ["steerControlType", ["eonDetail","openpilotParams","car","steerControlType"], "Base"],
+      ["SteerControlType", ["eonDetail","openpilotParams","car","steerControlType"], "Base"],
       ["radarOffCan", ["eonDetail","openpilotParams","car","radarOffCan"], "Base"],
-      ["steerRatio", ["eonDetail","openpilotParams","car","steerRatio"], "Base"],
+      ["SteerRatio", ["eonDetail","openpilotParams","car","steerRatio"], "Base"],
       ["brakeMaxBP", ["eonDetail","openpilotParams","car","brakeMaxBP"], "Base"],
       ["enableCamera", ["eonDetail","openpilotParams","car","enableCamera"], "Base"],
       ["enableCruise", ["eonDetail","openpilotParams","car","enableCruise"], "Base"],
@@ -56,24 +71,24 @@
       ["longPidDeadzoneV", ["eonDetail","openpilotParams","car","longPidDeadzoneV"], "Base"],
       ["carName", ["eonDetail","openpilotParams","car","carName"], "Base"],
       ["safetyModel", ["eonDetail","openpilotParams","car","safetyModel"], "Base"],
-      ["steerKiBP", ["eonDetail","openpilotParams","car","steerKiBP"], "Base"],
-      ["steerMaxBP", ["eonDetail","openpilotParams","car","steerMaxBP"], "Base"],
+      ["SteerKiBP", ["eonDetail","openpilotParams","car","steerKiBP"], "Base"],
+      ["SteerMaxBP", ["eonDetail","openpilotParams","car","steerMaxBP"], "Base"],
       ["gasMaxV", ["eonDetail","openpilotParams","car","gasMaxV"], "Base"],
       ["longitudinalKpV", ["eonDetail","openpilotParams","car","longitudinalKpV"], "Base"],
-      ["steerRateCost", ["eonDetail","openpilotParams","car","steerRateCost"], "Base"],
+      ["SteerRateCost", ["eonDetail","openpilotParams","car","steerRateCost"], "Base"],
       ["brakeMaxV", ["eonDetail","openpilotParams","car","brakeMaxV"], "Base"],
       ["tireStiffnessRear", ["eonDetail","openpilotParams","car","tireStiffnessRear"], "Base"],
       ["vEgoStopping", ["eonDetail","openpilotParams","car","vEgoStopping"], "Base"],
       ["centerToFront", ["eonDetail","openpilotParams","car","centerToFront"], "Base"],
       ["enableSteerDEPRECATED", ["eonDetail","openpilotParams","car","enableSteerDEPRECATED"], "Base"],
       ["longitudinalKpBP", ["eonDetail","openpilotParams","car","longitudinalKpBP"], "Base"],
-      ["steerKiDEPRECATED", ["eonDetail","openpilotParams","car","steerKiDEPRECATED"], "Base"],
+      ["SteerKiDEPRECATED", ["eonDetail","openpilotParams","car","steerKiDEPRECATED"], "Base"],
       ["startAccel", ["eonDetail","openpilotParams","car","startAccel"], "Base"],
       ["wheelbase", ["eonDetail","openpilotParams","car","wheelbase"], "Base"],
-      ["steerKpDEPRECATED", ["eonDetail","openpilotParams","car","steerKpDEPRECATED"], "Base"],
+      ["SteerKpDEPRECATED", ["eonDetail","openpilotParams","car","steerKpDEPRECATED"], "Base"],
       ["rotationalInertia", ["eonDetail","openpilotParams","car","rotationalInertia"], "Base"],
       ["mass", ["eonDetail","openpilotParams","car","mass"], "Base"],
-      ["steerActuatorDelay", ["eonDetail","openpilotParams","car","steerActuatorDelay"], "Base"],
+      ["SteerActuatorDelay", ["eonDetail","openpilotParams","car","steerActuatorDelay"], "Base"],
       ["directAccelControl", ["eonDetail","openpilotParams","car","directAccelControl"], "Base"]
     ], "Base"],
     ["hud",[
@@ -91,7 +106,7 @@
     ], "Base"]
   ],
   "vehicle": [
-    ["steering", [
+    ["Steering", [
       ["angle", ["carState","steeringAngle"], "Base"],
       ["rate", ["carState","steeringRate"], "Base"],
       ["pressed", ["carState","steeringPressed"], "Base"],
@@ -100,7 +115,7 @@
       ["turnSignalLeft", ["carState","leftBlinker"], "Base"],
       ["actuatorAngle", ["carControl","actuatorSteerAngle"], "Base"],
       ["actuator", ["carControl","actuatorSteer"], "Base"],
-      ["steeringTorqueDEPRECATED", ["carControl","steeringTorqueDEPRECATED"], "Base"]
+      ["SteeringTorqueDEPRECATED", ["carControl","steeringTorqueDEPRECATED"], "Base"]
     ], "Base"],
     ["acceleration", [
       ["gas", ["carState","gas"], "Base"],

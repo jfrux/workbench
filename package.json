@@ -223,6 +223,7 @@
     "express-ws": "^4.0.0",
     "history": "^4.7.2",
     "immutability-helper": "^2.8.1",
+    "inflection": "^1.12.0",
     "ip": "^1.1.5",
     "iprange": "^0.1.0",
     "is-port-reachable": "^2.0.0",

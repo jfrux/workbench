@@ -22,16 +22,18 @@ class StateListGroup extends Component {
   renderChildren = () => {
     const { rootKey, data } = this.props;
     const childKeys = data.keys;
-    return childKeys.map((childKey) => {
-      const childValue = data[childKey];
-      const childComponent = data.childKeyToComponent[childKey];
-      return this.renderChild({
-        rootKey,
-        key: childKey,
-        value: childValue,
-        component: childComponent
-      });
-    });
+    return (<ListGroup>
+      {childKeys.map((childKey) => {
+        const childValue = data[childKey];
+        const childComponent = data.childKeyToComponent[childKey];
+        return this.renderChild({
+          rootKey,
+          key: childKey,
+          value: childValue,
+          component: childComponent
+        });
+      })}
+    </ListGroup>);
   }
   render() {
     const { rootKey, data } = this.props;
@@ -41,7 +43,7 @@ class StateListGroup extends Component {
       <Card className={"state-card"}>
         <CardBody className={"state-card-body"}>
           <CardHeader className={"state-card-header"}>{rootKey}</CardHeader>
-          <div>{childElems}</div>
+         {childElems}
         </CardBody>
       </Card>
     );

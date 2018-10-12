@@ -11,8 +11,8 @@ export function update(data) {
   });
 
   data['usedSpace'] = 100 - data.freeSpace;
-  data['usedSpaceFriendly'] = `${Math.round(data.usedSpace)}%`;
-  data['freeSpaceFriendly'] = `${Math.round(data.freeSpace)}%`;
+  data['freeSpaceFriendly'] = `${Math.round(data.usedSpace)}%`;
+  data['usedSpaceFriendly'] = `${Math.round(data.freeSpace)}%`;
   return {
     type: types.UPDATE,
     payload: data

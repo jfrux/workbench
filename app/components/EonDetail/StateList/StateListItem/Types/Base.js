@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { ListGroup, ListGroupItem } from 'reactstrap';
-
+import { capitalize } from 'inflection';
 const propTypes = {
   value: PropTypes.any,
   label: PropTypes.label
@@ -15,7 +15,7 @@ class StateListItem extends Component {
       <span className={"state-item"}>
         <span className={"state-label"}>
           <i className={classnames({stateIcon: true})}></i> 
-          {label}
+          {capitalize(label)}
         </span>
         {value &&
         <span className={"state-value"}>
