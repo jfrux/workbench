@@ -13,6 +13,13 @@ export function ADD_ERROR(error) {
   };
 }
 
+
+export function RESET_ERROR() {
+  return {
+    type: types.RESET_ERROR
+  };
+}
+
 export function ADD_EON(eon) {
   return {
     type: types.ADD_EON,

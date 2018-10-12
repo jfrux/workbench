@@ -162,6 +162,9 @@
 .state-item {
   display:flex;
 }
+.state-value {
+  flex:0 0 70%;
+}
 .state-label {
   font-weight:200;
   text-align:right;

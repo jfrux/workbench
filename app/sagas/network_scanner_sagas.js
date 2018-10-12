@@ -56,28 +56,6 @@ function fetchMacAddress(eon) {
   });
 }
 
-function* getResultInfo(action) {
-  const { networkScanner } = yield select();
-  const { scanResults } = networkScanner;
-  const { eon } = action.payload;
-  const eonId = Object.keys(eon)[0]
-  const eonObj = eon[eonId];
-  let result = {};
-  let mac_address;
-  // console.warn("Starting getResultInfo",action);
-  yield put(networkScannerActions.MAC_ADDRESS_REQUEST());
-  try {
-    mac_address = yield call(fetchMacAddress,eonObj);
-    result[eonId] = {
-      ...scanResults[eonId],
-      mac: mac_address
-    };
-    yield put(networkScannerActions.MAC_ADDRESS_SUCCESS(result));
-  } catch (e) {
-    yield put(networkScannerActions.MAC_ADDRESS_ERROR(e));
-  }
-}
-
 export function* createScannerEventChannel(scanner) {
   return eventChannel(emit => {
     const scanError = (data) => {
@@ -98,20 +76,6 @@ export function* createScannerEventChannel(scanner) {
     return () => {
       // This is a handler to uncreateScannerEventChannel.
     };
-  });
-}
-
-function* checkSsh(ip) {
-  const sshConn = new SSH();
-  const privateKey = eonDetailActions.getPrivateKey();
-  // console.log("Checking ssh for " + ip);
-  // console.log("Dispatch check for ssh on " + ip);
-
-  return sshConn.connect({
-    host: ip,
-    username: 'root',
-    port: 8022,
-    privateKey: privateKey
   });
 }
 
@@ -194,6 +158,7 @@ function* handleConnected(action) {
   const { router } = yield select();
 
   if (router.location.pathname !== routes.EON_DETAIL) {
+    yield put(eonListActions.RESET_ERROR());
     yield put(networkScannerActions.BEGIN_scanNetwork());
   }
 }

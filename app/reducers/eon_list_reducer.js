@@ -22,6 +22,11 @@ export default function eonListReducer(state = initialState, action) {
         ...state,
         error: action.payload
       };
+    case types.RESET_ERROR:
+      return {
+        ...state,
+        error: null
+      };
     case types.ADDING_EON:
       return {
         ...state,

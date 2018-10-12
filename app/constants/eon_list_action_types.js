@@ -1,5 +1,6 @@
 
 export const ADD_ERROR = 'eonList/ADD_ERROR';
+export const RESET_ERROR = 'eonList/RESET_ERROR';
 export const ADD_EON = 'eonList/ADD_EON';
 export const ADDING_EON = 'eonList/ADDING_EON';
 export const ADD_EON_ALREADY_EXISTS = 'eonList/ADD_EON_ALREADY_EXISTS';

@@ -10,9 +10,9 @@ export function update(data) {
     data[`${temp}friendly`] = `${Math.round(data[temp]/1000)}°C`;
   });
 
-  data['usedSpace'] = 100 - data.freeSpace;
-  data['freeSpaceFriendly'] = `${Math.round(data.usedSpace)}%`;
-  data['usedSpaceFriendly'] = `${Math.round(data.freeSpace)}%`;
+  data['usedSpace'] = 1-data.freeSpace;
+  data['freeSpaceFriendly'] = `${Math.round(data.freeSpace*100)}%`;
+  data['usedSpaceFriendly'] = `${Math.round(data.usedSpace*100)}%`;
   return {
     type: types.UPDATE,
     payload: data

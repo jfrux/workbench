@@ -1,13 +1,13 @@
 {
   "eon": [
     ["battery", [
-      ["temperature", ["thermal","batfriendly"], "ProgressBar"],
+      ["temperature", ["thermal","batfriendly"], "Temperature"],
       ["thermalColor", ["thermal","thermalStatus"], "Base"],
       ["status", ["thermal","batteryStatus"], "Base"],
       ["current", ["thermal","batteryCurrent"], "Base"],
       ["voltage", ["thermal","batteryVoltage"], "Base"],
-      ["percent", ["thermal","batteryPercent"], "Base"]
-    ],"Battery"],
+      ["percent", ["thermal","batteryPercent"], "ProgressBar"]
+    ],"Base"],
     ["processors", [
       ["cpu0", ["thermal","cpu0friendly"], "Temperature"],
       ["cpu1", ["thermal","cpu1friendly"], "Temperature"],
@@ -33,12 +33,21 @@
       ["usedSpace", ["thermal","usedSpaceFriendly"], "Base"],
       ["freeSpace", ["thermal","freeSpaceFriendly"], "Base"],
       ["memory", ["thermal","mem"], "Base"]
-    ], "Storage"]
+    ], "Base"]
   ],
   "openpilot": [
     ["params",[
       ["passive", ["eonDetail","openpilotParams","passive"], "Base"],
       ["isMetric", ["eonDetail","openpilotParams","is_metric"], "Base"]
+    ], "Base"],
+    ["health", [
+      ["gasInterceptorDetected",["eonDetail","health","gasInterceptorDetected"], "Base"],
+      ["controlsAllowed",["eonDetail","health","controlsAllowed"], "Base"],
+      ["started",["eonDetail","health","started"], "Base"],
+      ["current",["eonDetail","health","current"], "Base"],
+      ["startedSignalDetected",["eonDetail","health","startedSignalDetected"], "Base"],
+      ["isGreyPanda",["eonDetail","health","isGreyPanda"], "Base"],
+      ["voltage",["eonDetail","health","voltage"], "Base"]
     ], "Base"],
     ["vehicle",[
       ["Fingerprint", ["eonDetail","fingerprint"], "ArrayOfValues"],
@@ -168,6 +177,13 @@
       ["events", ["carState","events"], "ArrayOfValues"],
       ["canMonoTimes", ["carState","canMonoTimes"], "Base"],
       ["active", ["carControl","active"], "Base"]
+    ], "Base"],
+    ["clocks", [
+      ["modemUptimeMillis", ["eonDetail","clocks","modemUptimeMillis"], "Base"],
+      ["wallTimeNanos", ["eonDetail","clocks","wallTimeNanos"], "Base"],
+      ["bootTimeNanos", ["eonDetail","clocks","bootTimeNanos"], "Base"],
+      ["monotonicRawNanos", ["eonDetail","clocks","monotonicRawNanos"], "Base"],
+      ["monotonicNanos", ["eonDetail","clocks","monotonicNanos"], "Base"]
     ], "Base"]
   ]
 }
