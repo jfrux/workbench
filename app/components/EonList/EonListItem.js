@@ -8,7 +8,7 @@ import { ListGroupItem } from 'reactstrap';
 import classNames from 'classnames';
 import statusMessages from '../../constants/scan_status_messages.json';
 import sshConnectionStatusMessages from '../../constants/ssh_connection_status.json';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const propTypes = {
   index: PropTypes.number,
   eon: PropTypes.object,
@@ -29,7 +29,7 @@ class EonListItem extends Component {
                 <span className={styles.results_button_ip}>{ip}</span>
                 <span className={styles.results_button_mac}>{mac}</span>
               </span>
-              <span className={styles.results_button_selected}><i className="fa fa-plus"></i></span>
+              <span className={styles.results_button_selected}><FontAwesomeIcon icon={['fas', 'chevron-right']}/></span>
             </ListGroupItem>
     );
   }

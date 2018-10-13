@@ -1,13 +1,7 @@
 import { all, take, call, fork, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
 import IpUtil from "ip";
-const app = require('electron').remote.app;
-const RSAKey = require('rsa-key');
-const mkdirp = require("mkdirp");
-import path from 'path';
-import fs from 'fs';
 import * as routes from '../constants/routes.json';
-const SSH = require('node-ssh');
 import * as eonListTypes from '../constants/eon_list_action_types';
 import * as types from '../constants/network_scanner_action_types';
 import * as networkConnectionTypes from '../constants/network_connection_action_types';
@@ -15,13 +9,10 @@ import * as networkScannerActions from '../actions/network_scanner_actions';
 import * as networkActions from '../actions/network_connection_actions';
 import * as eonListActions from '../actions/eon_list_actions';
 import * as eonDetailActions from '../actions/eon_detail_actions';
-
+import evilscan from 'evilscan';
 function revisedRandId() {
   return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
 }
-
-const arp = require('node-arp');
-const evilscan = require('evilscan');
 
 function getScanner(cidrStr) {
   const scanner = new evilscan({
@@ -61,8 +52,13 @@ export function* createScannerEventChannel(scanner) {
     const scanError = (data) => {
       emit(networkScannerActions.FAIL_scanNetwork(data.toString()));
     };
-    
+    // let i = 0;
     const scanResult = (data) => {
+      // console.warn("foundData:",data);
+      // data.status = "open";
+      // i = i+1;
+      // data.mac = "00:00:00:00:" + i;
+      // {ip: "10.168.4.125", port: 8022, status: "open"}
       emit(networkScannerActions.RESULT_scanNetwork(data));
     };
     
@@ -83,28 +79,13 @@ export function* createScannerEventChannel(scanner) {
 function* scanNetwork() {
   const ip = IpUtil.address();
   let ips = yield networkActions.getIpsForScan(ip);
-  // console.log(ips);
-  // evilscan logic
   ips = ips.map((ip) => { return `${ip}.0`; });
-  // const scanner = yield call(getScanner, `${ips[0]}/24`);
-  // const scanner2 = yield call(getScanner, ips[1]);
   const scanner = yield call(getScanner, ips[0] + '/23');
   try {
     yield fork(read, scanner);
   } catch (e) {
     // console.warn("Errors in check #1");
   }
-
-  // ssh check logic
-  // for (let ipItem of ips) {
-  //   try {
-  //     let result = yield fork(checkSsh,ipItem);
-  //     // console.warn(result.stdout);
-  //     yield put(networkScannerActions.RESULT_scanNetwork({ ip: ipItem }))
-  //   } catch (e) {
-  //     yield put(networkScannerActions.PROGRESS_scanNetwork());
-  //   }
-  // }
 }
 
 function* handleAddEon(action) {

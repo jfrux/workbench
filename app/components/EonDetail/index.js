@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-const app = require('electron').remote.app;
-import Textarea from 'react-textarea-autosize';
 import classnames from 'classnames';
 import { Redirect } from 'react-router';
 import LazyLoad from 'react-lazy-load';
@@ -13,20 +11,12 @@ import 'moment-timezone';
 import PropTypes from 'prop-types';
 import vehicleConnectionStatuses from '../../constants/vehicle_connection_statuses.json';
 import Layout from '../Layout';
-import LoadingIndicator from '../LoadingIndicator';
 import * as commaEndpoints from '../../constants/comma_endpoints.json';
-// import ConnectedTime from './ConnectedTime';
 import vehicleStateGroups from '../../constants/vehicle_state_groups.json';
-import { LineChart, PieChart } from 'react-chartkick';
-import Battery from './Widgets/Battery';
-import commands from '../../constants/commands.json';
 import StateList from './StateList';
-import ThermalStateList from './StateList/ThermalStateList';
 import LoadingOverlay from '../LoadingOverlay';
-import TaskDialog from '../TaskDialog';
-// import DriveViewer from './DriveViewer';
-import { Row, CardHeader,TabContent, Nav, NavItem, NavLink, TabPane, Col, Card, CardBody, CardText, CardTitle, CardSubtitle, ListGroup, ListGroupItem } from 'reactstrap';
-// import io from 'socket.io-client';
+import { TabContent, Nav, NavItem, NavLink, TabPane, ListGroupItem } from 'reactstrap';
+
 const propTypes = {
   stateRequestFatal: PropTypes.bool,
   stateRequestAttempts: PropTypes.number,

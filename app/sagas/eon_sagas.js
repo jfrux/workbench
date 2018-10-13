@@ -1,23 +1,25 @@
 import { all, take, call, fork, race,  put, takeLatest, takeEvery, select } from 'redux-saga/effects';
 import { delay, eventChannel } from 'redux-saga';
-const app = require('electron').remote.app;
-const RSAKey = require('rsa-key');
-const mkdirp = require("mkdirp");
+import { remote } from 'electron';
+const { app } = remote;
+import mkdirp from 'mkdirp';
+import RSAKey from 'rsa-key';
 import path from 'path';
 import fs from 'fs';
 import * as routes from '../constants/routes.json';
-import IpUtil from "ip";
-const SSH = require('node-ssh');
+import SSH from 'node-ssh';
 import * as types from '../constants/eon_detail_action_types';
 import * as eonListTypes from '../constants/eon_list_action_types';
 import * as eonListActions from '../actions/eon_list_actions';
 import * as eonDetailActions from '../actions/eon_detail_actions';
 import * as endpoints from '../constants/comma_endpoints.json';
 import * as commands from '../constants/commands.json';
+
 function* failedSshConnection() {
   // console.warn("failedSshConnection Saga");
   yield put(eonListActions.DESELECT_EON);
 }
+
 function apiRequest(endpoint,state) {
   const { eonList, eonDetail } = state;
   const { auth } = eonDetail;
@@ -36,6 +38,7 @@ function apiRequest(endpoint,state) {
       }
     });
 }
+
 function* fetchApiRequest(endpoint) {
   const state = yield select();
   yield put(eonDetailActions.API_REQUEST());

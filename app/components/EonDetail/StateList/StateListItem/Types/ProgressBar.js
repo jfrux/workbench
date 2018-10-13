@@ -16,12 +16,19 @@ class ProgressBar extends StateListItemBase {
   getMax = () => {
     return 100;
   }
+  getValue = () => {
+    return parseInt(this.props.value);
+  }
+  getValueFriendly = () => {
+    return this.props.value;
+  }
   renderValue = () => {
-    const { value } = this.props;
     const color = this.getColor();
     const max = this.getMax();
+    const value = this.getValue();
+    const valueFriendly = this.getValueFriendly();
     if (value !== null) {
-      return <span className={"state-value"}><Progress color={color} value={value} max={max}>{value}</Progress></span>;
+      return <span className={"state-value"}><Progress color={color} value={value} max={max}>{valueFriendly}</Progress></span>;
     }
   }
 };

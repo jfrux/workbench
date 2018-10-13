@@ -1,11 +1,6 @@
 
 import * as types from '../constants/eon_list_action_types';
 
-const app = require('electron').remote.app;
-const SSH = require('node-ssh');
-const RSAKey = require('rsa-key');
-const mkdirp = require("mkdirp");
-
 export function ADD_ERROR(error) {
   return {
     type: types.ADD_ERROR,

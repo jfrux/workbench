@@ -12,7 +12,7 @@ import LoadingIndicator from '../LoadingIndicator';
 import { Container, ListGroup, Collapse, Card, CardBody, Nav, NavItem, NavLink, ListGroupItem, Form, Button, FormGroup, Label, FormFeedback, FormText, InputGroup, InputGroupAddon, InputGroupText, Input} from 'reactstrap';
 import statusMessages from '../../constants/scan_status_messages.json';
 import sshConnectionStatusMessages from '../../constants/ssh_connection_status.json';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const propTypes = {
   foundCount: PropTypes.number,
   addingEon: PropTypes.bool,
@@ -114,7 +114,9 @@ class EonList extends Component {
     const contextActions = [
       <NavItem key={1} className={styles.nav_item}>
         <NavLink className={classnames({ nav_link: true, disabled: scanning })} onClick={this.handleScanNetwork}>
-          <i className={"fa fa-sync" + (scanning ? " fa-spin" : "")}></i>
+          <FontAwesomeIcon icon="sync" className={classnames({
+            spin: scanning
+          })} />
         </NavLink>
       </NavItem>
     ];

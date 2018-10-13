@@ -24,13 +24,13 @@ export default merge.smart(baseConfig, {
 
   target: 'electron-renderer',
 
-  externals: ['fsevents', 'crypto-browserify'],
+  externals: ['ws', 'fsevents', 'crypto-browserify'],
 
   /**
    * Use `module` from `webpack.config.renderer.dev.js`
    */
   module: require('./webpack.config.renderer.dev').module,
-
+  
   entry: {
     renderer: Object.keys(dependencies || {}).filter(
       dependency => dependency !== '@fortawesome/fontawesome-free'

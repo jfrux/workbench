@@ -1,8 +1,6 @@
 import * as CidrUtil from "node-cidr";
 import IpUtil from "ip";
-const iprange = require('iprange');
-// console.log("CidrUtil",CidrUtil);
-// console.log("IpUtil",IpUtil);
+import iprange, { IPEmitter }  from 'iprange';
 
 export function getBaseIp(ip,octets=3) {
   let aIp = ip.split('.');
@@ -57,7 +55,6 @@ export function getIpsForScan(ip) {
     return Promise.all(baseIpsToScan.map((net) => {
       return new Promise((resolve,reject) => {
         let ips = [];
-        var IPEmitter = require('iprange').IPEmitter;
         var emitter = new IPEmitter(net + '/24');
         emitter.on('ip',(ip) => {
           ips.push(ip);

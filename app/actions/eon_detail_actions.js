@@ -1,19 +1,13 @@
 import settings from 'electron-settings';
-const app = require('electron').remote.app;
-const RSAKey = require('rsa-key');
-const mkdirp = require("mkdirp");
 import path from 'path';
 import fs from 'fs';
 import * as types from '../constants/eon_detail_action_types';
 import * as commands from '../constants/commands.json';
-
-const SSH = require('node-ssh');
 import * as vehicle_connection_statuses from '../constants/vehicle_connection_statuses.json';
+
 // ACTION CREATORS
 let pollerId;
 export function BEGIN_install() {
-  // console.log("dispatched BEGIN_scanNetwork");
-
   return {
     type: types.INSTALL
   };
@@ -35,8 +29,6 @@ export function FAIL_install(err) {
 }
 
 export function BEGIN_uninstall() {
-  // console.log("dispatched BEGIN_scanNetwork");
-
   return {
     type: types.UNINSTALL
   };
@@ -56,30 +48,6 @@ export function FAIL_uninstall(err) {
     }
   };
 }
-
-// const limitedLogArray = function(length) {
-//   var array = new Array();
-//   array.push = function () {
-//     if (this.length >= length) {
-//       this.shift();
-//     }
-//     return Array.prototype.push.apply(this,arguments);
-//   };
-//   return array;
-// };
-
-// function testJSON(text){
-//   if (typeof text!=="string"){
-//       return false;
-//   }
-//   try{
-//       JSON.parse(text);
-//       return true;
-//   }
-//   catch (error){
-//       return false;
-//   }
-// }
 
 // AUTH REQUEST
 export function AUTH_REQUEST() {
@@ -279,83 +247,6 @@ export function FAIL_sshCommand(err) {
   };
 }
 
-export function sendPiped(eon, command, commandArgs = [], stdOut = () => {}, stdErr = () => {}) {
-  const privateKey = getPrivateKey();
-  // console.log(privateKey);
-  app.tmuxClient = new SSH();
-  return (dispatch, getState) => {
-    return app.tmuxClient.connect({
-      host: eon.ip,
-      username: 'root',
-      port: 8022,
-      privateKey: privateKey
-    }).then(() => {
-      return app.tmuxClient.exec(command, commandArgs, {
-        cwd: '/',
-        onStdout(chunk) {
-          // console.log(chunk.toString('utf8'));
-          stdOut(chunk.toString('utf8'));
-        },
-        onStderr(chunk) {
-          console.warn("CONNECTION ERROR!");
-          stdErr(chunk.toString('utf8'));
-        },
-      });
-    }).catch((err) => {
-      dispatch(FAIL_connectSSH(err));
-      // console.warn("ERROR CONNECTING:",err);
-    });
-  };
-}
-
-export function fetchFingerprint() {
-  return (dispatch, getState) => {
-    const { selectedEon, eons } = getState().eonList;
-    const eon = eons[selectedEon];
-    const { polling } = getState().eonDetail;
-    setTimeout(() => {
-      fetch(`http://${eon.ip}:8080/fingerprint.json`)
-        .then(res => {
-          return res.json();
-        })
-        .then(json => {
-          dispatch(RESPONSE_GET_FINGERPRINT(json, getState()));
-          if (polling) {
-            dispatch(fetchFingerprint());
-          }
-        }).catch((err) => {
-          dispatch(FAIL_GET_FINGERPRINT(err));
-          if (polling) {
-            dispatch(fetchFingerprint());
-          }
-        });
-    },2000);
-  };
-}
 export function stopPolling() {
   dispatch(STOP_POLLING);
-}
-export function fetchEonState() {
-  return (dispatch, getState) => {
-    const { selectedEon, eons } = getState().eonList;
-    const eon = eons[selectedEon];
-    const { polling } = getState().eonDetail;
-    setTimeout(() => {
-      fetch(`http://${eon.ip}:8080/state.json`)
-        .then(res => {
-          return res.json();
-        })
-        .then(json => {
-          dispatch(RESPONSE_REQUEST_EON_STATE(json, getState()));
-          if (polling) {
-            dispatch(fetchEonState(eon));
-          }
-        }).catch((err) => {
-          dispatch(FAIL_REQUEST_EON_STATE(err));
-          if (polling) {
-            dispatch(fetchEonState(eon));
-          }
-        });
-    },2000);
-  };
 }

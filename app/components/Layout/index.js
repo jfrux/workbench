@@ -6,21 +6,11 @@ import Comma from "../../images/comma.svg";
 import styles from './Styles.scss';
 import * as networkScannerActions from '../../actions/network_scanner_actions';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import routes from '../../constants/routes.json';
 import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
   NavItem,
   NavLink,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem } from 'reactstrap';
-const { shell } = require('electron');
+  Nav } from 'reactstrap';
+
 class Layout extends React.PureComponent {
   
   constructor(props) {

@@ -2,21 +2,24 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { ListGroup, ListGroupItem } from 'reactstrap';
-import { capitalize } from 'inflection';
+import { camelize } from 'inflection';
 const propTypes = {
   value: PropTypes.any,
   label: PropTypes.label
 };
 
 class StateListItemBase extends Component {
+  getValue = () => {
+    return this.props.value;
+  }
   renderLabel = () => {
     return (<span className={"state-label"}>
     <i className={classnames({stateIcon: true})}></i> 
-    {this.props.label}
+    {camelize(this.props.label,false)}
   </span>);
   }
   renderValue = () => {
-    const { value } = this.props;
+    const value = this.getValue();
     if (value !== null) {
       return (<span className={"state-value"}>
         {value + ''}

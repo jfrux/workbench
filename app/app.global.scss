@@ -2,7 +2,6 @@
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
-@import "~@fortawesome/fontawesome-pro/css/all.css";
 @import "~bootstrap/dist/css/bootstrap.css";
 .container-fluid {
   position: relative;
@@ -150,14 +149,15 @@
   display: block;
 }
 
-.state-label,.state-status {
+.state-label,.state-status, .state-value {
   flex:0 0 50%;
   white-space:nowrap;
   // border-bottom: 1px solid #555;
   vertical-align: middle;
   width:50%;
   font-size:12px;
-  padding:0 15px;
+  padding:0 5px;
+  line-height: 22px;
 }
 .state-item {
   display:flex;
@@ -466,7 +466,7 @@ a:hover {
   }
 
   .list-group-item {
-    padding:0;
+    padding:3px 15px;
     border-radius:0;
     background-color: rgba(#000,0.1);
     color:#FFF;

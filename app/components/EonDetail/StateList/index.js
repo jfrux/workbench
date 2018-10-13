@@ -22,10 +22,9 @@ class StateList extends Component {
         console.warn("Received an empty key...");
         return;
       }
-      // console.warn("rootKey:",key);
+
       const rootData = this.props[key];
       const rootComponentKey = rootKeyToComponent[key];
-      // console.warn("rootComponentKey",rootComponentKey)
       
       if (rootComponentKey) {
         const StateListGroupTag = this.components[rootComponentKey];
@@ -46,48 +45,35 @@ function mapStateToProps(state,ownProps) {
     rootKeys: [],
     rootKeyToComponent: {}
   };
-  // console.log("items",items);
   items.forEach((rootItem) => {
-    // console.log(rootItem);
     const rootItemKey = rootItem[0];
     const rootItemChildren = rootItem[1];
     const rootItemComponent = rootItem[2];
-    // console.warn("rootComponent:",rootItemComponent);
     props.rootKeys.push(rootItemKey);
-    // console.log("rootItemKey",rootItemKey);
     props[rootItemKey] = {
       keys: [],
       childKeyToComponent: {}
     };
     props.rootKeyToComponent[rootItemKey] = rootItemComponent;
-    // console.log("rootItemChildren",rootItemChildren);
     rootItemChildren.forEach((itemChild) => {
-      const itemChildKey = itemChild[0];
-      props[rootItemKey]['keys'].push(itemChildKey);
-      const itemChildStatePath = itemChild[1].join(".");
-      const itemChildComponent = itemChild[2];
-      const itemChildState = get(state,itemChildStatePath, null);
-      // console.log("itemChildKey",itemChildKey);
-      // if (typeof itemChildState === 'Array') {
-      //   itemChildState.forEach((itemChildStateItem) => {
-
-      //   })
-      // }
-      props[rootItemKey].childKeyToComponent[itemChildKey] = itemChildComponent;
-      props[rootItemKey][itemChildKey] = itemChildState;
-      // console.log("itemChild",itemChild);
-      // console.log("itemChildStatePath",itemChildStatePath);
-      // console.log("itemChildState",itemChildState);
+      let itemChildKey = itemChild[0];
+      let itemChildStatePath = itemChild[1].join(".");
+      let itemChildComponent = itemChild[2];
+      let itemChildState;
+      try {
+        itemChildState = get(state,itemChildStatePath, null);
+        props[rootItemKey].childKeyToComponent[itemChildKey] = itemChildComponent;
+        props[rootItemKey][itemChildKey] = itemChildState;
+        props[rootItemKey]['keys'].push(itemChildKey);
+      
+      } catch (e) {
+        console.warn(`Could not find key ${itemChildStatePath}`);
+      }
     }); 
   });
   return props;
 }
 
-// function mapDispatchToProps(dispatch) {
-//   return bindActionCreators(EonActions, dispatch);
-// }
-
 export default connect(
   mapStateToProps
-  // mapDispatchToProps
 )(StateList);
