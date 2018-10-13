@@ -1,6 +1,7 @@
 import { all, take, call, fork, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
 import IpUtil from "ip";
+import arp from 'node-arp';
 import * as routes from '../constants/routes.json';
 import * as eonListTypes from '../constants/eon_list_action_types';
 import * as types from '../constants/network_scanner_action_types';
