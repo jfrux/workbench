@@ -1,14 +1,17 @@
 {
   "eon": [
-    ["battery", [
-      ["temperature", ["thermal","batfriendly"], "Temperature"],
-      ["thermalColor", ["thermal","thermalStatus"], "Base"],
-      ["status", ["thermal","batteryStatus"], "Base"],
-      ["current", ["thermal","batteryCurrent"], "Base"],
-      ["voltage", ["thermal","batteryVoltage"], "Base"],
-      ["percent", ["thermal","batteryPercent"], "ProgressBar"]
+    ["Overview", [
+      ["EON Temp", ["thermal","batfriendly"], "DashboardBubble"],
+      ["Storage", ["thermal","usedSpaceFriendly"], "DashboardBubble"]
+    ], "Dashboard"],
+    ["Battery", [
+      ["Temperature", ["thermal","batfriendly"], "Temperature"],
+      ["Percent", ["thermal","batteryPercent"], "ProgressBar"],
+      ["Status", ["thermal","batteryStatus"], "Base"],
+      ["Current", ["thermal","batteryCurrent"], "Base"],
+      ["Voltage", ["thermal","batteryVoltage"], "Base"]
     ],"Base"],
-    ["processors", [
+    ["Processors", [
       ["cpu0", ["thermal","cpu0friendly"], "ProcessorTemperature"],
       ["cpu1", ["thermal","cpu1friendly"], "ProcessorTemperature"],
       ["cpu2", ["thermal","cpu2friendly"], "ProcessorTemperature"],
@@ -16,32 +19,32 @@
       ["gpu", ["thermal","gpufriendly"], "ProcessorTemperature"]
     ], "Base"],
     ["GPS", [
-      ["accuracy", ["eonDetail","gpsLocation","accuracy"], "Base"],
-      ["altitude", ["eonDetail","gpsLocation","altitude"], "Base"],
-      ["bearing", ["eonDetail","gpsLocation","bearing"], "Base"],
-      ["bearingAccuracy", ["eonDetail","gpsLocation","bearingAccuracy"], "Base"],
-      ["flags", ["eonDetail","gpsLocation","flags"], "Base"],
-      ["latitude", ["eonDetail","gpsLocation","latitude"], "Base"],
-      ["longitude", ["eonDetail","gpsLocation","longitude"], "Base"],
-      ["source", ["eonDetail","gpsLocation","source"], "Base"],
-      ["speed", ["eonDetail","gpsLocation","speed"], "Base"],
-      ["speedAccuracy", ["eonDetail","gpsLocation","speedAccuracy"], "Base"],
-      ["timestamp", ["eonDetail","gpsLocation","timestamp"], "Base"],
-      ["verticalAccuracy", ["eonDetail","gpsLocation","verticalAccuracy"], "Base"]
+      ["Source", ["eonDetail","gpsLocation","source"], "Base"],
+      ["Accuracy", ["eonDetail","gpsLocation","accuracy"], "Base"],
+      ["Altitude", ["eonDetail","gpsLocation","altitude"], "Base"],
+      ["Bearing", ["eonDetail","gpsLocation","bearing"], "Base"],
+      ["Bearing Accuracy", ["eonDetail","gpsLocation","bearingAccuracy"], "Base"],
+      ["Flags", ["eonDetail","gpsLocation","flags"], "Base"],
+      ["Latitude", ["eonDetail","gpsLocation","latitude"], "Base"],
+      ["Longitude", ["eonDetail","gpsLocation","longitude"], "Base"],
+      ["Speed", ["eonDetail","gpsLocation","speed"], "Base"],
+      ["Speed Accuracy", ["eonDetail","gpsLocation","speedAccuracy"], "Base"],
+      ["Timestamp", ["eonDetail","gpsLocation","timestamp"], "Base"],
+      ["Vertical Accuracy", ["eonDetail","gpsLocation","verticalAccuracy"], "Base"]
     ], "Base"],
-    ["storage", [
-      ["usedSpace", ["thermal","usedSpaceFriendly"], "ProgressBar"],
-      ["freeSpace", ["thermal","freeSpaceFriendly"], "ProgressBar"],
-      ["memory", ["thermal","mem"], "Memory"]
+    ["Storage and Memory", [
+      ["Used", ["thermal","usedSpaceFriendly"], "ProgressBar"],
+      ["Memory Used", ["thermal","mem"], "Memory"]
     ], "Base"]
   ],
   "openpilot": [
-    ["params",[
-      ["passive", ["eonDetail","openpilotParams","passive"], "Boolean"],
-      ["isMetric", ["eonDetail","openpilotParams","is_metric"], "Boolean"]
+    
+    ["Params",[
+      ["Passive", ["eonDetail","openpilotParams","passive"], "Boolean"],
+      ["Metric", ["eonDetail","openpilotParams","is_metric"], "Boolean"]
     ], "Base"],
-    ["health", [
-      ["gasInterceptorDetected",["eonDetail","health","gasInterceptorDetected"], "Boolean"],
+    ["Health", [
+      ["Gas Interceptor Detected",["eonDetail","health","gasInterceptorDetected"], "Boolean"],
       ["controlsAllowed",["eonDetail","health","controlsAllowed"], "Boolean"],
       ["started",["eonDetail","health","started"], "Boolean"],
       ["current",["eonDetail","health","current"], "Base"],

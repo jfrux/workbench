@@ -1,9 +1,7 @@
 import Base from './Base';
-import Battery from './Battery';
-import Storage from './Storage';
+import Dashboard from './Dashboard';
 
 export default {
   Base,
-  Battery,
-  Storage
+  Dashboard
 }

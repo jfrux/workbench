@@ -97,7 +97,6 @@
   position:fixed;
   background-color: darken(#232c39,$darker_col)!important;
   background: radial-gradient(619.87px at 50% 6.62%, #072339 0%, #051B2C 100%)!important;
-  
 }
 .content {
   padding-top:36px;
@@ -114,18 +113,7 @@
   }
 }
 .state-card {
-  margin:10px;
-  .state-card-body {
-    // > div {
-    //   padding:5px 15px;
-    // }
-    .progress {
-      border-radius:0;
-      background-color:rgba(0,0,0,0.2);
-      height:25px;
-      font-size:11px;
-    }
-  }
+  
 }
 .state-list {
   display:table;
@@ -348,7 +336,6 @@ button {
   font: inherit;
   margin: 0;
   min-height: 2em;
-  padding: 3px;
   outline: none;
 }
 
@@ -451,6 +438,108 @@ a:hover {
   border:0!important;
   border-radius:0!important;
   background-color:rgba(#000,0);
+  margin:10px;
+  
+  .state-card-body {
+    .progress {
+      border-radius:0;
+      background-color:rgba(0,0,0,0.2);
+      height:25px;
+      font-size:11px;
+    }
+
+    .list-group {
+      .list-group-item {
+        border-radius:0;
+        padding:3;
+        margin-bottom:initial;
+        border:0;
+        background-color:rgba(#000,0.3);
+        font-size:12px;
+        position:relative;
+        &:after {
+          content:"";
+          bottom:0;
+          left:0;
+          right:0;
+          position:absolute;
+          height:1px;
+          width:100%;
+          background-color:rgba(#000,0.4);
+        }
+      }
+    }
+  }
+  
+  &.dashboard {
+    .state-card-body {
+      .list-group {
+        display:flex;
+        flex-flow: row;
+        justify-content: flex-start;
+        background-color:rgba(#000,0.3);
+       
+        .list-group-item {
+          border:0;
+          // border-radius: 0 !important;
+          // padding: 3px !important;
+          // margin-bottom: initial !important;
+          // border: 0 !important;
+          // background-color: rgba(0, 0, 0, 0.0);
+          // font-size: 12px !important;
+          // position: relative;
+          // height:150px;
+          // width:150px;
+          margin:10px;
+          width:initial;
+          padding:0;
+          background:none;
+          &:after {
+            display:none;
+          }
+          &.dashboard-bubble {
+            $bubble-height: 60px;
+            $bubble-width: 92px;
+            .state-item {
+              display:block;
+              border:1px solid rgba(#FFF,0.4);
+              border-radius:10px;
+              width: $bubble-width;
+              height: $bubble-height;
+              position:relative;
+              .state-value {
+                top: 8px;
+                position: absolute;
+                font-size: 24px;
+                left: 13px;
+                font-weight: bold;
+              }
+              .state-label {
+                position:absolute;
+                bottom:4px;
+                left: 13px;
+                font-size:13px;
+                color:#FFF;
+                text-transform:uppercase;
+                font-weight:300;
+              }
+              &:before {
+                content:"";
+                position:absolute;
+                left:1px;
+                top:1px;
+                height:$bubble-height - 4px;
+                width:8px;
+                background-color:#FFF;
+                border-top-left-radius:9px;
+                border-bottom-left-radius:9px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   .card-header {
     border-radius:0!important;
     text-transform:capitalize;
@@ -482,25 +571,7 @@ a:hover {
     }
   
   }
-  .card-list-group-item {
-    border-radius:0!important;
-    padding:3!important;
-    margin-bottom:initial!important;
-    border:0!important;
-    background-color:rgba(#000,0.1);
-    font-size:12px!important;
-    position:relative;
-    &:after {
-      content:"";
-      bottom:0;
-      left:0;
-      right:0;
-      position:absolute;
-      height:1px;
-      width:100%;
-      background-color:rgba(#000,0.2);
-    }
-  }
+  
   .card-body {
     padding:0!important;
     background-color:rgba(#000,0);

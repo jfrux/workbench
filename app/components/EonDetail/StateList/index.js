@@ -16,7 +16,7 @@ class StateList extends Component {
   components = stateListGroupTypes
   render() {
     let { rootKeys, items, rootKeyToComponent } = this.props;
-    rootKeys = rootKeys.sort();
+    // rootKeys = rootKeys.sort();
     let rootBlocks = rootKeys.map((key) => {
       if (!key) {
         console.warn("Received an empty key...");

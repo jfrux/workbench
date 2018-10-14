@@ -12,12 +12,14 @@ class ArrayOfValues extends StateListItemBase {
   renderValue = () => {
     const { value } = this.props;
     if (value !== null) {
-      return (<span className={"state-value"}>
-      {value.map((item, index) => {
-        return (
-        <span key={index} className={"sub-value"}>{item + ""}</span>);
-      })}
-      </span>);
+      if (Array.isArray(value)) {
+        return (<span className={"state-value"}>
+          {value.map((item, index) => {
+            return (
+            <span key={index} className={"sub-value"}>{item + ""}</span>);
+          })}
+        </span>);
+      }
     }
   }
 };

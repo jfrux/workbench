@@ -2,20 +2,24 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { ListGroup, ListGroupItem } from 'reactstrap';
-import { camelize } from 'inflection';
+import { camelize, underscore, humanize } from 'inflection';
 const propTypes = {
   value: PropTypes.any,
   label: PropTypes.label
 };
 
 class StateListItemBase extends Component {
+  name = "default"
   getValue = () => {
     return this.props.value;
+  }
+  getClassNames = () => {
+    return classnames(["card-list-group-item","list-group-item",this.name]);
   }
   renderLabel = () => {
     return (<span className={"state-label"}>
     <i className={classnames({stateIcon: true})}></i> 
-    {camelize(this.props.label,false)}
+    {this.props.label}
   </span>);
   }
   renderValue = () => {
@@ -28,7 +32,7 @@ class StateListItemBase extends Component {
   }
   render() {
     const { label, icon, value } = this.props;
-    return (<ListGroupItem className={"card-list-group-item"}>
+    return (<ListGroupItem className={this.getClassNames()}>
       <span className={"state-item"}>
         {this.renderLabel()}
         {this.renderValue()}

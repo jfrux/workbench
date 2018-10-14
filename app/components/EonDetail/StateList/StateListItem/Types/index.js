@@ -5,10 +5,12 @@ import ProgressBar from './ProgressBar';
 import ArrayOfValues from './ArrayOfValues';
 import Memory from './Memory';
 import Boolean from './Boolean';
+import DashboardBubble from './DashboardBubble';
 
 export default {
   Base,
   Memory,
+  DashboardBubble,
   Temperature,
   ProcessorTemperature,
   ProgressBar,
