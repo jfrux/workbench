@@ -243,11 +243,11 @@ function* installWorkbenchApi() {
   const { selectedEon, eons } = eonList;
   const eon = eons[selectedEon];
   yield put(eonDetailActions.BEGIN_install());
-  // const {installed, timeout} = yield race({
-  //   installed: call(sendInstallCommand,eon),
-  //   timeout: call(delay, 15000)
-  // });
-  const installed = true;
+  const {installed, timeout} = yield race({
+    installed: call(sendInstallCommand,eon),
+    timeout: call(delay, 15000)
+  });
+  // const installed = true;
   try {
     if (installed) {
       // console.warn("Installed!");
