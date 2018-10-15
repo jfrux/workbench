@@ -447,7 +447,9 @@ a:hover {
       height:25px;
       font-size:11px;
     }
-
+    .sub-sub-value {
+      display:block;
+    }
     .list-group {
       .list-group-item {
         border-radius:0;
@@ -507,12 +509,14 @@ a:hover {
               width: $bubble-width;
               height: $bubble-height;
               position:relative;
+             
               .state-value {
                 top: 8px;
                 position: absolute;
                 font-size: 24px;
                 left: 13px;
                 font-weight: bold;
+                
               }
               .state-label {
                 position:absolute;

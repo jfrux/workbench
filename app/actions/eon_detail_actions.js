@@ -1,12 +1,8 @@
-import settings from 'electron-settings';
-import path from 'path';
-import fs from 'fs';
 import * as types from '../constants/eon_detail_action_types';
-import * as commands from '../constants/commands.json';
-import * as vehicle_connection_statuses from '../constants/vehicle_connection_statuses.json';
 
 // ACTION CREATORS
 let pollerId;
+
 export function BEGIN_install() {
   return {
     type: types.INSTALL

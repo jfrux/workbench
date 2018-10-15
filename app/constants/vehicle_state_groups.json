@@ -38,7 +38,9 @@
     ], "Base"]
   ],
   "openpilot": [
-    
+    ["Overview",[
+      ["Pedal",["eonDetail","health","gasInterceptorDetected"], "DashboardBubble"]
+    ],"Dashboard"],
     ["Params",[
       ["Passive", ["eonDetail","openpilotParams","passive"], "Boolean"],
       ["Metric", ["eonDetail","openpilotParams","is_metric"], "Boolean"]

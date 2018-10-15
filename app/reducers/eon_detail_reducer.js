@@ -168,7 +168,6 @@ export default function eonDetailReducer(state = initialState, action) {
       return {
         ...state,
         ...action.payload,
-        // currentStateKeys: Object.keys(action.payload),
         tmuxAttached: true,
         stateRequestAttempts: 0,
         stateRequestFatal: false,
