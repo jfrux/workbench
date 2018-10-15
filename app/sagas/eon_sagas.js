@@ -8,6 +8,7 @@ import path from 'path';
 import fs from 'fs';
 import * as routes from '../constants/routes.json';
 import SSH from 'node-ssh';
+import Sockette from 'sockette';
 import * as types from '../constants/eon_detail_action_types';
 import * as eonListTypes from '../constants/eon_list_action_types';
 import * as eonListActions from '../actions/eon_list_actions';
@@ -242,10 +243,11 @@ function* installWorkbenchApi() {
   const { selectedEon, eons } = eonList;
   const eon = eons[selectedEon];
   yield put(eonDetailActions.BEGIN_install());
-  const {installed, timeout} = yield race({
-    installed: call(sendInstallCommand,eon),
-    timeout: call(delay, 15000)
-  });
+  // const {installed, timeout} = yield race({
+  //   installed: call(sendInstallCommand,eon),
+  //   timeout: call(delay, 15000)
+  // });
+  const installed = true;
   try {
     if (installed) {
       // console.warn("Installed!");
@@ -260,7 +262,63 @@ function* installWorkbenchApi() {
     yield put(eonDetailActions.FAIL_install(e));
   }
 }
+function getSocket(eon) {
+  const scanner = new evilscan({
+    target: eon.ip,
+    port:'8022',
+    status:'TROU'
+  });
+  return scanner;
+}
 
+function* read() {
+  const channel = yield call(createSocketEventChannel);
+  // scanner.run();
+  while (true) {
+    let action = yield take(channel);
+    yield put(action);
+  }
+}
+export function* createSocketEventChannel() {
+  const { eonList } = yield select();
+  const { selectedEon, eons } = eonList;
+  const eon = eons[selectedEon];
+  
+  return eventChannel(emit => {
+    const onMessageReceived = (data) => {
+      // console.log("Received Message:", data.data);
+      emit(eonDetailActions.RESPONSE_REQUEST_EON_STATE(JSON.parse(data.data)));
+    };
+
+    // console.log("Connecting to WS",`ws://${eon.ip}:4000`);
+    const ws = new Sockette(`ws://${eon.ip}:4000`, {
+      timeout: 5e3,
+      maxAttempts: 10,
+      onopen: e => console.log('Connected!', e),
+      onmessage: e => onMessageReceived(e),
+      onreconnect: e => console.log('Reconnecting...', e),
+      onmaximum: e => console.log('Stop Attempting!', e),
+      onclose: e => console.log('Closed!', e),
+      onerror: e => console.log('Error:', e)
+    });
+    return () => {
+      // This is a handler to uncreateScannerEventChannel.
+    };
+  });
+}
+function* connectWebSockets() {
+  try {
+    yield fork(read);
+  } catch (e) {
+    // console.warn("Errors in check #1");
+  }
+  // ws.send('Hello, world!');
+  // ws.json({type: 'ping'});
+  // ws.close(); // graceful shutdown
+
+  // Reconnect 10s later
+  // setTimeout(ws.reconnect, 10e3);
+}
 // TODO: Build a mechanism to remove the need to reinstall each time.
 // Possibly when development slows and is more stable we can add something that doesn't require updates unless something changes in Git.
 function* determineIfShouldInstall(action) {
@@ -284,7 +342,8 @@ export function* eonSagas() {
   yield all([
     takeLatest("@@router/LOCATION_CHANGE",determineIfShouldInstall),
     takeLatest(types.EON_STATE_FATAL,addEonListError),
-    takeLatest(types.INSTALL_SUCCESS,fetchState),
+    // takeLatest(types.INSTALL_SUCCESS,fetchState),
+    takeLatest(types.INSTALL_SUCCESS,connectWebSockets),
     takeLatest(types.AUTH_REQUEST_FAIL,fetchAuth),
     takeLatest(types.EON_STATE_FAIL,fetchState),
     takeLatest(types.GET_FINGERPRINT_FAIL,fetchFingerprint),

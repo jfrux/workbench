@@ -54,13 +54,13 @@ class API():
 
     def run_forever(self):
         try:
-            logger.info("Listening on port %d for clients.." % self.port)
+            print("Listening on port %d for clients.." % self.port)
             self.serve_forever()
         except KeyboardInterrupt:
             self.server_close()
-            logger.info("Server terminated.")
+            print("Server terminated.")
         except Exception as e:
-            logger.error(str(e), exc_info=True)
+            print(str(e), exc_info=True)
             exit(1)
 
     def new_client(self, client, server):

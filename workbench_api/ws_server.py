@@ -1,5 +1,7 @@
 from websocket_server import WebsocketServer
 
+def send_message(self, message):
+  server.send_message(message)
 # Called for every client connecting (after handshake)
 def new_client(client, server):
 	print("New client connected and was given id %d" % client['id'])
@@ -17,7 +19,7 @@ def message_received(client, server, message):
 
 def main():
   PORT=4000
-  server = WebsocketServer(PORT)
+  server = WebsocketServer(PORT,host='0.0.0.0')
   server.set_fn_new_client(new_client)
   server.set_fn_client_left(client_left)
   server.set_fn_message_received(message_received)
