@@ -23,5 +23,4 @@ server = WebsocketServer(PORT)
 server.set_fn_new_client(new_client)
 server.set_fn_client_left(client_left)
 server.set_fn_message_received(message_received)
-print "Running websocket server on " + PORT
 server.run_forever()
