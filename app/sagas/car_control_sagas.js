@@ -14,6 +14,6 @@ function* handleUpdate(action) {
 export function* carControlSagas() {
   yield all([
     // on first controls focus, load remaining playlists and enable story browser
-    takeLatest(types.MESSAGE, handleUpdate)
+    takeEvery(types.MESSAGE, handleUpdate)
   ]);
 }

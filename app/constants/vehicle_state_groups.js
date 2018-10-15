@@ -62,21 +62,8 @@ export default {
       ["Lanes Visible", ["carControl","hudControlLanesVisible"], "DashboardCircle"],
       ["Speed Visible", ["carControl","hudControlSpeedVisible"], "DashboardCircle"]
     ], "Dashboard"],
-    ["Params",[
-      ["Passive", ["eonDetail","openpilotParams","passive"], "Boolean"],
-      ["Metric", ["eonDetail","openpilotParams","is_metric"], "Boolean"]
-    ], "Base"],
-    ["Health", [
-      ["Gas Interceptor Detected",["eonDetail","health","gasInterceptorDetected"], "Boolean"],
-      ["controlsAllowed",["eonDetail","health","controlsAllowed"], "Boolean"],
-      ["started",["eonDetail","health","started"], "Boolean"],
-      ["current",["eonDetail","health","current"], "Base"],
-      ["startedSignalDetected",["eonDetail","health","startedSignalDetected"], "Boolean"],
-      ["isGreyPanda",["eonDetail","health","isGreyPanda"], "Boolean"],
-      ["voltage",["eonDetail","health","voltage"], "Base"]
-    ], "Base"],
     ["vehicle",[
-      ["Fingerprint", ["eonDetail","fingerprint"], "ArrayOfValues"],
+      ["Fingerprint", ["eonDetail","fingerprintFriendly"], "Textarea"],
       ["SteerKpV", ["eonDetail","openpilotParams","car","steerKpV"], "ArrayOfValues"],
       ["safetyParam", ["eonDetail","openpilotParams","car","safetyParam"], "Base"],
       ["SteerRatioRear", ["eonDetail","openpilotParams","car","steerRatioRear"], "Base"],
@@ -127,6 +114,20 @@ export default {
       ["SteerActuatorDelay", ["eonDetail","openpilotParams","car","steerActuatorDelay"], "Base"],
       ["directAccelControl", ["eonDetail","openpilotParams","car","directAccelControl"], "Boolean"]
     ], "Base"],
+    ["Params",[
+      ["Passive", ["eonDetail","openpilotParams","passive"], "Boolean"],
+      ["Metric", ["eonDetail","openpilotParams","is_metric"], "Boolean"]
+    ], "Base"],
+    ["Health", [
+      ["Gas Interceptor Detected",["eonDetail","health","gasInterceptorDetected"], "Boolean"],
+      ["controlsAllowed",["eonDetail","health","controlsAllowed"], "Boolean"],
+      ["started",["eonDetail","health","started"], "Boolean"],
+      ["current",["eonDetail","health","current"], "Base"],
+      ["startedSignalDetected",["eonDetail","health","startedSignalDetected"], "Boolean"],
+      ["isGreyPanda",["eonDetail","health","isGreyPanda"], "Boolean"],
+      ["voltage",["eonDetail","health","voltage"], "Base"]
+    ], "Base"],
+    
     ["hud",[
       ["Lead Visible", ["carControl","hudControlLeadVisible"], "Boolean"],
       ["setSpeed", ["carControl","hudControlSetSpeed"], "Base"],

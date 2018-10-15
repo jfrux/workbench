@@ -54,6 +54,7 @@ export default function eonDetailReducer(state = initialState, action) {
       return {
         ...state,
         ...action.payload,
+        fingerprintFriendly: "[" + JSON.stringify(action.payload.fingerprint).replace(/"/g,'').replace(/:/g,': ') + "]",
         connected: true,
         connecting: false
       };

@@ -6,6 +6,7 @@ import { routerMiddleware, routerActions } from 'react-router-redux';
 import { createLogger } from 'redux-logger';
 import rootReducer from '../reducers';
 import rootSaga from '../sagas';
+import * as eonTypes from '../constants/eon_detail_action_types';
 import * as eonListActions from '../actions/eon_list_actions';
 import * as eonDetailActions from '../actions/eon_detail_actions';
 import persistConfig from './persist';
@@ -38,6 +39,7 @@ const configureStore = (initialState) => {
   // Logging Middleware
   const logger = createLogger({
     level: 'info',
+    // predicate: (getState, action) => action.type !== eonTypes.MESSAGE,
     collapsed: true
   });
 
