@@ -18,6 +18,7 @@ from cereal import car, log
 import selfdrive.messaging as messaging
 from selfdrive.services import service_list
 
+#TODO: Someone better at Python than me can help clean this file up if they get time...
 def new_client(client, server):
   print("New client connected and was given id %d" % client['id'])
   context = zmq.Context()
