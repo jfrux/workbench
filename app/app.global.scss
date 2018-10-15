@@ -499,6 +499,59 @@ a:hover {
           &:after {
             display:none;
           }
+          &.dashboard-circle {
+            $circle-height: 60px;
+            $circle-width: 60px;
+            .state-item {
+              display:block;
+              border:1px solid rgba(#FFF,0.4);
+              border-radius:60px;
+              width: $circle-width;
+              height: $circle-height;
+              position:relative;
+              opacity:0.2;
+              .state-value {
+                top: 50%;
+                left: 50%;
+                transform:translate(-50%,-50%);
+                position: absolute;
+                font-size: 22px;
+                text-align:center;
+                font-weight: bold;
+                display:none;
+              }
+              .state-label {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 13px;
+                color: #FFF;
+                text-transform: uppercase;
+                font-weight: 300;
+                text-align: center;
+                padding: 0;
+                display: block;
+                white-space: initial;
+                line-height: 1em;
+                width: 100%;
+              }
+            }
+
+            &.active {
+              .state-item {
+                background-color: #28a745;
+                border-color:#28a745;
+                opacity:1;
+                .state-value {
+                  
+                }
+                .state-label {
+                  
+                }
+              }
+            }
+          }
           &.dashboard-bubble {
             $bubble-height: 60px;
             $bubble-width: 92px;

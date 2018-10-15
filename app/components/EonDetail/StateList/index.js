@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import LoadingIndicator from '../../LoadingIndicator';
 import stateListGroupTypes from './StateListGroup/Types';
-import styles from '../Styles.scss';
-import stateInfo from '../../../constants/state_details.json';
-import { Row, CardHeader,TabContent, Nav, NavItem, NavLink, TabPane, Col, Card, CardBody, CardText, CardTitle, CardSubtitle, ListGroup, ListGroupItem } from 'reactstrap';
 import { get } from 'dot-prop-immutable';
 const propTypes = {
   type: PropTypes.string,

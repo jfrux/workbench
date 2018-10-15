@@ -9,13 +9,14 @@ import Moment from 'react-moment';
 import moment from 'moment';
 import 'moment-timezone';
 import PropTypes from 'prop-types';
-import vehicleConnectionStatuses from '../../constants/vehicle_connection_statuses.json';
+import vehicleConnectionStatuses from '../../constants/vehicle_connection_statuses';
 import Layout from '../Layout';
 import * as commaEndpoints from '../../constants/comma_endpoints.json';
-import vehicleStateGroups from '../../constants/vehicle_state_groups.json';
+import vehicleStateGroups from '../../constants/vehicle_state_groups';
 import StateList from './StateList';
 import LoadingOverlay from '../LoadingOverlay';
 import { TabContent, Nav, NavItem, NavLink, TabPane, ListGroupItem } from 'reactstrap';
+import Sockette from 'sockette';
 
 const propTypes = {
   stateRequestFatal: PropTypes.bool,
@@ -52,6 +53,27 @@ class EonDetail extends Component {
     if (eon && this.props.SELECT_EON) {
       this.props.SELECT_EON(eon.id);
     }
+    if (!eon) {
+      return;
+    }
+
+    const ws = new Sockette(`ws://${eon.ip}:9001`, {
+      timeout: 5e3,
+      maxAttempts: 10,
+      onopen: e => console.log('Connected!', e),
+      onmessage: e => console.log('Received:', e),
+      onreconnect: e => console.log('Reconnecting...', e),
+      onmaximum: e => console.log('Stop Attempting!', e),
+      onclose: e => console.log('Closed!', e),
+      onerror: e => console.log('Error:', e)
+    });
+
+    ws.send('Hello, world!');
+    ws.json({type: 'ping'});
+    ws.close(); // graceful shutdown
+
+    // Reconnect 10s later
+    setTimeout(ws.reconnect, 10e3);
   }
   componentWillUnmount() {
     this.props.STOP_POLLING();

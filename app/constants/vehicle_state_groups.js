@@ -1,4 +1,9 @@
-{
+/*
+ * None of this is clearly defined and there really isn't necessarily a plan.
+ * As a community we should come up with the most sensible setup for what we find
+ * to be the most useful HUD / Interface to view EON and Openpilot state.
+*/
+export default {
   "eon": [
     ["Overview", [
       ["EON Temp", ["thermal","batfriendly"], "DashboardBubble"],
@@ -39,8 +44,19 @@
   ],
   "openpilot": [
     ["Overview",[
-      ["Pedal",["eonDetail","health","gasInterceptorDetected"], "DashboardBubble"]
+      ["Pedal",["eonDetail","health","gasInterceptorDetected"], "DashboardCircle"],
+      ["Grey Panda",["eonDetail","health","isGreyPanda"], "DashboardCircle"],
+      ["Brake Ctrl.", ["eonDetail","openpilotParams","car","stoppingControl"], "DashboardCircle"],
+      ["Lng. Ctrl.", ["eonDetail","openpilotParams","car","directAccelControl"], "DashboardCircle"],
+      
+      ["Engaged", ["carControl","enabled"], "DashboardCircle"]
     ],"Dashboard"],
+    ["HUD",[
+      ["Max Speed", ["carControl","hudControlSetSpeed"], "DashboardBubble"],
+      ["Lead Visible", ["carControl","hudControlLeadVisible"], "DashboardCircle"],
+      ["Lanes Visible", ["carControl","hudControlLanesVisible"], "DashboardCircle"],
+      ["Speed Visible", ["carControl","hudControlSpeedVisible"], "DashboardCircle"]
+    ], "Dashboard"],
     ["Params",[
       ["Passive", ["eonDetail","openpilotParams","passive"], "Boolean"],
       ["Metric", ["eonDetail","openpilotParams","is_metric"], "Boolean"]

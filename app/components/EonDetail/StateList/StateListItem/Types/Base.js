@@ -13,15 +13,18 @@ class StateListItemBase extends Component {
   getValue = () => {
     return this.props.value;
   }
+
   getClassNames = () => {
     return classnames(["card-list-group-item","list-group-item",this.name]);
   }
+
   renderLabel = () => {
     return (<span className={"state-label"}>
     <i className={classnames({stateIcon: true})}></i> 
     {this.props.label}
-  </span>);
+    </span>);
   }
+
   renderValue = () => {
     const value = this.getValue();
     if (value !== null) {
@@ -30,6 +33,7 @@ class StateListItemBase extends Component {
       </span>);
     }
   }
+
   render() {
     const { label, icon, value } = this.props;
     return (<ListGroupItem className={this.getClassNames()}>

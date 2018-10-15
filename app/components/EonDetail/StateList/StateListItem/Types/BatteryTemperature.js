@@ -19,7 +19,7 @@ import Temperature from './Temperature';
 // else:
 //   # all good
 //   thermal_status = ThermalStatus.green
-class ProcessorTemperature extends Temperature {
+class BatteryTemperature extends Temperature {
   getMax = () => {
     return 63; // highest of Battery Temps
   }
@@ -47,4 +47,4 @@ class ProcessorTemperature extends Temperature {
   }
 };
 
-export default ProcessorTemperature;
+export default BatteryTemperature;
