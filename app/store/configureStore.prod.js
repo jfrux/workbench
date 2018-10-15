@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
 import { createHashHistory } from 'history';
 import { routerMiddleware, routerActions } from 'react-router-redux';
-import { createLogger } from 'redux-logger';
+// import { createLogger } from 'redux-logger';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import rootReducer from '../reducers';
 import rootSaga from '../sagas';
@@ -44,15 +44,15 @@ const configureStore = (initialState) => {
   middleware.push(thunk);
 
   // Logging Middleware
-  const logger = createLogger({
-    level: 'info',
-    collapsed: true
-  });
+  // const logger = createLogger({
+  //   level: 'info',
+  //   collapsed: true
+  // });
 
   // Skip redux logs in console during the tests
-  if (process.env.NODE_ENV !== 'test') {
-    middleware.push(logger);
-  }
+  // if (process.env.NODE_ENV !== 'test') {
+  //   middleware.push(logger);
+  // }
 
   // Router Middleware
   const router = routerMiddleware(history);

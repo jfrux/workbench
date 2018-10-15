@@ -77,6 +77,7 @@
   -webkit-app-region: drag;
   z-index:2;
   text-align:center;
+  user-select: none;
 }
 .left-bar {
   position:fixed;
@@ -114,59 +115,6 @@
 }
 .state-card {
   
-}
-.state-list {
-  display:table;
-  width:100%;
-  padding:0;
-  margin:0;
-}
-.state-spinner {
-  height: 100%;
-  width: 100%;
-  opacity:0.5;
-}
-.state-spinner img {
-  width:100%;
-  height:100%;
-}
-.state-loading-icon-wrap {
-  width: 16px;
-  height: 16px;
-  position: relative;
-  display: block;
-}
-
-.state-label,.state-status, .state-value {
-  flex:0 0 50%;
-  white-space:nowrap;
-  // border-bottom: 1px solid #555;
-  vertical-align: middle;
-  width:50%;
-  font-size:12px;
-  padding:0 5px;
-  line-height: 22px;
-}
-.state-item {
-  display:flex;
-}
-.state-value {
-  flex:0 0 70%;
-}
-.state-label {
-  font-weight:200;
-  text-align:right;
-  // padding:0;
-  color:#888;
-  flex:0 0 30%;
-}
-.state-status {
-  /* color:#28a745; */
-
-  flex:0 0 70%;
-}
-.state-status-started {
-  color:#28a745;
 }
 .nav_link {
   color:#FFF!important;
@@ -439,13 +387,74 @@ a:hover {
   border-radius:0!important;
   background-color:rgba(#000,0);
   margin:10px;
-  
+  .state-textarea {
+    background-color:rgba(#FFF,0.05);
+    border-color:rgba(#FFF,0.1);
+    color:rgba(#FFF,0.5);
+    height:30px;
+    font-size:11px;
+  }
   .state-card-body {
     .progress {
       border-radius:0;
       background-color:rgba(0,0,0,0.2);
       height:25px;
       font-size:11px;
+    }
+    
+    .state-list {
+      display:table;
+      width:100%;
+      padding:0;
+      margin:0;
+    }
+    .state-spinner {
+      height: 100%;
+      width: 100%;
+      opacity:0.5;
+    }
+    .state-spinner img {
+      width:100%;
+      height:100%;
+    }
+    .state-loading-icon-wrap {
+      width: 16px;
+      height: 16px;
+      position: relative;
+      display: block;
+    }
+
+    .state-label,.state-status, .state-value {
+      flex:0 0 50%;
+      white-space:nowrap;
+      // border-bottom: 1px solid #555;
+      vertical-align: middle;
+      width:50%;
+      font-size:12px;
+      padding:0 5px;
+      line-height: 22px;
+    }
+    .state-item {
+      display:flex;
+    }
+    .state-value {
+      flex:0 0 70%;
+    }
+    .state-label {
+      font-weight:200;
+      text-align:right;
+      // padding:0;
+      color:#888;
+      flex:0 0 30%;
+      line-height:25px;
+    }
+    .state-status {
+      /* color:#28a745; */
+
+      flex:0 0 70%;
+    }
+    .state-status-started {
+      color:#28a745;
     }
     .sub-sub-value {
       display:block;

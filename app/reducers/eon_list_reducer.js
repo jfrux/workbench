@@ -8,6 +8,7 @@ const initialState = {
   eonToAdd: null,
   addingEonError: null,
   addingEon: false,
+  sshCommand: null,
   selectedEon: null
 };
 export default function eonListReducer(state = initialState, action) {
@@ -84,6 +85,7 @@ export default function eonListReducer(state = initialState, action) {
         // scanError: null,
         // sshConnectionStatus: "not_connected",
         // sshConnectionError: null,
+        sshCommand: `ssh root@${state.eons[action.payload.index].ip} -p 8022 -i ~/.ssh/openpilot_rsa`,
         selectedEon: action.payload.index
       };
     case types.DESELECT_EON:

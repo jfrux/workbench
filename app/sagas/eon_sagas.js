@@ -8,7 +8,9 @@ import path from 'path';
 import fs from 'fs';
 import * as routes from '../constants/routes.json';
 import SSH from 'node-ssh';
-import Sockette from 'sockette';
+// import Sockette from 'sockette';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+// import WebSocket from 'ws';
 import * as types from '../constants/eon_detail_action_types';
 import * as eonListTypes from '../constants/eon_list_action_types';
 import * as eonListActions from '../actions/eon_list_actions';
@@ -242,7 +244,7 @@ function* installWorkbenchApi() {
   const { eonList } = yield select();
   const { selectedEon, eons } = eonList;
   const eon = eons[selectedEon];
-  yield put(eonDetailActions.BEGIN_install());
+  yield put(eonDetailActions.BEGIN_install(eon));
   const {installed, timeout} = yield race({
     installed: call(sendInstallCommand,eon),
     timeout: call(delay, 15000)
@@ -262,28 +264,36 @@ function* installWorkbenchApi() {
     yield put(eonDetailActions.FAIL_install(e));
   }
 }
+
 function getSocket(eon) {
-  const scanner = new evilscan({
-    target: eon.ip,
-    port:'8022',
-    status:'TROU'
-  });
-  return scanner;
+  
 }
 
-function* read() {
-  const channel = yield call(createSocketEventChannel);
+function* read(ws) {
+  const channel = yield call(createSocketEventChannel, ws);
   // scanner.run();
   while (true) {
     let action = yield take(channel);
     yield put(action);
   }
 }
-export function* createSocketEventChannel() {
-  const { eonList } = yield select();
-  const { selectedEon, eons } = eonList;
-  const eon = eons[selectedEon];
-  
+
+function* wsHandling() {
+  while (true) {
+    const data = yield take('INSTALL_SUCCESS');
+    const socket = new WebSocket(`wss://example.com/?token=${token}`);
+    const socketChannel = yield call(watchMessages, socket);
+    const { cancel } = yield race({
+      task: [call(externalListener, socketChannel), call(internalListener, socket)],
+      cancel: take('STOP_WEBSOCKET')
+    });
+    if (cancel) {
+      socketChannel.close();
+    }
+  }
+}
+
+export function* createEventChannel(ws) {
   return eventChannel(emit => {
     const onMessageReceived = (data) => {
       // console.log("Received Message:", data.data);
@@ -291,24 +301,33 @@ export function* createSocketEventChannel() {
     };
 
     // console.log("Connecting to WS",`ws://${eon.ip}:4000`);
-    const ws = new Sockette(`ws://${eon.ip}:4000`, {
-      timeout: 5e3,
-      maxAttempts: 10,
-      onopen: e => console.log('Connected!', e),
-      onmessage: e => onMessageReceived(e),
-      onreconnect: e => console.log('Reconnecting...', e),
-      onmaximum: e => console.log('Stop Attempting!', e),
-      onclose: e => console.log('Closed!', e),
-      onerror: e => console.log('Error:', e)
-    });
+    ws.on('open', onMessageReceived);
+    ws.on('message', onMessageReceived);
+      // onopen: e => console.log('Connected!', e)
+      // onmessage: e => onMessageReceived(e)
+      // onreconnect: e => console.log('Reconnecting...', e)
+      // onmaximum: e => console.log('Stop Attempting!', e)
+      // onclose: e => console.log('Closed!', e)
+      // onerror: e => console.log('Error:', e)
     return () => {
       // This is a handler to uncreateScannerEventChannel.
+
     };
   });
 }
 function* connectWebSockets() {
+  const { eonList } = yield select();
+  const { selectedEon, eons } = eonList;
+  const eon = eons[selectedEon];
+  const rws = new ReconnectingWebSocket(`ws://${eon.ip}:4000`, [], {
+    WebSocket,
+    connectionTimeout: 1000,
+    reconnectionDelayGrowFactor: 1.3,
+    maxRetries: 10,
+    debug: true
+  });
   try {
-    yield fork(read);
+    yield fork(read, ws);
   } catch (e) {
     // console.warn("Errors in check #1");
   }
@@ -328,7 +347,12 @@ function* determineIfShouldInstall(action) {
   const { selectedEon, eons } = eonList;
   if (routes.EON_DETAIL === pathname) {
     // console.warn("IS DETAIL SCREEN", eons[selectedEon]);
-    yield call(installWorkbenchApi);
+    try {     
+      yield call(installWorkbenchApi);
+    } catch (e) {
+      yield put(eonListActions.ADD_ERROR("Failed to establish a connection to EON: " + e.message));
+      yield put(eonDetailActions.FAIL_install(e));
+    }
   }
 }
 function* addEonListError() {

@@ -9,6 +9,9 @@ export default {
       ["EON Temp", ["thermal","batfriendly"], "DashboardBubble"],
       ["Storage", ["thermal","usedSpaceFriendly"], "DashboardBubble"]
     ], "Dashboard"],
+    ["Connection", [
+      ["SSH Command", ["eonList","sshCommand"], "Textarea"]
+    ],"Base"],
     ["Battery", [
       ["Temperature", ["thermal","batfriendly"], "Temperature"],
       ["Percent", ["thermal","batteryPercent"], "ProgressBar"],

@@ -5,6 +5,7 @@ import ProgressBar from './ProgressBar';
 import ArrayOfValues from './ArrayOfValues';
 import Memory from './Memory';
 import Boolean from './Boolean';
+import Textarea from './Textarea';
 import DashboardCircle from './DashboardCircle';
 import DashboardBubble from './DashboardBubble';
 
@@ -17,5 +18,6 @@ export default {
   ProcessorTemperature,
   ProgressBar,
   ArrayOfValues,
-  Boolean
+  Boolean,
+  Textarea
 }

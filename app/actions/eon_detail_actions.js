@@ -3,9 +3,10 @@ import * as types from '../constants/eon_detail_action_types';
 // ACTION CREATORS
 let pollerId;
 
-export function BEGIN_install() {
+export function BEGIN_install(eon) {
   return {
-    type: types.INSTALL
+    type: types.INSTALL,
+    payload: eon
   };
 }
 

@@ -15,6 +15,7 @@ const initialState = {
   health: null,
   fingerprint: null,
   thermal: null,
+  sshCommand: null,
   installing: false,
   installError: null,
   auth: null,
@@ -214,7 +215,8 @@ export default function eonDetailReducer(state = initialState, action) {
       return {
         ...state,
         installError: null,
-        installing: true
+        installing: true,
+        sshCommand: `ssh root@${action.payload.ip} -p 8022 -i ~/.ssh/openpilot_rsa`
       };
     case types.INSTALL_SUCCESS:
       return {

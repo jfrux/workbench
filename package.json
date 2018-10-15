@@ -259,6 +259,7 @@
     "react-router-redux": "^5.0.0-alpha.6",
     "react-textarea-autosize": "^7.0.4",
     "reactstrap": "^6.4.0",
+    "reconnecting-websocket": "^4.1.8",
     "redux": "^4.0.0",
     "redux-orm": "^0.12.1",
     "redux-orm-proptypes": "^0.1.0",
@@ -271,7 +272,8 @@
     "source-map-support": "^0.5.6",
     "ssh2": "^0.6.1",
     "tmp": "^0.0.33",
-    "toml": "^2.3.3"
+    "toml": "^2.3.3",
+    "ws": "^6.1.0"
   },
   "devEngines": {
     "node": ">=7.x",
