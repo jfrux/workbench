@@ -93,7 +93,7 @@ def new_client(client, server):
         state_file.write(json.dumps(state))
         state_file.close()
         server.send_message_to_all(json.dumps(state))
-        # time.sleep(0.25)
+        time.sleep(0.25)
 # Called for every client disconnecting
 def client_left(client, server):
 	print("Client(%d) disconnected" % client['id'])
