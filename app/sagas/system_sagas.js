@@ -1,17 +1,16 @@
 import { all, call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import * as types from '../constants/eon_detail_action_types';
-import * as actions from '../actions/thermal_actions';
+import * as actions from '../actions/system_actions';
 
 function* handleUpdate(action) {
   const { payload } = action;
-  const { thermal } = payload;
-
-  if (thermal) {
-    yield put(actions.update(thermal));
+  const { system } = payload;
+  if (system) {
+    yield put(actions.update(system));
   }
 }
 
-export function* thermalSagas() {
+export function* systemSagas() {
   yield all([
     // on first controls focus, load remaining playlists and enable story browser
     takeLatest(types.MESSAGE, handleUpdate)

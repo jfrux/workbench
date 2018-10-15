@@ -13,6 +13,6 @@ function* handleUpdate(action) {
 export function* carStateSagas() {
   yield all([
     // on first controls focus, load remaining playlists and enable story browser
-    takeLatest(types.EON_STATE_RESPONSE, handleUpdate)
+    takeLatest(types.MESSAGE, handleUpdate)
   ]);
 }

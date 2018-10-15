@@ -265,12 +265,8 @@ function* installWorkbenchApi() {
   }
 }
 
-function getSocket(eon) {
-  
-}
-
-function* read(ws) {
-  const channel = yield call(createSocketEventChannel, ws);
+function* read(rws) {
+  const channel = yield call(createEventChannel, rws);
   // scanner.run();
   while (true) {
     let action = yield take(channel);
@@ -278,31 +274,26 @@ function* read(ws) {
   }
 }
 
-function* wsHandling() {
-  while (true) {
-    const data = yield take('INSTALL_SUCCESS');
-    const socket = new WebSocket(`wss://example.com/?token=${token}`);
-    const socketChannel = yield call(watchMessages, socket);
-    const { cancel } = yield race({
-      task: [call(externalListener, socketChannel), call(internalListener, socket)],
-      cancel: take('STOP_WEBSOCKET')
-    });
-    if (cancel) {
-      socketChannel.close();
-    }
-  }
-}
-
 export function* createEventChannel(ws) {
   return eventChannel(emit => {
+    const onOpen = () => {
+      // console.warn("Connected!");
+      emit({ type: types.CONNECTED });
+    };
+    const onClose = () => {
+      // console.warn("Disconnected!");
+      emit({ type: types.DISCONNECTED });
+    };
     const onMessageReceived = (data) => {
-      // console.log("Received Message:", data.data);
-      emit(eonDetailActions.RESPONSE_REQUEST_EON_STATE(JSON.parse(data.data)));
+      // console.warn("Received Message:", JSON.parse(data.data));
+      emit({ type: types.MESSAGE, payload: JSON.parse(data.data) });
+      // emit(eonDetailActions.RESPONSE_REQUEST_EON_STATE());
     };
 
     // console.log("Connecting to WS",`ws://${eon.ip}:4000`);
-    ws.on('open', onMessageReceived);
-    ws.on('message', onMessageReceived);
+    ws.addEventListener('open', onOpen);
+    ws.addEventListener('close', onClose);
+    ws.addEventListener('message', onMessageReceived);
       // onopen: e => console.log('Connected!', e)
       // onmessage: e => onMessageReceived(e)
       // onreconnect: e => console.log('Reconnecting...', e)
@@ -311,23 +302,29 @@ export function* createEventChannel(ws) {
       // onerror: e => console.log('Error:', e)
     return () => {
       // This is a handler to uncreateScannerEventChannel.
-
+      ws.close();
     };
   });
 }
+
 function* connectWebSockets() {
   const { eonList } = yield select();
   const { selectedEon, eons } = eonList;
   const eon = eons[selectedEon];
+  yield put({ type: types.CONNECT });
   const rws = new ReconnectingWebSocket(`ws://${eon.ip}:4000`, [], {
-    WebSocket,
-    connectionTimeout: 1000,
-    reconnectionDelayGrowFactor: 1.3,
-    maxRetries: 10,
-    debug: true
+    // WebSocket,
+    // connectionTimeout: 1000,
+    // maxRetries: 10,
+    // debug: false
   });
   try {
-    yield fork(read, ws);
+    yield fork(read, rws);
+
+    while (true) {
+      yield take(types.DISCONNECT);
+      rws.close();
+    }
   } catch (e) {
     // console.warn("Errors in check #1");
   }
@@ -340,11 +337,12 @@ function* connectWebSockets() {
 }
 // TODO: Build a mechanism to remove the need to reinstall each time.
 // Possibly when development slows and is more stable we can add something that doesn't require updates unless something changes in Git.
-function* determineIfShouldInstall(action) {
+function* routeWatcher(action) {
   const { payload } = action;
   const { pathname } = payload;
-  const { eonList } = yield select();
+  const { eonList, eonDetail } = yield select();
   const { selectedEon, eons } = eonList;
+  const { connected } = eonDetail;
   if (routes.EON_DETAIL === pathname) {
     // console.warn("IS DETAIL SCREEN", eons[selectedEon]);
     try {     
@@ -353,24 +351,29 @@ function* determineIfShouldInstall(action) {
       yield put(eonListActions.ADD_ERROR("Failed to establish a connection to EON: " + e.message));
       yield put(eonDetailActions.FAIL_install(e));
     }
+  } else {
+    // Not in EON_DETAIL screen... try to disconnect
+    if (connected) {
+      yield put({ type: types.DISCONNECT });
+    }
   }
 }
+
 function* addEonListError() {
   yield put(eonListActions.ADD_ERROR("Failed to connect to your EON.  Sometimes due to network instability it can take longer than we were willing to wait.  If the problem persists, try rebooting EON."));
 }
 
-
 // EXPORT ROOT SAGA
 export function* eonSagas() {
-  console.warn("types:",types);
+  // console.warn("types:",types);
   yield all([
-    takeLatest("@@router/LOCATION_CHANGE",determineIfShouldInstall),
-    takeLatest(types.EON_STATE_FATAL,addEonListError),
+    takeLatest("@@router/LOCATION_CHANGE",routeWatcher),
+    takeLatest(types.CONNECT_FAILED,addEonListError),
     // takeLatest(types.INSTALL_SUCCESS,fetchState),
     takeLatest(types.INSTALL_SUCCESS,connectWebSockets),
-    takeLatest(types.AUTH_REQUEST_FAIL,fetchAuth),
-    takeLatest(types.EON_STATE_FAIL,fetchState),
-    takeLatest(types.GET_FINGERPRINT_FAIL,fetchFingerprint),
+    // takeLatest(types.AUTH_REQUEST_FAIL,fetchAuth),
+    // takeLatest(types.EON_STATE_FAIL,fetchState),
+    // takeLatest(types.GET_FINGERPRINT_FAIL,fetchFingerprint),
     takeLatest(types.CHANGE_TAB, handleTabChange)
   ]);
 }

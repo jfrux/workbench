@@ -38,178 +38,42 @@ export default function eonDetailReducer(state = initialState, action) {
         ...state,
         activeTab: action.payload
       };
-    case types.AUTH_REQUEST:
+    case types.CONNECT:
       return {
         ...state,
-        requestingAuth: true
+        connected: false,
+        connecting: true
       };
-    case types.AUTH_REQUEST_SUCCESS:
+    case types.CONNECTED:
       return {
         ...state,
-        requestingAuth: false,
-        auth: action.payload,
-        authRequestError: null
+        connected: true,
+        connecting: false
       };
-    case types.AUTH_REQUEST_FAIL:
-      return {
-        ...state,
-        requestingAuth: false,
-        authRequestError: action.payload
-      };
-    case types.API_REQUEST:
-      return {
-        ...state
-      };
-    case types.API_REQUEST_SUCCESS:
-      return {
-        ...state,
-        ...action.payload
-      };
-    case types.API_REQUEST_FAIL:
-      return {
-        ...state
-      };
-    case types.STOP_POLLING:
-      return {
-        ...state,
-        polling: false,
-        stateRequestAttempts: 0,
-        stateRequestFatal: false,
-        sshConnectionStatus: "not_connected",
-        sshConnectionError: null
-      };
-    case types.CONNECT_SSH:
-      return {
-        ...state,
-        sshStatus: "connecting",
-        sshConnectionStatus: "connected"
-      };
-    case types.CONNECT_SSH_SUCCESS:
-      return {
-        ...state,
-        sshStatus: "connected",
-        sshConnectionStatus: "connected",
-        sshConnectionError: null
-      };
-    case types.CONNECT_SSH_FAIL:
-      return {
-        ...state,
-        sshStatus: "failed",
-        selectedEon: null,
-        sshConnectionError: action.payload.err,
-        sshConnectionStatus: "not_connected_error"
-      };
-    case types.SSH_COMMAND:
-      return {
-        ...state,
-        sshCommand: action.payload.command,
-        sshCommandStatus: "executing"
-      };
-    case types.SSH_COMMAND_RESPONSE:
-      return {
-        ...state,
-        sshCommand: action.payload.response,
-        sshCommandStatus: "executing"
-      };
-    case types.SSH_COMMAND_COMPLETE:
-      return {
-        ...state,
-        sshCommand: null,
-        sshCommandStatus: "success"
-      };
-    case types.SSH_COMMAND_FAIL:
-      return {
-        ...state,
-        sshCommand: null,
-        sshCommandStatus: "failed",
-        sshCommandError: action.payload.error
-      };
-    case types.CONNECT_SSH_SUCCESS:
-      return {
-        ...state,
-        sshStatus: "connected"
-      };
-    case types.CONNECT_SSH_FAIL:
-      return {
-        ...state,
-        sshStatus: "failed",
-        sshError: "",
-        selectedEon: null
-      };
-    case types.GET_FINGERPRINT:
-      return {
-        ...state
-      };
-    case types.GET_FINGERPRINT_RESPONSE:
-      return {
-        ...state,
-        fingerprint: action.payload.fingerprint,
-        fingerprintString: action.payload.fingerprintString
-      };
-
-    case types.GET_FINGERPRINT_FAIL:
-      return {
-        ...state,
-        fingerprint: null
-      };
-    
-    case types.GET_FINGERPRINT_CLOSE:
-      return {
-        ...state,
-        fingerprint: null
-      };
-    case types.EON_STATE:
-      return {
-        ...state,
-        tmuxAttached: false,
-        stateRequestFatal: false,
-        tmuxLog: []
-      };
-    case types.EON_STATE_RESPONSE:
+    case types.MESSAGE:
       return {
         ...state,
         ...action.payload,
-        tmuxAttached: true,
-        stateRequestAttempts: 0,
-        stateRequestFatal: false,
-        tmuxError: null
+        connected: true,
+        connecting: false
       };
-
-    case types.EON_STATE_FAIL:
+    case types.CONNECT_FAILED:
       return {
         ...state,
-        tmuxAttached: false,
         currentStateKeys: [],
         service: null,
         health: null,
-        thermal: null,
-        stateRequestAttempts: state.stateRequestAttempts+1,
-        tmuxError: action.payload.error,
-        tmuxLog: []
+        thermal: null
       };
-    
-      case types.EON_STATE_FATAL:
-        return {
-          ...state,
-          tmuxAttached: false,
-          currentStateKeys: [],
-          service: null,
-          health: null,
-          thermal: null,
-          tmuxLog: [],
-          stateRequestFatal: true
-        };
-    
-    case types.EON_STATE_CLOSE:
+    case types.DISCONNECT:
       return {
         ...state,
-        tmuxAttached: false,
-        tmuxError: null,
-        tmuxLog: [],
-        service: null,
-        health: null,
-        thermal: null,
-        currentStateKeys: []
+        connected: false
+      };
+    case types.DISCONNECTED:
+      return {
+        ...state,
+        connected: false
       };
     case types.INSTALL:
       return {

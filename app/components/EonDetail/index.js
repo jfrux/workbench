@@ -18,32 +18,15 @@ import LoadingOverlay from '../LoadingOverlay';
 import { TabContent, Nav, NavItem, NavLink, TabPane, ListGroupItem } from 'reactstrap';
 
 const propTypes = {
-  stateRequestFatal: PropTypes.bool,
-  stateRequestAttempts: PropTypes.number,
+  connecting: PropTypes.bool,
+  connected: PropTypes.bool,
   activeTab: PropTypes.string,
-  drives: PropTypes.any,
   installError: PropTypes.any,
-  devices: PropTypes.any,
   isLoggedIn: PropTypes.any,
-  apiRequest: PropTypes.func,
-  auth: PropTypes.object,
   install: PropTypes.func,
   eon: PropTypes.object,
   selectedEon: PropTypes.string,
-  sshConnectionError: PropTypes.object,
-  sshConnectionStatus: PropTypes.string,
-  vehicleStarted: PropTypes.string,
-  vehicleStartedAt: PropTypes.string,
-  vehicleConnection: PropTypes.string,
-  healthState: PropTypes.object,
-  thermal: PropTypes.object,
-  gpsLocation: PropTypes.object,
-  network: PropTypes.string,
-  tmuxError: PropTypes.any,
-  sshStatus: PropTypes.any,
-  fingerprint: PropTypes.any,
-  currentStateKeys: PropTypes.array,
-  fingerprintString: PropTypes.string
+  currentStateKeys: PropTypes.array
 };
 
 class EonDetail extends Component {
@@ -56,9 +39,6 @@ class EonDetail extends Component {
       return;
     }
   }
-  componentWillUnmount() {
-    this.props.STOP_POLLING();
-  }
   setTab(tab) {
     this.props.CHANGE_TAB(tab);
   }
@@ -66,7 +46,7 @@ class EonDetail extends Component {
     this.props.OPEN_DRIVE(driveIndex);
   }
   render() {
-    const { installing, activeTab, network, fingerprint, stateRequestFatal, stateRequestAttempts, drives, devices, installError, tmuxError, fingerprintString, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshStatus, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
+    const { installing, activeTab, connecting, network, fingerprint, stateRequestFatal, stateRequestAttempts, drives, devices, installError, tmuxError, fingerprintString, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshStatus, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
     const vehicleConnectionInfo = vehicleConnectionStatuses[vehicleConnection];
     // const { usbOnline } = thermal;
     // console.warn("sshConnectionError:",sshConnectionError);
@@ -88,7 +68,7 @@ class EonDetail extends Component {
     } else {
       loadingMessage = "Setting up EON for Workbench...";
     }
-    if (installing || !stateGroupKeys.length) {
+    if (installing || !stateGroupKeys.length || connecting) {
       return <LoadingOverlay message={loadingMessage} />;
     }
     

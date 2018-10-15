@@ -16,13 +16,6 @@ import { createMigrate, persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 const history = createHashHistory();
-
-const persistConfig = {
-  key: 'root',
-  storage,
-  stateReconciler: autoMergeLevel2,
-  blacklist: ['router','networkConnection','eonList.scanning','eonList.scanError','eonList.sshConnectionStatus','eonList.sshConnectionError','eonList.progress']
-};
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 const router = routerMiddleware(history);
 

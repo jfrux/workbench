@@ -1,5 +1,13 @@
 export const INSTALL = 'eon/INSTALL';
 export const INSTALL_SUCCESS = 'eon/INSTALL_SUCCESS';
+
+export const CONNECT = 'eon/CONNECT';
+export const CONNECT_FAILED = 'eon/CONNECT_FAILED';
+export const CONNECTED = 'eon/CONNECTED';
+export const MESSAGE = 'eon/MESSAGE';
+export const DISCONNECT = 'eon/DISCONNECT';
+export const DISCONNECTED = 'eon/DISCONNECTED';
+
 export const INSTALL_FAIL = 'eon/INSTALL_FAIL';
 export const UNINSTALL = 'eon/UNINSTALL';
 export const UNINSTALL_SUCCESS = 'eon/UNINSTALL_SUCCESS';

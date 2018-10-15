@@ -9,8 +9,10 @@ export default {
       ["EON Temp", ["thermal","batfriendly"], "DashboardBubble"],
       ["Storage", ["thermal","usedSpaceFriendly"], "DashboardBubble"]
     ], "Dashboard"],
-    ["Connection", [
-      ["SSH Command", ["eonList","sshCommand"], "Textarea"]
+    ["System", [
+      ["EON Uptime", ["system","uptimeFriendly"], "Base"],
+      ["Network Down", ["system","networkUsage", "rxFriendly"], "Base"],
+      ["Network Up", ["system","networkUsage", "txFriendly"], "Base"],
     ],"Base"],
     ["Battery", [
       ["Temperature", ["thermal","batfriendly"], "Temperature"],
@@ -196,6 +198,9 @@ export default {
     ], "Base"]
   ],
   "other": [
+    ["SSH Command Library", [
+      ["SSH Command", ["eonList","sshCommand"], "Textarea"]
+    ], "Base"],
     ["misc", [
       ["yawRate", ["carState","yawRate"], "Base"],
       ["events", ["carState","events"], "ArrayOfValues"],
