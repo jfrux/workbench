@@ -5,6 +5,7 @@ import * as EonActions from '../actions/eon_detail_actions';
 
 function mapStateToProps(state) {
   return {
+    messagesReceived: state.eonDetail.messagesReceived,
     connected: state.eonDetail.connected,
     connecting: state.eonDetail.connecting,
     activeTab: state.eonDetail.activeTab,

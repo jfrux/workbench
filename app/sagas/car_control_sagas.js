@@ -7,13 +7,14 @@ function* handleUpdate(action) {
   const { carControl } = payload;
 
   if (carControl) {
+    console.log("carControl");
     yield put(actions.update(carControl));
   }
 }
 
 export function* carControlSagas() {
-  yield all([
-    // on first controls focus, load remaining playlists and enable story browser
-    yield throttle(500, types.MESSAGE, handleUpdate)
-  ]);
+  // yield all([
+  //   // on first controls focus, load remaining playlists and enable story browser
+  //   // yield takeEvery(types.MESSAGE, handleUpdate)
+  // ]);
 }

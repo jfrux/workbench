@@ -23,12 +23,7 @@ const initialState = {
   stateRequestAttempts: 0,
   stateRequestFatal: false,
   workbenchInstalled: false,
-  sshConnectionStatus: "not_connected",
-  sshConnectionError: null,
-  sshCurrentCommand: null,
-  sshLog: [],
-  sshCommandErrors: null,
-  sshCommandStatus: "idle"
+  messagesReceived: 0
 };
 
 export default function eonDetailReducer(state = initialState, action) {
@@ -53,9 +48,10 @@ export default function eonDetailReducer(state = initialState, action) {
     case types.MESSAGE:
       return {
         ...state,
-        ...action.payload.message,
-        fingerprintFriendly: action.payload.message && action.payload.message.fingerprint ? "[" + JSON.stringify(action.payload.message.fingerprint).replace(/"/g,'').replace(/:/g,': ') + "]" : null,
+        ...action.payload,
+        fingerprintFriendly: action.payload && action.payload.fingerprint ? "[" + JSON.stringify(action.payload.fingerprint).replace(/"/g,'').replace(/:/g,': ') + "]" : null,
         connected: true,
+        messagesReceived: state.messagesReceived+1,
         connecting: false
       };
     case types.CONNECT_FAILED:

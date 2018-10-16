@@ -7,8 +7,13 @@ import { createLogger } from 'redux-logger';
 import rootReducer from '../reducers';
 import rootSaga from '../sagas';
 import * as eonTypes from '../constants/eon_detail_action_types';
-import * as eonListActions from '../actions/eon_list_actions';
-import * as eonDetailActions from '../actions/eon_detail_actions';
+import * as carStateTypes from '../constants/car_state_action_types';
+import * as carControlTypes from '../constants/car_control_action_types';
+import * as thermalTypes from '../constants/thermal_action_types';
+import * as systemTypes from '../constants/system_action_types';
+import * as networkScannerTypes from '../constants/network_scanner_action_types';
+// import * as eonListActions from '../actions/eon_list_actions';
+// import * as eonDetailActions from '../actions/eon_detail_actions';
 import persistConfig from './persist';
 
 //PERSISTED STORAGE
@@ -39,7 +44,7 @@ const configureStore = (initialState) => {
   // Logging Middleware
   const logger = createLogger({
     level: 'info',
-    // predicate: (getState, action) => action.type !== eonTypes.MESSAGE,
+    predicate: (getState, action) => ![networkScannerTypes.SCAN_NETWORK_PROGRESS,eonTypes.MESSAGE,systemTypes.UPDATE,thermalTypes.UPDATE,carStateTypes.UPDATE,carControlTypes.UPDATE].includes(action.type),
     collapsed: true
   });
 
@@ -53,24 +58,19 @@ const configureStore = (initialState) => {
   middleware.push(router);
 
   // Redux DevTools Configuration
-  const actionCreators = {
-    ...eonDetailActions,
-    ...eonListActions,
-    ...routerActions
-  };
+  // const actionCreators = {
+  //   ...eonDetailActions,
+  //   ...eonListActions,
+  //   ...routerActions
+  // };
   // If Redux DevTools Extension is installed use it, otherwise use Redux compose
   /* eslint-disable no-underscore-dangle */
-  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-        // Options: http://extension.remotedev.io/docs/API/Arguments.html
-        actionCreators
-      })
-    : compose;
+  // const composeEnhancers = compose;
   /* eslint-enable no-underscore-dangle */
 
   // Apply Middleware & Compose Enhancers
   enhancers.push(applyMiddleware(...middleware));
-  const enhancer = composeEnhancers(...enhancers);
+  const enhancer = compose(...enhancers);
 
   // Create Store
   const store = createStore(persistedReducer, enhancer);

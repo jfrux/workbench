@@ -1,6 +1,6 @@
 {
-  "INSTALL_API": "source <(curl -s https://raw.githubusercontent.com/openpilot-community/workbench-api/master/scripts/install.sh)",
-  "UNINSTALL_API": "source <(curl -s https://raw.githubusercontent.com/openpilot-community/workbench/master/eon_uninstall.sh)",
+  "INSTALL_API": "source <(curl -s https://raw.githubusercontent.com/openpilot-community/workbench-api/master/scripts/install.sh?seed=%timestamp%)",
+  "UNINSTALL_API": "tmux kill-session -t 'workbench' || echo 'ATTENTION: Existing TMUX Session did not already exist. But this is normal...'",
   "OPENPILOT_PID": "ps -ef | grep chffr | grep -v grep | awk '{print $1}'",
   "PIPE_TMUX": "rm -f /tmp/tmuxpipe;mkfifo /tmp/tmuxpipe;tmux pipe-pane -o 'cat >> /tmp/tmuxpipe';cat /tmp/tmuxpipe",
   "PIPE_STATE": "PYTHONPATH=/data/openpilot PREPAREONLY=1 python /data/workbench.py",

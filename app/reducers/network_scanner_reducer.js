@@ -78,8 +78,8 @@ export default function eonListReducer(state = initialState, action) {
         progress: 0
       };
     case types.REMOVE_SCANNED_RESULT:
-      console.log("deleting property",state.scanResults,action.payload.id);
-      console.log("deleted property",deleteProperty(state.scanResults,action.payload.id));
+      // console.log("deleting property",state.scanResults,action.payload.id);
+      deleteProperty(state.scanResults,action.payload.id);
       return {
         ...state,
         scanResults: deleteProperty(state.scanResults,action.payload.id)

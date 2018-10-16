@@ -25,6 +25,7 @@ const propTypes = {
   isLoggedIn: PropTypes.any,
   install: PropTypes.func,
   eon: PropTypes.object,
+  messagesReceived: PropTypes.number,
   selectedEon: PropTypes.string,
   currentStateKeys: PropTypes.array
 };
@@ -46,10 +47,8 @@ class EonDetail extends Component {
     this.props.OPEN_DRIVE(driveIndex);
   }
   render() {
-    const { installing, activeTab, connecting, network, fingerprint, stateRequestFatal, stateRequestAttempts, drives, devices, installError, tmuxError, fingerprintString, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshStatus, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
+    const { installing, activeTab, messagesReceived, connecting, network, fingerprint, stateRequestFatal, stateRequestAttempts, drives, devices, installError, tmuxError, fingerprintString, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshStatus, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
     const vehicleConnectionInfo = vehicleConnectionStatuses[vehicleConnection];
-    // const { usbOnline } = thermal;
-    // console.warn("sshConnectionError:",sshConnectionError);
     if (network === 'disconnected' || eon == null || installError || stateRequestFatal) {
       return (<Redirect to={routes.EON_LIST} />);
     }
@@ -139,7 +138,7 @@ class EonDetail extends Component {
     ];
 
     return (
-      <Layout title={this.props.eon.ip} contextActions={contextActions}>
+      <Layout title={`${this.props.eon.ip} (Messages Received: ${messagesReceived})`} contextActions={contextActions}>
         <Nav tabs className={styles.tabs_list}>
           {stateTabs}
         </Nav>

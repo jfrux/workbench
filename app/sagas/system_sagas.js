@@ -6,6 +6,8 @@ function* handleUpdate(action) {
   const { payload } = action;
   const { system } = payload;
   if (system) {
+    console.log("system", system.uptime);
+    
     yield put(actions.update(system));
   }
 }
@@ -13,6 +15,6 @@ function* handleUpdate(action) {
 export function* systemSagas() {
   yield all([
     // on first controls focus, load remaining playlists and enable story browser
-    takeEvery(types.MESSAGE, handleUpdate)
+    // yield takeEvery(types.MESSAGE, handleUpdate)
   ]);
 }

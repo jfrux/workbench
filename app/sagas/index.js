@@ -14,9 +14,9 @@ export default function* rootSaga(dispatch) {
   console.warn("Initializing Sagas...");
   yield all([
     eonSagas(),
-    carStateSagas(),
-    carControlSagas(),
-    thermalSagas(),
+    // carStateSagas(),
+    // carControlSagas(),
+    // thermalSagas(),
     scannerSagas(),
     systemSagas()
   ]);

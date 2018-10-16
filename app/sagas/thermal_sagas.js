@@ -7,13 +7,14 @@ function* handleUpdate(action) {
   const { thermal } = payload;
 
   if (thermal) {
+    console.log("thermal");
     yield put(actions.update(thermal));
   }
 }
 
 export function* thermalSagas() {
-  yield all([
+  // yield all([
     // on first controls focus, load remaining playlists and enable story browser
-    yield throttle(500, types.MESSAGE, handleUpdate)
-  ]);
+    // yield takeEvery(types.MESSAGE, handleUpdate)
+  // ]);
 }

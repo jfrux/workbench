@@ -59,6 +59,11 @@ function mapStateToProps(state,ownProps) {
         let itemChildComponent = itemChild[2];
         let itemChildState;
           itemChildState = get(state,itemChildStatePath, null);
+          // console.log("rootItemKey",rootItemKey);
+          // console.log("itemChildKey",itemChildKey);
+          // if (itemChildKey === "EON Uptime") {
+          //   console.log("uptime:", itemChildState);
+          // }
           props[rootItemKey].childKeyToComponent[itemChildKey] = itemChildComponent;
           props[rootItemKey][itemChildKey] = itemChildState;
           props[rootItemKey]['keys'].push(itemChildKey);

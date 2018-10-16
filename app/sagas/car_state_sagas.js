@@ -6,13 +6,14 @@ function* handleUpdate(action) {
   const { payload } = action;
   const { carState } = payload;
   if (carState) {
+    console.log("carState");
     yield put(actions.update(carState));
   }
 }
 
 export function* carStateSagas() {
-  yield all([
-    // on first controls focus, load remaining playlists and enable story browser
-    yield throttle(500, types.MESSAGE, handleUpdate)
-  ]);
+  // yield all([
+  //   // on first controls focus, load remaining playlists and enable story browser
+  //   yield takeEvery(types.MESSAGE, handleUpdate)
+  // ]);
 }
