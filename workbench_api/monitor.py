@@ -10,10 +10,6 @@ import re
 import time
 import uuid
 import datetime
-
-from raven import Client
-from raven.transport.http import HTTPTransport
-
 from selfdrive.version import version, dirty
 from selfdrive.swaglog import cloudlog
 
@@ -23,7 +19,6 @@ def get_tombstones():
 
 from websocket_server import WebsocketServer
 from collections import OrderedDict, namedtuple
-from selfdrive.version import version, dirty
 from common.params import Params
 from hexdump import hexdump
 from threading import Thread
@@ -32,6 +27,7 @@ from selfdrive.car.car_helpers import get_car
 from cereal import car, log
 import selfdrive.messaging as messaging
 from selfdrive.services import service_list
+
 def get_tombstone(fn):
   mtime = os.path.getmtime(fn)
   with open(fn, "r") as f:
