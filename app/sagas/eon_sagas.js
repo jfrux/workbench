@@ -158,6 +158,7 @@ function* handleTabChange(action) {
 
 function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, stdErr = () => {}) {
   const privateKey = getPrivateKey();
+  console.log('sendCommand',arguments);
   app.sshClient = new SSH();
   return app.sshClient.connect({
     host: eon.ip,
@@ -225,10 +226,9 @@ RsVMUiFgloWGHETOy0Qvc5AwtqTJFLTD1Wza2uBilSVIEsg6Y83Gickh+ejOmEsY
   return key.exportKey('private', 'pem', 'pkcs1'); 
 }
 function sendInstallCommand(eon) {
-  // console.warn("sendInstallCommand",eon);
+  console.warn("sendInstallCommand",eon);
   return new Promise((resolve,reject) => {
     sendCommand(eon, commands.INSTALL_API, [], (resp) => {
-      console.info("Installing...", resp);
   
       app.sshClient.dispose();
       resolve(resp);
@@ -244,6 +244,7 @@ function* installWorkbenchApi() {
   const { eonList } = yield select();
   const { selectedEon, eons } = eonList;
   const eon = eons[selectedEon];
+  console.warn("sendInstallCommand",sendInstallCommand);
   yield put(eonDetailActions.BEGIN_install(eon));
   const {installed, timeout} = yield race({
     installed: call(sendInstallCommand,eon),
