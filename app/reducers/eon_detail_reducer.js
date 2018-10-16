@@ -53,8 +53,8 @@ export default function eonDetailReducer(state = initialState, action) {
     case types.MESSAGE:
       return {
         ...state,
-        ...action.payload,
-        fingerprintFriendly: "[" + JSON.stringify(action.payload.fingerprint).replace(/"/g,'').replace(/:/g,': ') + "]",
+        ...action.payload.message,
+        fingerprintFriendly: action.payload.message && action.payload.message.fingerprint ? "[" + JSON.stringify(action.payload.message.fingerprint).replace(/"/g,'').replace(/:/g,': ') + "]" : null,
         connected: true,
         connecting: false
       };

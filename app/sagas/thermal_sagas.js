@@ -1,4 +1,4 @@
-import { all, call, put, takeEvery, takeLatest } from 'redux-saga/effects';
+import { all, throttle, call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import * as types from '../constants/eon_detail_action_types';
 import * as actions from '../actions/thermal_actions';
 
@@ -14,6 +14,6 @@ function* handleUpdate(action) {
 export function* thermalSagas() {
   yield all([
     // on first controls focus, load remaining playlists and enable story browser
-    takeEvery(types.MESSAGE, handleUpdate)
+    yield throttle(500, types.MESSAGE, handleUpdate)
   ]);
 }

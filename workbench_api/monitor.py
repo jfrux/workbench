@@ -6,6 +6,21 @@ import json
 import time
 import platform
 import os
+import re
+import time
+import uuid
+import datetime
+
+from raven import Client
+from raven.transport.http import HTTPTransport
+
+from selfdrive.version import version, dirty
+from selfdrive.swaglog import cloudlog
+
+def get_tombstones():
+  return [("/data/tombstones/"+fn, int(os.stat("/data/tombstones/"+fn).st_ctime) )
+          for fn in os.listdir("/data/tombstones") if fn.startswith("tombstone")]
+
 from websocket_server import WebsocketServer
 from collections import OrderedDict, namedtuple
 from selfdrive.version import version, dirty
@@ -17,10 +32,41 @@ from selfdrive.car.car_helpers import get_car
 from cereal import car, log
 import selfdrive.messaging as messaging
 from selfdrive.services import service_list
+def get_tombstone(fn):
+  mtime = os.path.getmtime(fn)
+  with open(fn, "r") as f:
+    dat = f.read()
 
+  # see system/core/debuggerd/tombstone.cpp
+  parsed = re.match(r"[* ]*\n"
+                    r"(?P<header>CM Version:[\s\S]*?ABI:.*\n)"
+                    r"(?P<thread>pid:.*\n)"
+                    r"(?P<signal>signal.*\n)?"
+                    r"(?P<abort>Abort.*\n)?"
+                    r"(?P<registers>\s+x0[\s\S]*?\n)\n"
+                    r"(?:backtrace:\n"
+                      r"(?P<backtrace>[\s\S]*?\n)\n"
+                      r"stack:\n"
+                      r"(?P<stack>[\s\S]*?\n)\n"
+                    r")?", dat)
+
+  # logtail = re.search(r"--------- tail end of.*\n([\s\S]*?\n)---", dat)
+  # logtail = logtail and logtail.group(1)
+
+  if parsed:
+    parsedict = parsed.groupdict()
+    message = parsedict.get('thread') or ''
+    message += parsedict.get('signal') or  ''
+    message += parsedict.get('abort') or ''
+  else:
+    parsedict = {}
+    message = fn+"\n"+dat[:1024]
+
+  return parsedict
 #TODO: Someone better at Python than me can help clean this file up if they get time...
 def new_client(client, server):
   print("New client connected and was given id %d" % client['id'])
+  initial_tombstones = set(get_tombstones())
   context = zmq.Context()
   poller = zmq.Poller()
   parser = argparse.ArgumentParser(description='Sniff a communcation socket')
@@ -35,16 +81,7 @@ def new_client(client, server):
   parser.add_argument("socket", type=str, nargs='*', help="socket name")
   args = parser.parse_args()
   republish_socks = {}
-  # WRITE EMPTY FILES
-  f = open("/data/workbench/data/exception.json", 'w+')
-  f.write('{}');
-  f.close()
-  f = open("/data/workbench/data/fingerprint.json", 'w+')
-  f.write('{}');
-  f.close()
-  f = open("/data/workbench/data/state.json", 'w+')
-  f.write('{}');
-  f.close()
+
   service_whitelist = ["live100", "logMessage", "clocks", "androidLogEntry", "thermal", "health", "gpsLocation", "carState", "carControl"]
   for m in args.socket if len(args.socket) > 0 else service_list:
     if m in service_list:
@@ -60,11 +97,9 @@ def new_client(client, server):
   
   can_messages = {}
   while 1:
+    now_tombstones = set(get_tombstones())
     polld = poller.poll(timeout=1000)
     data = {}
-    state_file = open("/data/workbench/data/state.json", "r")
-    state = json.loads(state_file.read())
-    state_file.close()
     for sock, mode in polld:
       if mode != zmq.POLLIN:
         continue
@@ -84,16 +119,23 @@ def new_client(client, server):
       if evt.which() == 'thermal':
         data['openpilotParams'] = get_params()
         data['system'] = get_system_info()
+        data['tombstones'] = []
+        for fn, ctime in (now_tombstones):
+          # cloudlog.info("reporting new tombstone %s", fn)
+          data['tombstones'].append(get_tombstone(fn))
+        # report_tombstone(fn, client)
+        
+        initial_tombstones = now_tombstones
       if evt.which() in service_whitelist:
         data[evt.which()] = evt.to_dict()[evt.which()]
       
       if any(data):
-        state_file = open("/data/workbench/data/state.json", "w")
-        state = merge_state(state,data)
-        state_file.write(json.dumps(state))
-        state_file.close()
-        server.send_message_to_all(json.dumps(state))
-        time.sleep(0.25)
+        # state_file = open("/data/workbench/data/state.json", "w")
+        # state = merge_state(state,data)
+        # state_file.write(json.dumps(state))
+        # state_file.close()
+        server.send_message_to_all(json.dumps(data))
+        time.sleep(1)
 # Called for every client disconnecting
 def client_left(client, server):
 	print("Client(%d) disconnected" % client['id'])
@@ -109,16 +151,7 @@ def merge_state(x, y):
   z.update(y)    # modifies z with y's keys and values & returns None
   return z
 
-# HANDLE PYTHON EXCEPTIONS
-def save_exceptions_to_file(exception):
-  f = open("/data/workbench/data/exception.json", 'w+')
-  f.write(json.dumps(exception));
-
 __excepthook__ = sys.excepthook
-def handle_exception(*exc_info):
-  if exc_info[0] not in (KeyboardInterrupt, SystemExit):
-    save_exceptions_to_file(exc_info=exc_info)
-  __excepthook__(*exc_info)
 
 def meminfo():
     ''' Return the information in /proc/meminfo
