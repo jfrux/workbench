@@ -111,14 +111,14 @@ function sendInstallCommand(eon) {
   return new Promise((resolve,reject) => {
     console.warn("sendInstallCommand",eon);
     sendCommand(eon, commands.INSTALL_API.replace("%timestamp%",new Date().getTime()), [], (resp) => {
-      console.warn("Successfully installed.");
+      console.warn("Successfully installed.",resp);
       // app.sshClient.dispose();
-      resolve(resp);
+      // resolve(resp);
     }, (err) => {
-      console.warn("Failed install.");
+      console.warn("Failed install.",e);
       reject(err);
     }).catch((e) => {
-      console.warn("Failed install.");
+      console.warn("Failed install.",e);
       reject(e);
     })
   });

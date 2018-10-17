@@ -266,6 +266,7 @@
     "redux-persist": "^5.10.0",
     "redux-saga": "^0.16.0",
     "redux-thunk": "^2.3.0",
+    "reselect": "^4.0.0",
     "rsa-key": "^0.0.6",
     "smalltalk": "^3.2.0",
     "sockette": "^2.0.0",

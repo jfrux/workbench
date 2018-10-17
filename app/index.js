@@ -6,7 +6,7 @@ import { configureStore, history } from './store/configureStore';
 import fontawesome from '@fortawesome/fontawesome-pro';
 import './app.global.scss';
 
-console.warn(configureStore);
+// console.warn(configureStore);
 const { store, persistor } = configureStore();
 
 render(

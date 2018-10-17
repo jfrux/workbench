@@ -10,6 +10,7 @@ const propTypes = {
 
 class StateListItemBase extends Component {
   name = "default"
+
   getValue = () => {
     return this.props.value;
   }
