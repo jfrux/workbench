@@ -111,16 +111,18 @@ function sendInstallCommand(eon) {
   return new Promise((resolve,reject) => {
     console.warn("sendInstallCommand",eon);
     sendCommand(eon, commands.INSTALL_API.replace("%timestamp%",new Date().getTime()), [], (resp) => {
-      console.warn("Successfully installed.",resp);
+      console.warn("stdlog [" + resp.trim() + "]");
       // app.sshClient.dispose();
+      if (resp.trim() == "Workbench API install complete.") {
+        resolve(true);
+      }
       // resolve(resp);
     }, (err) => {
-      console.warn("Failed install.",e);
-      reject(err);
-    }).catch((e) => {
-      console.warn("Failed install.",e);
-      reject(e);
-    })
+      console.warn("stderr",err);
+      // reject(err);
+    }).catch((e) =>{
+
+    });
   });
 }
 
@@ -149,7 +151,7 @@ function* installWorkbenchApi() {
     timeout: call(delay, 15000)
   });
   // const installed = true;
-  try {
+  // try {
     if (installed) {
       // console.warn("Installed!");
       yield put(eonDetailActions.SUCCESS_install());
@@ -158,10 +160,6 @@ function* installWorkbenchApi() {
       yield put(eonListActions.ADD_ERROR("Could not connect to EON"));
       yield put(eonDetailActions.FAIL_install(new Error("Install timed out...")));
     }
-  } catch (e) {
-    yield put(eonListActions.ADD_ERROR(e.message));
-    yield put(eonDetailActions.FAIL_install(e));
-  }
 }
 
 function* read(rws) {
@@ -195,29 +193,19 @@ export function* createEventChannel(ws) {
     };
     const onClose = () => {
       console.warn("Disconnected!");
-      emit({ type: types.DISCONNECTED });
+      // emit({ type: types.DISCONNECTED });
     };
     const onError = () => {
       console.warn("Error in WebSocket");
-      emit({ type: types.DISCONNECT });
+      // emit({ type: types.DISCONNECT });
     };
     const onMessageReceived = (data) => {
-      // console.warn("Received Message:", JSON.parse(data.data));
       emit({ type: types.MESSAGE, payload: JSON.parse(data.data) });
-      // emit(eonDetailActions.RESPONSE_REQUEST_EON_STATE());
     };
-
-    // console.log("Connecting to WS",`ws://${eon.ip}:4000`);
     ws.addEventListener('open', onOpen);
     ws.addEventListener('close', onClose);
     ws.addEventListener('error', onError);
     ws.addEventListener('message', onMessageReceived);
-      // onopen: e => console.log('Connected!', e)
-      // onmessage: e => onMessageReceived(e)
-      // onreconnect: e => console.log('Reconnecting...', e)
-      // onmaximum: e => console.log('Stop Attempting!', e)
-      // onclose: e => console.log('Closed!', e)
-      // onerror: e => console.log('Error:', e)
     return () => {
       // This is a handler to uncreateScannerEventChannel.
       ws.close();
