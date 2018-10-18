@@ -42,6 +42,7 @@ export default function eonDetailReducer(state = initialState, action) {
     case types.CONNECTED:
       return {
         ...state,
+        messagesReceived: 0,
         connected: true,
         connecting: false
       };

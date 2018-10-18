@@ -87,16 +87,16 @@ class EonDetail extends Component {
         </NavItem>
       );
     });
-    statePanes = stateGroupKeys.map((key) => {
-      const items = vehicleStateGroups[key];
-      return (
-        <TabPane key={key + "-tab-pane"} tabId={key}>
-          {activeTab === key &&
-          <StateList type={key} items={items} />
-          }
-        </TabPane>
-      )
-    });
+    // statePanes = stateGroupKeys.map((key) => {
+    //   const items = vehicleStateGroups[key];
+    //   return (
+    //     <TabPane key={key + "-tab-pane"} tabId={key}>
+    //       {activeTab === key &&
+    //       <StateList type={key} items={items} />
+    //       }
+    //     </TabPane>
+    //   )
+    // });
     // vidurl example:
     // https://video.comma.ai/hls/0812e2149c1b5609/0ccfd8331dfb6f5280753837cefc9d26_2018-10-06--19-56-04/index.m3u8
     let drivesList;
@@ -143,7 +143,7 @@ class EonDetail extends Component {
           {stateTabs}
         </Nav>
         <TabContent activeTab={activeTab}>
-          {statePanes}
+          
         </TabContent>
       </Layout>
     );
