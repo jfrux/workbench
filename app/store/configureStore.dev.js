@@ -44,7 +44,7 @@ const configureStore = (initialState) => {
   // Logging Middleware
   const logger = createLogger({
     level: 'info',
-    predicate: (getState, action) => ![networkScannerTypes.SCAN_NETWORK_PROGRESS,eonTypes.MESSAGE,systemTypes.UPDATE,thermalTypes.UPDATE,carStateTypes.UPDATE,carControlTypes.UPDATE].includes(action.type),
+    predicate: (getState, action) => ![networkScannerTypes.SCAN_NETWORK_PROGRESS,systemTypes.UPDATE,thermalTypes.UPDATE,carStateTypes.UPDATE,carControlTypes.UPDATE].includes(action.type),
     collapsed: true
   });
 

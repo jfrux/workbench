@@ -13,8 +13,7 @@ function* handleUpdate(action) {
 }
 
 export function* thermalSagas() {
-  // yield all([
-    // on first controls focus, load remaining playlists and enable story browser
-    // yield takeEvery(types.MESSAGE, handleUpdate)
-  // ]);
+  yield all([
+    yield takeEvery(types.MESSAGE, handleUpdate)
+  ]);
 }
