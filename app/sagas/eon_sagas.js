@@ -157,7 +157,7 @@ function* installWorkbenchApi() {
       yield put(eonDetailActions.SUCCESS_install());
     } else {
       // console.warn("Timed out waiting to install");
-      yield put(eonListActions.ADD_ERROR("Could not connect to EON"));
+      yield put(eonListActions.ADD_ERROR("Timed out trying to connect to EON"));
       yield put(eonDetailActions.FAIL_install(new Error("Install timed out...")));
     }
 }

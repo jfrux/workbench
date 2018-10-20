@@ -19,18 +19,13 @@ class XTerm extends React.Component {
   }
 
   applyAddon(addon) {
-    XTerm.applyAddon(addon);
+    Terminal.applyAddon(addon);
   }
   componentDidMount() {
-      if (this.props.addons) {
-          this.props.addons.forEach(s => {
-              const addon = require(`xterm/dist/addons/${s}/${s}.js`);
-              XTerm.applyAddon(addon);
-          });
-      }
-      XTerm.applyAddon(attach);
+      this.socket = new WebSocket(`ws://${this.props.style.ip}:4001/`);
+      Terminal.applyAddon(attach);
       this.xterm = new Terminal(this.props.options);
-      this.xterm.attach()
+      this.xterm.attach(this.socket);
       this.xterm.open(this.container);
       this.xterm.on('focus', this.focusChanged.bind(this, true));
       this.xterm.on('blur', this.focusChanged.bind(this, false));

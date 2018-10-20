@@ -36,7 +36,7 @@ class EonDetail extends Component {
     if (eon && this.props.SELECT_EON) {
       this.props.SELECT_EON(eon.id);
     }
-    this.socket = new WebSocket(`ws://${eon}:4000/`);
+    
     if (!eon) {
       return;
     }
@@ -100,29 +100,29 @@ class EonDetail extends Component {
     });
     // vidurl example:
     // https://video.comma.ai/hls/0812e2149c1b5609/0ccfd8331dfb6f5280753837cefc9d26_2018-10-06--19-56-04/index.m3u8
-    let drivesList;
-    if (drives) {
-      const drivesKeys = Object.keys(drives).sort(function(a, b){
-        let parsedA = moment(a, "YYYY-MM-DD--HH-mm-SS");
-        let parsedB = moment(b, "YYYY-MM-DD--HH-mm-SS");
-        // console.log("a",parsedA);
-        // console.log("b",parsedB);
-        return parsedB.valueOf()-parsedA.valueOf();
-      });
-      drivesList = drivesKeys.map((key) => {
-        const route = drives[key];
-        const thumbnail = `${commaEndpoints.Thumbnail.Base}${commaEndpoints.Thumbnail.Endpoint.tiny.replace(":segment_string",route.sig_path)}`;
-        return (<LazyLoad key={key} height={70}>
-          <ListGroupItem tag="a" href="#" onClick={(ev) => {this.openDrive(key); ev.preventDefault(); return false;}}>
-            <span className={"thumbnail"}><img src={thumbnail} /></span>
-            <span className={"details"}>
-            <strong>{route.start_geocode} to {route.end_geocode}</strong><br />
-            <Moment format="dddd MMM. DD, YYYY hh:mm:SS a" tz="America/Los_Angeles">{route.start_time}</Moment>
-            </span>
-          </ListGroupItem>
-        </LazyLoad>);
-      });
-    }
+    // let drivesList;
+    // if (drives) {
+    //   const drivesKeys = Object.keys(drives).sort(function(a, b){
+    //     let parsedA = moment(a, "YYYY-MM-DD--HH-mm-SS");
+    //     let parsedB = moment(b, "YYYY-MM-DD--HH-mm-SS");
+    //     // console.log("a",parsedA);
+    //     // console.log("b",parsedB);
+    //     return parsedB.valueOf()-parsedA.valueOf();
+    //   });
+    //   drivesList = drivesKeys.map((key) => {
+    //     const route = drives[key];
+    //     const thumbnail = `${commaEndpoints.Thumbnail.Base}${commaEndpoints.Thumbnail.Endpoint.tiny.replace(":segment_string",route.sig_path)}`;
+    //     return (<LazyLoad key={key} height={70}>
+    //       <ListGroupItem tag="a" href="#" onClick={(ev) => {this.openDrive(key); ev.preventDefault(); return false;}}>
+    //         <span className={"thumbnail"}><img src={thumbnail} /></span>
+    //         <span className={"details"}>
+    //         <strong>{route.start_geocode} to {route.end_geocode}</strong><br />
+    //         <Moment format="dddd MMM. DD, YYYY hh:mm:SS a" tz="America/Los_Angeles">{route.start_time}</Moment>
+    //         </span>
+    //       </ListGroupItem>
+    //     </LazyLoad>);
+    //   });
+    // }
 
     let devicesList;
 
@@ -161,6 +161,7 @@ class EonDetail extends Component {
               <XTerm ref='xterm' style={{
                 addons:['attach', 'fit', 'fullscreen', 'search'],
                 overflow: 'hidden',
+                ip: eon.ip,
                 position: 'relative',
                 width: '100%',
                 height: '100%'
