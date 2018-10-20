@@ -13,9 +13,9 @@ It also has a goal of providing easier porting of new vehicles.
 
 ### Help Support Openpilot Community Efforts
 
-Nor Openpilot Community or jfrux are funded by Comma.ai, Inc. or any other commercial entity.
+The Openpilot Community or jfrux are funded by Comma.ai, Inc. or any other commercial entity.
 Your support is all we have.  Growing expenses with opc.ai, cloud hosting, and costs running great services for the community is not free.
-If you have a few bucks, feel free to [become a patreon](https://patreon.com/openpilotcommunity) for the Openpilot Community and support further uptime and dev time.
+If you have a few bucks, please consider [becoming a patreon](https://patreon.com/openpilotcommunity) for the Openpilot Community and support further uptime and dev time.  Finances will be out in the open on the patreon page for everyone to see.
 
 https://patreon.com/openpilotcommunity
 
