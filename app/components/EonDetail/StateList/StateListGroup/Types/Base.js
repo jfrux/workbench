@@ -45,7 +45,7 @@ class StateListGroup extends Component {
       <Card className={this.getClassNames()}>
         <CardBody className={"state-card-body"}>
           <CardHeader className={"state-card-header"}>{rootKey}</CardHeader>
-         {childElems}
+         
         </CardBody>
       </Card>
     );

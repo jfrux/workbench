@@ -20,16 +20,16 @@ const getItems = (state, ownProps) => {
       };
       props.rootKeyToComponent[rootItemKey] = rootItemComponent;
 
-      rootItemChildren.forEach((itemChild) => {
-        let itemChildKey = itemChild[0];
-        let itemChildStatePath = itemChild[1].join(".");
-        let itemChildComponent = itemChild[2];
-        let itemChildState;
-          itemChildState = get(state,itemChildStatePath, null);
-          props[rootItemKey].childKeyToComponent[itemChildKey] = itemChildComponent;
-          props[rootItemKey][itemChildKey] = itemChildState;
-          props[rootItemKey]['keys'].push(itemChildKey);
-      });
+      // rootItemChildren.forEach((itemChild) => {
+      //   let itemChildKey = itemChild[0];
+      //   let itemChildStatePath = itemChild[1].join(".");
+      //   let itemChildComponent = itemChild[2];
+      //   let itemChildState;
+      //     itemChildState = get(state,itemChildStatePath, null);
+      //     props[rootItemKey].childKeyToComponent[itemChildKey] = itemChildComponent;
+      //     props[rootItemKey][itemChildKey] = itemChildState;
+      //     props[rootItemKey]['keys'].push(itemChildKey);
+      // });
     } catch (e) {
       console.warn(`Error mapping keys to props...`,e);
     }

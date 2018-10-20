@@ -28,7 +28,6 @@ class StateList extends Component {
         console.warn(`No component could be found for rootKey ${key}`)
         return (<StateListGroup key={key} rootKey={key} data={rootData} />);
       }
-      
     });
     return (<div>{rootBlocks}</div>);
   }

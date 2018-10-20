@@ -16,7 +16,7 @@ import vehicleStateGroups from '../../constants/vehicle_state_groups';
 import StateList from './StateList';
 import LoadingOverlay from '../LoadingOverlay';
 import { TabContent, Nav, NavItem, NavLink, TabPane, ListGroupItem } from 'reactstrap';
-
+import {Terminal, XTerm} from '../Terminal';
 const propTypes = {
   connecting: PropTypes.bool,
   connected: PropTypes.bool,
@@ -36,6 +36,7 @@ class EonDetail extends Component {
     if (eon && this.props.SELECT_EON) {
       this.props.SELECT_EON(eon.id);
     }
+    this.socket = new WebSocket(`ws://${eon}:4000/`);
     if (!eon) {
       return;
     }
@@ -140,9 +141,32 @@ class EonDetail extends Component {
     return (
       <Layout title={`${this.props.eon.ip} (Messages Received: ${messagesReceived})`} contextActions={contextActions}>
         <Nav tabs className={styles.tabs_list}>
+          <NavItem key={"console-tab-link"}>
+            <NavLink
+              className={classnames({
+                test: true,
+                active: !installing && stateGroupKeys.length && activeTab === '0',
+                disabled: installing || !stateGroupKeys.length
+              })}
+              onClick={() => { this.setTab('0'); }}
+              >
+              Console
+            </NavLink>
+          </NavItem>
           {stateTabs}
         </Nav>
         <TabContent activeTab={activeTab}>
+          <TabPane key={"console-tab-pane"} tabId={'0'}>
+            {activeTab === '0' &&
+              <XTerm ref='xterm' style={{
+                addons:['attach', 'fit', 'fullscreen', 'search'],
+                overflow: 'hidden',
+                position: 'relative',
+                width: '100%',
+                height: '100%'
+              }} />
+            }
+          </TabPane>
           {statePanes}
         </TabContent>
       </Layout>
