@@ -1,10 +1,30 @@
-#!/usr/bin/env node
+// const {EventEmitter} = require('events');
+// const {StringDecoder} = require('string_decoder');
+
+const defaultShell = require('default-shell');
+
+// const {getDecoratedEnv} = require('./plugins');
+// const {productName, version} = require('./package');
+// const config = require('./config');
+
+// const createNodePtyError = () =>
+//   new Error(
+//     '`node-pty` failed to load. Typically this means that it was built incorrectly. Please check the `readme.md` to more info.'
+//   );
+
+// let spawn;
+// try {
+//   spawn = require('node-pty').fork;
+// } catch (err) {
+//   throw createNodePtyError();
+// }
 var terminals = {};
 var logs = {};
 
 const PORT = 9788;
 const express = require('express');
 const app = express();
+// console.log(pty);
 const pty = require('node-pty');
 const argv = require('yargs').argv;
 
@@ -43,7 +63,7 @@ app.post('/terminals', function (req, res) {
   let shell = argv.shell && argv.shell !== '' ? argv.shell : process.platform === 'win32' ? 'cmd.exe' : 'bash';
   let cols = parseInt(req.query.cols, 10);
   let rows = parseInt(req.query.rows, 10);
-  let term = pty.spawn(shell, [], {
+  let term = pty.fork(shell, [], {
     name: 'xterm-color',
     cols: cols || 80,
     rows: rows || 24,
@@ -103,10 +123,14 @@ app.ws('/terminals/:pid', function (ws, req) {
   });
 });
 
-if (!port) {
-  console.error('Please provide a port: node ./src/server.js --port=XXXX');
-  process.exit(1);
-} else {
-  app.listen(port, host);
-  console.log('Workbench terminal emulator server listening at http://' + host + ':' + port);
-}
+module.exports = {
+  startServer() {
+    if (!port) {
+      console.error('Please provide a port: node ./src/server.js --port=XXXX');
+      process.exit(1);
+    } else {
+      app.listen(port, host);
+      console.log('Workbench terminal emulator server listening at http://' + host + ':' + port);
+    }
+  }
+} 

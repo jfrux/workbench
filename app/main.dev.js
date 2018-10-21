@@ -12,20 +12,20 @@
 import { app, BrowserWindow } from 'electron';
 import MenuBuilder from './menu';
 import { autoUpdater } from "electron-updater";
-
-const serverProc = require('child_process').fork(
-  require.resolve('./server.js'),
-  ['--key', 'value'], // pass to process.argv into child
-  {
-    // options
-  }
-)
-serverProc.on('exit', (code, sig) => {
+import {startServer} from './server';
+// const serverProc = require('child_process').fork(
+//   require.resolve('./server.js'),
+//   ['--key', 'value'], // pass to process.argv into child
+//   {
+//     // options
+//   }
+// )
+// serverProc.on('exit', (code, sig) => {
   // finishing
-})
-serverProc.on('error', (error) => {
-  // error handling
-})
+// })
+// serverProc.on('error', (error) => {
+//   // error handling
+// })
 //-------------------------------------------------------------------
 // Logging
 //
@@ -76,7 +76,7 @@ app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
   // if (process.platform !== 'darwin') {
-    serverProc.kill('SIGINT');
+    // serverProc.kill('SIGINT');
     app.quit();
   // }
 });
@@ -134,7 +134,7 @@ app.on('ready', async () => {
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
-  console.warn("Loading URL")
+  startServer();
   // mainWindow.on('resize', () => {
     // console.log(store.get('windowBounds'));
     // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with

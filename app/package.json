@@ -15,6 +15,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "node-pty": "^0.7.8"
+    "bufferutil": "^4.0.0",
+    "node-pty": "^0.7.8",
+    "utf-8-validate": "^5.0.1"
   }
 }

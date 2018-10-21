@@ -2,10 +2,22 @@
 # yarn lockfile v1
 
 
+bufferutil@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/bufferutil/-/bufferutil-4.0.0.tgz#a5078160e443751a4e83b6f4d6d7e26c058326a0"
+  integrity sha512-jpnqMVLo7sqfUY2W92RC4jjj9TuiOSkjB0k43TxPcrBSntZwXUOl8Krfd3eVEdApuScpSTwYKntm/dXU2T8gnw==
+  dependencies:
+    node-gyp-build "~3.4.0"
+
 nan@2.10.0:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.10.0.tgz#96d0cd610ebd58d4b4de9cc0c6828cda99c7548f"
   integrity sha512-bAdJv7fBLhWC+/Bls0Oza+mvTaNQtP+1RyhhhvD95pgUJz6XM5IzgmxOkItJ9tkoCiplvAnXI1tNmmUD/eScyA==
+
+node-gyp-build@~3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/node-gyp-build/-/node-gyp-build-3.4.0.tgz#f8f62507e65f152488b28aac25d04b9d79748cf7"
+  integrity sha512-YoviGBJYGrPdLOKDIQB0sKxuKy/EEsxzooNkOZak4vSTKT/qH0Pa6dj3t1MJjEQGsefih61IyHDmO1WW7xOFfw==
 
 node-pty@^0.7.8:
   version "0.7.8"
@@ -13,3 +25,10 @@ node-pty@^0.7.8:
   integrity sha512-2c2tZtGnvIJUWw8fDipxO953Mytqc5/IdRZK+YF52NtFMNTuWCQ41QDLEx76W64MEZkfDMoZyah6KPmyW1LO7g==
   dependencies:
     nan "2.10.0"
+
+utf-8-validate@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/utf-8-validate/-/utf-8-validate-5.0.1.tgz#cef1f9011ba4b216f4d7c6ddf5189d750599ff8b"
+  integrity sha512-Qef1AuiWWxQeZ1Oa4DTV3ArRafpZvsK+CLrlB8khLfsV+9mwhj58hNSGmel0ns5jYP+3yEwav6vxxW7Gz85bVw==
+  dependencies:
+    node-gyp-build "~3.4.0"

@@ -5,6 +5,7 @@
 import path from 'path';
 import webpack from 'webpack';
 import fs from 'fs';
+// import node from 'file.node';
 import { dependencies as externals } from './app/package.json';
 import { dependencies as possibleExternals } from './package.json';
 
@@ -30,10 +31,15 @@ function filterDepWithoutEntryPoints(dep: string): boolean {
 
 export default {
   externals: [
-    ...Object.keys(possibleExternals || {}).filter(filterDepWithoutEntryPoints)
+    ...Object.keys(possibleExternals || {}).filter(filterDepWithoutEntryPoints),
+    ...Object.keys(externals)
   ],
   module: {
     rules: [
+      {
+        test: /\.node$/,
+        use: 'node-loader'
+      },
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
