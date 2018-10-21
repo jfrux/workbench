@@ -33,16 +33,17 @@ Download the latest version from the links below.
 
 # Features
 
-- [x] Connects to EON via SSH (automatically, installs key for you)
-- [x] Displays Thermal
-- [x] Displays Health
-- [x] Displays GPS Location Info
-- [x] Installs a basic API to EON for more accurate data fetching. (see `workbench_api` directory)
-- [x] Can scan network for EON and find it quickly
-- [x] Retrieves fingerprint and places it in a textbox.
+- [x] Scans your network for your EON so you don't need to find the IP.
+- [x] Connects to EON via SSH (and automatically, installs SSH key for you)
+- [x] Dumps you into an SSH shell connection to your EON with one click.
+
 
 ## Todos Pipeline
 
+- [ ] Displays Health
+- [ ] Displays GPS Location Info
+- [ ] Installs a basic API to EON for more accurate data fetching. (see `workbench_api` directory)
+- [ ] Retrieves fingerprint and places it in a textbox.
 - [ ] Check if Panda is flashed
 - [ ] Output if Vehicle Detected by Fingerprint
 - [ ] A general "health" check view to make it easier to know if things are okay.
