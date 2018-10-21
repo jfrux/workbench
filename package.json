@@ -1,7 +1,7 @@
 {
   "name": "openpilot-workbench",
   "productName": "Workbench",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "description": "The Openpilot Workbench is to help people fix problems with EON, Openpilot, etc.",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
