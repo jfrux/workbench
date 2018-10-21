@@ -2,21 +2,16 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import classnames from 'classnames';
 import { Redirect } from 'react-router';
-import LazyLoad from 'react-lazy-load';
 import routes from '../../constants/routes.json';
 import styles from './Styles.scss';
-import Moment from 'react-moment';
-import moment from 'moment';
-import 'moment-timezone';
 import PropTypes from 'prop-types';
 import vehicleConnectionStatuses from '../../constants/vehicle_connection_statuses';
 import Layout from '../Layout';
-import * as commaEndpoints from '../../constants/comma_endpoints.json';
 import vehicleStateGroups from '../../constants/vehicle_state_groups';
 import StateList from './StateList';
 import LoadingOverlay from '../LoadingOverlay';
 import { TabContent, Nav, NavItem, NavLink, TabPane, ListGroupItem } from 'reactstrap';
-import {Terminal, XTerm} from '../Terminal';
+import Terminal from '../Terminal';
 const propTypes = {
   connecting: PropTypes.bool,
   connected: PropTypes.bool,
@@ -72,32 +67,32 @@ class EonDetail extends Component {
       return <LoadingOverlay message={loadingMessage} />;
     }
     
-    stateTabs = stateGroupKeys.map((key) => {
-      return (
-        <NavItem key={key + "-tab-link"}>
-          <NavLink
-            className={classnames({
-              test: true,
-              active: !installing && stateGroupKeys.length && activeTab === key,
-              disabled: installing || !stateGroupKeys.length
-            })}
-            onClick={() => { this.setTab(key); }}
-            >
-            {key}
-          </NavLink>
-        </NavItem>
-      );
-    });
-    statePanes = stateGroupKeys.map((key) => {
-      const items = vehicleStateGroups[key];
-      return (
-        <TabPane key={key + "-tab-pane"} tabId={key}>
-          {activeTab === key &&
-          <StateList type={key} items={items} />
-          }
-        </TabPane>
-      )
-    });
+    // stateTabs = stateGroupKeys.map((key) => {
+    //   return (
+    //     <NavItem key={key + "-tab-link"}>
+    //       <NavLink
+    //         className={classnames({
+    //           test: true,
+    //           active: !installing && stateGroupKeys.length && activeTab === key,
+    //           disabled: installing || !stateGroupKeys.length
+    //         })}
+    //         onClick={() => { this.setTab(key); }}
+    //         >
+    //         {key}
+    //       </NavLink>
+    //     </NavItem>
+    //   );
+    // });
+    // statePanes = stateGroupKeys.map((key) => {
+    //   const items = vehicleStateGroups[key];
+    //   return (
+    //     <TabPane key={key + "-tab-pane"} tabId={key}>
+    //       {activeTab === key &&
+    //       <StateList type={key} items={items} />
+    //       }
+    //     </TabPane>
+    //   )
+    // });
     // vidurl example:
     // https://video.comma.ai/hls/0812e2149c1b5609/0ccfd8331dfb6f5280753837cefc9d26_2018-10-06--19-56-04/index.m3u8
     // let drivesList;
@@ -139,8 +134,8 @@ class EonDetail extends Component {
     ];
 
     return (
-      <Layout title={`${this.props.eon.ip} (Messages Received: ${messagesReceived})`} contextActions={contextActions}>
-        <Nav tabs className={styles.tabs_list}>
+      <Layout title={`${this.props.eon.ip}`} contextActions={contextActions}>
+        <Nav tabs className={'tab-list'}>
           <NavItem key={"console-tab-link"}>
             <NavLink
               className={classnames({
@@ -153,22 +148,13 @@ class EonDetail extends Component {
               Console
             </NavLink>
           </NavItem>
-          {stateTabs}
         </Nav>
         <TabContent activeTab={activeTab}>
-          <TabPane key={"console-tab-pane"} tabId={'0'}>
+          <TabPane className={"console-tab"} key={"console-tab-pane"} tabId={'0'}>
             {activeTab === '0' &&
-              <XTerm ref='xterm' style={{
-                addons:['attach', 'fit', 'fullscreen', 'search'],
-                overflow: 'hidden',
-                ip: eon.ip,
-                position: 'relative',
-                width: '100%',
-                height: '100%'
-              }} />
+              <Terminal eonIp={eon.ip} />
             }
           </TabPane>
-          {statePanes}
         </TabContent>
       </Layout>
     );

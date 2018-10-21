@@ -62,7 +62,7 @@ function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, stdErr =
   })
 }
 
-function getPrivateKey() {
+function* getPrivateKey() {
   const userHome = app.getPath('home');
   mkdirp.sync(path.join(userHome,'.ssh'));
   const filePath = path.join(userHome,'.ssh','openpilot_rsa');
@@ -103,7 +103,7 @@ RsVMUiFgloWGHETOy0Qvc5AwtqTJFLTD1Wza2uBilSVIEsg6Y83Gickh+ejOmEsY
     console.warn("chmod failed on file ",filePath);
   }
   const key = new RSAKey(fs.readFileSync(filePath));
-  
+  yield put({ type: types.PRIVATE_KEY_INSTALLED });
   return key.exportKey('private', 'pem', 'pkcs1'); 
 }
 
@@ -146,11 +146,12 @@ function* installWorkbenchApi() {
   const eon = eons[selectedEon];
   console.warn("sendInstallCommand",sendInstallCommand);
   yield put(eonDetailActions.BEGIN_install(eon));
-  const {installed, timeout} = yield race({
-    installed: call(sendInstallCommand,eon),
-    timeout: call(delay, 15000)
-  });
-  // const installed = true;
+  yield call(getPrivateKey);
+  // const {installed, timeout} = yield race({
+  //   installed: call(sendInstallCommand,eon),
+  //   timeout: call(delay, 15000)
+  // });
+  const installed = true;
   // try {
     if (installed) {
       // console.warn("Installed!");
@@ -271,7 +272,7 @@ export function* eonSagas() {
     takeLatest("@@router/LOCATION_CHANGE",routeWatcher),
     takeEvery(types.CONNECT_FAILED,addEonListError),
     // takeEvery(types.INSTALL_SUCCESS,fetchState),
-    takeEvery(types.INSTALL_SUCCESS,connectWebSockets),
+    // takeEvery(types.INSTALL_SUCCESS,connectWebSockets),
     takeEvery(types.DISCONNECT,handleDisconnect),
     // takeLatest(types.AUTH_REQUEST_FAIL,fetchAuth),
     // takeLatest(types.EON_STATE_FAIL,fetchState),

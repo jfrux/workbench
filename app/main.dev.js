@@ -13,6 +13,19 @@ import { app, BrowserWindow } from 'electron';
 import MenuBuilder from './menu';
 import { autoUpdater } from "electron-updater";
 
+const serverProc = require('child_process').fork(
+  require.resolve('./server.js'),
+  ['--key', 'value'], // pass to process.argv into child
+  {
+    // options
+  }
+)
+serverProc.on('exit', (code, sig) => {
+  // finishing
+})
+serverProc.on('error', (error) => {
+  // error handling
+})
 //-------------------------------------------------------------------
 // Logging
 //
@@ -63,6 +76,7 @@ app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
   // if (process.platform !== 'darwin') {
+    serverProc.kill('SIGINT');
     app.quit();
   // }
 });

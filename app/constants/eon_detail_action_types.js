@@ -7,7 +7,7 @@ export const CONNECTED = 'eon/CONNECTED';
 export const MESSAGE = 'eon/MESSAGE';
 export const DISCONNECT = 'eon/DISCONNECT';
 export const DISCONNECTED = 'eon/DISCONNECTED';
-
+export const PRIVATE_KEY_INSTALLED = 'eon/PRIVATE_KEY_INSTALLED';
 export const INSTALL_FAIL = 'eon/INSTALL_FAIL';
 export const UNINSTALL = 'eon/UNINSTALL';
 export const UNINSTALL_SUCCESS = 'eon/UNINSTALL_SUCCESS';

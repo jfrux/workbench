@@ -12,8 +12,24 @@
   left: 0;
   height:100%; */
   text-align: center;
+}
+.terminal-container {
+  padding:10px;
+}
+.xterm .xterm-viewport {
   
-  
+}
+.tab-content {
+  height:100%;
+  padding:15px;
+  background-color:#000;
+}
+.content {
+  height:100%;
+}
+.console-tab {
+  position:relative;
+  height:100%;
 }
 .smalltalk {
   display: flex;
@@ -89,6 +105,12 @@
   height:100%;
   background-color:rgba(#000,0.3335);
   z-index:1;
+  .nav-item {
+    width:100%;
+    .nav-link {
+      text-align:center;
+    }
+  }
 }
 .app-wrapper {
   $darker_col: 6;
@@ -682,8 +704,13 @@ a:hover {
   background-color:lighten(#03111C,10);
   border:0;
   border-radius:0;
+  width:100%;
 }
 .nav-tabs .nav-link:hover, .nav-tabs .nav-link:focus {
   // border-color: #e9ecef #e9ecef #dee2e6;
   border:0;
+}
+
+.content .nav.nav-tabs {
+  display:none;
 }
