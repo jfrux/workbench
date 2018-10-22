@@ -32,19 +32,19 @@ install:
   - ps: Install-Product node $env:nodejs_version x64
   - set CI=true
   # NOTE: Remove this if your project is private and you don't have a paid greenkeeper account
-  - yarn global add greenkeeper-lockfile@2
+  # - yarn global add greenkeeper-lockfile@2
   - yarn
 
 # NOTE: Remove this if your project is private and you don't have a paid greenkeeper account
-before_test:
-  - greenkeeper-lockfile-update
+# before_test:
+#   - greenkeeper-lockfile-update
 
 test_script:
   - node --version
-  - yarn lint
+  # - yarn lint
   - yarn package
-  - yarn test
-  - yarn test-e2e
+  # - yarn test
+  # - yarn test-e2e
 
 # NOTE: Remove this if your project is private and you don't have a paid greenkeeper account
-after_test: greenkeeper-lockfile-upload
+# after_test: greenkeeper-lockfile-upload
