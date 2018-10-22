@@ -1,4 +1,14 @@
-import { all, take, call, fork, race,  put, takeLatest, takeEvery, select } from 'redux-saga/effects';
+import {
+  all,
+  take,
+  call,
+  fork,
+  race,
+  put,
+  takeLatest,
+  takeEvery,
+  select
+} from 'redux-saga/effects';
 import { delay, eventChannel } from 'redux-saga';
 import { remote } from 'electron';
 const { app } = remote;
@@ -21,53 +31,63 @@ import * as commands from '../constants/commands.json';
 function* handleTabChange(action) {
   const tab = action.payload;
   switch (tab) {
-    case "1":
-      // return;
-    case "2":
+    case '1':
+    // return;
+    case '2':
       //get routes
       // yield call(fetchApiRequest,'routes');
       break;
-    case "3":
+    case '3':
       // yield call(fetchApiRequest,'devices');
       break;
-    case "4":
+    case '4':
       // yield call(fetchFingerprint);
       break;
   }
 }
 
-function sendCommand(eon, command, commandArgs = [], stdOut = () => {}, stdErr = () => {}) {
+function sendCommand(
+  eon,
+  command,
+  commandArgs = [],
+  stdOut = () => {},
+  stdErr = () => {}
+) {
   const privateKey = getPrivateKey();
-  console.log('sendCommand',arguments);
+  console.log('sendCommand', arguments);
   app.sshClient = new SSH();
-  return app.sshClient.connect({
-    host: eon.ip,
-    username: 'root',
-    port: 8022,
-    privateKey: privateKey
-  }).then(() => {
-    // console.warn("Dispatching command:\n",command);
-    // console.warn("To EON:\n",eon);
-    return app.sshClient.exec(command, commandArgs, {
-      cwd: '/',
-      onStdout(chunk) {
-        // console.warn("stdOut:",chunk.toString('utf8'));
-        stdOut(chunk.toString('utf8'));
-      },
-      onStderr(chunk) {
-        // console.warn("stdErr:",chunk.toString('utf8'));
-        stdErr(chunk.toString('utf8'));
-      },
+  return app.sshClient
+    .connect({
+      host: eon.ip,
+      username: 'root',
+      port: 8022,
+      privateKey: privateKey
+    })
+    .then(() => {
+      // console.warn("Dispatching command:\n",command);
+      // console.warn("To EON:\n",eon);
+      return app.sshClient.exec(command, commandArgs, {
+        cwd: '/',
+        onStdout(chunk) {
+          // console.warn("stdOut:",chunk.toString('utf8'));
+          stdOut(chunk.toString('utf8'));
+        },
+        onStderr(chunk) {
+          // console.warn("stdErr:",chunk.toString('utf8'));
+          stdErr(chunk.toString('utf8'));
+        }
+      });
     });
-  })
 }
 
 function* getPrivateKey() {
   const userHome = app.getPath('home');
-  mkdirp.sync(path.join(userHome,'.ssh'));
-  const filePath = path.join(userHome,'.ssh','openpilot_rsa');
+  mkdirp.sync(path.join(userHome, '.ssh'));
+  const filePath = path.join(userHome, '.ssh', 'openpilot_rsa');
   if (!fs.existsSync(filePath)) {
-fs.writeFileSync(filePath,`-----BEGIN PRIVATE KEY-----
+    fs.writeFileSync(
+      filePath,
+      `-----BEGIN PRIVATE KEY-----
 MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC+iXXq30Tq+J5N
 Kat3KWHCzcmwZ55nGh6WggAqECa5CasBlM9VeROpVu3beA+5h0MibRgbD4DMtVXB
 t6gEvZ8nd04E7eLA9LTZyFDZ7SkSOVj4oXOQsT0GnJmKrASW5KslTWqVzTfo2XCt
@@ -94,47 +114,64 @@ jTadcgKFnRUmc+JT9p/ZbCxkA/ALFg8++G+0ghECgYA8vG3M/utweLvq4RI7l7U7
 b+i2BajfK2OmzNi/xugfeLjY6k2tfQGRuv6ppTjehtji2uvgDWkgjJUgPfZpir3I
 RsVMUiFgloWGHETOy0Qvc5AwtqTJFLTD1Wza2uBilSVIEsg6Y83Gickh+ejOmEsY
 6co17RFaAZHwGfCFFjO76Q==
------END PRIVATE KEY-----`);
+-----END PRIVATE KEY-----`
+    );
   }
 
   try {
     fs.chmodSync(filePath, '600');
+    if (process.platform === 'win32') {
+      require('child_process').execSync(
+        `icacls "${filePath}" /c /t /inheritance:d && icacls "${filePath}" /c /t /grant %username%:F && icacls "${filePath}"  /c /t /remove Administrator BUILTIN\\Administrators BUILTIN Everyone System Users && icacls "${filePath}"`,
+        { stdio: [0, 1, 2] }
+      );
+    }
   } catch (e) {
-    console.warn("chmod failed on file ",filePath);
+    console.warn('chmod failed on file ', filePath);
   }
   const key = new RSAKey(fs.readFileSync(filePath));
   yield put({ type: types.PRIVATE_KEY_INSTALLED });
-  return key.exportKey('private', 'pem', 'pkcs1'); 
+  return key.exportKey('private', 'pem', 'pkcs1');
 }
 
 function sendInstallCommand(eon) {
-  return new Promise((resolve,reject) => {
-    console.warn("sendInstallCommand",eon);
-    sendCommand(eon, commands.INSTALL_API.replace("%timestamp%",new Date().getTime()), [], (resp) => {
-      console.warn("stdlog [" + resp.trim() + "]");
-      // app.sshClient.dispose();
-      if (resp.trim() == "Workbench API install complete.") {
-        resolve(true);
+  return new Promise((resolve, reject) => {
+    console.warn('sendInstallCommand', eon);
+    sendCommand(
+      eon,
+      commands.INSTALL_API.replace('%timestamp%', new Date().getTime()),
+      [],
+      resp => {
+        console.warn('stdlog [' + resp.trim() + ']');
+        // app.sshClient.dispose();
+        if (resp.trim() == 'Workbench API install complete.') {
+          resolve(true);
+        }
+        // resolve(resp);
+      },
+      err => {
+        console.warn('stderr', err);
+        // reject(err);
       }
-      // resolve(resp);
-    }, (err) => {
-      console.warn("stderr",err);
-      // reject(err);
-    }).catch((e) =>{
-
-    });
+    ).catch(e => {});
   });
 }
 
 function sendDisconnectCommand(eon) {
-  console.warn("sendDisconnectCommand",eon);
-  return new Promise((resolve,reject) => {
-    sendCommand(eon, commands.UNINSTALL_API, [], (resp) => {
-      // app.sshClient.dispose();
-      resolve(resp);
-    }, (err) => {
-      reject(err);
-    }).catch((e) => {
+  console.warn('sendDisconnectCommand', eon);
+  return new Promise((resolve, reject) => {
+    sendCommand(
+      eon,
+      commands.UNINSTALL_API,
+      [],
+      resp => {
+        // app.sshClient.dispose();
+        resolve(resp);
+      },
+      err => {
+        reject(err);
+      }
+    ).catch(e => {
       reject(e);
     });
   });
@@ -144,7 +181,7 @@ function* installWorkbenchApi() {
   const { eonList } = yield select();
   const { selectedEon, eons } = eonList;
   const eon = eons[selectedEon];
-  console.warn("sendInstallCommand",sendInstallCommand);
+  console.warn('sendInstallCommand', sendInstallCommand);
   yield put(eonDetailActions.BEGIN_install(eon));
   yield call(getPrivateKey);
   // const {installed, timeout} = yield race({
@@ -153,14 +190,14 @@ function* installWorkbenchApi() {
   // });
   const installed = true;
   // try {
-    if (installed) {
-      // console.warn("Installed!");
-      yield put(eonDetailActions.SUCCESS_install());
-    } else {
-      // console.warn("Timed out waiting to install");
-      yield put(eonListActions.ADD_ERROR("Timed out trying to connect to EON"));
-      yield put(eonDetailActions.FAIL_install(new Error("Install timed out...")));
-    }
+  if (installed) {
+    // console.warn("Installed!");
+    yield put(eonDetailActions.SUCCESS_install());
+  } else {
+    // console.warn("Timed out waiting to install");
+    yield put(eonListActions.ADD_ERROR('Timed out trying to connect to EON'));
+    yield put(eonDetailActions.FAIL_install(new Error('Install timed out...')));
+  }
 }
 
 function* read(rws) {
@@ -180,7 +217,7 @@ function* handleDisconnect(action) {
   try {
     yield call(sendDisconnectCommand, eon);
   } catch (e) {
-    console.warn("Failed to disconnect properly...");
+    console.warn('Failed to disconnect properly...');
     // yield put(eonListActions.ADD_ERROR(e.message));
     // yield put(eonDetailActions.FAIL_install(e));
   }
@@ -189,18 +226,18 @@ function* handleDisconnect(action) {
 export function* createEventChannel(ws) {
   return eventChannel(emit => {
     const onOpen = () => {
-      console.warn("Connecting...");
+      console.warn('Connecting...');
       emit({ type: types.CONNECTED });
     };
     const onClose = () => {
-      console.warn("Disconnected!");
+      console.warn('Disconnected!');
       // emit({ type: types.DISCONNECTED });
     };
     const onError = () => {
-      console.warn("Error in WebSocket");
+      console.warn('Error in WebSocket');
       // emit({ type: types.DISCONNECT });
     };
-    const onMessageReceived = (data) => {
+    const onMessageReceived = data => {
       emit({ type: types.MESSAGE, payload: JSON.parse(data.data) });
     };
     ws.addEventListener('open', onOpen);
@@ -247,10 +284,14 @@ function* routeWatcher(action) {
   const { connected } = eonDetail;
   if (routes.EON_DETAIL === pathname) {
     // console.warn("IS DETAIL SCREEN", eons[selectedEon]);
-    try {     
+    try {
       yield call(installWorkbenchApi);
     } catch (e) {
-      yield put(eonListActions.ADD_ERROR("Failed to establish a connection to EON: " + e.message));
+      yield put(
+        eonListActions.ADD_ERROR(
+          'Failed to establish a connection to EON: ' + e.message
+        )
+      );
       yield put(eonDetailActions.FAIL_install(e));
     }
   } else {
@@ -262,18 +303,22 @@ function* routeWatcher(action) {
 }
 
 function* addEonListError() {
-  yield put(eonListActions.ADD_ERROR("Failed to connect to your EON.  Sometimes due to network instability it can take longer than we were willing to wait.  If the problem persists, try rebooting EON."));
+  yield put(
+    eonListActions.ADD_ERROR(
+      'Failed to connect to your EON.  Sometimes due to network instability it can take longer than we were willing to wait.  If the problem persists, try rebooting EON.'
+    )
+  );
 }
 
 // EXPORT ROOT SAGA
 export function* eonSagas() {
   // console.warn("types:",types);
   yield all([
-    takeLatest("@@router/LOCATION_CHANGE",routeWatcher),
-    takeEvery(types.CONNECT_FAILED,addEonListError),
+    takeLatest('@@router/LOCATION_CHANGE', routeWatcher),
+    takeEvery(types.CONNECT_FAILED, addEonListError),
     // takeEvery(types.INSTALL_SUCCESS,fetchState),
     // takeEvery(types.INSTALL_SUCCESS,connectWebSockets),
-    takeEvery(types.DISCONNECT,handleDisconnect),
+    takeEvery(types.DISCONNECT, handleDisconnect),
     // takeLatest(types.AUTH_REQUEST_FAIL,fetchAuth),
     // takeLatest(types.EON_STATE_FAIL,fetchState),
     // takeLatest(types.GET_FINGERPRINT_FAIL,fetchFingerprint),

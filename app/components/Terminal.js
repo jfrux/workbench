@@ -2,6 +2,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Terminal } from 'xterm';
+import { remote } from 'electron';
+const { app } = remote;
+import path from 'path';
+
 // import * as attach from 'xterm/lib/addons/attach/attach';
 import * as attach from '../addons/attach';
 import * as fit from 'xterm/lib/addons/fit/fit';
@@ -44,7 +48,12 @@ class ReactTerminal extends React.Component {
     this.term.focus();
     this.term.on('resize', ({ cols, rows }) => {
       if (!this.pid) return;
-      fetch(`http://${this.HOST}/terminals/${ this.pid }/size?cols=${ cols }&rows=${ rows }`, { method: 'POST' });
+      fetch(
+        `http://${this.HOST}/terminals/${
+          this.pid
+        }/size?cols=${cols}&rows=${rows}`,
+        { method: 'POST' }
+      );
     });
     this.term.decreaseFontSize = () => {
       this.term.setOption('fontSize', --this.fontSize);
@@ -63,12 +72,22 @@ class ReactTerminal extends React.Component {
     this.term.textarea.onkeydown = e => {
       console.log(e.keyCode, e.shiftKey, e.ctrlKey, e.altKey);
       // ctrl + shift + metakey + +
-      if ((e.keyCode === 187 || e.keyCode === 61) && e.shiftKey && e.ctrlKey && e.altKey) {
+      if (
+        (e.keyCode === 187 || e.keyCode === 61) &&
+        e.shiftKey &&
+        e.ctrlKey &&
+        e.altKey
+      ) {
         this.term.setOption('fontSize', ++this.fontSize);
         this.term.fit();
       }
       // ctrl + shift + metakey + -
-      if ((e.keyCode === 189 || e.keyCode === 173) && e.shiftKey && e.ctrlKey && e.altKey) {
+      if (
+        (e.keyCode === 189 || e.keyCode === 173) &&
+        e.shiftKey &&
+        e.ctrlKey &&
+        e.altKey
+      ) {
         this.term.setOption('fontSize', --this.fontSize);
         this.term.fit();
       }
@@ -78,7 +97,8 @@ class ReactTerminal extends React.Component {
       }
       // ctrl + shift + metakey + h
       if (e.keyCode === 72 && e.shiftKey && e.ctrlKey && e.altKey) {
-        this.props.options.splitHorizontal && this.props.options.splitHorizontal();
+        this.props.options.splitHorizontal &&
+          this.props.options.splitHorizontal();
       }
       // ctrl + shift + metakey + w
       if (e.keyCode === 87 && e.shiftKey && e.ctrlKey && e.altKey) {
@@ -95,13 +115,24 @@ class ReactTerminal extends React.Component {
     this.socket = null;
   }
   render() {
-    return <div ref={ref => (this.container = ref)} style={{
-      position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'
-    }}></div>;
+    return (
+      <div
+        ref={ref => (this.container = ref)}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%'
+        }}
+      />
+    );
   }
   _connectToServer() {
     fetch(
-      `http://${this.HOST}/terminals/?cols=${ this.term.cols }&rows=${ this.term.rows }`,
+      `http://${this.HOST}/terminals/?cols=${this.term.cols}&rows=${
+        this.term.rows
+      }`,
       { method: 'POST' }
     ).then(
       res => {
@@ -110,7 +141,10 @@ class ReactTerminal extends React.Component {
           if (this.failures === 2) {
             this.term.writeln(
               'There is back-end server found but it returns "' +
-              res.status + ' ' + res.statusText + '".'
+                res.status +
+                ' ' +
+                res.statusText +
+                '".'
             );
           }
           this._tryAgain();
@@ -120,8 +154,17 @@ class ReactTerminal extends React.Component {
           this.pid = processId;
           this.socket = new WebSocket(this.SOCKET_URL + processId);
           this.socket.onopen = () => {
+            console.log('CONNECTED TO SHELL');
             this.term.attach(this.socket);
-            this.sendCommand(`ssh root@${this.props.eonIp} -p 8022 -i ~/.ssh/openpilot_rsa\r`);
+            console.warn(process.platform);
+            if (process.platform === 'win32') {
+              const userHome = app.getPath('home');
+              const filePath = path.join(userHome, '.ssh', 'openpilot_rsa');
+            }
+
+            this.sendCommand(
+              `ssh root@${this.props.eonIp} -p 8022 -i ~/.ssh/openpilot_rsa\r`
+            );
           };
           this.socket.onclose = () => {
             this.term.writeln('Server disconnected!');
@@ -150,7 +193,7 @@ class ReactTerminal extends React.Component {
       this._connectToServer();
     }, 2000);
   }
-};
+}
 
 ReactTerminal.propTypes = {
   eonIp: PropTypes.string,
@@ -163,7 +206,7 @@ function listenToWindowResize(callback) {
   function resizeThrottler() {
     // ignore resize events as long as an actualResizeHandler execution is in the queue
     if (!resizeTimeout) {
-      resizeTimeout = setTimeout(function () {
+      resizeTimeout = setTimeout(function() {
         resizeTimeout = null;
         callback();
       }, 66);
