@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import JSONPretty from 'react-json-pretty';
 import stateListGroupTypes from './StateListGroup/Types';
 import { getItemsState } from '../../../selectors/state_list_selectors';
 const propTypes = {
@@ -30,12 +31,12 @@ class StateList extends Component {
     //     return (<StateListGroup key={key} rootKey={key} data={rootData} />);
     //   }
     // });
-    return (<div>{rootBlocks}</div>);
+    return (<div><JSONPretty id="json-pretty" json={this.props.data}></JSONPretty></div>);
   }
 }
 
 function mapStateToProps(state,ownProps) {
-  const itemsState = state.eonDetail[ownProps.rootKey];
+  const itemsState = state.eonDetail[ownProps.type];
   return {
     data: itemsState
   };

@@ -54,17 +54,17 @@ class EonDetail extends Component {
     const stateGroupKeys = Object.keys(vehicleStateGroups);
  
     let stateBlocks, stateTabs, statePanes;
-    let loadingMessage = "Connecting...";
+    // let loadingMessage = "Connecting...";
 
-    if (!installing && stateRequestAttempts > 0) {
-      loadingMessage = loadingMessage + " (retrying " + stateRequestAttempts + ")";
-    } else {
-      loadingMessage = "Setting up EON for Workbench...";
-    }
+    // if (!installing && stateRequestAttempts > 0) {
+    //   loadingMessage = loadingMessage + " (retrying " + stateRequestAttempts + ")";
+    // } else {
+    //   loadingMessage = "Setting up EON for Workbench...";
+    // }
 
-    if (installing || !stateGroupKeys.length || connecting) {
-      return <LoadingOverlay message={loadingMessage} />;
-    }
+    // if (installing || !stateGroupKeys.length || connecting) {
+    //   return <LoadingOverlay message={loadingMessage} />;
+    // }
     
     stateTabs = stateGroupKeys.map((key) => {
       return (
@@ -138,18 +138,18 @@ class EonDetail extends Component {
           <NavItem key={"console-tab-link"}>
             <NavLink className={classnames({
                 test: true,
-                active: !installing && stateGroupKeys.length && activeTab === '0',
+                active: !installing && stateGroupKeys.length && activeTab === 'console',
                 disabled: installing || !stateGroupKeys.length
               })}
-              onClick={() => { this.setTab('0'); }}>
+              onClick={() => { this.setTab('console'); }}>
               Console
             </NavLink>
-            {stateTabs}
           </NavItem>
+          {stateTabs}
         </Nav>
         <TabContent activeTab={activeTab}>
-          <TabPane className={"console-tab"} key={"console-tab-pane"} tabId={'0'}>
-            {activeTab === '0' &&
+          <TabPane className={"console-tab"} key={"console-tab-pane"} tabId={'console'}>
+            {activeTab === 'console' &&
               <Terminal eonIp={eon.ip} />
             }
           </TabPane>

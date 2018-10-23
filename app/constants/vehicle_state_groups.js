@@ -5,10 +5,10 @@
 */
 export default {
   "Thermal": [
-    ["Overview", [
-      ["EON Temp", ["eonDetail","Thermal","batfriendly"], "DashboardBubble"],
-      ["Storage", ["eonDetail","Thermal","usedSpaceFriendly"], "DashboardBubble"]
-    ], "Dashboard"],
+    // ["Overview", [
+    //   ["EON Temp", ["eonDetail","Thermal","batfriendly"], "DashboardBubble"],
+    //   ["Storage", ["eonDetail","Thermal","usedSpaceFriendly"], "DashboardBubble"]
+    // ], "Dashboard"],
     // ["System", [
     //   ["EON Uptime", ["system","uptimeFriendly"], "Base"],
     //   ["Network Down", ["system","networkUsage", "rxFriendly"], "Base"],
@@ -47,7 +47,8 @@ export default {
     //   ["Memory Used", ["thermal","mem"], "Memory"]
     // ], "Base"]
   ],
-  // "eon": [
+  
+  "CarState": [
   //   ["Overview", [
   //     ["EON Temp", ["thermal","batfriendly"], "DashboardBubble"],
   //     ["Storage", ["thermal","usedSpaceFriendly"], "DashboardBubble"]
@@ -89,8 +90,8 @@ export default {
   //     ["Used", ["thermal","usedSpaceFriendly"], "ProgressBar"],
   //     ["Memory Used", ["thermal","mem"], "Memory"]
   //   ], "Base"]
-  // ],
-  // "openpilot": [
+  ],
+  "CarControl": [
   //   ["Overview",[
   //     ["Pedal",["eonDetail","health","gasInterceptorDetected"], "DashboardCircle"],
   //     ["Grey Panda",["eonDetail","health","isGreyPanda"], "DashboardCircle"],
@@ -184,7 +185,7 @@ export default {
   //     ["started", ["thermal","started"], "Base"],
   //     ["startedTs", ["thermal","startedTs"], "Base"]
   //   ], "Base"]
-  // ],
+  ]
   // "vehicle": [
   //   ["Steering", [
   //     ["angle", ["carState","steeringAngle"], "Base"],

@@ -7,13 +7,15 @@ import {
   put,
   takeLatest,
   takeEvery,
-  select
+  select,
+  throttle
 } from 'redux-saga/effects';
 import zmq from 'zeromq';
+var inflection = require( 'inflection' );
 import serviceList from '../constants/service_list.yaml';
 const EventMessage = require('../messages/event');
 
-import { delay, eventChannel } from 'redux-saga';
+import { delay, eventChannel, END } from 'redux-saga';
 import { remote } from 'electron';
 const { app } = remote;
 import mkdirp from 'mkdirp';
@@ -32,19 +34,10 @@ import * as commands from '../constants/commands.json';
 // console.log(serviceList);
 function* handleTabChange(action) {
   const tab = action.payload;
-  switch (tab) {
-    case '1':
-    // return;
-    case '2':
-      // get routes
-      // yield call(fetchApiRequest,'routes');
-      break;
-    case '3':
-      // yield call(fetchApiRequest,'devices');
-      break;
-    case '4':
-      // yield call(fetchFingerprint);
-      break;
+  yield put({ type: types.DISCONNECT });
+
+  if (tab !== 'console') {
+    yield call(connectWebSockets,tab);
   }
 }
 
@@ -56,7 +49,7 @@ function sendCommand(
   stdErr = () => {}
 ) {
   const privateKey = getPrivateKey();
-  console.log('sendCommand', arguments);
+  // console.log('sendCommand', arguments);
   app.sshClient = new SSH();
   return app.sshClient
     .connect({
@@ -136,54 +129,34 @@ RsVMUiFgloWGHETOy0Qvc5AwtqTJFLTD1Wza2uBilSVIEsg6Y83Gickh+ejOmEsY
   return key.exportKey('private', 'pem', 'pkcs1');
 }
 
-function sendInstallCommand(eon) {
-  return new Promise((resolve, reject) => {
-    console.warn('sendInstallCommand', eon);
-    sendCommand(
-      eon,
-      commands.INSTALL_API.replace('%timestamp%', new Date().getTime()),
-      [],
-      resp => {
-        console.warn('stdlog [' + resp.trim() + ']');
-        // app.sshClient.dispose();
-        if (resp.trim() == 'Workbench API install complete.') {
-          resolve(true);
-        }
-        // resolve(resp);
-      },
-      err => {
-        console.warn('stderr', err);
-        // reject(err);
-      }
-    ).catch(e => {});
-  });
-}
-
-function sendDisconnectCommand(eon) {
-  console.warn('sendDisconnectCommand', eon);
-  return new Promise((resolve, reject) => {
-    sendCommand(
-      eon,
-      commands.UNINSTALL_API,
-      [],
-      resp => {
-        // app.sshClient.dispose();
-        resolve(resp);
-      },
-      err => {
-        reject(err);
-      }
-    ).catch(e => {
-      reject(e);
-    });
-  });
-}
+// function sendInstallCommand(eon) {
+//   return new Promise((resolve, reject) => {
+//     console.warn('sendInstallCommand', eon);
+//     sendCommand(
+//       eon,
+//       commands.INSTALL_API.replace('%timestamp%', new Date().getTime()),
+//       [],
+//       resp => {
+//         console.warn('stdlog [' + resp.trim() + ']');
+//         // app.sshClient.dispose();
+//         if (resp.trim() == 'Workbench API install complete.') {
+//           resolve(true);
+//         }
+//         // resolve(resp);
+//       },
+//       err => {
+//         console.warn('stderr', err);
+//         // reject(err);
+//       }
+//     ).catch(e => {});
+//   });
+// }
 
 function* installWorkbenchApi() {
   const { eonList } = yield select();
   const { selectedEon, eons } = eonList;
   const eon = eons[selectedEon];
-  console.warn('sendInstallCommand', sendInstallCommand);
+  // console.warn('sendInstallCommand', sendInstallCommand);
   yield put(eonDetailActions.BEGIN_install(eon));
   yield call(getPrivateKey);
   const installed = true;
@@ -204,13 +177,28 @@ function* read(sock, service) {
   const { eonList } = yield select();
   const { selectedEon, eons } = eonList;
   const eon = eons[selectedEon];
-
-  sock.connect(`tcp://${eon.ip}:8005`);
-  const channel = yield call(createEventChannel, sock);
+  console.warn("connecting to service...",service);
+  const addr = `tcp://${eon.ip}:${service[0]}`;
+  sock.connect(addr);
+  const channel = yield call(createEventChannel, sock, addr);
   // scanner.run();
-  while (true) {
-    let action = yield take(channel);
-    yield put(action);
+  try {
+    while (true) {
+      const { disconnectAction, socketAction } = yield race({
+        disconnectAction: take(types.DISCONNECT),
+        socketAction: take(channel)
+      });
+      if (disconnectAction) {
+        console.warn("DISCONNECT CHANNEL");
+        channel.close();
+      } else {
+        yield put(socketAction);
+      }
+      let action = yield take(channel);
+      yield put(action);
+    }
+  } finally {
+
   }
 }
 
@@ -220,21 +208,7 @@ function* connectZmq(service) {
   
 }
 
-function* handleDisconnect(action) {
-  const { eonList } = yield select();
-  const { selectedEon, eons } = eonList;
-  const eon = eons[selectedEon];
-
-  try {
-    yield call(sendDisconnectCommand, eon);
-  } catch (e) {
-    console.warn('Failed to disconnect properly...');
-    // yield put(eonListActions.ADD_ERROR(e.message));
-    // yield put(eonDetailActions.FAIL_install(e));
-  }
-}
-
-export function* createEventChannel(ws) {
+export function* createEventChannel(ws,addr) {
   return eventChannel(emit => {
     const onOpen = () => {
       console.warn('Connecting...');
@@ -242,7 +216,7 @@ export function* createEventChannel(ws) {
     };
     const onClose = () => {
       console.warn('Disconnected!');
-      // emit({ type: types.DISCONNECTED });
+      emit({ type: types.DISCONNECTED });
     };
     const onError = () => {
       console.warn('Error in WebSocket');
@@ -251,7 +225,7 @@ export function* createEventChannel(ws) {
     const onMessageReceived = msg => {
       const event_message = new EventMessage(msg);
       // console.warn(`[zmq] message:`, JSON.stringify(event_message.toJSON()));
-      emit({ type: types.MESSAGE, payload: JSON.parse(JSON.stringify(event_message.toJSON())) });
+      emit({ type: types.MESSAGE_RECEIVED, payload: JSON.parse(JSON.stringify(event_message.toJSON())) });
     };
     console.warn('[zmq] connected', ws);
     ws.on('exit',onClose);
@@ -261,22 +235,23 @@ export function* createEventChannel(ws) {
     // ws.addEventListener('error', onError);
     // ws.addEventListener('message', onMessageReceived);
     return () => {
+      console.warn("createEventChannel return()");
       // This is a handler to uncreateScannerEventChannel.
-      ws.disconnect();
+      ws.disconnect(addr);
     };
   });
 }
-
 function* connectWebSockets(service) {
   const { eonList } = yield select();
   const { selectedEon, eons } = eonList;
   const eon = eons[selectedEon];
-  const serviceItem = serviceList[service]
+  const serviceItem = serviceList[inflection.camelize(service,true)]
   yield put({ type: types.CONNECT });
   const sock = zmq.socket('sub');
 
   try {
     yield fork(read, sock, serviceItem);
+    
   } catch (e) {
     // console.warn("Errors in check #1");
   }
@@ -308,7 +283,9 @@ function* routeWatcher(action) {
     // }
   }
 }
-
+function* handleMessage(action) {
+  yield put({ type: types.MESSAGE, payload: action.payload });
+}
 function* addEonListError() {
   yield put(
     eonListActions.ADD_ERROR(
@@ -323,12 +300,12 @@ export function* eonSagas() {
   yield all([
     takeLatest('@@router/LOCATION_CHANGE', routeWatcher),
     takeEvery(types.CONNECT_FAILED, addEonListError),
-    // takeEvery(types.INSTALL_SUCCESS,fetchState),
-    takeEvery(types.INSTALL_SUCCESS,connectWebSockets),
-    takeEvery(types.DISCONNECT, handleDisconnect),
+    // takeEvery(types.INSTALL_SUCCESS,connectWebSockets),
+    // takeEvery(types.DISCONNECT, handleDisconnect),
     // takeLatest(types.AUTH_REQUEST_FAIL,fetchAuth),
     // takeLatest(types.EON_STATE_FAIL,fetchState),
     // takeLatest(types.GET_FINGERPRINT_FAIL,fetchFingerprint),
-    takeEvery(types.CHANGE_TAB, handleTabChange)
+    takeEvery(types.CHANGE_TAB, handleTabChange),
+    throttle(250,types.MESSAGE_RECEIVED,handleMessage)
   ]);
 }

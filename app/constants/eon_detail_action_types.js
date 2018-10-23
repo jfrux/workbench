@@ -4,6 +4,7 @@ export const INSTALL_SUCCESS = 'eon/INSTALL_SUCCESS';
 export const CONNECT = 'eon/CONNECT';
 export const CONNECT_FAILED = 'eon/CONNECT_FAILED';
 export const CONNECTED = 'eon/CONNECTED';
+export const MESSAGE_RECEIVED = 'eon/MESSAGE_RECEIVED';
 export const MESSAGE = 'eon/MESSAGE';
 export const DISCONNECT = 'eon/DISCONNECT';
 export const DISCONNECTED = 'eon/DISCONNECTED';
