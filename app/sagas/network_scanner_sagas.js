@@ -60,6 +60,7 @@ export function* createScannerEventChannel(scanner) {
       // i = i+1;
       // data.mac = "00:00:00:00:" + i;
       // {ip: "10.168.4.125", port: 8022, status: "open"}
+      // console.log("Scan Result:",data)
       emit(networkScannerActions.RESULT_scanNetwork(data));
     };
     

@@ -9,6 +9,10 @@ import {
   takeEvery,
   select
 } from 'redux-saga/effects';
+import zmq from 'zeromq';
+import serviceList from '../constants/service_list.yaml';
+const EventMessage = require('../messages/event');
+
 import { delay, eventChannel } from 'redux-saga';
 import { remote } from 'electron';
 const { app } = remote;
@@ -18,23 +22,21 @@ import path from 'path';
 import fs from 'fs';
 import * as routes from '../constants/routes.json';
 import SSH from 'node-ssh';
-// import Sockette from 'sockette';
 import ReconnectingWebSocket from 'reconnecting-websocket';
-// import WebSocket from 'ws';
 import * as types from '../constants/eon_detail_action_types';
 import * as eonListTypes from '../constants/eon_list_action_types';
 import * as eonListActions from '../actions/eon_list_actions';
 import * as eonDetailActions from '../actions/eon_detail_actions';
 import * as endpoints from '../constants/comma_endpoints.json';
 import * as commands from '../constants/commands.json';
-
+// console.log(serviceList);
 function* handleTabChange(action) {
   const tab = action.payload;
   switch (tab) {
     case '1':
     // return;
     case '2':
-      //get routes
+      // get routes
       // yield call(fetchApiRequest,'routes');
       break;
     case '3':
@@ -184,12 +186,9 @@ function* installWorkbenchApi() {
   console.warn('sendInstallCommand', sendInstallCommand);
   yield put(eonDetailActions.BEGIN_install(eon));
   yield call(getPrivateKey);
-  // const {installed, timeout} = yield race({
-  //   installed: call(sendInstallCommand,eon),
-  //   timeout: call(delay, 15000)
-  // });
   const installed = true;
   // try {
+
   if (installed) {
     // console.warn("Installed!");
     yield put(eonDetailActions.SUCCESS_install());
@@ -200,13 +199,25 @@ function* installWorkbenchApi() {
   }
 }
 
-function* read(rws) {
-  const channel = yield call(createEventChannel, rws);
+function* read(sock, service) {
+  sock.subscribe('');
+  const { eonList } = yield select();
+  const { selectedEon, eons } = eonList;
+  const eon = eons[selectedEon];
+
+  sock.connect(`tcp://${eon.ip}:8005`);
+  const channel = yield call(createEventChannel, sock);
   // scanner.run();
   while (true) {
     let action = yield take(channel);
     yield put(action);
   }
+}
+
+const service_whitelist = ['thermal','sensorEvents','health','carState','carControl','gpsLocationExternal','ubloxRaw'];
+
+function* connectZmq(service) {
+  
 }
 
 function* handleDisconnect(action) {
@@ -237,42 +248,38 @@ export function* createEventChannel(ws) {
       console.warn('Error in WebSocket');
       // emit({ type: types.DISCONNECT });
     };
-    const onMessageReceived = data => {
-      emit({ type: types.MESSAGE, payload: JSON.parse(data.data) });
+    const onMessageReceived = msg => {
+      const event_message = new EventMessage(msg);
+      // console.warn(`[zmq] message:`, JSON.stringify(event_message.toJSON()));
+      emit({ type: types.MESSAGE, payload: JSON.parse(JSON.stringify(event_message.toJSON())) });
     };
-    ws.addEventListener('open', onOpen);
-    ws.addEventListener('close', onClose);
-    ws.addEventListener('error', onError);
-    ws.addEventListener('message', onMessageReceived);
+    console.warn('[zmq] connected', ws);
+    ws.on('exit',onClose);
+    ws.on('message', onMessageReceived);
+    // ws.addEventListener('open', onOpen);
+    // ws.addEventListener('close', onClose);
+    // ws.addEventListener('error', onError);
+    // ws.addEventListener('message', onMessageReceived);
     return () => {
       // This is a handler to uncreateScannerEventChannel.
-      ws.close();
+      ws.disconnect();
     };
   });
 }
 
-function* connectWebSockets() {
+function* connectWebSockets(service) {
   const { eonList } = yield select();
   const { selectedEon, eons } = eonList;
   const eon = eons[selectedEon];
+  const serviceItem = serviceList[service]
   yield put({ type: types.CONNECT });
-  const rws = new ReconnectingWebSocket(`ws://${eon.ip}:4000`, [], {
-    // WebSocket,
-    // connectionTimeout: 1000,
-    // maxRetries: 10,
-    // debug: false
-  });
+  const sock = zmq.socket('sub');
+
   try {
-    yield fork(read, rws);
+    yield fork(read, sock, serviceItem);
   } catch (e) {
     // console.warn("Errors in check #1");
   }
-  // ws.send('Hello, world!');
-  // ws.json({type: 'ping'});
-  // ws.close(); // graceful shutdown
-
-  // Reconnect 10s later
-  // setTimeout(ws.reconnect, 10e3);
 }
 // TODO: Build a mechanism to remove the need to reinstall each time.
 // Possibly when development slows and is more stable we can add something that doesn't require updates unless something changes in Git.
@@ -317,7 +324,7 @@ export function* eonSagas() {
     takeLatest('@@router/LOCATION_CHANGE', routeWatcher),
     takeEvery(types.CONNECT_FAILED, addEonListError),
     // takeEvery(types.INSTALL_SUCCESS,fetchState),
-    // takeEvery(types.INSTALL_SUCCESS,connectWebSockets),
+    takeEvery(types.INSTALL_SUCCESS,connectWebSockets),
     takeEvery(types.DISCONNECT, handleDisconnect),
     // takeLatest(types.AUTH_REQUEST_FAIL,fetchAuth),
     // takeLatest(types.EON_STATE_FAIL,fetchState),

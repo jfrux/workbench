@@ -12,16 +12,11 @@ import * as fit from 'xterm/lib/addons/fit/fit';
 import * as fullscreen from 'xterm/lib/addons/fullscreen/fullscreen';
 import * as search from 'xterm/lib/addons/search/search';
 import * as winptyCompat from 'xterm/lib/addons/winptyCompat/winptyCompat';
-// import { PORT } from '../../config';
-// import getId from '../helpers/getId';
 
 Terminal.applyAddon(attach);
 Terminal.applyAddon(fit);
-// Terminal.applyAddon(fullscreen);
 Terminal.applyAddon(search);
 Terminal.applyAddon(winptyCompat);
-
-// const HOST = `127.0.0.1:${ PORT }`;
 
 class ReactTerminal extends React.Component {
   constructor(props) {

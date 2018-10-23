@@ -12,31 +12,32 @@ class StateList extends Component {
   render() {
     let { rootKeys, items, rootKeyToComponent } = this.props;
     // rootKeys = rootKeys.sort();
-    let rootBlocks = rootKeys.map((key) => {
-      if (!key) {
-        console.warn("Received an empty key...");
-        return;
-      }
+    
+    // let rootBlocks = rootKeys.map((key) => {
+    //   if (!key) {
+    //     console.warn("Received an empty key...");
+    //     return;
+    //   }
 
-      const rootData = this.props[key];
-      const rootComponentKey = rootKeyToComponent[key];
+    //   const rootData = this.props[key];
+    //   const rootComponentKey = rootKeyToComponent[key];
       
-      if (rootComponentKey) {
-        const StateListGroupTag = this.components[rootComponentKey];
-        return (<StateListGroupTag key={key} rootKey={key} data={rootData} />);
-      } else {
-        console.warn(`No component could be found for rootKey ${key}`)
-        return (<StateListGroup key={key} rootKey={key} data={rootData} />);
-      }
-    });
+    //   if (rootComponentKey) {
+    //     const StateListGroupTag = this.components[rootComponentKey];
+    //     return (<StateListGroupTag key={key} rootKey={key} data={rootData} />);
+    //   } else {
+    //     console.warn(`No component could be found for rootKey ${key}`)
+    //     return (<StateListGroup key={key} rootKey={key} data={rootData} />);
+    //   }
+    // });
     return (<div>{rootBlocks}</div>);
   }
 }
 
 function mapStateToProps(state,ownProps) {
-  const itemsState = getItemsState(state,ownProps);
+  const itemsState = state.eonDetail[ownProps.rootKey];
   return {
-    ...itemsState
+    data: itemsState
   };
 }
 

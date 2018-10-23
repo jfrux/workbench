@@ -78,6 +78,10 @@ export default merge.smart(baseConfig, {
         }
       },
       {
+        test: /\.yaml$/,
+        use: 'js-yaml-loader',
+      },
+      {
         test: /\.global\.css$/,
         use: [
           {

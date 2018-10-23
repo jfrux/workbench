@@ -52,9 +52,7 @@ class EonDetail extends Component {
       currentStateKeys.push('fingerprint');
     }
     const stateGroupKeys = Object.keys(vehicleStateGroups);
-    // if (!tmuxAttached) {
-    //   return <LoadingIndicator className={styles.loading_overlay} />;
-    // }
+ 
     let stateBlocks, stateTabs, statePanes;
     let loadingMessage = "Connecting...";
 
@@ -63,36 +61,37 @@ class EonDetail extends Component {
     } else {
       loadingMessage = "Setting up EON for Workbench...";
     }
+
     if (installing || !stateGroupKeys.length || connecting) {
       return <LoadingOverlay message={loadingMessage} />;
     }
     
-    // stateTabs = stateGroupKeys.map((key) => {
-    //   return (
-    //     <NavItem key={key + "-tab-link"}>
-    //       <NavLink
-    //         className={classnames({
-    //           test: true,
-    //           active: !installing && stateGroupKeys.length && activeTab === key,
-    //           disabled: installing || !stateGroupKeys.length
-    //         })}
-    //         onClick={() => { this.setTab(key); }}
-    //         >
-    //         {key}
-    //       </NavLink>
-    //     </NavItem>
-    //   );
-    // });
-    // statePanes = stateGroupKeys.map((key) => {
-    //   const items = vehicleStateGroups[key];
-    //   return (
-    //     <TabPane key={key + "-tab-pane"} tabId={key}>
-    //       {activeTab === key &&
-    //       <StateList type={key} items={items} />
-    //       }
-    //     </TabPane>
-    //   )
-    // });
+    stateTabs = stateGroupKeys.map((key) => {
+      return (
+        <NavItem key={key + "-tab-link"}>
+          <NavLink
+            className={classnames({
+              test: true,
+              active: !installing && stateGroupKeys.length && activeTab === key,
+              disabled: installing || !stateGroupKeys.length
+            })}
+            onClick={() => { this.setTab(key); }}
+            >
+            {key}
+          </NavLink>
+        </NavItem>
+      );
+    });
+    statePanes = stateGroupKeys.map((key) => {
+      const items = vehicleStateGroups[key];
+      return (
+        <TabPane key={key + "-tab-pane"} tabId={key}>
+          {activeTab === key &&
+          <StateList type={key} items={items} />
+          }
+        </TabPane>
+      );
+    });
     // vidurl example:
     // https://video.comma.ai/hls/0812e2149c1b5609/0ccfd8331dfb6f5280753837cefc9d26_2018-10-06--19-56-04/index.m3u8
     // let drivesList;
@@ -137,16 +136,15 @@ class EonDetail extends Component {
       <Layout title={`${this.props.eon.ip}`} contextActions={contextActions}>
         <Nav tabs className={'tab-list'}>
           <NavItem key={"console-tab-link"}>
-            <NavLink
-              className={classnames({
+            <NavLink className={classnames({
                 test: true,
                 active: !installing && stateGroupKeys.length && activeTab === '0',
                 disabled: installing || !stateGroupKeys.length
               })}
-              onClick={() => { this.setTab('0'); }}
-              >
+              onClick={() => { this.setTab('0'); }}>
               Console
             </NavLink>
+            {stateTabs}
           </NavItem>
         </Nav>
         <TabContent activeTab={activeTab}>
@@ -155,6 +153,7 @@ class EonDetail extends Component {
               <Terminal eonIp={eon.ip} />
             }
           </TabPane>
+          {statePanes}
         </TabContent>
       </Layout>
     );

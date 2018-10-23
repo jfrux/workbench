@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import stateListItemTypes from '../../StateListItem/Types';
 import { dasherize } from 'inflection';
-import { createSelector } from 'reselect'
 import { Row, CardHeader,TabContent, Nav, NavItem, NavLink, TabPane, Col, Card, CardBody, CardText, CardTitle, CardSubtitle, ListGroup, ListGroupItem } from 'reactstrap';
 const propTypes = {
   value: PropTypes.any,
@@ -45,7 +44,7 @@ class StateListGroup extends Component {
       <Card className={this.getClassNames()}>
         <CardBody className={"state-card-body"}>
           <CardHeader className={"state-card-header"}>{rootKey}</CardHeader>
-         
+         {childElems}
         </CardBody>
       </Card>
     );
