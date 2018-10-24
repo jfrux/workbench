@@ -32,14 +32,7 @@ import * as eonDetailActions from '../actions/eon_detail_actions';
 import * as endpoints from '../constants/comma_endpoints.json';
 import * as commands from '../constants/commands.json';
 // console.log(serviceList);
-function* handleTabChange(action) {
-  const tab = action.payload;
-  yield put({ type: types.DISCONNECT });
 
-  if (tab !== 'console') {
-    yield call(connectWebSockets,tab);
-  }
-}
 
 function sendCommand(
   eon,
@@ -172,90 +165,94 @@ function* installWorkbenchApi() {
   }
 }
 
-function* read(sock, service) {
-  sock.subscribe('');
-  const { eonList } = yield select();
-  const { selectedEon, eons } = eonList;
-  const eon = eons[selectedEon];
-  console.warn("connecting to service...",service);
-  const addr = `tcp://${eon.ip}:${service[0]}`;
-  sock.connect(addr);
-  const channel = yield call(createEventChannel, sock, addr);
-  // scanner.run();
-  try {
-    while (true) {
-      const { disconnectAction, socketAction } = yield race({
-        disconnectAction: take(types.DISCONNECT),
-        socketAction: take(channel)
-      });
-      if (disconnectAction) {
-        console.warn("DISCONNECT CHANNEL");
-        channel.close();
-      } else {
-        yield put(socketAction);
-      }
-      let action = yield take(channel);
-      yield put(action);
-    }
-  } finally {
+// function* read(sock, service) {
+//   const { eonList } = yield select();
+//   const { selectedEon, eons } = eonList;
+//   const eon = eons[selectedEon];
+//   console.warn("connecting to service...",service);
+//   const channel = yield call(createEventChannel, sock, addr);
+//   // scanner.run();
+//   try {
+//     while (true) {
+//       const { disconnectAction, socketAction } = yield race({
+//         socketAction: take(channel)
+//       });
+//       if (disconnectAction) {
+//         console.warn("DISCONNECT CHANNEL");
+//         channel.close();
+//       } else {
+//         yield put(socketAction);
+//       }
+//       let action = yield take(channel);
+//       yield put(action);
+//     }
+//   } finally {
 
-  }
-}
+//   }
+// }
 
-const service_whitelist = ['thermal','sensorEvents','health','carState','carControl','gpsLocationExternal','ubloxRaw'];
+// const service_whitelist = ['thermal','sensorEvents','health','carState','carControl','gpsLocationExternal','ubloxRaw'];
 
-function* connectZmq(service) {
+// export function* createEventChannel(ws,addr) {
+//   return eventChannel(emit => {
+//     const onOpen = () => {
+//       console.warn('Connecting...');
+//       emit({ type: types.CONNECTED });
+//     };
+//     const onClose = () => {
+//       console.warn('Disconnected!');
+//       emit({ type: types.DISCONNECTED });
+//     };
+//     const onError = () => {
+//       console.warn('Error in WebSocket');
+//       // emit({ type: types.DISCONNECT });
+//     };
+//     const onMessageReceived = msg => {
+//       const event_message = new EventMessage(msg);
+//       // console.warn(`[zmq] message:`, JSON.stringify(event_message.toJSON()));
+//       // emit({ type: types.MESSAGE_RECEIVED, payload: );
+//     };
+//     console.warn('[zmq] connected', ws);
+//     ws.on('exit',onClose);
+//     ws.on('message', onMessageReceived);
+//     // ws.addEventListener('open', onOpen);
+//     // ws.addEventListener('close', onClose);
+//     // ws.addEventListener('error', onError);
+//     // ws.addEventListener('message', onMessageReceived);
+//     return () => {
+//       console.warn("createEventChannel return()");
+//       // This is a handler to uncreateScannerEventChannel.
+//       ws.disconnect(addr);
+//     };
+//   });
+// }
+// function* connectWebSockets(service) {
+//   const { eonList } = yield select();
+//   const { selectedEon, eons } = eonList;
+//   const eon = eons[selectedEon];
+//   const serviceItem = serviceList[inflection.camelize(service,true)]
+//   yield put({ type: types.CONNECT });
   
-}
 
-export function* createEventChannel(ws,addr) {
-  return eventChannel(emit => {
-    const onOpen = () => {
-      console.warn('Connecting...');
-      emit({ type: types.CONNECTED });
-    };
-    const onClose = () => {
-      console.warn('Disconnected!');
-      emit({ type: types.DISCONNECTED });
-    };
-    const onError = () => {
-      console.warn('Error in WebSocket');
-      // emit({ type: types.DISCONNECT });
-    };
-    const onMessageReceived = msg => {
-      const event_message = new EventMessage(msg);
-      // console.warn(`[zmq] message:`, JSON.stringify(event_message.toJSON()));
-      emit({ type: types.MESSAGE_RECEIVED, payload: JSON.parse(JSON.stringify(event_message.toJSON())) });
-    };
-    console.warn('[zmq] connected', ws);
-    ws.on('exit',onClose);
-    ws.on('message', onMessageReceived);
-    // ws.addEventListener('open', onOpen);
-    // ws.addEventListener('close', onClose);
-    // ws.addEventListener('error', onError);
-    // ws.addEventListener('message', onMessageReceived);
-    return () => {
-      console.warn("createEventChannel return()");
-      // This is a handler to uncreateScannerEventChannel.
-      ws.disconnect(addr);
-    };
-  });
-}
-function* connectWebSockets(service) {
-  const { eonList } = yield select();
-  const { selectedEon, eons } = eonList;
-  const eon = eons[selectedEon];
-  const serviceItem = serviceList[inflection.camelize(service,true)]
-  yield put({ type: types.CONNECT });
-  const sock = zmq.socket('sub');
-
-  try {
-    yield fork(read, sock, serviceItem);
+//   try {
+//     yield fork(read, sock, serviceItem);
     
-  } catch (e) {
-    // console.warn("Errors in check #1");
+//   } catch (e) {
+//     // console.warn("Errors in check #1");
+//   }
+// }
+// function* disconnectChannel() {
+//   yield put({type: types.DISCONNECT});
+// }
+function* handleTabChange(action) {
+  const tab = action.payload;
+  yield call(disconnectChannel);
+
+  if (tab !== 'console') {
+    yield call(connectWebSockets,tab);
   }
 }
+
 // TODO: Build a mechanism to remove the need to reinstall each time.
 // Possibly when development slows and is more stable we can add something that doesn't require updates unless something changes in Git.
 function* routeWatcher(action) {
@@ -297,15 +294,11 @@ function* addEonListError() {
 // EXPORT ROOT SAGA
 export function* eonSagas() {
   // console.warn("types:",types);
+  
   yield all([
     takeLatest('@@router/LOCATION_CHANGE', routeWatcher),
     takeEvery(types.CONNECT_FAILED, addEonListError),
-    // takeEvery(types.INSTALL_SUCCESS,connectWebSockets),
-    // takeEvery(types.DISCONNECT, handleDisconnect),
-    // takeLatest(types.AUTH_REQUEST_FAIL,fetchAuth),
-    // takeLatest(types.EON_STATE_FAIL,fetchState),
-    // takeLatest(types.GET_FINGERPRINT_FAIL,fetchFingerprint),
-    takeEvery(types.CHANGE_TAB, handleTabChange),
-    throttle(250,types.MESSAGE_RECEIVED,handleMessage)
+    // throttle(250,types.MESSAGE_RECEIVED,handleMessage),
+    // takeEvery(types.CHANGE_TAB, handleTabChange)
   ]);
 }

@@ -185,8 +185,20 @@ export default {
   //     ["started", ["thermal","started"], "Base"],
   //     ["startedTs", ["thermal","startedTs"], "Base"]
   //   ], "Base"]
-  ]
-  // "vehicle": [
+  ],
+  "Health": [
+
+  ],
+  "Live100": [
+
+  ],
+  "SensorEvents": [
+
+  ],
+  "GpsNMEA": [
+
+  ],
+  "Can": [
   //   ["Steering", [
   //     ["angle", ["carState","steeringAngle"], "Base"],
   //     ["rate", ["carState","steeringRate"], "Base"],
@@ -241,7 +253,7 @@ export default {
   //     ["speedOverride", ["carControl","cruiseSpeedOverride"], "Base"],
   //     ["accelOverride", ["carControl","cruiseAccelOverride"], "Base"]
   //   ], "Base"]
-  // ],
+  ]
   // "other": [
   //   ["SSH Command Library", [
   //     ["SSH Command", ["eonList","sshCommand"], "Textarea"]

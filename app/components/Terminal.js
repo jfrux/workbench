@@ -75,7 +75,9 @@ class ReactTerminal extends React.Component {
   }
 
   onWindowResize() {
-    this.fitResize();
+    requestAnimationFrame(() => {
+      this.fitResize();
+    });
   }
 
   // intercepting paste event for any necessary processing of
@@ -206,14 +208,14 @@ class ReactTerminal extends React.Component {
         { method: 'POST' }
       );
     });
-    this.term.decreaseFontSize = () => {
-      this.term.setOption('fontSize', --this.fontSize);
-      this.term.fit();
-    };
-    this.term.increaseFontSize = () => {
-      this.term.setOption('fontSize', ++this.fontSize);
-      this.term.fit();
-    };
+    // this.term.decreaseFontSize = () => {
+    //   this.term.setOption('fontSize', --this.fontSize);
+    //   this.term.fit();
+    // };
+    // this.term.increaseFontSize = () => {
+    //   this.term.setOption('fontSize', ++this.fontSize);
+    //   this.term.fit();
+    // };
     this.fitResize();
     this._connectToServer();
 
@@ -280,13 +282,6 @@ class ReactTerminal extends React.Component {
       <div ref={this.onTermWrapperRef} className="term_fit term_wrapper">
       <div
         ref={this.onTermRef}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%'
-        }}
       />
       </div>
     );

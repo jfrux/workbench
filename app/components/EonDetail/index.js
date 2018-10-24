@@ -9,7 +9,6 @@ import vehicleConnectionStatuses from '../../constants/vehicle_connection_status
 import Layout from '../Layout';
 import vehicleStateGroups from '../../constants/vehicle_state_groups';
 import StateList from './StateList';
-import LoadingOverlay from '../LoadingOverlay';
 import { TabContent, Nav, NavItem, NavLink, TabPane, ListGroupItem } from 'reactstrap';
 import Terminal from '../Terminal';
 const propTypes = {
@@ -87,7 +86,7 @@ class EonDetail extends Component {
       return (
         <TabPane key={key + "-tab-pane"} tabId={key}>
           {activeTab === key &&
-          <StateList type={key} items={items} />
+          <StateList type={key} eon={this.props.eon} items={items} />
           }
         </TabPane>
       );
@@ -147,7 +146,7 @@ class EonDetail extends Component {
           </NavItem>
           {stateTabs}
         </Nav>
-        <TabContent activeTab={activeTab}>
+        <TabContent className={'tab-content'} activeTab={activeTab}>
           <TabPane className={"console-tab"} key={"console-tab-pane"} tabId={'console'}>
             {activeTab === 'console' &&
               <Terminal eonIp={eon.ip} />
