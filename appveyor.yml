@@ -5,8 +5,7 @@ platform:
 
 environment:
   matrix:
-    - nodejs_version: 10
-    - nodejs_version: 9
+    - nodejs_version: 8
   GH_TOKEN:
     secure: JQTogieeX60CDa5l+4NGvmE3do+t8iDPrrppjHYfGbx2vlGMvNUtPbJvnsqZ07tF
 
@@ -14,14 +13,24 @@ cache:
   - '%LOCALAPPDATA%/Yarn'
   - node_modules -> package.json
   - app/node_modules -> app/package.json
-  - flow-typed
   - '%USERPROFILE%\.electron'
 
 matrix:
   fast_finish: true
 
 build: off
-
+deploy:
+  release: v$(appveyor_build_version)
+  description: 'Features'
+  provider: GitHub
+  auth_token:
+    secure: 'JQTogieeX60CDa5l+4NGvmE3do+t8iDPrrppjHYfGbx2vlGMvNUtPbJvnsqZ07tF' # your encrypted token from GitHub
+  artifact: /.*\.exe/            # upload all NuGet packages to release assets
+  draft: false
+  prerelease: false
+  on:
+    branch: master                 # release from master branch only
+    appveyor_repo_tag: true
 version: '{build}'
 
 shallow_clone: true

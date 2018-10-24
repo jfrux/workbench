@@ -1,23 +1,5 @@
-// const {EventEmitter} = require('events');
-// const {StringDecoder} = require('string_decoder');
+// const defaultShell = require('default-shell');
 
-const defaultShell = require('default-shell');
-
-// const {getDecoratedEnv} = require('./plugins');
-// const {productName, version} = require('./package');
-// const config = require('./config');
-
-// const createNodePtyError = () =>
-//   new Error(
-//     '`node-pty` failed to load. Typically this means that it was built incorrectly. Please check the `readme.md` to more info.'
-//   );
-
-// let spawn;
-// try {
-//   spawn = require('node-pty').fork;
-// } catch (err) {
-//   throw createNodePtyError();
-// }
 var terminals = {};
 var logs = {};
 
@@ -25,7 +7,7 @@ const PORT = 9788;
 const express = require('express');
 const app = express();
 // console.log(pty);
-const pty = require('node-pty');
+const pty = require('node-pty-prebuilt');
 const argv = require('yargs').argv;
 
 const port = argv.port || PORT;
