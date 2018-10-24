@@ -1,7 +1,6 @@
 {
   "name": "openpilot-workbench",
   "productName": "Workbench",
-  "version": "0.0.27",
   "description": "The Openpilot Workbench is to help people fix problems with EON, Openpilot, etc.",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -176,6 +175,7 @@
     "file-loader": "^1.1.11",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^23.4.2",
+    "js-yaml-loader": "^1.0.1",
     "lint-staged": "^7.3.0",
     "mapbox-gl": "^0.49.0",
     "mini-css-extract-plugin": "^0.4.1",
@@ -197,7 +197,6 @@
     "uglifyjs-webpack-plugin": "1.2.7",
     "url-loader": "^1.0.1",
     "webpack": "^4.16.3",
-    "js-yaml-loader": "^1.0.1",
     "webpack-bundle-analyzer": "^2.13.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.5",
@@ -239,6 +238,7 @@
     "humanize-duration": "^3.15.3",
     "immutability-helper": "^2.8.1",
     "inflection": "^1.12.0",
+    "inquirer": "^6.2.0",
     "ip": "^1.1.5",
     "iprange": "^0.1.0",
     "is-port-reachable": "^2.0.0",
