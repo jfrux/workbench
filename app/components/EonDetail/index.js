@@ -148,9 +148,7 @@ class EonDetail extends Component {
         </Nav>
         <TabContent className={'tab-content'} activeTab={activeTab}>
           <TabPane className={"console-tab"} key={"console-tab-pane"} tabId={'console'}>
-            {activeTab === 'console' &&
-              <Terminal eonIp={eon.ip} />
-            }
+            <Terminal eonIp={eon.ip} />
           </TabPane>
           {statePanes}
         </TabContent>

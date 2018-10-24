@@ -75,9 +75,7 @@ class ReactTerminal extends React.Component {
   }
 
   onWindowResize() {
-    requestAnimationFrame(() => {
-      this.fitResize();
-    });
+    this.fitResize();
   }
 
   // intercepting paste event for any necessary processing of
@@ -191,7 +189,9 @@ class ReactTerminal extends React.Component {
         props.onCursorMove(cursorFrame);
       });
     }
-
+    window.addEventListener('resize',() => {
+      this.term.fit();
+    });
     window.addEventListener('resize', this.onWindowResize, {
       passive: true
     });
@@ -222,7 +222,7 @@ class ReactTerminal extends React.Component {
     // listenToWindowResize(() => {
     //   this.term.fit();
     // });
-    // this.term.fit();
+    this.term.fit();
     // this.term.textarea.onkeydown = e => {
     //   console.log(e.keyCode, e.shiftKey, e.ctrlKey, e.altKey);
     //   // ctrl + shift + metakey + +
