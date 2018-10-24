@@ -12,7 +12,9 @@
   height:100%;
   text-align: center;
 }
-
+.xterm-viewport::-webkit-scrollbar {
+  display: none;
+}
 .tab-list {
   position: relative;
   width: 100%;
