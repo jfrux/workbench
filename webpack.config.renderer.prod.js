@@ -49,6 +49,10 @@ export default merge.smart(baseConfig, {
           }
         ]
       },
+      {
+        test: /\.yaml$/,
+        use: 'js-yaml-loader',
+      },
       // Pipe other styles through css modules and append to style.css
       {
         test: /^((?!\.global).)*\.css$/,
