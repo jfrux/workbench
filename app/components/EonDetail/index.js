@@ -51,7 +51,7 @@ class EonDetail extends Component {
     if (fingerprint) {
       currentStateKeys.push('fingerprint');
     }
-    const stateGroupKeys = Object.keys(serviceList);
+    const stateGroupKeys = Object.keys(serviceList).sort();
     let stateTabs, statePanes;
     // console.warn("stateGroupKeys",stateGroupKeys);
     

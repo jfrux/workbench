@@ -244,7 +244,7 @@ liveLocationKalman:
 uiNavigationEvent:
   key: "UiNavigationEvent"
   port: 8055
-  label: "Ui Navigation Event"
+  label: "UI Navigation Event"
   description: ""
 orbOdometry:
   key: "OrbOdometry"
@@ -264,7 +264,7 @@ orbKeyFrame:
 uiLayoutState:
   key: "UiLayoutState"
   port: 8060
-  label: "Ui Layout State"
+  label: "UI Layout State"
   description: ""
 frontEncodeIdx:
   key: "FrontEncodeIdx"

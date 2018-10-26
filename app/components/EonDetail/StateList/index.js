@@ -19,12 +19,16 @@ class StateList extends Component {
   constructor(props) {
     super(props);
     this.sock = zmq.socket('sub');
-    this.state = {};
+    this.state = {
+      messageCount: 0,
+      data: null,
+      waiting: true
+    };
   }
   onMessageReceived = (event_message) => {
     const msg = new EventMessage(event_message);
     const jsonData = JSON.parse(JSON.stringify(msg.toJSON()))[this.props.group.key];
-    console.warn(`jsonData`,jsonData);
+    // console.warn(`jsonData`,jsonData);
 
     this.setState({
       waiting:false,
@@ -41,10 +45,10 @@ class StateList extends Component {
     // this.sock.on('exit',onClose);
     console.warn(`Connecting to ${this.addr}`)
     this.sock.on('message', this.onMessageReceived);
-    this.setState({
-      waiting: true,
-      messageCount: 0
-    });
+    // this.setState({
+    //   waiting: true,
+    //   messageCount: 0
+    // });
     this.sock.connect(this.addr);
   }
   componentWillUnmount() {
@@ -59,7 +63,10 @@ class StateList extends Component {
     }
 
     if (!waiting && data) {
-      return (<div><JSONPretty id="json-pretty" json={data}></JSONPretty></div>);
+      return (<div>
+        <div>Messages received: {this.state.messageCount}</div>
+        <JSONPretty id="json-pretty" json={data}></JSONPretty>
+      </div>);
     } else {
       return (<div></div>);
     }
