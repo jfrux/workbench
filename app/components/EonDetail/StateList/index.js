@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import JSONPretty from 'react-json-pretty';
 import stateListGroupTypes from './StateListGroup/Types';
-import { getItemsState } from '../../../selectors/state_list_selectors';
 import LoadingOverlay from '../../LoadingOverlay';
 import zmq from 'zeromq';
+import { Button, ButtonGroup, ButtonToolbar } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+const JsonTable = require('ts-react-json-table');
 const EventMessage = require('../../../messages/event');
 
 const propTypes = {
@@ -21,6 +23,7 @@ class StateList extends Component {
     this.sock = zmq.socket('sub');
     this.state = {
       messageCount: 0,
+      messages: [],
       data: null,
       waiting: true,
       sampling: false
@@ -47,6 +50,16 @@ class StateList extends Component {
     }
     this.setState(newState);
   }
+  clearSampling = () => {
+    this.setState({
+      messages: []
+    })
+  }
+  toggleSampling = () => {
+    this.setState({
+      sampling: !this.state.sampling
+    })
+  }
   componentDidMount(props) {
     const { type, eon, group } = this.props;
     // const service = serviceList[inflection.camelize(type,true)];
@@ -66,17 +79,37 @@ class StateList extends Component {
     this.sock.disconnect(this.addr);
   }
   render() {
-    const { waiting, data } = this.state;
+    const { waiting, data, messages, sampling } = this.state;
     let loadingMessage = "Waiting for messages...";
-
+    
     if (waiting) {
       return <LoadingOverlay message={loadingMessage} />;
     }
-
+    
     if (!waiting && data) {
       return (<div>
+        <ButtonToolbar>
+          <ButtonGroup className={"mr-2"}>
+            <Button onClick={this.toggleSampling}>
+              {sampling && 
+                <FontAwesomeIcon icon="pause" style={{color: '#FFF' }} />
+              }
+              {!sampling && 
+                <FontAwesomeIcon icon="circle" style={{color: 'RED' }} />
+              }
+            </Button>
+          </ButtonGroup>
+          <ButtonGroup className={"mr-2"}>
+            <Button onClick={this.clearSampling}  disabled={!messages.length}>
+              <FontAwesomeIcon icon="undo" />
+            </Button>
+          </ButtonGroup>
+          <ButtonGroup className={"mr-2"}>
+          </ButtonGroup>
+        </ButtonToolbar>
         <div>Messages received: {this.state.messageCount}</div>
-        <JSONPretty id="json-pretty" json={data}></JSONPretty>
+        <JsonTable className={"table table-sm"} rows={ messages } />
+        <JSONPretty json={data} />
       </div>);
     } else {
       return (<div></div>);

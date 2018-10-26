@@ -286,6 +286,7 @@
     "stream-selector": "^0.4.0",
     "tmp": "^0.0.33",
     "toml": "^2.3.3",
+    "ts-react-json-table": "^0.1.1",
     "ws": "^6.1.0",
     "xterm": "^3.8.0",
     "yaml-loader": "^0.5.0"
