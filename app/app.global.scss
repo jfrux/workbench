@@ -14,6 +14,7 @@ $eons-list-top-height: 30px;
 $eons-list-top: $top-bar-height+$eons-list-top-height;
 $right-content-width: calc(100% - #{$left-bar-width});
 
+@import "styles/eon";
 @import "styles/eon-list";
 @import "styles/left-bar";
 

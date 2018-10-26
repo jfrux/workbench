@@ -3,8 +3,11 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Comma from "../../images/comma.svg";
 const { shell } = require('electron');
+import classnames from 'classnames';
+import Header from './Header';
 import * as networkScannerActions from '../../actions/network_scanner_actions';
 import PropTypes from 'prop-types';
+const isMac = /Mac/.test(navigator.userAgent);
 import {
   NavItem,
   UncontrolledTooltip,
@@ -36,10 +39,15 @@ class Layout extends React.PureComponent {
   render() {
     const { backBtn, scanning, title, hideLogo, selectedEon, contextActions } = this.props;
     return (
-      <div className={'app-wrapper'}>
+      <div className={classnames({
+        'app-wrapper': true,
+        'is-mac': isMac
+      })}>
+        {isMac &&
         <div className={'top-bar'}>
           <span className={'title'}>{title}</span>
         </div>
+        }
 
         <div className={'left-bar'}>
           <Nav style={{marginTop:'36px'}}>

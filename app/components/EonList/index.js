@@ -123,7 +123,7 @@ class EonList extends Component {
       </NavItem>
     ];
     return (
-      <Layout title="Workbench" contextActions={contextActions}>
+      <Layout title="" contextActions={contextActions}>
         <div className={"eon-list-top"}>
           <Collapse isOpen={!scanning}>
             <div className={"add_form_area"}>

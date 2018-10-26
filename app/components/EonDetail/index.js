@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import classnames from 'classnames';
 import { Redirect } from 'react-router';
 import routes from '../../constants/routes.json';
-import styles from './Styles.scss';
 import PropTypes from 'prop-types';
 import vehicleConnectionStatuses from '../../constants/vehicle_connection_statuses';
 import Layout from '../Layout';
@@ -85,7 +84,7 @@ class EonDetail extends Component {
     });
 
     const contextActions = [
-      <NavItem key={1} className={styles.nav_item}>
+      <NavItem key={1} className={"nav_item"}>
         <NavLink tag={Link} to={routes.EON_LIST} className={"nav_link"}><i className="fas fa-chevron-left"></i></NavLink>
       </NavItem>
     ];
