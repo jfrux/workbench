@@ -74,6 +74,11 @@ export default function eonListReducer(state = initialState, action) {
         addingEonError: action.payload.error,
         eonToAdd: null
       };
+    case types.CLEAR_UNRESOLVED_EONS:
+      return {
+        ...state,
+        eons: action.payload
+      };
     case types.SELECT_EON:
       // const eon = state.scanResults[action.payload.index];
       // console.warn("REDUCER SELECT_EON:",eon);

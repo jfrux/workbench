@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Logo from "../../images/logo.svg";
 import Comma from "../../images/comma.svg";
-import styles from './Styles.scss';
+const { shell } = require('electron');
 import * as networkScannerActions from '../../actions/network_scanner_actions';
 import PropTypes from 'prop-types';
 import {
   NavItem,
+  UncontrolledTooltip,
   NavLink,
   Nav } from 'reactstrap';
 
@@ -47,10 +47,17 @@ class Layout extends React.PureComponent {
           </Nav>
           <Nav className={'bottom-nav'}>
             <NavItem className={'nav-item'}>
-              <NavLink className={"nav-link"} onClick={() => this.handleOpenUrl("https://comma.ai/")}><Comma style={{height: 18, width: 18 }} /></NavLink>
+              <NavLink onClick={() => this.handleOpenUrl("https://comma.ai/")} id={'Tooltip-Comma'}><Comma style={{height: 18, width: 18 }} /></NavLink>
+
+              <UncontrolledTooltip placement={'right'} target={'Tooltip-Comma'}>
+                Comma.ai
+              </UncontrolledTooltip>
             </NavItem>
             <NavItem className={'nav-item'}>
-              <NavLink className={"nav-link"} onClick={() => this.handleOpenUrl("https://github.com/openpilot-community/workbench")}><i className="fab fa-github"></i></NavLink>
+              <NavLink onClick={() => this.handleOpenUrl("https://github.com/openpilot-community/workbench")} id={'Tooltip-Workbench'}><i className="fab fa-github"></i></NavLink>
+              <UncontrolledTooltip placement={'right'} target={'Tooltip-Workbench'}>
+                Workbench GitHub
+              </UncontrolledTooltip>
             </NavItem>
           </Nav>
         </div>

@@ -9,6 +9,11 @@ export function BEGIN_scanNetwork() {
   };
 }
 
+export function PARTIALCOMPLETE_scanNetwork() {
+  return {
+    type: types.SCAN_NETWORK_PARTIAL_COMPLETE
+  };
+}
 export function RESULT_scanNetwork(result) {
   let randomId = revisedRandId();
   let newEon = {}

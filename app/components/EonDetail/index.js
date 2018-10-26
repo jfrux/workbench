@@ -62,6 +62,7 @@ class EonDetail extends Component {
           <NavLink
             className={classnames({
               test: true,
+              "no-select": true,
               active: !installing && stateGroupKeys.length && activeTab === key,
               disabled: installing || !stateGroupKeys.length
             })}
@@ -95,6 +96,7 @@ class EonDetail extends Component {
           <NavItem key={"console-tab-link"}>
             <NavLink className={classnames({
                 test: true,
+                "no-select": true,
                 active: !installing && stateGroupKeys.length && activeTab === 'console',
                 disabled: installing || !stateGroupKeys.length
               })}

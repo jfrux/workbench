@@ -123,7 +123,9 @@ app.on('ready', async () => {
 
   mainWindow = new BrowserWindow({
     // show: false,
-    titleBarStyle: 'hiddenInset',
+    frame: (process.platform !== 'darwin') ? false : true,
+    titleBarStyle: (process.platform !== 'darwin') ? null : "hiddenInset",
+    // titleBarStyle: 'hiddenIn set',
     backgroundColor: "#000000",
     // width: 540,
     // height: 640,

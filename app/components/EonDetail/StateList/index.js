@@ -22,19 +22,30 @@ class StateList extends Component {
     this.state = {
       messageCount: 0,
       data: null,
-      waiting: true
+      waiting: true,
+      sampling: false
     };
   }
   onMessageReceived = (event_message) => {
     const msg = new EventMessage(event_message);
     const jsonData = JSON.parse(JSON.stringify(msg.toJSON()))[this.props.group.key];
     // console.warn(`jsonData`,jsonData);
+    const state = this.state;
 
-    this.setState({
+    let newState = {
+      ...state,
       waiting:false,
       data: jsonData,
       messageCount: this.state.messageCount+1
-    });
+    };
+    if (this.state.sampling) {
+      newState.messages.push(jsonData);
+      newState = {
+        ...newState,
+        messages: newState.messages
+      }
+    }
+    this.setState(newState);
   }
   componentDidMount(props) {
     const { type, eon, group } = this.props;

@@ -1,0 +1,126 @@
+
+.results_details {
+  display: block;
+  margin-left:70px;
+  text-align:left;
+  padding-left:10px;
+}
+.new_scan_button {
+  span {
+    text-align:center;
+    width:100%;
+    display:block;
+    margin:0;
+    padding:0;
+  }
+}
+
+.results_button_selected {
+  position:absolute;
+  right:15px;
+  top:50%;
+  transform: translateY(-50%);
+  color:#FFF!important;
+}
+.results {
+  width:100%;
+  margin-top:10px;
+}
+
+.results_button {
+  display:block;
+  min-height:68px;
+  border-radius:0!important;
+  background-color:rgba(#FFF,0.05)!important;
+  &:hover {
+    background-color:rgba(#FFF,0.1)!important;
+  }
+
+  .fa {
+    color:#FFF!important;
+  }
+}
+
+.results_button_mac {
+  display:block;
+  color:#EEE;
+  font-weight:400;
+  font-size:12px;
+}
+
+.results_button_ip {
+  display:block;
+  color:#F7F7F7!important;
+}
+.eon-list-top {
+  position:fixed;
+  top: $eons-list-top-top;
+  left: $left-bar-width;
+  min-height: $eons-list-top-height;
+  width: $right-content-width;
+  z-index:100;
+  border-bottom:1px solid rgba(#000,0.1);
+}
+.eons-list {
+  position:fixed;
+  top:$eons-list-top;
+  width:$right-content-width;
+  left: $left-bar-width;
+  height: calc(100% - #{$eons-list-top});
+  overflow-x: hidden;
+  overflow-y: auto;
+  --webkit-overflow-behavior: contain;
+  padding-bottom:30px;
+  .list-group-item {
+
+    .eon_icon {
+      width:70px;
+      display:block;
+      position:absolute;
+      left:15px;
+      top:50%;
+      opacity: 1;
+      transform:translateY(-50%);
+      padding-right:15px;
+      border-right:1px solid rgba(#000,0.5);
+      svg {
+        opacity:0.25;
+      }
+      svg.fa-check,svg.fa-times-octagon {
+        position:absolute;
+        top:50%;
+        left:50%;
+
+        opacity:1;
+        transform:translate(-100%,-50%);
+        z-index:55;
+      }
+      svg.fa-check {
+        color:#28a745;
+      }
+      svg.fa-times-octagon {
+        color:#dc3545;
+      }
+    }
+    &:after {
+      content:"";
+      bottom:0;
+      left:0;
+      right:0;
+      position:absolute;
+      height:1px;
+      width:100%;
+      background-color:rgba(#000,0.1);
+    }
+    &:hover {
+      background-color: var(--blue)!important;
+      .eon_icon {
+        opacity:1;
+        border-right:1px solid rgba(#FFF,0.1);
+      }
+      .results_button_mac {
+        color:#FFF;
+      }
+    }
+  }
+}

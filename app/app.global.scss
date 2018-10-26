@@ -5,9 +5,18 @@
 @import "~bootstrap/dist/css/bootstrap.css";
 @import "~xterm/src/xterm.css";
 @import "~react-json-pretty/src/JSONPretty.monikai.css";
+
 $left-bar-width: 50px;
 $top-bar-height: 36px;
 $child-list-width: 200px;
+$eons-list-top-top: $top-bar-height;
+$eons-list-top-height: 30px;
+$eons-list-top: $top-bar-height+$eons-list-top-height;
+$right-content-width: calc(100% - #{$left-bar-width});
+
+@import "styles/eon-list";
+@import "styles/left-bar";
+
 .container-fluid {
   position: relative;
   width:100%;
@@ -17,6 +26,7 @@ $child-list-width: 200px;
 .xterm-viewport::-webkit-scrollbar {
   display: none;
 }
+
 .tab-list {
   position: relative;
   width: 200px;
@@ -66,7 +76,7 @@ $child-list-width: 200px;
       &.active {
         color:#FFF;
         font-weight:bold;
-        background-color:lighten(#03111C,2);
+        background-color:var(--blue);
         // box-shadow:inset 3px 0 15px rgba(#000,1);
         // &:before, &:after {
         //   display:none;
@@ -86,7 +96,7 @@ $child-list-width: 200px;
   width:100%;
   height:100%;
   > div {
-    padding:0;
+    padding:0 0 0 15px;
     height:100%;
     width:100%;
   }
@@ -117,7 +127,7 @@ $child-list-width: 200px;
 }
 
 .tab-content {
-  height: calc(100% - #{$top-bar-height});
+  height: 100%;
   width: calc(100% - #{$child-list-width + $left-bar-width});
   overflow-y: auto;
   position: fixed;
@@ -243,7 +253,7 @@ $child-list-width: 200px;
 }
 
 .title {
-  line-height:36px;
+  line-height:$top-bar-height;
   color:rgba(#FFF,0.7);
   font-size:15px;
 }
@@ -496,6 +506,9 @@ body {
     display:block;
     display:flex;
     flex:0 0 100%;
+    &:after {
+
+    }
     .thumbnail {
       flex: 0 0 25%;
       vertical-align:middle;
@@ -825,3 +838,146 @@ body {
   // border-color: #e9ecef #e9ecef #dee2e6;
   border:0;
 }
+.add_form_area {
+  // background-color: rgba(255, 255, 255, 0.05) !important;
+  color: #FFF;
+}
+
+.list_group_header {
+  font-size:11px;
+  text-transform:uppercase;
+  margin-top:10px;
+  line-height:20px;
+  display:block;
+  color:rgba(#FFF,0.5);
+}
+.react_ip_input {
+  display: inline-block;
+  border: 1px solid #c2c3c9;
+  border-radius: 4px;
+  padding: 5px 8px;
+}
+.form_help_text {
+  color:rgba(#FFF,0.2);
+  margin-top:5px;
+  font-size:12px;
+  text-align:center;
+  flex:0 0 100%;
+  margin-bottom:10px;
+  border-top:1px solid rgba(#000,0.1);
+  padding-top:10px;
+}
+
+.divider {
+  text-align:center;
+  padding:10px;
+  color:#555;
+}
+
+.form {
+}
+
+
+.error_message,.scanning_message {
+  padding:0!important;
+  border-radius:0!important;
+}
+// .error_message_body,.scanning_message_body {
+//   padding:5px 5px!important;
+// }
+
+.ssh_connection_title {
+  text-align:center;
+  display:block;
+  font-size:14px;
+}
+
+.ssh_connection_subtext {
+  text-align:center;
+  display:block;
+  font-size:12px;
+}
+
+.progress {
+  display: -ms-flexbox;
+  display: flex;
+  height: 1rem;
+  overflow: hidden;
+  font-size: .75rem;
+  background-color: rgba(#FFF,0.2);
+  border-radius: .25rem;
+}
+.scan_button {
+  position:absolute;
+  background-color:#000!important;
+  top: 140px;
+  right:16px;
+  border:0!important;
+  color:rgba(#FFF,0.3)!important;
+  &:hover {
+    color:rgba(#FFF,0.8)!important;
+
+  }
+}
+.progress_overlay {
+  margin-top:25px;
+  
+}
+.loading_overlay {
+  position:relative;
+  // top:50%;
+  // left:50%;
+  height:85px;
+  width:85px;
+  margin:25px auto 0 auto;
+  // transform:translate(-50%,-50%);
+  // margin-top:100px;
+  /* width:100%;
+  height:100%; */
+  -webkit-app-region: drag;
+}
+.loader_wrap {
+  position:absolute;
+  width:100%;
+  background-color:rgba(#000,0.5);
+  top:0;
+  left:0;
+  height:100%;
+  z-index:5;
+  padding:200px 50px;
+}
+.scanned_no_results {
+  
+}
+.manual_error {
+  background-color:transparent!important;
+}
+
+.ssh_message {
+  background-color:#dc3545;
+  color:#FFF;
+  padding:5px;
+}
+
+.eon_icon svg {
+  object-fit: cover;
+  height:100%!important;
+}
+
+
+.title {
+  font-weight:400;
+  text-align:center;
+}
+.subtext {
+  font-weight:200;
+  text-align:center;
+}
+
+.subsubtext {
+  font-weight:200;
+  text-align:center;
+  font-weight:200;
+  color:#555;
+}
+

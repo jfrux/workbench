@@ -1,6 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import styles from './Styles.scss';
 import Eon from "../../images/device-icons/eon.svg";
 import PropTypes from 'prop-types';
 import routes from '../../constants/routes.json';
@@ -9,7 +8,7 @@ import classnames from 'classnames';
 import NoConnection from './NoConnection';
 import ProgressBar from './ProgressBar';
 import LoadingIndicator from '../LoadingIndicator';
-import { Container, ListGroup, Collapse, Card, CardBody, Nav, NavItem, NavLink, ListGroupItem, Form, Button, FormGroup, Label, FormFeedback, FormText, InputGroup, InputGroupAddon, InputGroupText, Input} from 'reactstrap';
+import { Container, ListGroup, UncontrolledTooltip, Collapse, Card, CardBody, Nav, NavItem, NavLink, ListGroupItem, Form, Button, FormGroup, Label, FormFeedback, FormText, InputGroup, InputGroupAddon, InputGroupText, Input} from 'reactstrap';
 import statusMessages from '../../constants/scan_status_messages.json';
 import sshConnectionStatusMessages from '../../constants/ssh_connection_status.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -98,8 +97,8 @@ class EonList extends Component {
       progress
     } = this.props;
     const { manualError } = this.state;
-    const scanResultsList = Object.keys(scanResults);
-    const eonList = Object.keys(eons);
+    const scanResultsList = Object.keys(scanResults)
+    const eonList = Object.keys(eons)
     // console.log("scanResults:",scanResults);
     // console.log("scanResultsList:",scanResultsList);
     // console.log("eons:",eons);
@@ -112,111 +111,84 @@ class EonList extends Component {
       return <NoConnection />;
     }
     const contextActions = [
-      <NavItem key={1} className={styles.nav_item}>
-        <NavLink className={classnames({ nav_link: true, disabled: scanning })} onClick={this.handleScanNetwork}>
+      <NavItem key={1} className={"nav_item"}>
+        <NavLink className={classnames({ nav_link: true, disabled: scanning })} onClick={this.handleScanNetwork} id={"Tooltip-Refresh"}>
           <FontAwesomeIcon icon="sync" className={classnames({
-            spin: scanning
+            "fa-spin": scanning
           })} />
         </NavLink>
+        <UncontrolledTooltip placement={'right'} target={"Tooltip-Refresh"}>
+          Scan for EON
+        </UncontrolledTooltip>
       </NavItem>
     ];
     return (
       <Layout title="Workbench" contextActions={contextActions}>
-        <Collapse isOpen={!scanning}>
-          <div className={styles.add_form_area}>
-            <Form inline onSubmit={this.handleSubmit} className={"p-0 m-0"}>
-              <FormGroup className={"col col-8 p-0 h-100"}>
-                <Input placeholder="___.___.___.___" className={"add_field d-block w-100"} value={this.state.value} onChange={this.handleChange} />
-              </FormGroup>
-              <FormGroup className={"col col-2 p-0 h-100"}>
-                <Button className={"add_ip_button"} type="submit"><i className="fa fa-plus"></i></Button>
-              </FormGroup>
-              <FormGroup className={"col col-2 p-0 h-100"}>
-                <Button className={"refresh_button"} type="button" onClick={this.handleScanNetwork}><i className="fa fa-sync"></i> Scan</Button>
-              </FormGroup>
-            </Form>
-          </div>
-        </Collapse>
-
-        <Collapse className={"message"} isOpen={scanning}>
-          <Card body inverse color="primary" className={"scanning-message"}>
-            <CardBody className={"scanning-message-body"}>
-              Scanning for EON...
-              {foundCount > 0 &&
-                <div>Found {foundCount} EON on the network...</div>
-              }
-            </CardBody>
-          </Card>
-        </Collapse>
-        
-        <Collapse className={"message"} isOpen={error && error.length > 0}>
-          <Card body inverse color="danger" className={styles.error_message}>
-            <CardBody className={styles.error_message_body}>
-              {error}
-            </CardBody>
-          </Card>
-        </Collapse>
-        <div className={styles.found_eons}>
-          {(scanResultsList.length > 0) && 
-            <span>
-            <div className={styles.list_group_header}>
-              Found {scanResults.length} New EON(s)
+        <div className={"eon-list-top"}>
+          <Collapse isOpen={!scanning}>
+            <div className={"add_form_area"}>
+              <Form inline onSubmit={this.handleSubmit} className={"p-0 m-0"}>
+                <FormGroup className={"col col-8 p-0 h-100"}>
+                  <Input placeholder="___.___.___.___" className={"add_field d-block w-100"} value={this.state.value} onChange={this.handleChange} />
+                </FormGroup>
+                <FormGroup className={"col col-2 p-0 h-100"}>
+                  <Button className={"add_ip_button"} type="submit"><i className="fa fa-plus"></i></Button>
+                </FormGroup>
+                <FormGroup className={"col col-2 p-0 h-100"}>
+                  <Button className={"refresh_button"} type="button" onClick={this.handleScanNetwork}><i className="fa fa-sync"></i> Scan</Button>
+                </FormGroup>
+              </Form>
             </div>
-            <ListGroup>
-              {scanResultsList.map((key,index) => {
-                let scanResult = scanResults[key];
-                // console.log("scanResult:",scanResult);
-                if (scanResult) {
-                  return (<ListGroupItem key={index} onClick={() => { this.addEon(scanResult);}} className={styles.results_button} tag="button">
-                      <span className={styles.eon_icon}><Eon width="100%" height="100%" /></span>
-                      <span className={styles.results_details}>
-                        <span className={styles.results_button_ip}>{scanResult.mac}</span>
-                        <span className={styles.results_button_mac}>{scanResult.ip}</span>
-                      </span>
-                      <span className={styles.results_button_selected}><i className="fa fa-plus"></i></span>
-                    </ListGroupItem>);
-                } else {
-                  return (
-                    <ListGroupItem key={index} onClick={() => { this.handleSelectEon(scanResult.id);}} className={styles.results_button} tag="button">
-                    </ListGroupItem>
-                  )
-                }
-              })}
-            </ListGroup>
-            </span>
-          }
-        </div>
+          </Collapse>
 
-        <div className={styles.existing_eons}>
-          {eons && 
-            <span>
-            {(scanResultsList.length > 0) &&
-              <div className={styles.list_group_header}>
-                Previously Added EONs
-              </div>
-            }
-            <ListGroup>
-              {eonList.map((key,index) => {
-                let eon = eons[key];
-                // console.log("eon:",eon);
-                return (<ListGroupItem key={index} onClick={() => { this.handleSelectEon(eon.id);}} className={styles.results_button} tag="button">
-                    <span className={styles.eon_icon}><Eon width="100%" height="100%" /></span>
-                    <span className={styles.results_details}>
-                      <span className={styles.results_button_ip}>{eon.mac}</span>
-                      <span className={styles.results_button_mac}>{eon.ip}</span>
-                    </span>
-                    <span className={styles.results_button_selected}><i className="fa fa-chevron-right"></i></span>
-                  </ListGroupItem>);
-              })}
-            </ListGroup>
-            </span>
-          }
+          <Collapse className={"message"} isOpen={scanning}>
+            <Card body inverse color="primary" className={"scanning-message"}>
+              <CardBody className={"scanning-message-body"}>
+                Scanning for EON...
+                {foundCount > 0 &&
+                  <div>Found {foundCount} EON on the network...</div>
+                }
+              </CardBody>
+            </Card>
+          </Collapse>
+          
+          <Collapse className={"message"} isOpen={error && error.length > 0}>
+            <Card body inverse color="danger" className={"error_message"}>
+              <CardBody className={"error_message_body"}>
+                {error}
+              </CardBody>
+            </Card>
+          </Collapse>
         </div>
-          
-          
-          {!eonList.length && !scanResultsList.length &&
-            <p style={{padding:'15px'}}><strong>You haven't added any EON</strong><br />Start by scanning your network by clicking the refresh icon to the left.</p>
-          }
+        <div className={"eons-list"}>
+          <ListGroup>
+            {eonList.map((key,index) => {
+              let eon = eons[key];
+              return (<ListGroupItem key={index} onClick={() => { this.handleSelectEon(eon.id);}} className={"results_button"} tag="button">
+                  <span className={"eon_icon"}>
+                    {(eon.addStatus === 1) && 
+                      <FontAwesomeIcon icon={['fas', 'check']}/>
+                    }
+                    {(eon.addStatus === 0) && 
+                      <FontAwesomeIcon icon={['fas', 'times-octagon']}/>
+                    }
+                    <Eon width="100%" height="100%" />
+                  </span>
+                  <span className={"results_details"}>
+                    <span className={"results_button_ip"}>
+                      {eon.mac}
+                      {!eon.mac && "Unresolved Host"}
+                    </span>
+                    <span className={"results_button_mac"}>{eon.ip}</span>
+                  </span>
+                  <span className={"results_button_selected"}><FontAwesomeIcon icon={['fas', 'chevron-right']}/></span>
+                </ListGroupItem>);
+            })}
+          </ListGroup>
+        </div>
+        {!eonList.length && !scanResultsList.length &&
+          <p style={{padding:'15px'}}><strong>You haven't added any EON</strong><br />Start by scanning your network by clicking the refresh icon to the left.</p>
+        }
       </Layout>
     );
   }

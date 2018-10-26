@@ -1,5 +1,5 @@
-import { all, take, call, fork, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
-import { eventChannel } from 'redux-saga';
+import { all, take, call, join, fork,spawn, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
+import { eventChannel, END } from 'redux-saga';
 import IpUtil from "ip";
 import arp from 'node-arp';
 import * as routes from '../constants/routes.json';
@@ -65,7 +65,8 @@ export function* createScannerEventChannel(scanner) {
     };
     
     const scanComplete = () => {
-      emit(networkScannerActions.COMPLETE_scanNetwork());
+      emit(networkScannerActions.PARTIALCOMPLETE_scanNetwork());
+      emit(END);
     };
 
     scanner.on('result', scanResult);
@@ -73,18 +74,44 @@ export function* createScannerEventChannel(scanner) {
     scanner.on('done', scanComplete);
     return () => {
       // This is a handler to uncreateScannerEventChannel.
+      // console.warn("Scan done.");
     };
   });
 }
-
+function* scan(ip) {
+  const scanner = new evilscan({
+    target: ip,
+    port:'8022',
+    status:'TROU'
+  });
+  yield fork(read, scanner);
+}
+function* cleanUnresolvedEons() {
+  const { eonList } = yield select();
+  const { eons } = eonList; 
+  let cleanEonsList = {};
+  Object.keys(eons).filter(key => { 
+    const eon = eons[key];
+    return eon.mac;
+  }).forEach((key) => {
+    cleanEonsList[key] = eons[key];
+  });
+  yield put({type: eonListTypes.CLEAR_UNRESOLVED_EONS, payload: cleanEonsList});
+}
 // function* scan
 function* scanNetwork() {
+  yield call(cleanUnresolvedEons);
   const ip = IpUtil.address();
+
   let ips = yield networkActions.getIpsForScan(ip);
-  ips = ips.map((ip) => { return `${ip}.0`; });
-  const scanner = yield call(getScanner, ips[0] + '/23');
+  // ips = ips.map((ip) => { return `${ip}.0`; });
+  ips = networkActions.getIpList(ips[1]+'.0',ips[2]+'.0');
+  const scans = yield all(ips.map(function * (ip) {
+    yield call(scan, ip);
+  }));
+  // const scanner = yield call(getScanner, ips[0] + '/24');
+  yield put(networkScannerActions.COMPLETE_scanNetwork());
   try {
-    yield fork(read, scanner);
   } catch (e) {
     // console.warn("Errors in check #1");
   }
@@ -117,7 +144,8 @@ function* handleAddEon(action) {
       let topEonKey = existingEons[0];
       newEon[topEonKey] = {
         ...eons[topEonKey],
-        ip: payload.ip
+        ip: payload.ip,
+        addStatus: 1
       };
       yield put(eonListActions.ADD_EON_ALREADY_EXISTS(newEon));
       yield put(networkScannerActions.REMOVE_SCANNED_RESULT(payload.id));
@@ -125,15 +153,25 @@ function* handleAddEon(action) {
       if (!payload.id) {
         newEon[randomId] = {
           ...payload,
-          id: randomId
+          id: randomId,
+          addStatus: 1
         };
       }
       yield put(eonListActions.ADD_EON_SUCCESS(newEon));
       yield put(networkScannerActions.REMOVE_SCANNED_RESULT(payload.id));
     }
   } catch (e) {
+    if (!payload.id) {
+      newEon[randomId] = {
+        ...payload,
+        id: randomId,
+        addStatus: 0
+      };
+    }
+    newEon[newEon.id]
     // console.warn("FAILED TO ADD EON",e);
-    yield put(eonListActions.ADD_EON_FAILED(newEon,e));
+    yield put(eonListActions.ADD_EON_SUCCESS(newEon));
+    // yield put(eonListActions.ADD_EON_FAILED(newEon,e));
   }
 }
 

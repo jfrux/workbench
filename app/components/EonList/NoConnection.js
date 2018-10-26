@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import styles from './Styles.scss';
 import { Redirect } from 'react-router';
 import Eon from "../../images/device-icons/eon.svg";
 import PropTypes from 'prop-types';

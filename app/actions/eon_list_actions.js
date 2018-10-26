@@ -113,7 +113,11 @@ export function checkExistingEONStatuses() {
     });
   };
 }
-
+export function clearUnresolvedEons() {
+  return (dispatch, getState) => {
+    
+  }
+}
 export function retrieveEonFromSettings() {
   return (dispatch, getState) => {
     let scanResults = getState().eonList.scanResults;

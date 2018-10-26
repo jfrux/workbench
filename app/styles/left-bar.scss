@@ -1,0 +1,11 @@
+.left-bar {
+  .nav-item {
+    .nav-link {
+      cursor:pointer;
+      opacity:0.5;
+      &:hover {
+        opacity:1;
+      }
+    }
+  }
+}
