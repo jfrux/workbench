@@ -226,6 +226,7 @@
     "easy-zip2": "^2.0.0",
     "electron-builder": "^20.28.4",
     "electron-builder-squirrel-windows": "^20.28.3",
+    "electron-context-menu": "^0.10.0",
     "electron-debug": "^2.0.0",
     "electron-prompt": "^1.2.0",
     "electron-settings": "^3.2.0",

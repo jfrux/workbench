@@ -1,135 +1,298 @@
-# TODO: these port numbers are hardcoded in c, fix this
-
-# LogRotate: 8001 is a PUSH PULL socket between loggerd and visiond
-
-# all ZMQ pub sub:
-
-# frame syncing packet
-frame: [8002, true]
-# accel, gyro, and compass
-sensorEvents: [8003, true]
-# GPS data, also global timestamp
-gpsNMEA: [8004, true]
-# CPU+MEM+GPU+BAT temps
-thermal: [8005, true]
-# List(CanData), list of can messages
-can: [8006, true]
-live100: [8007, true]
-
-# random events we want to log
-
-#liveEvent: [8008, true]
-model: [8009, true]
-features: [8010, true]
-health: [8011, true]
-live20: [8012, true]
-#liveUI: [8014, true]
-encodeIdx: [8015, true]
-liveTracks: [8016, true]
-sendcan: [8017, true]
-logMessage: [8018, true]
-liveCalibration: [8019, true]
-androidLog: [8020, true]
-carState: [8021, true]
-# 8022 is reserved for sshd
-carControl: [8023, true]
-plan: [8024, true]
-liveLocation: [8025, true]
-gpsLocation: [8026, true]
-ethernetData: [8027, true]
-navUpdate: [8028, true]
-qcomGnss: [8029, true]
-lidarPts: [8030, true]
-procLog: [8031, true]
-gpsLocationExternal: [8032, true]
-ubloxGnss: [8033, true]
-clocks: [8034, true]
-liveMpc: [8035, true]
-liveLongitudinalMpc: [8036, true]
-plusFrame: [8037, false]
-navStatus: [8038, true]
-gpsLocationTrimble: [8039, true]
-trimbleGnss: [8041, true]
-ubloxRaw: [8042, true]
-gpsPlannerPoints: [8043, true]
-gpsPlannerPlan: [8044, true]
-applanixRaw: [8046, true]
-orbLocation: [8047, true]
-trafficEvents: [8048, true]
-liveLocationTiming: [8049, true]
-orbslamCorrection: [8050, true]
-liveLocationCorrected: [8051, true]
-orbObservation: [8052, true]
-applanixLocation: [8053, true]
-liveLocationKalman: [8054, true]
-uiNavigationEvent: [8055, true]
-orbOdometry: [8057, true]
-orbFeatures: [8058, false]
-orbKeyFrame: [8059, true]
-uiLayoutState: [8060, true]
-frontEncodeIdx: [8061, true]
-orbFeaturesSummary: [8062, true]
-driverMonitoring: [8063, true]
-
-testModel: [8040, false]
-testLiveLocation: [8045, false]
-testJoystick: [8056, false]
-
-# 8080 is reserved for slave testing daemon
-# 8762 is reserved for logserver
-
-# manager -- base process to manage starting and stopping of all others
-#   subscribes: health
-#   publishes:  thermal
-
-# **** processes that communicate with the outside world ****
-
-# boardd -- communicates with the car
-#   subscribes: sendcan
-#   publishes:  can, health, ubloxRaw
-
-# sensord -- publishes the IMU and GPS
-#   publishes:  sensorEvents, gpsNMEA
-
-# visiond -- talks to the cameras, runs the model, saves the videos
-#   subscribes: liveCalibration, sensorEvents, live100
-#   publishes:  frame, encodeIdx, model, liveCalibration
-
-# **** stateful data transformers ****
-
-# plannerd -- decides where to drive the car
-#   subscribes: carState, model, live20
-#   publishes:  plan
-
-# controlsd -- actually drives the car
-#   subscribes: can, thermal, plan
-#   publishes:  carState, carControl, sendcan, live100
-
-# radard -- processes the radar data
-#   blocks:     CarParams
-#   subscribes: can, live100, model
-#   publishes:  live20, liveTracks
-
-# **** LOGGING SERVICE ****
-
-# loggerd
-#   subscribes: EVERYTHING
-
-# **** NON VITAL SERVICES ****
-
-# ui
-#   subscribes: live100, live20, liveCalibration, model, (raw frames)
-
-# uploader
-#   communicates through file system with loggerd
-
-# logmessaged -- central logging service, can log to cloud
-#   publishes:  logMessage
-
-# logcatd -- fetches logcat info from android
-#   publishes:  androidLog
-
-# proclogd -- fetches process information
-#   publishes: procLog
-
-# tombstoned -- reports native crashes
+frame:
+  key: "Frame"
+  port: 8002
+  label: "Frame"
+  description: "Frame syncing packet"
+sensorEvents:
+  key: "SensorEvents"
+  port: 8003
+  label: "Sensor Events"
+  description: "Accel, gyro, and compass"
+gpsNMEA:
+  key: "GpsNMEA"
+  port: 8004
+  label: "GPS NMEA"
+  description: "GPS data, also global timestamp"
+gpsLocation:
+  key: "GpsLocation"
+  port: 8026
+  label: "GPS Location"
+  description:
+thermal:
+  key: "Thermal"
+  port: 8005
+  label: "Thermal"
+  description:
+can:
+  key: "Can"
+  port: 8006
+  label: "CAN"
+  description: "List of can messages"
+live100:
+  key: "Live100"
+  port: 8007
+  label: "Live 100"
+  description:
+#liveEvent:
+  # port: 8008
+  # label: "Live Event"
+  # description:
+model:
+  key: "Model"
+  port: 8009
+  label: "Model"
+  description:
+features:
+  key: "Features"
+  port: 8010
+  label: "Features"
+  description:
+health:
+  key: "Health"
+  port: 8011
+  label: "Health"
+  description:
+live20:
+  key: "Live20"
+  port: 8012
+  label: "Live 20"
+  description:
+#liveUI:
+  # port: 8014
+  # label: "Live Ui"
+  # description:
+encodeIdx:
+  key: "EncodeIdx"
+  port: 8015
+  label: "Encode Idx"
+  description:
+liveTracks:
+  key: "LiveTracks"
+  port: 8016
+  label: "Live Tracks"
+  description:
+sendcan:
+  key: "Sendcan"
+  port: 8017
+  label: "Send CAN"
+  description:
+logMessage:
+  key: "LogMessage"
+  port: 8018
+  label: "Log Message"
+  description:
+liveCalibration:
+  key: "LiveCalibration"
+  port: 8019
+  label: "Live Calibration"
+  description: ""
+androidLog:
+  key: "AndroidLog"
+  port: 8020
+  label: "Android Log"
+  description:
+carState:
+  key: "CarState"
+  port: 8021
+  label: "Car State"
+  description:
+carControl:
+  key: "CarControl"
+  port: 8023
+  label: "Car Control"
+  description:
+plan:
+  key: "Plan"
+  port: 8024
+  label: "Plan"
+  description:
+liveLocation:
+  key: "LiveLocation"
+  port: 8025
+  label: "Live Location"
+  description: ""
+ethernetData:
+  key: "EthernetData"
+  port: 8027
+  label: "Ethernet Data"
+  description: " "
+navUpdate:
+  key: "NavUpdate"
+  port: 8028
+  label: "Nav Update"
+  description:
+qcomGnss:
+  key: "QcomGNSS"
+  port: 8029
+  label: "QCOM GNSS"
+  description:
+lidarPts:
+  key: "LidarPts"
+  port: 8030
+  label: "Lidar Pts"
+  description:
+procLog:
+  key: "ProcLog"
+  port: 8031
+  label: "Proc Log"
+  description:
+gpsLocationExternal:
+  key: "GpsLocationExternal"
+  port: 8032
+  label: "GPS Location External"
+  description: ""
+ubloxGnss:
+  key: "UbloxGNSS"
+  port: 8033
+  label: "Ublox GNSS"
+  description:
+clocks:
+  key: "Clocks"
+  port: 8034
+  label: "Clocks"
+  description:
+liveMpc:
+  key: "LiveMpc"
+  port: 8035
+  label: "Live Mpc"
+  description:
+liveLongitudinalMpc:
+  key: "LiveLongitudinalMpc"
+  port: 8036
+  label: "Live Longitudinal Mpc"
+  description: ""
+plusFrame:
+  key: "PlusFrame"
+  port: 8037
+  label: "Plus Frame"
+  description:
+navStatus:
+  key: "NavStatus"
+  port: 8038
+  label: "Nav Status"
+  description:
+gpsLocationTrimble:
+  key: "GpsLocationTrimble"
+  port: 8039
+  label: "GPS Location Trimble"
+  description: ""
+trimbleGnss:
+  key: "TrimbleGNSS"
+  port: 8041
+  label: "Trimble GNSS"
+  description:
+ubloxRaw:
+  key: "UbloxRaw"
+  port: 8042
+  label: "Ublox Raw"
+  description:
+gpsPlannerPoints:
+  key: "GpsPlannerPoints"
+  port: 8043
+  label: "GPS Planner Points"
+  description: ""
+gpsPlannerPlan:
+  key: "GpsPlannerPlan"
+  port: 8044
+  label: "GPS Planner Plan"
+  description: ""
+applanixRaw:
+  key: "ApplanixRaw"
+  port: 8046
+  label: "Applanix Raw"
+  description:
+orbLocation:
+  key: "OrbLocation"
+  port: 8047
+  label: "Orb Location"
+  description:
+trafficEvents:
+  key: "TrafficEvents"
+  port: 8048
+  label: "Traffic Events"
+  description: ""
+liveLocationTiming:
+  key: "LiveLocationTiming"
+  port: 8049
+  label: "Live Location Timing"
+  description: " "
+orbslamCorrection:
+  key: "OrbslamCorrection"
+  port: 8050
+  label: "Orbslam Correction"
+  description: " "
+liveLocationCorrected:
+  key: "LiveLocationCorrected"
+  port: 8051
+  label: "Live Location Corrected"
+  description: " "
+orbObservation:
+  key: "OrbObservation"
+  port: 8052
+  label: "Orb Observation"
+  description: ""
+applanixLocation:
+  key: "ApplanixLocation"
+  port: 8053
+  label: "Applanix Location"
+  description: ""
+liveLocationKalman:
+  key: "LiveLocationKalman"
+  port: 8054
+  label: "Live Location Kalman"
+  description: ""
+uiNavigationEvent:
+  key: "UiNavigationEvent"
+  port: 8055
+  label: "Ui Navigation Event"
+  description: ""
+orbOdometry:
+  key: "OrbOdometry"
+  port: 8057
+  label: "Orb Odometry"
+  description:
+orbFeatures:
+  key: "OrbFeatures"
+  port: 8058
+  label: "Orb Features"
+  description:
+orbKeyFrame:
+  key: "OrbKeyFrame"
+  port: 8059
+  label: "Orb Key Frame"
+  description:
+uiLayoutState:
+  key: "UiLayoutState"
+  port: 8060
+  label: "Ui Layout State"
+  description: ""
+frontEncodeIdx:
+  key: "FrontEncodeIdx"
+  port: 8061
+  label: "Front Encode Idx"
+  description: ""
+orbFeaturesSummary:
+  key: "OrbFeaturesSummary"
+  port: 8062
+  label: "Orb Features Summary"
+  description: ""
+driverMonitoring:
+  key: "DriverMonitoring"
+  port: 8063
+  label: "Driver Monitoring"
+  description: ""
+testModel:
+  key: "TestModel"
+  port: 8040
+  label: "Test Model"
+  description:
+testLiveLocation:
+  key: "TestLiveLocation"
+  port: 8045
+  label: "Test Live Location"
+  description: ""
+testJoystick:
+  key: "TestJoystick"
+  port: 8056
+  label: "Test Joystick"
+  description:

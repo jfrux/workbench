@@ -1,6 +1,13 @@
 // @flow
 import { app, Menu, shell, BrowserWindow } from 'electron';
-
+import electron from 'electron';
+require('electron-context-menu')({
+	prepend: (params, browserWindow) => [{
+		label: 'Rainbow',
+		// Only show it when right-clicking images
+		visible: params.mediaType === 'image'
+	}]
+});
 export default class MenuBuilder {
   mainWindow: BrowserWindow;
 
@@ -9,7 +16,7 @@ export default class MenuBuilder {
   }
 
   buildMenu() {
-    this.setupDevelopmentEnvironment();
+    this.setupContextMenu();
     const template =
       process.platform === 'darwin'
         ? this.buildDarwinTemplate()
@@ -19,22 +26,6 @@ export default class MenuBuilder {
     Menu.setApplicationMenu(menu);
 
     return menu;
-  }
-
-  setupDevelopmentEnvironment() {
-    // this.mainWindow.openDevTools();
-    this.mainWindow.webContents.on('context-menu', (e, props) => {
-      const { x, y } = props;
-
-      Menu.buildFromTemplate([
-        {
-          label: 'Inspect element',
-          click: () => {
-            this.mainWindow.inspectElement(x, y);
-          }
-        }
-      ]).popup(this.mainWindow);
-    });
   }
 
   buildDarwinTemplate() {

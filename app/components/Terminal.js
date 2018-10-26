@@ -147,7 +147,11 @@ class ReactTerminal extends React.Component {
     this.term.open(this.termRef);
     this.term.webLinksInit();
     this.term.winptyCompatInit();
-
+    window.addEventListener('contextmenu', () => {
+      const selection = window.getSelection().toString();
+      const {props: {uid}} = this.getActiveTerm();
+      this.props.onContextMenu(uid, selection);
+    });
     if (props.term) {
       //We need to set options again after reattaching an existing term
       Object.keys(this.termOptions).forEach(option => this.term.setOption(option, this.termOptions[option]));

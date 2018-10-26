@@ -7,10 +7,11 @@ import styles from './Styles.scss';
 import PropTypes from 'prop-types';
 import vehicleConnectionStatuses from '../../constants/vehicle_connection_statuses';
 import Layout from '../Layout';
-import vehicleStateGroups from '../../constants/vehicle_state_groups';
+import serviceList from '../../constants/service_list.yaml';
 import StateList from './StateList';
-import { TabContent, Nav, NavItem, NavLink, TabPane, ListGroupItem } from 'reactstrap';
+import { TabContent, Nav, NavItem, NavLink, TabPane } from 'reactstrap';
 import Terminal from '../Terminal';
+
 const propTypes = {
   connecting: PropTypes.bool,
   connected: PropTypes.bool,
@@ -42,30 +43,20 @@ class EonDetail extends Component {
     this.props.OPEN_DRIVE(driveIndex);
   }
   render() {
-    const { installing, activeTab, messagesReceived, connecting, network, fingerprint, stateRequestFatal, stateRequestAttempts, drives, devices, installError, tmuxError, fingerprintString, currentStateKeys, tmuxStartedAt, thermal, serviceState, eon, selectedEon, healthState, sshConnectionError, sshStatus, sshConnectionStatus, gpsState, vehicleConnection, tmuxAttached } = this.props;
-    const vehicleConnectionInfo = vehicleConnectionStatuses[vehicleConnection];
+    const { installing, activeTab, network, fingerprint, stateRequestFatal, devices, installError, currentStateKeys, eon } = this.props;
+    // const vehicleConnectionInfo = vehicleConnectionStatuses[vehicleConnection];
     if (network === 'disconnected' || eon == null || installError || stateRequestFatal) {
       return (<Redirect to={routes.EON_LIST} />);
     }
     if (fingerprint) {
       currentStateKeys.push('fingerprint');
     }
-    const stateGroupKeys = Object.keys(vehicleStateGroups);
- 
-    let stateBlocks, stateTabs, statePanes;
-    // let loadingMessage = "Connecting...";
-
-    // if (!installing && stateRequestAttempts > 0) {
-    //   loadingMessage = loadingMessage + " (retrying " + stateRequestAttempts + ")";
-    // } else {
-    //   loadingMessage = "Setting up EON for Workbench...";
-    // }
-
-    // if (installing || !stateGroupKeys.length || connecting) {
-    //   return <LoadingOverlay message={loadingMessage} />;
-    // }
+    const stateGroupKeys = Object.keys(serviceList);
+    let stateTabs, statePanes;
+    console.warn("stateGroupKeys",stateGroupKeys);
     
     stateTabs = stateGroupKeys.map((key) => {
+      const stateGroup = serviceList[key];
       return (
         <NavItem key={key + "-tab-link"}>
           <NavLink
@@ -76,55 +67,22 @@ class EonDetail extends Component {
             })}
             onClick={() => { this.setTab(key); }}
             >
-            {key}
+            {stateGroup.label}
           </NavLink>
         </NavItem>
       );
     });
     statePanes = stateGroupKeys.map((key) => {
-      const items = vehicleStateGroups[key];
+      const stateGroup = serviceList[key];
       return (
         <TabPane key={key + "-tab-pane"} tabId={key}>
           {activeTab === key &&
-          <StateList type={key} eon={this.props.eon} items={items} />
+            <StateList type={key} eon={this.props.eon} group={stateGroup} />
           }
         </TabPane>
       );
     });
-    // vidurl example:
-    // https://video.comma.ai/hls/0812e2149c1b5609/0ccfd8331dfb6f5280753837cefc9d26_2018-10-06--19-56-04/index.m3u8
-    // let drivesList;
-    // if (drives) {
-    //   const drivesKeys = Object.keys(drives).sort(function(a, b){
-    //     let parsedA = moment(a, "YYYY-MM-DD--HH-mm-SS");
-    //     let parsedB = moment(b, "YYYY-MM-DD--HH-mm-SS");
-    //     // console.log("a",parsedA);
-    //     // console.log("b",parsedB);
-    //     return parsedB.valueOf()-parsedA.valueOf();
-    //   });
-    //   drivesList = drivesKeys.map((key) => {
-    //     const route = drives[key];
-    //     const thumbnail = `${commaEndpoints.Thumbnail.Base}${commaEndpoints.Thumbnail.Endpoint.tiny.replace(":segment_string",route.sig_path)}`;
-    //     return (<LazyLoad key={key} height={70}>
-    //       <ListGroupItem tag="a" href="#" onClick={(ev) => {this.openDrive(key); ev.preventDefault(); return false;}}>
-    //         <span className={"thumbnail"}><img src={thumbnail} /></span>
-    //         <span className={"details"}>
-    //         <strong>{route.start_geocode} to {route.end_geocode}</strong><br />
-    //         <Moment format="dddd MMM. DD, YYYY hh:mm:SS a" tz="America/Los_Angeles">{route.start_time}</Moment>
-    //         </span>
-    //       </ListGroupItem>
-    //     </LazyLoad>);
-    //   });
-    // }
-
-    let devicesList;
-
-    if (devices) {
-      // const devicesKeys = Object.keys(devices);
-      devicesList = devices.map((device,index) => {
-        return (<div key={index}>{device.alias} {device.device_type}</div>);
-      });
-    }
+    
     const contextActions = [
       <NavItem key={1} className={styles.nav_item}>
         <NavLink tag={Link} to={routes.EON_LIST} className={"nav_link"}><i className="fas fa-chevron-left"></i></NavLink>
