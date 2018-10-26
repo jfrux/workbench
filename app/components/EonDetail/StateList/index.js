@@ -23,7 +23,6 @@ class StateList extends Component {
   }
   onMessageReceived = (event_message) => {
     const msg = new EventMessage(event_message);
-    console.warn("this.props.type",this.props.group.key);
     const jsonData = JSON.parse(JSON.stringify(msg.toJSON()))[this.props.group.key];
     console.warn(`jsonData`,jsonData);
 

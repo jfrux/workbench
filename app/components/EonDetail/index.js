@@ -53,7 +53,7 @@ class EonDetail extends Component {
     }
     const stateGroupKeys = Object.keys(serviceList);
     let stateTabs, statePanes;
-    console.warn("stateGroupKeys",stateGroupKeys);
+    // console.warn("stateGroupKeys",stateGroupKeys);
     
     stateTabs = stateGroupKeys.map((key) => {
       const stateGroup = serviceList[key];
@@ -82,7 +82,7 @@ class EonDetail extends Component {
         </TabPane>
       );
     });
-    
+
     const contextActions = [
       <NavItem key={1} className={styles.nav_item}>
         <NavLink tag={Link} to={routes.EON_LIST} className={"nav_link"}><i className="fas fa-chevron-left"></i></NavLink>

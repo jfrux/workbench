@@ -25,7 +25,7 @@ $child-list-width: 200px;
   position: fixed;
   top: $top-bar-height;
   flex-flow: column;
-  background-color: #FFF;
+  background-color: #000;
   padding-left: 0;
   display: flex;
   z-index: 1;
@@ -40,6 +40,9 @@ $child-list-width: 200px;
       padding-bottom:0;
       text-transform: initial;
       text-align:left;
+      background-color:darken(#03111C,2);
+      color:rgba(#FFF,0.5);
+    
       &:before {
         position: absolute;
         bottom: -1px;
@@ -48,7 +51,7 @@ $child-list-width: 200px;
         height: 1px;
         content: "";
         z-index: 100;
-        background-color: rgba(#FFF, 0.05);
+        background-color: rgba(#FFF, 0.04);
       }
       &:after {
         position: absolute;
@@ -58,12 +61,16 @@ $child-list-width: 200px;
         height: 1px;
         content: "";
         z-index: 100;
-        background-color: rgba(0, 0, 0, 0.6);
+        background-color: rgba(#000, 0.6);
       }
       &.active {
-        &:before,&:after {
-          display:none;
-        }
+        color:#FFF;
+        font-weight:bold;
+        background-color:lighten(#03111C,2);
+        // box-shadow:inset 3px 0 15px rgba(#000,1);
+        // &:before, &:after {
+        //   display:none;
+        // }
       }
     }
   }
@@ -788,8 +795,8 @@ body {
 
 .nav-tabs {
   .nav-link {
-    background-color:#03111C;
-    color:#FFF;
+    background-color:darken(#03111C,2);
+    color:rgba(#FFF,0.5);
     border:0;
     border-radius:0;
     cursor:pointer;
