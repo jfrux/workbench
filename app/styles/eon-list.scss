@@ -53,20 +53,20 @@
   color:#F7F7F7!important;
 }
 .eon-list-top {
-  position:fixed;
-  top: $eons-list-top-top;
-  left: $left-bar-width;
-  min-height: $eons-list-top-height;
-  width: $right-content-width;
+  position:relative;
+  // top: $eons-list-top-top;
+  // left: $left-bar-width;
+  // min-height: $eons-list-top-height;
+  // width: $right-content-width;
   z-index:100;
   border-bottom:1px solid rgba(#000,0.1);
 }
 .eons-list {
-  position:fixed;
-  top:$eons-list-top;
-  width:$right-content-width;
-  left: $left-bar-width;
-  height: calc(100% - #{$eons-list-top});
+  position:relative;
+  // top:$eons-list-top;
+  // width:$right-content-width;
+  // left: $left-bar-width;
+  // height: calc(100% - #{$eons-list-top});
   overflow-x: hidden;
   overflow-y: auto;
   --webkit-overflow-behavior: contain;

@@ -102,10 +102,13 @@ function* cleanUnresolvedEons() {
 function* scanNetwork() {
   yield call(cleanUnresolvedEons);
   const ip = IpUtil.address();
-
-  let ips = yield networkActions.getIpsForScan(ip);
+  let ips = [];
+  let ipRange = yield networkActions.getIpsForScan(ip);
   // ips = ips.map((ip) => { return `${ip}.0`; });
-  ips = networkActions.getIpList(ips[1]+'.0',ips[2]+'.0');
+  ips.push(ipRange[0]+'.0/24');
+  ips = ips.concat(networkActions.getIpList(ipRange[1]+'.0',ipRange[2]+'.0'));
+  
+  console.warn("ips",ips);
   const scans = yield all(ips.map(function * (ip) {
     yield call(scan, ip);
   }));

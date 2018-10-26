@@ -2,7 +2,9 @@ import * as CidrUtil from "node-cidr";
 import IpUtil from "ip";
 import iprange, { IPEmitter }  from 'iprange';
 const ipv4 = /^(?:(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?:\.(?!$)|$)){4}$/;
-
+function modulo(num, div) {
+  return ((num % div) + div) % div;
+}
 /**
  * Convert an IPv4 to an hexadecimal representation
  * @param  {String} ip   IPv4
@@ -74,19 +76,23 @@ export function *range(ip1, ip2) {
     yield `${(i >> 24) & 0xff}.${(i >> 16) & 0xff}.${(i >> 8) & 0xff}.${i & 0xff}`;
   }
 }
+const availableRange = numberRange(0,255);
 function getAfterOctet(ip) {
   const aIp = ip.split('.');
   const baseIp = getBaseIp(ip,2);
-  const availableRange = numberRange(0,255);
-  let newIndex = baseIp.lastSegment+20 % availableRange.length;
+  console.warn("afterbaseIp",baseIp);
+  let newIndex = modulo((baseIp.lastSegment+10), 254);
+  console.warn("after newIndex:",newIndex);
   return baseIp.baseIp + "." + newIndex;
 }
 
 function getBeforeOctet(ip) {
   const aIp = ip.split('.');
   const baseIp = getBaseIp(ip,2);
-  const availableRange = numberRange(0,255);
-  let newIndex = baseIp.lastSegment-20 % availableRange.length;
+  console.warn("beforebaseIp",baseIp);
+  const differ = (baseIp.lastSegment-10);
+  let newIndex =  modulo(differ, 254);
+  console.warn("before newIndex:",newIndex);
   return baseIp.baseIp + "." + newIndex;
 }
 

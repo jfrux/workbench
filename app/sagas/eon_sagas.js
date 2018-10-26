@@ -1,21 +1,12 @@
 import {
   all,
-  take,
   call,
-  fork,
-  race,
   put,
   takeLatest,
   takeEvery,
-  select,
-  throttle
+  select
 } from 'redux-saga/effects';
-import zmq from 'zeromq';
-var inflection = require( 'inflection' );
-import serviceList from '../constants/service_list.yaml';
-const EventMessage = require('../messages/event');
 
-import { delay, eventChannel, END } from 'redux-saga';
 import { remote } from 'electron';
 const { app } = remote;
 import mkdirp from 'mkdirp';
@@ -24,15 +15,9 @@ import path from 'path';
 import fs from 'fs';
 import * as routes from '../constants/routes.json';
 import SSH from 'node-ssh';
-import ReconnectingWebSocket from 'reconnecting-websocket';
 import * as types from '../constants/eon_detail_action_types';
-import * as eonListTypes from '../constants/eon_list_action_types';
 import * as eonListActions from '../actions/eon_list_actions';
 import * as eonDetailActions from '../actions/eon_detail_actions';
-import * as endpoints from '../constants/comma_endpoints.json';
-import * as commands from '../constants/commands.json';
-// console.log(serviceList);
-
 
 function sendCommand(
   eon,
@@ -165,85 +150,6 @@ function* installWorkbenchApi() {
   }
 }
 
-// function* read(sock, service) {
-//   const { eonList } = yield select();
-//   const { selectedEon, eons } = eonList;
-//   const eon = eons[selectedEon];
-//   console.warn("connecting to service...",service);
-//   const channel = yield call(createEventChannel, sock, addr);
-//   // scanner.run();
-//   try {
-//     while (true) {
-//       const { disconnectAction, socketAction } = yield race({
-//         socketAction: take(channel)
-//       });
-//       if (disconnectAction) {
-//         console.warn("DISCONNECT CHANNEL");
-//         channel.close();
-//       } else {
-//         yield put(socketAction);
-//       }
-//       let action = yield take(channel);
-//       yield put(action);
-//     }
-//   } finally {
-
-//   }
-// }
-
-// const service_whitelist = ['thermal','sensorEvents','health','carState','carControl','gpsLocationExternal','ubloxRaw'];
-
-// export function* createEventChannel(ws,addr) {
-//   return eventChannel(emit => {
-//     const onOpen = () => {
-//       console.warn('Connecting...');
-//       emit({ type: types.CONNECTED });
-//     };
-//     const onClose = () => {
-//       console.warn('Disconnected!');
-//       emit({ type: types.DISCONNECTED });
-//     };
-//     const onError = () => {
-//       console.warn('Error in WebSocket');
-//       // emit({ type: types.DISCONNECT });
-//     };
-//     const onMessageReceived = msg => {
-//       const event_message = new EventMessage(msg);
-//       // console.warn(`[zmq] message:`, JSON.stringify(event_message.toJSON()));
-//       // emit({ type: types.MESSAGE_RECEIVED, payload: );
-//     };
-//     console.warn('[zmq] connected', ws);
-//     ws.on('exit',onClose);
-//     ws.on('message', onMessageReceived);
-//     // ws.addEventListener('open', onOpen);
-//     // ws.addEventListener('close', onClose);
-//     // ws.addEventListener('error', onError);
-//     // ws.addEventListener('message', onMessageReceived);
-//     return () => {
-//       console.warn("createEventChannel return()");
-//       // This is a handler to uncreateScannerEventChannel.
-//       ws.disconnect(addr);
-//     };
-//   });
-// }
-// function* connectWebSockets(service) {
-//   const { eonList } = yield select();
-//   const { selectedEon, eons } = eonList;
-//   const eon = eons[selectedEon];
-//   const serviceItem = serviceList[inflection.camelize(service,true)]
-//   yield put({ type: types.CONNECT });
-  
-
-//   try {
-//     yield fork(read, sock, serviceItem);
-    
-//   } catch (e) {
-//     // console.warn("Errors in check #1");
-//   }
-// }
-// function* disconnectChannel() {
-//   yield put({type: types.DISCONNECT});
-// }
 function* handleTabChange(action) {
   const tab = action.payload;
   yield call(disconnectChannel);
