@@ -105,7 +105,7 @@ function* scanNetwork() {
   let ips = [];
   let ipRange = yield networkActions.getIpsForScan(ip);
   // ips = ips.map((ip) => { return `${ip}.0`; });
-  ips.push(ipRange[0]+'.0/24');
+  // ips.push(ipRange[0]+'.0/24');
   ips = ips.concat(networkActions.getIpList(ipRange[1]+'.0',ipRange[2]+'.0'));
   
   // console.warn("ips",ips);
@@ -139,7 +139,7 @@ function* handleAddEon(action) {
       };
     }
     
-    const existingEons = Object.keys(eons).filter((key) => {
+    let existingEons = Object.keys(eons).filter((key) => {
       const eon = eons[key];
       return eon.mac === payload.mac;
     });
@@ -172,10 +172,17 @@ function* handleAddEon(action) {
         addStatus: 0
       };
     }
-    newEon[newEon.id]
-    // console.warn("FAILED TO ADD EON",e);
-    yield put(eonListActions.ADD_EON_SUCCESS(newEon));
-    // yield put(eonListActions.ADD_EON_FAILED(newEon,e));
+    let addingEon = newEon[randomId];
+    let existingEons = Object.keys(eons).filter((key) => {
+      const eon = eons[key];
+      return eon.ip === addingEon.ip;
+    });
+    if (existingEons.length > 0) {
+      yield put(eonListActions.ADD_EON_FAILED());
+      // yield put(eonListActions.ADD_EON_ALREADY_EXISTS(newEon));
+    } else {
+      yield put(eonListActions.ADD_EON_SUCCESS(newEon));
+    }
   }
 }
 

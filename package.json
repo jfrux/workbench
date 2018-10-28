@@ -245,6 +245,7 @@
     "iprange": "^0.1.0",
     "is-port-reachable": "^2.0.0",
     "jquery": "^3.3.1",
+    "json2csv": "^4.2.1",
     "local-devices": "^1.1.1",
     "mkdirp": "^0.5.1",
     "moment": "^2.22.2",

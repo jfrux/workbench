@@ -5,10 +5,10 @@ import EonDetail from '../components/EonDetail';
 import * as NetworkConnectionActions from '../actions/network_connection_actions';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
-import { faPause, faUndo, faCheck, faCircle, faTimesOctagon, faSync, faChevronLeft, faChevronRight, faPlus } from '@fortawesome/pro-solid-svg-icons';
+import { faPause, faSpinnerThird, faUndo, faCheck, faCircle, faTimesOctagon, faSync, faChevronLeft, faChevronRight, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
-library.add(faPause,faUndo, faCheck,faCircle, faGithub, faTimesOctagon, faSync, faChevronLeft, faPlus, faChevronRight);
+library.add(faPause,faUndo,faSpinnerThird, faCheck,faCircle, faGithub, faTimesOctagon, faSync, faChevronLeft, faPlus, faChevronRight);
 
 function mapStateToProps(state) {
   return {};

@@ -23,6 +23,21 @@ thermal:
   port: 8005
   label: "Thermal"
   description:
+  fields:
+    - "Cpu0"
+    - "Cpu1"
+    - "Cpu2"
+    - "Cpu3"
+    - "Mem"
+    - "Gpu"
+    - "Bat"
+    - "FreeSpace"
+    - "BatteryPercent"
+    - "BatteryStatus"
+    - "UsbOnline"
+    - "FanSpeed"
+    - "Started"
+    - "StartedTs"
 can:
   key: "Can"
   port: 8006
@@ -151,6 +166,12 @@ clocks:
   port: 8034
   label: "Clocks"
   description:
+  fields:
+    - "BootTimeNanos"
+    - "MonotonicNanos"
+    - "MonotonicRawNanos"
+    - "WallTimeNanos"
+    - "ModemUptimeMillis"
 liveMpc:
   key: "LiveMpc"
   port: 8035

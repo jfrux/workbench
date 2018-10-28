@@ -80,20 +80,27 @@ const availableRange = numberRange(0,255);
 function getAfterOctet(ip) {
   const aIp = ip.split('.');
   const baseIp = getBaseIp(ip,2);
-  console.warn("afterbaseIp",baseIp);
-  let newIndex = modulo((baseIp.lastSegment+10), 254);
-  console.warn("after newIndex:",newIndex);
-  return baseIp.baseIp + "." + newIndex;
+  // console.warn("afterbaseIp",baseIp);
+  let differ = (baseIp.lastSegment+20);
+  if (differ > 254) {
+    differ = 254;
+  }
+  // let newIndex = modulo((baseIp.lastSegment+10), 254);
+  // console.warn("after newIndex:",newIndex);
+  return baseIp.baseIp + "." + differ;
 }
 
 function getBeforeOctet(ip) {
   const aIp = ip.split('.');
   const baseIp = getBaseIp(ip,2);
-  console.warn("beforebaseIp",baseIp);
-  const differ = (baseIp.lastSegment-10);
-  let newIndex =  modulo(differ, 254);
-  console.warn("before newIndex:",newIndex);
-  return baseIp.baseIp + "." + newIndex;
+  // console.warn("beforebaseIp",baseIp);
+  let differ = (baseIp.lastSegment-20);
+  if (differ < 0) {
+    differ = 0;
+  }
+  // let newIndex =  modulo(differ, 254);
+  // console.warn("before newIndex:",newIndex);
+  return baseIp.baseIp + "." + differ;
 }
 
 function getNeighborNetworks(ip) {

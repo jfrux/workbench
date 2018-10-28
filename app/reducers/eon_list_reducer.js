@@ -77,6 +77,8 @@ export default function eonListReducer(state = initialState, action) {
     case types.CLEAR_UNRESOLVED_EONS:
       return {
         ...state,
+        addingEon: false,
+        eonToAdd: null,
         eons: action.payload
       };
     case types.SELECT_EON:

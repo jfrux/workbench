@@ -90,6 +90,7 @@ class EonList extends Component {
       status,
       foundCount,
       addingEon,
+      eonToAdd,
       error,
       network,
       eons,
@@ -132,13 +133,21 @@ class EonList extends Component {
             <div className={"add_form_area"}>
               <Form inline onSubmit={this.handleSubmit} className={"p-0 m-0"}>
                 <FormGroup className={"col col-8 p-0 h-100"}>
-                  <Input placeholder="___.___.___.___" className={"add_field d-block w-100"} value={this.state.value} onChange={this.handleChange} />
+                  <Input placeholder="___.___.___.___" disabled={addingEon} className={"add_field d-block w-100"} value={this.state.value} onChange={this.handleChange} />
                 </FormGroup>
                 <FormGroup className={"col col-2 p-0 h-100"}>
-                  <Button className={"add_ip_button"} type="submit"><i className="fa fa-plus"></i></Button>
+                  <Button className={"add_ip_button"} type="submit" disabled={addingEon}>
+                    {addingEon && <FontAwesomeIcon icon="spinner-third" className={classnames({
+                      "fa-spin": addingEon
+                    })} />}
+                    {!addingEon && <FontAwesomeIcon icon="plus" />}
+                  </Button>
                 </FormGroup>
                 <FormGroup className={"col col-2 p-0 h-100"}>
-                  <Button className={"refresh_button"} type="button" onClick={this.handleScanNetwork}><i className="fa fa-sync"></i> Scan</Button>
+                  <Button className={"refresh_button"} type="button" disabled={scanning} onClick={this.handleScanNetwork}>
+                  <FontAwesomeIcon icon="sync" className={classnames({
+                    "fa-spin": scanning
+                  })} /> Scan</Button>
                 </FormGroup>
               </Form>
             </div>
@@ -165,6 +174,23 @@ class EonList extends Component {
         </div>
         <div className={"eons-list"}>
           <ListGroup>
+            {addingEon && eonToAdd && 
+            <ListGroupItem key={999} className={"results_button disabled"} disabled tag="button">
+              <span className={"eon_icon"}>
+                {addingEon && <FontAwesomeIcon icon="spinner-third" style={{color: 'var(--blue)'}} className={classnames({
+                  "fa-spin": addingEon
+                })} />}
+                <Eon width="100%" height="100%" />
+              </span>
+              <span className={"results_details"}>
+                <span className={"results_button_ip"}>
+                  Attempting to resolve host...
+                </span>
+                <span className={"results_button_mac"}>{eonToAdd.ip}</span>
+              </span>
+              <span className={"results_button_selected"}><FontAwesomeIcon icon={['fas', 'chevron-right']}/></span>
+            </ListGroupItem>
+            }
             {eonList.map((key,index) => {
               let eon = eons[key];
               return (<ListGroupItem key={index} onClick={() => { this.handleSelectEon(eon.id);}} className={"results_button"} tag="button">

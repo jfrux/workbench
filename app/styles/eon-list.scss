@@ -52,6 +52,7 @@
   display:block;
   color:#F7F7F7!important;
 }
+
 .eon-list-top {
   position:relative;
   // top: $eons-list-top-top;
@@ -61,6 +62,7 @@
   z-index:100;
   border-bottom:1px solid rgba(#000,0.1);
 }
+
 .eons-list {
   position:relative;
   // top:$eons-list-top;
@@ -71,8 +73,8 @@
   overflow-y: auto;
   --webkit-overflow-behavior: contain;
   padding-bottom:30px;
-  .list-group-item {
 
+  .list-group-item {
     .eon_icon {
       width:70px;
       display:block;
@@ -86,20 +88,21 @@
       svg {
         opacity:0.25;
       }
-      svg.fa-check,svg.fa-times-octagon {
-        position:absolute;
-        top:50%;
-        left:50%;
-
-        opacity:1;
-        transform:translate(-100%,-50%);
-        z-index:55;
+      svg.fa-check,svg.fa-times-octagon,svg.fa-spinner-third {
+        position: absolute;
+        top: 1px;
+        left: 18px;
+        opacity: 1;
+        z-index: 55;
+      }
+      svg.fa-spinner-third {
+        color:var(--blue);
       }
       svg.fa-check {
-        color:#28a745;
+        color:var(--green);
       }
       svg.fa-times-octagon {
-        color:#dc3545;
+        color:var(--red);
       }
     }
     &:after {
@@ -120,6 +123,17 @@
       }
       .results_button_mac {
         color:#FFF;
+      }
+    }
+    &.disabled {
+      opacity: .65;
+      outline:none;
+      &:hover {
+        background-color:rgba(#FFF,0.05)!important;
+        .eon_icon {
+          opacity:1;
+          border-right:1px solid rgba(#000,0.5);
+        }
       }
     }
   }

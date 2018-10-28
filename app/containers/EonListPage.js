@@ -6,6 +6,7 @@ import * as eonListActions from '../actions/eon_list_actions';
 function mapStateToProps(state) {
   return {
     addingEon: state.eonList.addingEon,
+    eonToAdd: state.eonList.eonToAdd,
     error: state.eonList.error,
     scanResults: state.networkScanner.scanResults,
     scanError: state.networkScanner.scanError,
