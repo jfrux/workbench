@@ -7,17 +7,19 @@
 @import "~react-json-pretty/src/JSONPretty.monikai.css";
 
 $left-bar-width: 50px;
-$top-bar-height: 36px;
+$left-bar-padding-top: 0;
+$top-bar-height: 0;
 $child-list-width: 200px;
 $eons-list-top-top: $top-bar-height;
 $eons-list-top-height: 30px;
 $eons-list-top: $top-bar-height+$eons-list-top-height;
 $right-content-width: calc(100% - #{$left-bar-width});
 
+@import "styles/is-mac";
+
 @import "styles/eon";
 @import "styles/eon-list";
 @import "styles/left-bar";
-
 .container-fluid {
   position: relative;
   width:100%;

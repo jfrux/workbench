@@ -111,7 +111,7 @@ function* scanNetwork() {
   // console.warn("ips",ips);
   yield put(networkScannerActions.updateScanCount(ips.length*256));
   yield all(ips.map(function * (ip) {
-    return yield call(scan, ip);
+    yield fork(scan, ip);
   }));
   // const scanner = yield call(getScanner, ips[0] + '/24');
   yield put(networkScannerActions.COMPLETE_scanNetwork());

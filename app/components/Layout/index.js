@@ -50,7 +50,7 @@ class Layout extends React.PureComponent {
         }
 
         <div className={'left-bar'}>
-          <Nav style={{marginTop:'36px'}}>
+          <Nav>
             {contextActions}
           </Nav>
           <Nav className={'bottom-nav'}>

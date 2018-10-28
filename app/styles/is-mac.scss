@@ -1,0 +1,7 @@
+.is-mac {
+    $top-bar-height: 36px;
+    $left-bar-padding-top: $top-bar-height;
+    @import "styles/eon";
+    @import "styles/eon-list";
+    @import "styles/left-bar";
+}
