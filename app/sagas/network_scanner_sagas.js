@@ -98,7 +98,7 @@ function* cleanUnresolvedEons() {
   });
   yield put({type: eonListTypes.CLEAR_UNRESOLVED_EONS, payload: cleanEonsList});
 }
-// function* scan
+
 function* scanNetwork() {
   yield call(cleanUnresolvedEons);
   const ip = IpUtil.address();
@@ -108,9 +108,10 @@ function* scanNetwork() {
   ips.push(ipRange[0]+'.0/24');
   ips = ips.concat(networkActions.getIpList(ipRange[1]+'.0',ipRange[2]+'.0'));
   
-  console.warn("ips",ips);
-  const scans = yield all(ips.map(function * (ip) {
-    yield call(scan, ip);
+  // console.warn("ips",ips);
+  yield put(networkScannerActions.updateScanCount(ips.length*256));
+  yield all(ips.map(function * (ip) {
+    return yield call(scan, ip);
   }));
   // const scanner = yield call(getScanner, ips[0] + '/24');
   yield put(networkScannerActions.COMPLETE_scanNetwork());

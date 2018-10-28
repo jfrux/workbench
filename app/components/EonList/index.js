@@ -24,7 +24,8 @@ const propTypes = {
   selectedEon: PropTypes.any,
   network: PropTypes.string,
   networkIp: PropTypes.string,
-  progress: PropTypes.any
+  progress: PropTypes.any,
+  progressPercString: PropTypes.string
 };
 
 function ValidateIPaddress(ipaddress) 
@@ -94,7 +95,8 @@ class EonList extends Component {
       eons,
       networkIp,
       selectedEon,
-      progress
+      progress,
+      progressPercString
     } = this.props;
     const { manualError } = this.state;
     const scanResultsList = Object.keys(scanResults)
@@ -110,6 +112,7 @@ class EonList extends Component {
     if (network === 'disconnected') {
       return <NoConnection />;
     }
+
     const contextActions = [
       <NavItem key={1} className={"nav_item"}>
         <NavLink className={classnames({ nav_link: true, disabled: scanning })} onClick={this.handleScanNetwork} id={"Tooltip-Refresh"}>
@@ -144,7 +147,7 @@ class EonList extends Component {
           <Collapse className={"message"} isOpen={scanning}>
             <Card body inverse color="primary" className={"scanning-message"}>
               <CardBody className={"scanning-message-body"}>
-                Scanning for EON...
+                Scanning for EON... {progressPercString}
                 {foundCount > 0 &&
                   <div>Found {foundCount} EON on the network...</div>
                 }

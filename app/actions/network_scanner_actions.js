@@ -9,6 +9,13 @@ export function BEGIN_scanNetwork() {
   };
 }
 
+export function updateScanCount(count) {
+  return {
+    type: types.SCAN_NETWORK_COUNT,
+    payload: count
+  };
+}
+
 export function PARTIALCOMPLETE_scanNetwork() {
   return {
     type: types.SCAN_NETWORK_PARTIAL_COMPLETE

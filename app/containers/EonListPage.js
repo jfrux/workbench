@@ -16,6 +16,7 @@ function mapStateToProps(state) {
     networkIp: state.networkConnection.ip,
     network: state.networkConnection.status,
     progress: state.networkScanner.progress,
+    progressPercString: Math.round(state.networkScanner.progress) + "%",
     eons: state.eonList.eons
   };
 }
