@@ -79,12 +79,7 @@ export function* createScannerEventChannel(scanner) {
   });
 }
 function* scan(ip) {
-  const scanner = new evilscan({
-    target: ip,
-    port:'8022',
-    status:'TROU'
-  });
-  yield fork(read, scanner);
+  
 }
 function* cleanUnresolvedEons() {
   const { eonList } = yield select();
@@ -109,16 +104,16 @@ function* scanNetwork() {
   ips = ips.concat(networkActions.getIpList(ipRange[1]+'.0',ipRange[2]+'.0'));
   
   // console.warn("ips",ips);
-  yield put(networkScannerActions.updateScanCount(ips.length*256));
+  yield put(networkScannerActions.updateScanCount(6072));
+  
   yield all(ips.map(function * (ip) {
-    yield fork(scan, ip);
+    const scanner = new evilscan({
+      target: ip,
+      port:'8022',
+      status:'TROU'
+    });
+    yield call(read, scanner);
   }));
-  // const scanner = yield call(getScanner, ips[0] + '/24');
-  yield put(networkScannerActions.COMPLETE_scanNetwork());
-  try {
-  } catch (e) {
-    // console.warn("Errors in check #1");
-  }
 }
 
 function* handleAddEon(action) {
@@ -185,7 +180,16 @@ function* handleAddEon(action) {
     }
   }
 }
+function* handleProgress() {
+  const { networkScanner } = yield select();
+  const { progress } = networkScanner;
+  
+  if (progress) {
+    
+  }
 
+  yield put(networkScannerActions.COMPLETE_scanNetwork());
+}
 function* handleConnected(action) {
   const { router } = yield select();
 
@@ -199,7 +203,8 @@ export function* scannerSagas() {
   yield all([
     takeLatest(networkConnectionTypes.CONNECTED, handleConnected),
     takeLatest(eonListTypes.ADD_EON, handleAddEon),
-    takeLatest(types.SCAN_NETWORK, scanNetwork),
     takeEvery(types.SCAN_NETWORK_RESULT, handleAddEon),
+    takeEvery(types.SCAN_NETWORK_PROGRESS,handleProgress),
+    takeLatest(types.SCAN_NETWORK, scanNetwork)
   ]);
 }

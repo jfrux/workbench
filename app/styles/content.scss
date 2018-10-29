@@ -1,0 +1,23 @@
+
+  .content {
+    position: fixed;
+    top: $top-bar-height;
+    padding-top: 0;
+    padding-left: 0;
+    left: $left-bar-width;
+    max-height: calc(100% - #{$top-bar-height});
+    height: calc(100% - #{$top-bar-height});
+    width: calc(100% - #{$left-bar-width});
+    max-width: calc(100% - #{$left-bar-width});
+    flex: 0 0 calc(100% - #{$left-bar-width});
+    .nav.nav-tabs {
+      .nav-item {
+        text-transform: uppercase;
+        font-size: 12px;
+        text-align: center;
+      }
+    }
+  }
+  .content::-webkit-scrollbar { 
+    display: none; 
+  }
