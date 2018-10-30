@@ -1,5 +1,3 @@
-/* eslint global-require: 0, flowtype-errors/show-errors: 0 */
-
 /**
  * This module executes inside of electron's main process. You can start
  * electron renderer process from here and communicate with the other processes
@@ -9,23 +7,14 @@
  * `./app/main.prod.js` using webpack. This gives us some performance wins.
  *
  */
-import { app, BrowserWindow } from 'electron';
+import { app, ipcMain, BrowserWindow } from 'electron';
 import MenuBuilder from './menu';
+import log from 'electron-log';
 import { autoUpdater } from "electron-updater";
 import {startServer} from './server';
-// const serverProc = require('child_process').fork(
-//   require.resolve('./server.js'),
-//   ['--key', 'value'], // pass to process.argv into child
-//   {
-//     // options
-//   }
-// )
-// serverProc.on('exit', (code, sig) => {
-  // finishing
-// })
-// serverProc.on('error', (error) => {
-//   // error handling
-// })
+import { listenForNetworkScanner } from './background/network-scanner';
+
+
 //-------------------------------------------------------------------
 // Logging
 //
@@ -34,10 +23,10 @@ import {startServer} from './server';
 // This logging setup is not required for auto-updates to work,
 // but it sure makes debugging easier :)
 //-------------------------------------------------------------------
-// autoUpdater.logger = log;
-// autoUpdater.logger.transports.file.level = 'info';
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'info';
 
-// log.info('App starting...');
+log.info('App starting...');
 
 // import settings from 'electron-settings';
 app.commandLine.appendSwitch('--enable-viewport-meta', 'true');
@@ -81,31 +70,10 @@ app.on('window-all-closed', () => {
   // }
 });
 
-// AUTO UPDATER
-autoUpdater.on('checking-for-update', () => {
-  sendStatusToWindow('Checking for update...');
-})
-autoUpdater.on('update-available', (info) => {
-  sendStatusToWindow('Update available.');
-})
-autoUpdater.on('update-not-available', (info) => {
-  sendStatusToWindow('Update not available.');
-})
-autoUpdater.on('error', (err) => {
-  sendStatusToWindow('Error in auto-updater. ' + err);
-})
-autoUpdater.on('download-progress', (progressObj) => {
-  let log_message = "Download speed: " + progressObj.bytesPerSecond;
-  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
-  sendStatusToWindow(log_message);
-})
-autoUpdater.on('update-downloaded', (info) => {
-  sendStatusToWindow('Update downloaded');
-});
-
 app.on('ready', async () => {
   autoUpdater.checkForUpdatesAndNotify();
+  startServer();
+  listenForNetworkScanner();
   // if (!settings.get("windowBounds")) {
     // settings.set("windowBounds", { width: 800, height: 800 })
   // }
@@ -136,7 +104,7 @@ app.on('ready', async () => {
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
-  startServer();
+  
   // mainWindow.on('resize', () => {
     // console.log(store.get('windowBounds'));
     // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with

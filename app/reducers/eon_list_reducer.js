@@ -3,6 +3,7 @@ import * as types from '../constants/eon_list_action_types';
 import settings from 'electron-settings';
 
 const initialState = {
+  unresolvedEons: {},
   eons: {},
   error: null,
   eonToAdd: null,
@@ -50,10 +51,15 @@ export default function eonListReducer(state = initialState, action) {
         eonToAdd: null,
         addingEonError: null,
         error: null,
-        eons: {
-          ...state.eons,
+        unresolvedEons: {
+          ...state.unresolvedEons,
           ...action.payload
         }
+      };
+    case types.REMOVE_UNRESOLVED_EON:
+      delete state.unresolvedEons[action.payload.id];  
+      return {
+        ...state
       };
     case types.ADD_EON_ALREADY_EXISTS:
       return {
@@ -62,8 +68,8 @@ export default function eonListReducer(state = initialState, action) {
         addingEonError: null,
         error: null,
         eonToAdd: null,
-        eons: {
-          ...state.eons,
+        unresolvedEons: {
+          ...state.unresolvedEons,
           ...action.payload
         }
       };
@@ -79,7 +85,23 @@ export default function eonListReducer(state = initialState, action) {
         ...state,
         addingEon: false,
         eonToAdd: null,
-        eons: action.payload
+        unresolvedEons: {}
+      };
+    case types.RESOLVED_EON:
+      return {
+        ...state,
+        eons: {
+          ...state.eons,
+          ...action.payload
+        }
+      };
+    case types.UPDATE_UNRESOLVED:
+      return {
+        ...state,
+        unresolvedEons: {
+          ...state.unresolvedEons,
+          ...action.payload
+        }
       };
     case types.SELECT_EON:
       // const eon = state.scanResults[action.payload.index];

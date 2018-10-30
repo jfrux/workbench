@@ -4896,6 +4896,11 @@ electron-is-dev@^0.3.0:
   resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-0.3.0.tgz#14e6fda5c68e9e4ecbeff9ccf037cbd7c05c5afe"
   integrity sha1-FOb9pcaOnk7L7/nM8DfL18BcWv4=
 
+electron-is-dev@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-1.0.1.tgz#6e0a184736fe7aea77d18210b0b0f6a02402c4bc"
+  integrity sha512-iwM3EotA9HTXqMGpQRkR/kT8OZqBbdfHTnlwcxsjSLYqY8svvsq0MuujsWCn3/vtgRmDv/PC/gKUUpoZvi5C1w==
+
 electron-localshortcut@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/electron-localshortcut/-/electron-localshortcut-3.1.0.tgz#10c1ffd537b8d39170aaf6e1551341f7780dd2ce"
@@ -4905,6 +4910,11 @@ electron-localshortcut@^3.0.0:
     electron-is-accelerator "^0.1.0"
     keyboardevent-from-electron-accelerator "^1.1.0"
     keyboardevents-areequal "^0.2.1"
+
+electron-log@^2.2.17:
+  version "2.2.17"
+  resolved "https://registry.yarnpkg.com/electron-log/-/electron-log-2.2.17.tgz#e71e2ebb949fc96ded7cdb99eeee7202e48981d2"
+  integrity sha512-v+Af5W5z99ehhaLOfE9eTSXUwjzh2wFlQjz51dvkZ6ZIrET6OB/zAZPvsuwT6tm3t5x+M1r+Ed3U3xtPZYAyuQ==
 
 electron-osx-sign@0.4.10:
   version "0.4.10"
@@ -12049,6 +12059,11 @@ redeyed@~0.4.0:
   integrity sha1-N+mQpvKyGyoRwuakj9QTVpjLqX8=
   dependencies:
     esprima "~1.0.4"
+
+redux-electron-ipc@^1.1.13:
+  version "1.1.13"
+  resolved "https://registry.yarnpkg.com/redux-electron-ipc/-/redux-electron-ipc-1.1.13.tgz#6b4912d9ba47296ab7ab3a52bda513e8caa22b9f"
+  integrity sha512-X4OJ64sIZLXueNhGbohdZ4/bV7lJUTYsZcb9DdQGQTPjYTxB0w5mpliCgQtaMCNOiyRSb7FtQvx6D1eWunMh2w==
 
 redux-logger@^3.0.6:
   version "3.0.6"

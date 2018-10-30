@@ -30,10 +30,13 @@ export function ADDING_EON(eon) {
 }
 
 export function ADD_EON_SUCCESS(eon) {
+  let addEon = {};
+
+  addEon[eon.id] = eon;
   return {
     type: types.ADD_EON_SUCCESS,
     payload: {
-      ...eon
+      ...addEon
     }
   };
 }
@@ -56,9 +59,37 @@ export function ADD_EON_ALREADY_EXISTS(eon) {
     }
   };
 }
+export function REMOVE_UNRESOLVED_EON(removeId) {
+  return {
+    type: types.REMOVE_UNRESOLVED_EON,
+    payload: removeId
+  };
+}
+export function RESOLVED_EON(eon, mac) {
+  let updatedEon = {};
+  eon.addStatus = 1;
+  eon.mac = mac;
+  eon.id = mac;
+  updatedEon[eon.mac] = eon;
+  return {
+    type: types.RESOLVED_EON,
+    payload: {
+      ...updatedEon
+    }
+  };
+}
+export function UPDATE_UNRESOLVED(eon) {
+  let updatedEon = {};
+  updatedEon[eon.id] = eon;
+  return {
+    type: types.UPDATE_UNRESOLVED,
+    payload: {
+      ...updatedEon
+    }
+  };
+}
 
 export function SELECT_EON(index) {
-  console.warn("SELECT_EON:",index);
   return {
     type: types.SELECT_EON,
     payload: {
@@ -112,11 +143,6 @@ export function checkExistingEONStatuses() {
       });
     });
   };
-}
-export function clearUnresolvedEons() {
-  return (dispatch, getState) => {
-    
-  }
 }
 export function retrieveEonFromSettings() {
   return (dispatch, getState) => {

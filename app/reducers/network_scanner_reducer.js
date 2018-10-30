@@ -46,13 +46,12 @@ export default function eonListReducer(state = initialState, action) {
         maxCount: action.payload
       };
     
-    case types.SCAN_NETWORK_PROGRESS:
+    case types.SCAN_NETWORK_PARTIAL_COMPLETE:
       return {
         ...state,
         scanCount: state.scanCount+1,
-        progress: state.scanCount/state.maxCount
+        progress: (state.scanCount+1)/state.maxCount
       };
-
     case types.SCAN_NETWORK_RESULT:
       return {
         ...state,

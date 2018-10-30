@@ -1,24 +1,32 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Eons from '../components/EonList';
+
 import * as networkScannerActions from '../actions/network_scanner_actions';
 import * as eonListActions from '../actions/eon_list_actions';
+
 function mapStateToProps(state) {
+  const { eonList, networkScanner, networkConnection } = state;
+  const { eons, unresolvedEons } = eonList;
+  const { selectedEon, error, eonToAdd, addingEon } = eonList;
+  const { scanResults, scanError, scanning, foundCount, status, progress } = networkScanner;
+  const eonIds = Object.keys(eons);
+  const unresolvedEonIds = Object.keys(unresolvedEons);
   return {
-    addingEon: state.eonList.addingEon,
-    eonToAdd: state.eonList.eonToAdd,
-    error: state.eonList.error,
-    scanResults: state.networkScanner.scanResults,
-    scanError: state.networkScanner.scanError,
-    scanning: state.networkScanner.scanning,
-    foundCount: state.networkScanner.foundCount,
-    status: state.networkScanner.status,
-    selectedEon: state.eonList.selectedEon,
-    networkIp: state.networkConnection.ip,
-    network: state.networkConnection.status,
-    progress: state.networkScanner.progress,
-    progressPercString: Math.round(state.networkScanner.progress) + "%",
-    eons: state.eonList.eons
+    addingEon,
+    eonToAdd,
+    error,
+    scanResults,
+    scanError,
+    scanning,
+    foundCount,
+    status,
+    selectedEon,
+    networkIp: networkConnection.ip,
+    network: networkConnection.status,
+    progress,
+    eonIds,
+    unresolvedEonIds
   };
 }
 

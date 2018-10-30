@@ -7,6 +7,7 @@ import Layout from '../Layout';
 import classnames from 'classnames';
 import NoConnection from './NoConnection';
 import ProgressBar from './ProgressBar';
+import EonListItem from './EonListItem';
 import LoadingIndicator from '../LoadingIndicator';
 import { Container, ListGroup, UncontrolledTooltip, Collapse, Card, CardBody, Nav, NavItem, NavLink, ListGroupItem, Form, Button, FormGroup, Label, FormFeedback, FormText, InputGroup, InputGroupAddon, InputGroupText, Input} from 'reactstrap';
 import statusMessages from '../../constants/scan_status_messages.json';
@@ -25,7 +26,9 @@ const propTypes = {
   network: PropTypes.string,
   networkIp: PropTypes.string,
   progress: PropTypes.any,
-  progressPercString: PropTypes.string
+  progressPercString: PropTypes.string,
+  eonIds: PropTypes.array,
+  unresolvedEonIds: PropTypes.array
 };
 
 function ValidateIPaddress(ipaddress) 
@@ -93,15 +96,16 @@ class EonList extends Component {
       eonToAdd,
       error,
       network,
-      eons,
+      eonIds,
+      unresolvedEonIds,
       networkIp,
       selectedEon,
-      progress,
-      progressPercString
+      progress
     } = this.props;
+    const progressPercString = Math.round(progress*100) + "%";
     const { manualError } = this.state;
-    const scanResultsList = Object.keys(scanResults)
-    const eonList = Object.keys(eons)
+    // const scanResultsList = Object.keys(scanResults)
+    const eonList = eonIds;
     // console.log("scanResults:",scanResults);
     // console.log("scanResultsList:",scanResultsList);
     // console.log("eons:",eons);
@@ -129,29 +133,27 @@ class EonList extends Component {
     return (
       <Layout title="" contextActions={contextActions}>
         <div className={"eon-list-top"}>
-          <Collapse isOpen={!scanning}>
-            <div className={"add_form_area"}>
-              <Form inline onSubmit={this.handleSubmit} className={"p-0 m-0"}>
-                <FormGroup className={"col col-8 p-0 h-100"}>
-                  <Input placeholder="___.___.___.___" disabled={addingEon} className={"add_field d-block w-100"} value={this.state.value} onChange={this.handleChange} />
-                </FormGroup>
-                <FormGroup className={"col col-2 p-0 h-100"}>
-                  <Button className={"add_ip_button"} type="submit" disabled={addingEon}>
-                    {addingEon && <FontAwesomeIcon icon="spinner-third" className={classnames({
-                      "fa-spin": addingEon
-                    })} />}
-                    {!addingEon && <FontAwesomeIcon icon="plus" />}
-                  </Button>
-                </FormGroup>
-                <FormGroup className={"col col-2 p-0 h-100"}>
-                  <Button className={"refresh_button"} type="button" disabled={scanning} onClick={this.handleScanNetwork}>
-                  <FontAwesomeIcon icon="sync" className={classnames({
-                    "fa-spin": scanning
-                  })} /> Scan</Button>
-                </FormGroup>
-              </Form>
-            </div>
-          </Collapse>
+          <div className={"add_form_area"}>
+            <Form inline onSubmit={this.handleSubmit} className={"p-0 m-0"}>
+              <FormGroup className={"col col-8 p-0 h-100"}>
+                <Input placeholder="___.___.___.___" disabled={addingEon} className={"add_field d-block w-100"} value={this.state.value} onChange={this.handleChange} />
+              </FormGroup>
+              <FormGroup className={"col col-2 p-0 h-100"}>
+                <Button className={"add_ip_button"} type="submit" disabled={addingEon}>
+                  {addingEon && <FontAwesomeIcon icon="spinner-third" className={classnames({
+                    "fa-spin": addingEon
+                  })} />}
+                  {!addingEon && <FontAwesomeIcon icon="plus" />}
+                </Button>
+              </FormGroup>
+              <FormGroup className={"col col-2 p-0 h-100"}>
+                <Button className={"refresh_button"} type="button" disabled={scanning} onClick={this.handleScanNetwork}>
+                <FontAwesomeIcon icon="sync" className={classnames({
+                  "fa-spin": scanning
+                })} /> Scan</Button>
+              </FormGroup>
+            </Form>
+          </div>
 
           <Collapse className={"message"} isOpen={scanning}>
             <Card body inverse color="primary" className={"scanning-message"}>
@@ -174,48 +176,17 @@ class EonList extends Component {
         </div>
         <div className={"eons-list"}>
           <ListGroup>
-            {addingEon && eonToAdd && 
-            <ListGroupItem key={999} className={"results_button disabled"} disabled tag="button">
-              <span className={"eon_icon"}>
-                {addingEon && <FontAwesomeIcon icon="spinner-third" style={{color: 'var(--blue)'}} className={classnames({
-                  "fa-spin": addingEon
-                })} />}
-                <Eon width="100%" height="100%" />
-              </span>
-              <span className={"results_details"}>
-                <span className={"results_button_ip"}>
-                  Attempting to resolve host...
-                </span>
-                <span className={"results_button_mac"}>{eonToAdd.ip}</span>
-              </span>
-              <span className={"results_button_selected"}><FontAwesomeIcon icon={['fas', 'chevron-right']}/></span>
-            </ListGroupItem>
-            }
-            {eonList.map((key,index) => {
-              let eon = eons[key];
-              return (<ListGroupItem key={index} onClick={() => { this.handleSelectEon(eon.id);}} className={"results_button"} tag="button">
-                  <span className={"eon_icon"}>
-                    {(eon.addStatus === 1) && 
-                      <FontAwesomeIcon icon={['fas', 'check']}/>
-                    }
-                    {(eon.addStatus === 0) && 
-                      <FontAwesomeIcon icon={['fas', 'times-octagon']}/>
-                    }
-                    <Eon width="100%" height="100%" />
-                  </span>
-                  <span className={"results_details"}>
-                    <span className={"results_button_ip"}>
-                      {eon.mac}
-                      {!eon.mac && "Unresolved Host"}
-                    </span>
-                    <span className={"results_button_mac"}>{eon.ip}</span>
-                  </span>
-                  <span className={"results_button_selected"}><FontAwesomeIcon icon={['fas', 'chevron-right']}/></span>
-                </ListGroupItem>);
+            {eonIds.map((id) => {
+              return (<EonListItem id={id} type="resolved" key={id} action={() => { this.handleSelectEon(id);}} />);
+            })}
+          </ListGroup>
+          <ListGroup>
+            {unresolvedEonIds.map((id) => {
+              return (<EonListItem id={id} type="unresolved" key={id} action={() => { this.handleSelectEon(id);}} />);
             })}
           </ListGroup>
         </div>
-        {!eonList.length && !scanResultsList.length &&
+        {!eonList.length &&
           <p style={{padding:'15px'}}><strong>You haven't added any EON</strong><br />Start by scanning your network by clicking the refresh icon to the left.</p>
         }
       </Layout>
