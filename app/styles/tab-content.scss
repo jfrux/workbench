@@ -1,13 +1,15 @@
 .tab-content {
   height: 100%;
-  width: calc(100% - #{$child-list-width + $left-bar-width});
+  max-width: calc(100% - #{$child-list-width});
+  width: calc(100% - #{$child-list-width});
+  flex: 0 0 calc(100% - #{$child-list-width});
   overflow-y: auto;
-  position: fixed;
+  position: relative;
   overflow-x: hidden;
-  left: #{$child-list-width + $left-bar-width};
+  left: initial;
   padding: 0 0 0 0;
   background-color: #000;
-  top: $top-bar-height;
+  top: initial;
 }
 
 .tab-content::-webkit-scrollbar { 

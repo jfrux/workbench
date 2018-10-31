@@ -54,6 +54,10 @@
 }
 
 .eon-list-top {
+  width:100%;
+  flex:0 0 1;
+  // height:30px;
+  // max-height:30px;
   position:relative;
   // top: $eons-list-top-top;
   // left: $left-bar-width;
@@ -71,10 +75,14 @@
   // height: calc(100% - #{$eons-list-top});
   overflow-x: hidden;
   overflow-y: auto;
+
   --webkit-overflow-behavior: contain;
   padding-bottom:30px;
   height: 100%;
   max-height: 100%;
+  width:100%;
+  flex:0 0 100%;
+  
   .list-group-item {
     .eon_icon {
       width:70px;

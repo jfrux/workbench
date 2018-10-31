@@ -37,16 +37,20 @@ class Layout extends React.PureComponent {
     });
   }
   render() {
-    const { backBtn, scanning, title, hideLogo, selectedEon, contextActions } = this.props;
+    const { backBtn, scanning, title, hideLogo, selectedEon, contextActions, className } = this.props;
+    let layoutClasses = [{
+      'app-wrapper': true,
+      'is-mac': isMac
+    }];
+    if (className) {
+      layoutClasses.push(className);
+    }
     return (
-      <div className={classnames({
-        'app-wrapper': true,
-        'is-mac': isMac
-      })}>
+      <div className={classnames(layoutClasses)}>
         {isMac &&
-        <div className={'top-bar'}>
-          <span className={'title'}>{title}</span>
-        </div>
+          <div className={'top-bar'}>
+            <span className={'title'}>{title}</span>
+          </div>
         }
 
         <div className={'left-bar'}>

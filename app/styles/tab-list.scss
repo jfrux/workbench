@@ -2,10 +2,12 @@
 .tab-list {
   position: relative;
   width: 200px;
+  flex: 0 0 200px;
+  min-height: 100%;
   height: calc(100% - #{$top-bar-height});
-  left: $left-bar-width;
-  position: fixed;
-  top: $top-bar-height;
+  left: initial;
+  position: relative;
+  top: initial;
   flex-flow: column;
   background-color: #000;
   padding-left: 0;

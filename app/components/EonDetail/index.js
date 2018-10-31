@@ -90,7 +90,7 @@ class EonDetail extends Component {
     ];
 
     return (
-      <Layout title={`${this.props.eon.ip}`} contextActions={contextActions}>
+      <Layout className={'eon-detail'} title={`${this.props.eon.ip}`} contextActions={contextActions}>
         <Nav tabs className={'tab-list'}>
           <NavItem key={"console-tab-link"}>
             <NavLink className={classnames({

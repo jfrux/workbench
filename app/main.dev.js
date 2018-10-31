@@ -27,7 +27,17 @@ autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 
 log.info('App starting...');
+var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
+  // Someone tried to run a second instance, we should focus our window.
+  if (myWindow) {
+    if (myWindow.isMinimized()) myWindow.restore();
+    myWindow.focus();
+  }
+});
 
+if (shouldQuit) {
+  app.quit();
+}
 // import settings from 'electron-settings';
 app.commandLine.appendSwitch('--enable-viewport-meta', 'true');
 let mainWindow = null;

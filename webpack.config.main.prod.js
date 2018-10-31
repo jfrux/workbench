@@ -28,6 +28,7 @@ export default merge.smart(baseConfig, {
   optimization: {
     minimizer: [
       new UglifyJSPlugin({
+        exclude: /app\/capnp/,
         parallel: true,
         sourceMap: true,
         cache: true

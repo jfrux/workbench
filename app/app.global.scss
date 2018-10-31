@@ -21,7 +21,7 @@ $right-content-width: calc(100% - #{$left-bar-width});
   height:100%;
   width:100%;
   display:flex;
-  flex-flow: nowrap;
+  flex-flow: wrap;
   position:fixed;
   background-color: darken(#232c39,$darker_col)!important;
   background: radial-gradient(619.87px at 50% 6.62%, #072339 0%, #051B2C 100%)!important;
@@ -33,7 +33,6 @@ $right-content-width: calc(100% - #{$left-bar-width});
   @import "styles/left-bar";
   @import "styles/tab-list";
   @import "styles/tab-content";
-
   @import "styles/is-mac";
   
   .container-fluid {

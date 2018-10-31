@@ -32,9 +32,18 @@ class StateList extends Component {
       sampling: false
     };
   }
+  // USED TO CLEAN UP JSON STREAM
+  // replacer(key, value) {
+  //   // Filtering out properties
+  //   // console.log(key, typeof value);
+  //   if (typeof value === 'buffer') {
+  //     return value.join("");
+  //   }
+  //   return value;
+  // }
   onMessageReceived = (event_message) => {
     const msg = new EventMessage(event_message);
-    const jsonData = JSON.parse(JSON.stringify(msg.toJSON()))[this.props.group.key];
+    const jsonData = JSON.parse(JSON.stringify(msg))[this.props.group.key];
     const state = this.state;
     let parsedJson;
     let newState = {
@@ -58,6 +67,8 @@ class StateList extends Component {
         messagesCsv: parsedJson
       };
     }
+    // console.log(JSON.stringify(jsonData));
+      
     this.setState(newState);
   }
   clearSampling = () => {
@@ -117,7 +128,7 @@ class StateList extends Component {
         {messagesCsv && 
           <Input type="textarea" className={"messages-output"} value={messagesCsv} name="messagesCsv" id="messagesCsv" readOnly />
         }
-        <JSONPretty json={data} />
+        <JSONPretty json={JSON.parse(JSON.stringify(data))} />
       </div>);
     } else {
       return (<div></div>);

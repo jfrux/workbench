@@ -81,71 +81,34 @@ function* handleAddEon(action) {
   let randomId = revisedRandId();
   
   let newEon = {};
-  console.warn("Attempting to add eon: ", action);
   yield put(eonListActions.ADDING_EON());
-  // try {
-  // if (!payload.mac) {
-  //   const mac_address = yield call(fetchMacAddress, payload);
-  //   payload = {
-  //     ...payload,
-  //     mac: mac_address
-  //   };
-  // }
-    
-    let existingEons = Object.keys(unresolvedEons).filter((key) => {
-      const eon = unresolvedEons[key];
-      return eon.ip === payload.ip;
-    });
+  
+  let existingEons = Object.keys(unresolvedEons).filter((key) => {
+    const eon = unresolvedEons[key];
+    return eon.ip === payload.ip;
+  });
 
-    if (existingEons.length > 0) {
-      let topEonKey = existingEons[0];
+  if (existingEons.length > 0) {
+    let topEonKey = existingEons[0];
+    newEon = {
+      ...unresolvedEons[topEonKey],
+      ip: payload.ip,
+      addStatus: 0
+    };
+    yield put(eonListActions.ADD_EON_ALREADY_EXISTS(newEon));
+    yield put(networkScannerActions.REMOVE_SCANNED_RESULT(payload.id));
+  } else {
+    if (!payload.id) {
       newEon = {
-        ...unresolvedEons[topEonKey],
-        ip: payload.ip,
+        ...payload,
+        id: randomId,
         addStatus: 0
       };
-      yield put(eonListActions.ADD_EON_ALREADY_EXISTS(newEon));
-      yield put(networkScannerActions.REMOVE_SCANNED_RESULT(payload.id));
-    } else {
-      if (!payload.id) {
-        newEon = {
-          ...payload,
-          id: randomId,
-          addStatus: 0
-        };
-      }
-      yield put(eonListActions.ADD_EON_SUCCESS(newEon));
-      yield put(networkScannerActions.REMOVE_SCANNED_RESULT(payload.id));
     }
-  // } catch (e) {
-  //   if (!payload.id) {
-  //     newEon[randomId] = {
-  //       ...payload,
-  //       id: randomId,
-  //       addStatus: 0
-  //     };
-  //   }
-  //   let addingEon = newEon[randomId];
-  //   let existingEons = Object.keys(eons).filter((key) => {
-  //     const eon = eons[key];
-  //     return eon.ip === addingEon.ip;
-  //   });
-  //   if (existingEons.length > 0) {
-  //     yield put(eonListActions.ADD_EON_FAILED());
-  //     // yield put(eonListActions.ADD_EON_ALREADY_EXISTS(newEon));
-  //   } else {
-  //     yield put(eonListActions.ADD_EON_SUCCESS(newEon));
-  //   }
-  // }
+    yield put(eonListActions.ADD_EON_SUCCESS(newEon));
+    yield put(networkScannerActions.REMOVE_SCANNED_RESULT(payload.id));
+  }
 }
-// function* handleProgress() {
-//   const { networkScanner } = yield select();
-//   const { progress } = networkScanner;
-  
-//   if ((progress*100) >= 99) {
-//     yield put(networkScannerActions.COMPLETE_scanNetwork());
-//   }
-// }
 function* handleConnected(action) {
   const { router } = yield select();
 
