@@ -11,10 +11,9 @@ import { app, ipcMain, BrowserWindow } from 'electron';
 import MenuBuilder from './menu';
 import log from 'electron-log';
 import { autoUpdater } from "electron-updater";
-import {startServer} from './server';
+import { startServer } from './server';
 import { listenForNetworkScanner } from './background/network-scanner';
-
-
+import { listenForZmq } from './background/zmq';
 //-------------------------------------------------------------------
 // Logging
 //
@@ -40,6 +39,7 @@ if (shouldQuit) {
 }
 // import settings from 'electron-settings';
 app.commandLine.appendSwitch('--enable-viewport-meta', 'true');
+app.commandLine.appendSwitch('disable-pinch');
 let mainWindow = null;
 
 if (process.env.NODE_ENV === 'production') {
@@ -79,11 +79,8 @@ app.on('window-all-closed', () => {
     app.quit();
   // }
 });
-
 app.on('ready', async () => {
   autoUpdater.checkForUpdatesAndNotify();
-  startServer();
-  listenForNetworkScanner();
   // if (!settings.get("windowBounds")) {
     // settings.set("windowBounds", { width: 800, height: 800 })
   // }
@@ -112,9 +109,13 @@ app.on('ready', async () => {
     minWidth: 540,
     minHeight: 640
   });
-
+  let webContents = mainWindow.webContents;
+  
   mainWindow.loadURL(`file://${__dirname}/app.html`);
   
+  startServer();
+  listenForNetworkScanner();
+  listenForZmq();
   // mainWindow.on('resize', () => {
     // console.log(store.get('windowBounds'));
     // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with
@@ -125,10 +126,13 @@ app.on('ready', async () => {
   // });
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-  mainWindow.webContents.on('did-finish-load', () => {
+  webContents.on('did-finish-load', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
+    webContents.setZoomFactor(1);
+    webContents.setVisualZoomLevelLimits(1, 1);
+    webContents.setLayoutZoomLevelLimits(0, 0);
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {
@@ -143,4 +147,5 @@ app.on('ready', async () => {
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
+
 });

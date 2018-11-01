@@ -1,6 +1,5 @@
 /* reducer for managing list of eons and scanning for eons */
 import * as types from '../constants/network_scanner_action_types';
-import settings from 'electron-settings';
 
 const initialState = {
   scanning: true,

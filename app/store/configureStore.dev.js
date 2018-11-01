@@ -1,16 +1,12 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
-import { createHashHistory } from 'history';
-import { routerMiddleware, routerActions } from 'react-router-redux';
+import { createHashHistory } from 'history'
+import { connectRouter, routerMiddleware } from 'connected-react-router'
 import { createLogger } from 'redux-logger';
 import rootReducer from '../reducers';
 import rootSaga from '../sagas';
-import * as eonTypes from '../constants/eon_detail_action_types';
-import * as carStateTypes from '../constants/car_state_action_types';
-import * as carControlTypes from '../constants/car_control_action_types';
-import * as thermalTypes from '../constants/thermal_action_types';
-import * as systemTypes from '../constants/system_action_types';
+import * as zmqTypes from '../constants/zmq_action_types';
 import * as networkScannerTypes from '../constants/network_scanner_action_types';
 // import * as eonListActions from '../actions/eon_list_actions';
 // import * as eonDetailActions from '../actions/eon_detail_actions';
@@ -44,7 +40,7 @@ const configureStore = (initialState) => {
   // Logging Middleware
   const logger = createLogger({
     level: 'info',
-    predicate: (getState, action) => ![networkScannerTypes.SCAN_NETWORK_PROGRESS,systemTypes.UPDATE,thermalTypes.UPDATE,carStateTypes.UPDATE,carControlTypes.UPDATE].includes(action.type),
+    predicate: (getState, action) => ![networkScannerTypes.SCAN_NETWORK_PROGRESS].includes(action.type),
     collapsed: true
   });
 
@@ -73,7 +69,7 @@ const configureStore = (initialState) => {
   const enhancer = compose(...enhancers);
 
   // Create Store
-  const store = createStore(persistedReducer, enhancer);
+  const store = createStore(connectRouter(history)(persistedReducer), initialState, enhancer);
   let persistor = persistStore(store);
 
   sagaMiddleware.run(rootSaga);

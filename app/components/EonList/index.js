@@ -1,18 +1,14 @@
 // @flow
 import React, { Component } from 'react';
-import Eon from "../../images/device-icons/eon.svg";
 import PropTypes from 'prop-types';
 import routes from '../../constants/routes.json';
 import Layout from '../Layout';
 import classnames from 'classnames';
 import NoConnection from './NoConnection';
-import ProgressBar from './ProgressBar';
 import EonListItem from './EonListItem';
-import LoadingIndicator from '../LoadingIndicator';
-import { Container, ListGroup, UncontrolledTooltip, Collapse, Card, CardBody, Nav, NavItem, NavLink, ListGroupItem, Form, Button, FormGroup, Label, FormFeedback, FormText, InputGroup, InputGroupAddon, InputGroupText, Input} from 'reactstrap';
-import statusMessages from '../../constants/scan_status_messages.json';
-import sshConnectionStatusMessages from '../../constants/ssh_connection_status.json';
+import { ListGroup, UncontrolledTooltip, Collapse, Card, CardBody, NavItem, NavLink, Form, Button, FormGroup, Input} from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 const propTypes = {
   foundCount: PropTypes.number,
   addingEon: PropTypes.bool,
@@ -82,7 +78,7 @@ class EonList extends Component {
   }
   handleSelectEon = (index) => {
     this.props.selectEon(index);
-    this.props.history.push(routes.EON_DETAIL);
+    // this.props.history.push(routes.EON_DETAIL);
   }
   render() {
     const {

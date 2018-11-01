@@ -6,7 +6,7 @@ import {
   takeEvery,
   select
 } from 'redux-saga/effects';
-
+import { push } from 'connected-react-router'
 import { remote } from 'electron';
 const { app } = remote;
 import mkdirp from 'mkdirp';
@@ -14,44 +14,10 @@ import RSAKey from 'rsa-key';
 import path from 'path';
 import fs from 'fs';
 import * as routes from '../constants/routes.json';
-import SSH from 'node-ssh';
 import * as types from '../constants/eon_detail_action_types';
+import * as eonListTypes from '../constants/eon_list_action_types';
 import * as eonListActions from '../actions/eon_list_actions';
 import * as eonDetailActions from '../actions/eon_detail_actions';
-
-function sendCommand(
-  eon,
-  command,
-  commandArgs = [],
-  stdOut = () => {},
-  stdErr = () => {}
-) {
-  const privateKey = getPrivateKey();
-  // console.log('sendCommand', arguments);
-  app.sshClient = new SSH();
-  return app.sshClient
-    .connect({
-      host: eon.ip,
-      username: 'root',
-      port: 8022,
-      privateKey: privateKey
-    })
-    .then(() => {
-      // console.warn("Dispatching command:\n",command);
-      // console.warn("To EON:\n",eon);
-      return app.sshClient.exec(command, commandArgs, {
-        cwd: '/',
-        onStdout(chunk) {
-          // console.warn("stdOut:",chunk.toString('utf8'));
-          stdOut(chunk.toString('utf8'));
-        },
-        onStderr(chunk) {
-          // console.warn("stdErr:",chunk.toString('utf8'));
-          stdErr(chunk.toString('utf8'));
-        }
-      });
-    });
-}
 
 function* getPrivateKey() {
   const userHome = app.getPath('home');
@@ -100,95 +66,13 @@ RsVMUiFgloWGHETOy0Qvc5AwtqTJFLTD1Wza2uBilSVIEsg6Y83Gickh+ejOmEsY
       );
     }
   } catch (e) {
-    console.warn('chmod failed on file ', filePath);
+    // console.warn('chmod failed on file ', filePath);
   }
   const key = new RSAKey(fs.readFileSync(filePath));
   yield put({ type: types.PRIVATE_KEY_INSTALLED });
   return key.exportKey('private', 'pem', 'pkcs1');
 }
 
-// function sendInstallCommand(eon) {
-//   return new Promise((resolve, reject) => {
-//     console.warn('sendInstallCommand', eon);
-//     sendCommand(
-//       eon,
-//       commands.INSTALL_API.replace('%timestamp%', new Date().getTime()),
-//       [],
-//       resp => {
-//         console.warn('stdlog [' + resp.trim() + ']');
-//         // app.sshClient.dispose();
-//         if (resp.trim() == 'Workbench API install complete.') {
-//           resolve(true);
-//         }
-//         // resolve(resp);
-//       },
-//       err => {
-//         console.warn('stderr', err);
-//         // reject(err);
-//       }
-//     ).catch(e => {});
-//   });
-// }
-
-function* installWorkbenchApi() {
-  const { eonList } = yield select();
-  const { selectedEon, eons } = eonList;
-  const eon = eons[selectedEon];
-  // console.warn('sendInstallCommand', sendInstallCommand);
-  yield put(eonDetailActions.BEGIN_install(eon));
-  yield call(getPrivateKey);
-  const installed = true;
-  // try {
-
-  if (installed) {
-    // console.warn("Installed!");
-    yield put(eonDetailActions.SUCCESS_install());
-  } else {
-    // console.warn("Timed out waiting to install");
-    yield put(eonListActions.ADD_ERROR('Timed out trying to connect to EON'));
-    yield put(eonDetailActions.FAIL_install(new Error('Install timed out...')));
-  }
-}
-
-function* handleTabChange(action) {
-  const tab = action.payload;
-  yield call(disconnectChannel);
-
-  if (tab !== 'console') {
-    yield call(connectWebSockets,tab);
-  }
-}
-
-// TODO: Build a mechanism to remove the need to reinstall each time.
-// Possibly when development slows and is more stable we can add something that doesn't require updates unless something changes in Git.
-function* routeWatcher(action) {
-  const { payload } = action;
-  const { pathname } = payload;
-  const { eonList, eonDetail } = yield select();
-  const { selectedEon, eons } = eonList;
-  const { connected } = eonDetail;
-  if (routes.EON_DETAIL === pathname) {
-    // console.warn("IS DETAIL SCREEN", eons[selectedEon]);
-    try {
-      yield call(installWorkbenchApi);
-    } catch (e) {
-      yield put(
-        eonListActions.ADD_ERROR(
-          'Failed to establish a connection to EON: ' + e.message
-        )
-      );
-      yield put(eonDetailActions.FAIL_install(e));
-    }
-  } else {
-    // Not in EON_DETAIL screen... try to disconnect
-    // if (connected) {
-    yield put({ type: types.DISCONNECT });
-    // }
-  }
-}
-function* handleMessage(action) {
-  yield put({ type: types.MESSAGE, payload: action.payload });
-}
 function* addEonListError() {
   yield put(
     eonListActions.ADD_ERROR(
@@ -197,14 +81,22 @@ function* addEonListError() {
   );
 }
 
+function* handleSelectEon(action) {
+  const { eonDetail } = yield select();
+  const { activeTab } = eonDetail;
+  yield call(getPrivateKey);
+  yield put(eonDetailActions.CHANGE_TAB('console', activeTab));
+  yield put(push(routes.EON_DETAIL));
+}
+
 // EXPORT ROOT SAGA
 export function* eonSagas() {
   // console.warn("types:",types);
   
   yield all([
-    takeLatest('@@router/LOCATION_CHANGE', routeWatcher),
+    takeLatest(eonListTypes.SELECT_EON, handleSelectEon),
+    // takeLatest('@@router/LOCATION_CHANGE', routeWatcher),
     takeEvery(types.CONNECT_FAILED, addEonListError),
     // throttle(250,types.MESSAGE_RECEIVED,handleMessage),
-    // takeEvery(types.CHANGE_TAB, handleTabChange)
   ]);
 }

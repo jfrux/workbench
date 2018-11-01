@@ -1,0 +1,1 @@
+export const SET_TERMINAL_FONT_SIZE = 'ui/SET_TERMINAL_FONT_SIZE';

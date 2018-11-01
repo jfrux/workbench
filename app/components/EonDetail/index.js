@@ -4,81 +4,54 @@ import classnames from 'classnames';
 import { Redirect } from 'react-router';
 import routes from '../../constants/routes.json';
 import PropTypes from 'prop-types';
-import vehicleConnectionStatuses from '../../constants/vehicle_connection_statuses';
 import Layout from '../Layout';
-import serviceList from '../../constants/service_list.yaml';
 import StateList from './StateList';
 import { TabContent, Nav, NavItem, NavLink, TabPane } from 'reactstrap';
 import Terminal from '../Terminal';
 
 const propTypes = {
-  connecting: PropTypes.bool,
-  connected: PropTypes.bool,
   activeTab: PropTypes.string,
-  installError: PropTypes.any,
-  isLoggedIn: PropTypes.any,
-  install: PropTypes.func,
   eon: PropTypes.object,
   messagesReceived: PropTypes.number,
   selectedEon: PropTypes.string,
-  currentStateKeys: PropTypes.array
+  serviceIds: PropTypes.array,
+  services: PropTypes.object
 };
 
 class EonDetail extends Component {
-  componentDidMount() {
-    const { eon, SELECT_EON } = this.props;
-    if (eon && this.props.SELECT_EON) {
-      this.props.SELECT_EON(eon.id);
-    }
-    
-    if (!eon) {
-      return;
-    }
-  }
-  setTab(tab) {
+  setTab = (tab) => {
     this.props.CHANGE_TAB(tab);
   }
-  openDrive(driveIndex) {
-    this.props.OPEN_DRIVE(driveIndex);
-  }
   render() {
-    const { installing, activeTab, network, fingerprint, stateRequestFatal, devices, installError, currentStateKeys, eon } = this.props;
-    // const vehicleConnectionInfo = vehicleConnectionStatuses[vehicleConnection];
-    if (network === 'disconnected' || eon == null || installError || stateRequestFatal) {
+    const { activeTab, network, devices, currentStateKeys, eon, services, serviceIds } = this.props;
+    if (network === 'disconnected' || eon == null) {
       return (<Redirect to={routes.EON_LIST} />);
     }
-    if (fingerprint) {
-      currentStateKeys.push('fingerprint');
-    }
-    const stateGroupKeys = Object.keys(serviceList).sort();
     let stateTabs, statePanes;
-    // console.warn("stateGroupKeys",stateGroupKeys);
     
-    stateTabs = stateGroupKeys.map((key) => {
-      const stateGroup = serviceList[key];
+    stateTabs = serviceIds.map((key) => {
+      const service = services[key];
       return (
         <NavItem key={key + "-tab-link"}>
           <NavLink
             className={classnames({
               test: true,
               "no-select": true,
-              active: !installing && stateGroupKeys.length && activeTab === key,
-              disabled: installing || !stateGroupKeys.length
+              active: serviceIds.length && activeTab === key,
+              disabled: !serviceIds.length
             })}
             onClick={() => { this.setTab(key); }}
             >
-            {stateGroup.label}
+            {service.label}
           </NavLink>
         </NavItem>
       );
     });
-    statePanes = stateGroupKeys.map((key) => {
-      const stateGroup = serviceList[key];
+    statePanes = serviceIds.map((key) => {
+      const service = services[key];
       return (
         <TabPane key={key + "-tab-pane"} tabId={key}>
-          {activeTab === key &&
-            <StateList type={key} eon={this.props.eon} group={stateGroup} />
-          }
+          {activeTab === key && <StateList type={key} />}
         </TabPane>
       );
     });
@@ -96,8 +69,8 @@ class EonDetail extends Component {
             <NavLink className={classnames({
                 test: true,
                 "no-select": true,
-                active: !installing && stateGroupKeys.length && activeTab === 'console',
-                disabled: installing || !stateGroupKeys.length
+                active: serviceIds.length && activeTab === 'console',
+                disabled: !serviceIds.length
               })}
               onClick={() => { this.setTab('console'); }}>
               Console

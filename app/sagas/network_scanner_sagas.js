@@ -30,17 +30,10 @@ export function* createScannerEventChannel(scanner) {
     };
 
     const scanResult = (evt, data) => {
-      console.warn("RESULT RECEIVED", data);
       emit(networkScannerActions.RESULT_scanNetwork(data));
     };
 
     const scanPartialComplete = (evt, data) => {
-      // console.warn("foundData:",data);
-      // data.status = "open";
-      // i = i+1;
-      // data.mac = "00:00:00:00:" + i;
-      // {ip: "10.168.4.125", port: 8022, status: "open"}
-      // console.log("Scan Result:",data)
       emit(networkScannerActions.PARTIALCOMPLETE_scanNetwork(data));
     };
     
@@ -119,11 +112,8 @@ function* handleConnected(action) {
 }
 
 function fetchMacAddress(eon) {
-  // console.log("fetching mac address: ",action);
   return new Promise((resolve,reject) => {
-    // console.warn("Checking MAC of ",eon.ip);
     arp.getMAC(eon.ip, function(err, mac) {
-      // console.warn("Mac Lookup Error:",err,arguments);
       if (!err) {
         resolve(mac);
       } else {
@@ -134,13 +124,9 @@ function fetchMacAddress(eon) {
 }
 
 function* resolveEon(action) {
-  console.warn("Resolving eon...",action);
-  // const { eon } = this.props;
   const eonKey = Object.keys(action.payload)[0]
   const eon = action.payload[eonKey];
   let updatedEon = JSON.parse(JSON.stringify(eon));
-  // console.log("fetching mac address: ",action);
-  console.log("Checking MAC of ",eon.ip);
 
   try {
     const mac = yield call(fetchMacAddress,eon);

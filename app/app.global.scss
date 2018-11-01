@@ -14,10 +14,13 @@ $eons-list-top-top: $top-bar-height;
 $eons-list-top-height: 30px;
 $eons-list-top: $top-bar-height+$eons-list-top-height;
 $right-content-width: calc(100% - #{$left-bar-width});
+body {
+  background-color:#000;
+}
 .app-wrapper {
   $darker_col: 6;
   padding-top:0;
-  overflow:auto;
+  overflow:hidden;
   height:100%;
   width:100%;
   display:flex;
@@ -33,6 +36,7 @@ $right-content-width: calc(100% - #{$left-bar-width});
   @import "styles/left-bar";
   @import "styles/tab-list";
   @import "styles/tab-content";
+  @import "styles/loading-overlay";
   @import "styles/is-mac";
   
   .container-fluid {

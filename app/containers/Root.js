@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
-import { ConnectedRouter } from 'react-router-redux';
+import { ConnectedRouter } from 'connected-react-router'
 import Routes from '../Routes';
 import LoadingOverlay from '../components/LoadingOverlay';
 

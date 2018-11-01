@@ -3,12 +3,8 @@ import Eon from "../../images/device-icons/eon.svg";
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import routes from '../../constants/routes.json';
-import LoadingIndicator from '../LoadingIndicator';
 import { ListGroupItem } from 'reactstrap';
 import classNames from 'classnames';
-import statusMessages from '../../constants/scan_status_messages.json';
-import sshConnectionStatusMessages from '../../constants/ssh_connection_status.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as EonListActions from '../../actions/eon_list_actions';
 const propTypes = {

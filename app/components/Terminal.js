@@ -141,7 +141,7 @@ class ReactTerminal extends React.Component {
     const {props} = this;
     this.term = new Terminal({
       cursorBlink: true,
-      rows: 3,
+      // rows: 3,
       fontSize: this.fontSize
     });
     this.term.open(this.termRef);
@@ -212,57 +212,49 @@ class ReactTerminal extends React.Component {
         { method: 'POST' }
       );
     });
-    // this.term.decreaseFontSize = () => {
-    //   this.term.setOption('fontSize', --this.fontSize);
-    //   this.term.fit();
-    // };
-    // this.term.increaseFontSize = () => {
-    //   this.term.setOption('fontSize', ++this.fontSize);
-    //   this.term.fit();
-    // };
+    this.term.decreaseFontSize = () => {
+      this.term.setOption('fontSize', --this.fontSize);
+      this.term.fit();
+    };
+    this.term.increaseFontSize = () => {
+      this.term.setOption('fontSize', ++this.fontSize);
+      this.term.fit();
+    };
     this.fitResize();
     this._connectToServer();
-
-    // listenToWindowResize(() => {
-    //   this.term.fit();
-    // });
-    this.term.fit();
-    // this.term.textarea.onkeydown = e => {
-    //   console.log(e.keyCode, e.shiftKey, e.ctrlKey, e.altKey);
-    //   // ctrl + shift + metakey + +
-    //   if (
-    //     (e.keyCode === 187 || e.keyCode === 61) &&
-    //     e.shiftKey &&
-    //     e.ctrlKey &&
-    //     e.altKey
-    //   ) {
-    //     this.term.setOption('fontSize', ++this.fontSize);
-    //     this.term.fit();
-    //   }
-    //   // ctrl + shift + metakey + -
-    //   if (
-    //     (e.keyCode === 189 || e.keyCode === 173) &&
-    //     e.shiftKey &&
-    //     e.ctrlKey &&
-    //     e.altKey
-    //   ) {
-    //     this.term.setOption('fontSize', --this.fontSize);
-    //     this.term.fit();
-    //   }
-    //   // ctrl + shift + metakey + v
-    //   if (e.keyCode === 86 && e.shiftKey && e.ctrlKey && e.altKey) {
-    //     this.props.options.splitVertical && this.props.options.splitVertical();
-    //   }
-    //   // ctrl + shift + metakey + h
-    //   if (e.keyCode === 72 && e.shiftKey && e.ctrlKey && e.altKey) {
-    //     this.props.options.splitHorizontal &&
-    //       this.props.options.splitHorizontal();
-    //   }
-    //   // ctrl + shift + metakey + w
-    //   if (e.keyCode === 87 && e.shiftKey && e.ctrlKey && e.altKey) {
-    //     this.props.options.close && this.props.options.close();
-    //   }
-    // };
+    
+    this.term.textarea.onkeydown = e => {
+      // console.log(e.keyCode, e.shiftKey, e.ctrlKey, e.altKey);
+      // ctrl + shift + metakey + +
+      if (
+        (e.keyCode === 187 || e.keyCode === 61) &&
+        e.metaKey || e.ctrlKey
+      ) {
+        this.term.setOption('fontSize', ++this.fontSize);
+        this.term.fit();
+      }
+      // ctrl + shift + metakey + -
+      if (
+        (e.keyCode === 189 || e.keyCode === 173) &&
+        e.metaKey || e.ctrlKey
+      ) {
+        this.term.setOption('fontSize', --this.fontSize);
+        this.term.fit();
+      }
+      // ctrl + shift + metakey + v
+      if (e.keyCode === 86 && e.shiftKey && e.ctrlKey && e.altKey) {
+        this.props.options.splitVertical && this.props.options.splitVertical();
+      }
+      // ctrl + shift + metakey + h
+      if (e.keyCode === 72 && e.shiftKey && e.ctrlKey && e.altKey) {
+        this.props.options.splitHorizontal &&
+          this.props.options.splitHorizontal();
+      }
+      // ctrl + shift + metakey + w
+      if (e.keyCode === 87 && e.shiftKey && e.ctrlKey && e.altKey) {
+        this.props.options.close && this.props.options.close();
+      }
+    };
   }
   sendCommand(cmd) {
     this.socket.send(cmd);
@@ -328,12 +320,12 @@ class ReactTerminal extends React.Component {
               `ssh root@${this.props.eonIp} -p 8022 -i ~/.ssh/openpilot_rsa\r`
             );
           };
-          this.socket.onclose = () => {
-            this.term.writeln('Server disconnected!');
-            this._connectToServer();
-          };
+          // this.socket.onclose = () => {
+          //   this.term.writeln('Server disconnected!');
+          //   this._connectToServer();
+          // };
           this.socket.onerror = () => {
-            this.term.writeln('Server disconnected!');
+            this.term.writeln('Critical error, restart Workbench!');
             this._connectToServer();
           };
         });

@@ -1,13 +1,23 @@
-// const defaultShell = require('default-shell');
-
 var terminals = {};
 var logs = {};
 
 const PORT = 9788;
 const express = require('express');
 const app = express();
-// console.log(pty);
 const pty = require('node-pty-prebuilt');
+var log = require('electron-log');
+const chalk = require('chalk');
+const prefix = chalk.bold.blue;
+const bgTaskColor = chalk.green;
+
+function writeLog(...params) {
+  console.info(prefix('workbench') + ' ' + chalk.bold(bgTaskColor('[terminal]')), bgTaskColor(...params));
+}
+// try {
+//   spawn = require('node-pty-prebuilt').spawn;
+// } catch (err) {
+//   throw "pty could not be spawned";
+// }
 const argv = require('yargs').argv;
 
 const port = argv.port || PORT;
@@ -53,7 +63,7 @@ app.post('/terminals', function (req, res) {
     env: process.env
   });
 
-  console.log('Created terminal with PID: ' + term.pid);
+  writeLog('Created terminal with PID: ' + term.pid);
   terminals[term.pid] = term;
   logs[term.pid] = '';
   term.on('data', function (data) {
@@ -70,7 +80,7 @@ app.post('/terminals/:pid/size', function (req, res) {
   let term = terminals[pid];
 
   term.resize(cols, rows);
-  console.log('Resized terminal ' + pid + ' to ' + cols + ' cols and ' + rows + ' rows.');
+  writeLog('Resized terminal ' + pid + ' to ' + cols + ' cols and ' + rows + ' rows.');
   res.end();
 });
 
@@ -82,11 +92,11 @@ app.ws('/terminals/:pid', function (ws, req) {
     return;
   }
 
-  console.log('Connected to terminal ' + term.pid);
+  writeLog('Connected to terminal ' + term.pid);
   ws.send(logs[term.pid]);
 
   term.on('data', function (data) {
-    // console.log('Incoming data = ' + data);
+    // writeLog('Incoming data = ' + data);
     try {
       ws.send(data);
     } catch (ex) {
@@ -98,7 +108,7 @@ app.ws('/terminals/:pid', function (ws, req) {
   });
   ws.on('close', function () {
     term.kill();
-    console.log('Closed terminal ' + term.pid);
+    writeLog('Closed terminal ' + term.pid);
     // Clean things up
     delete terminals[term.pid];
     delete logs[term.pid];
@@ -112,7 +122,7 @@ module.exports = {
       process.exit(1);
     } else {
       app.listen(port, host);
-      console.log('Workbench terminal emulator server listening at http://' + host + ':' + port);
+      writeLog('Workbench terminal emulator server listening at http://' + host + ':' + port);
     }
   }
 } 

@@ -1,16 +1,17 @@
 import IpUtil from "ip";
 import arp from 'node-arp';
-var log = require('electron-log');
-const chalk = require('chalk');
 import evilscan from 'evilscan';
 import * as networkActions from '../actions/network_connection_actions';
 import * as types from '../constants/network_scanner_action_types';
 import { ipcMain } from 'electron';
 
+var log = require('electron-log');
+const chalk = require('chalk');
 const prefix = chalk.bold.blue;
+const bgTaskColor = chalk.yellow;
 
 function writeLog(...params) {
-  console.info(prefix('[scanner]'), ...params);
+  console.info(prefix('workbench') + ' ' + chalk.bold(bgTaskColor('[scanner]')), bgTaskColor(...params));
 }
 
 function scanNetwork(sender) {

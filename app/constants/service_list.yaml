@@ -1,24 +1,54 @@
 frame:
+  id: "frame"
+  type: "Object"
   key: "Frame"
   port: 8002
   label: "Frame"
+  fields:
+    -
   description: "Frame syncing packet"
 sensorEvents:
+  id: "sensorEvents"
+  type: "Object"
   key: "SensorEvents"
   port: 8003
   label: "Sensor Events"
+  fields:
+    -
   description: "Accel, gyro, and compass"
 gpsNMEA:
+  id: "gpsNMEA"
+  type: "Object"
   key: "GpsNMEA"
   port: 8004
   label: "GPS NMEA"
+  fields:
+    -
   description: "GPS data, also global timestamp"
 gpsLocation:
+  id: "gpsLocation"
+  type: "Object"
   key: "GpsLocation"
   port: 8026
   label: "GPS Location"
+  fields:
+    - "Flags"
+    - "Latitude"
+    - "Longitude"
+    - "Altitude"
+    - "Speed"
+    - "Bearing"
+    - "Accuracy"
+    - "Timestamp"
+    - "Source"
+    - "VNED"
+    - "VerticalAccuracy"
+    - "BearingAccuracy"
+    - "SpeedAccuracy"
   description:
 thermal:
+  id: "thermal"
+  type: "Object"
   key: "Thermal"
   port: 8005
   label: "Thermal"
@@ -39,129 +69,230 @@ thermal:
     - "Started"
     - "StartedTs"
 can:
+  id: "can"
+  type: "Array"
   key: "Can"
   port: 8006
   label: "CAN"
+  fields:
+    - "Address"
+    - "BusTime"
+    - "Dat"
+    - "Src"
   description: "List of can messages"
 live100:
+  id: "live100"
+  type: "Object"
   key: "Live100"
   port: 8007
   label: "Live 100"
+  fields:
+    -
   description:
 #liveEvent:
   # port: 8008
   # label: "Live Event"
+  # fields:
+    # -
   # description:
 model:
+  id: "model"
+  type: "Object"
   key: "Model"
   port: 8009
   label: "Model"
+  fields:
+    -
   description:
 features:
+  id: "features"
+  type: "Object"
   key: "Features"
   port: 8010
   label: "Features"
+  fields:
+    -
   description:
 health:
+  id: "health"
+  type: "Object"
   key: "Health"
   port: 8011
   label: "Health"
+  fields:
+    -
   description:
 live20:
+  id: "live20"
+  type: "Object"
   key: "Live20"
   port: 8012
   label: "Live 20"
+  fields:
+    -
   description:
 #liveUI:
   # port: 8014
   # label: "Live Ui"
+  # fields:
+  #   -
   # description:
 encodeIdx:
+  id: "encodeIdx"
+  type: "Object"
   key: "EncodeIdx"
   port: 8015
   label: "Encode Idx"
+  fields:
+    -
   description:
 liveTracks:
+  id: "liveTracks"
+  type: "Object"
   key: "LiveTracks"
   port: 8016
   label: "Live Tracks"
+  fields:
+    -
   description:
 sendcan:
+  id: "sendcan"
+  type: "Object"
   key: "Sendcan"
   port: 8017
   label: "Send CAN"
+  fields:
+    -
   description:
 logMessage:
+  id: "logMessage"
+  type: "Object"
   key: "LogMessage"
   port: 8018
   label: "Log Message"
+  fields:
+    -
   description:
 liveCalibration:
+  id: "liveCalibration"
+  type: "Object"
   key: "LiveCalibration"
   port: 8019
   label: "Live Calibration"
+  fields:
+    -
   description: ""
 androidLog:
+  id: "androidLog"
+  type: "Object"
   key: "AndroidLog"
   port: 8020
   label: "Android Log"
+  fields:
+    -
   description:
 carState:
+  id: "carState"
+  type: "Object"
   key: "CarState"
   port: 8021
   label: "Car State"
+  fields:
+    -
   description:
 carControl:
+  id: "carControl"
+  type: "Object"
   key: "CarControl"
   port: 8023
   label: "Car Control"
+  fields:
+    -
   description:
 plan:
+  id: "plan"
+  type: "Object"
   key: "Plan"
   port: 8024
   label: "Plan"
+  fields:
+    -
   description:
 liveLocation:
+  id: "liveLocation"
+  type: "Object"
   key: "LiveLocation"
   port: 8025
   label: "Live Location"
+  fields:
+    -
   description: ""
 ethernetData:
+  id: "ethernetData"
+  type: "Object"
   key: "EthernetData"
   port: 8027
   label: "Ethernet Data"
+  fields:
+    -
   description: " "
 navUpdate:
+  id: "navUpdate"
+  type: "Object"
   key: "NavUpdate"
   port: 8028
   label: "Nav Update"
+  fields:
+    -
   description:
 qcomGnss:
+  id: "qcomGnss"
+  type: "Object"
   key: "QcomGNSS"
   port: 8029
   label: "QCOM GNSS"
+  fields:
+    -
   description:
 lidarPts:
+  id: "lidarPts"
+  type: "Object"
   key: "LidarPts"
   port: 8030
   label: "Lidar Pts"
+  fields:
+    -
   description:
 procLog:
+  id: "procLog"
+  type: "Object"
   key: "ProcLog"
   port: 8031
   label: "Proc Log"
+  fields:
+    -
   description:
 gpsLocationExternal:
+  id: "gpsLocationExternal"
+  type: "Object"
   key: "GpsLocationExternal"
   port: 8032
   label: "GPS Location External"
+  fields:
+    -
   description: ""
 ubloxGnss:
+  id: "ubloxGnss"
+  type: "Object"
   key: "UbloxGNSS"
   port: 8033
   label: "Ublox GNSS"
+  fields:
+    -
   description:
 clocks:
+  id: "clocks"
+  type: "Object"
   key: "Clocks"
   port: 8034
   label: "Clocks"
@@ -173,147 +304,263 @@ clocks:
     - "WallTimeNanos"
     - "ModemUptimeMillis"
 liveMpc:
+  id: "liveMpc"
+  type: "Object"
   key: "LiveMpc"
   port: 8035
   label: "Live Mpc"
+  fields:
+    -
   description:
 liveLongitudinalMpc:
+  id: "liveLongitudinalMpc"
+  type: "Object"
   key: "LiveLongitudinalMpc"
   port: 8036
   label: "Live Longitudinal Mpc"
+  fields:
+    -
   description: ""
 plusFrame:
+  id: "plusFrame"
+  type: "Object"
   key: "PlusFrame"
   port: 8037
   label: "Plus Frame"
+  fields:
+    -
   description:
 navStatus:
+  id: "navStatus"
+  type: "Object"
   key: "NavStatus"
   port: 8038
   label: "Nav Status"
+  fields:
+    -
   description:
 gpsLocationTrimble:
+  id: "gpsLocationTrimble"
+  type: "Object"
   key: "GpsLocationTrimble"
   port: 8039
   label: "GPS Location Trimble"
+  fields:
+    -
   description: ""
 trimbleGnss:
+  id: "trimbleGnss"
+  type: "Object"
   key: "TrimbleGNSS"
   port: 8041
   label: "Trimble GNSS"
+  fields:
+    -
   description:
 ubloxRaw:
+  id: "ubloxRaw"
+  type: "Object"
   key: "UbloxRaw"
   port: 8042
   label: "Ublox Raw"
+  fields:
+    -
   description:
 gpsPlannerPoints:
+  id: "gpsPlannerPoints"
+  type: "Object"
   key: "GpsPlannerPoints"
   port: 8043
   label: "GPS Planner Points"
+  fields:
+    -
   description: ""
 gpsPlannerPlan:
+  id: "gpsPlannerPlan"
+  type: "Object"
   key: "GpsPlannerPlan"
   port: 8044
   label: "GPS Planner Plan"
+  fields:
+    -
   description: ""
 applanixRaw:
+  id: "applanixRaw"
+  type: "Object"
   key: "ApplanixRaw"
   port: 8046
   label: "Applanix Raw"
+  fields:
+    -
   description:
 orbLocation:
+  id: "orbLocation"
+  type: "Object"
   key: "OrbLocation"
   port: 8047
   label: "Orb Location"
+  fields:
+    -
   description:
 trafficEvents:
+  id: "trafficEvents"
+  type: "Object"
   key: "TrafficEvents"
   port: 8048
   label: "Traffic Events"
+  fields:
+    -
   description: ""
 liveLocationTiming:
+  id: "liveLocationTiming"
+  type: "Object"
   key: "LiveLocationTiming"
   port: 8049
   label: "Live Location Timing"
+  fields:
+    -
   description: " "
 orbslamCorrection:
+  id: "orbslamCorrection"
+  type: "Object"
   key: "OrbslamCorrection"
   port: 8050
   label: "Orbslam Correction"
+  fields:
+    -
   description: " "
 liveLocationCorrected:
+  id: "liveLocationCorrected"
+  type: "Object"
   key: "LiveLocationCorrected"
   port: 8051
   label: "Live Location Corrected"
+  fields:
+    -
   description: " "
 orbObservation:
+  id: "orbObservation"
+  type: "Object"
   key: "OrbObservation"
   port: 8052
   label: "Orb Observation"
+  fields:
+    -
   description: ""
 applanixLocation:
+  id: "applanixLocation"
+  type: "Object"
   key: "ApplanixLocation"
   port: 8053
   label: "Applanix Location"
+  fields:
+    -
   description: ""
 liveLocationKalman:
+  id: "liveLocationKalman"
+  type: "Object"
   key: "LiveLocationKalman"
   port: 8054
   label: "Live Location Kalman"
+  fields:
+    -
   description: ""
 uiNavigationEvent:
+  id: "uiNavigationEvent"
+  type: "Object"
   key: "UiNavigationEvent"
   port: 8055
   label: "UI Navigation Event"
+  fields:
+    -
   description: ""
 orbOdometry:
+  id: "orbOdometry"
+  type: "Object"
   key: "OrbOdometry"
   port: 8057
   label: "Orb Odometry"
+  fields:
+    -
   description:
 orbFeatures:
+  id: "orbFeatures"
+  type: "Object"
   key: "OrbFeatures"
   port: 8058
   label: "Orb Features"
+  fields:
+    -
   description:
 orbKeyFrame:
+  id: "orbKeyFrame"
+  type: "Object"
   key: "OrbKeyFrame"
   port: 8059
   label: "Orb Key Frame"
+  fields:
+    -
   description:
 uiLayoutState:
+  id: "uiLayoutState"
+  type: "Object"
   key: "UiLayoutState"
   port: 8060
   label: "UI Layout State"
+  fields:
+    -
   description: ""
 frontEncodeIdx:
+  id: "frontEncodeIdx"
+  type: "Object"
   key: "FrontEncodeIdx"
   port: 8061
   label: "Front Encode Idx"
+  fields:
+    -
   description: ""
 orbFeaturesSummary:
+  id: "orbFeaturesSummary"
+  type: "Object"
   key: "OrbFeaturesSummary"
   port: 8062
   label: "Orb Features Summary"
+  fields:
+    -
   description: ""
 driverMonitoring:
+  id: "driverMonitoring"
+  type: "Object"
   key: "DriverMonitoring"
   port: 8063
   label: "Driver Monitoring"
+  fields:
+    -
   description: ""
 testModel:
+  id: "testModel"
+  type: "Object"
   key: "TestModel"
   port: 8040
   label: "Test Model"
+  fields:
+    -
   description:
 testLiveLocation:
+  id: "testLiveLocation"
+  type: "Object"
   key: "TestLiveLocation"
   port: 8045
   label: "Test Live Location"
+  fields:
+    -
   description: ""
 testJoystick:
+  id: "testJoystick"
+  type: "Object"
   key: "TestJoystick"
   port: 8056
   label: "Test Joystick"
+  fields:
+    -
   description:

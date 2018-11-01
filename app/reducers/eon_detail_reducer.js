@@ -6,6 +6,7 @@ const defaultTmuxLogLength = 300;
 
 const initialState = {
   activeTab: 'console',
+  previousTab: null,
   updated: null,
   vehicleConnection: null,
   service: null,
@@ -31,6 +32,7 @@ export default function eonDetailReducer(state = initialState, action) {
     case types.CHANGE_TAB:
       return {
         ...state,
+        previousTab: state.activeTab,
         activeTab: action.payload
       };
     case types.CONNECT:
