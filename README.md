@@ -37,22 +37,11 @@ Download the latest version from the links below.
 - [x] Scans your network for your EON so you don't need to find the IP.
 - [x] Connects to EON via SSH (and automatically, installs SSH key for you)
 - [x] Dumps you into an SSH shell connection to your EON with one click.
-
-
-## Todos Pipeline
-
-- [ ] Displays Health
-- [ ] Displays GPS Location Info
-- [ ] Installs a basic API to EON for more accurate data fetching. (see `workbench_api` directory)
-- [ ] Retrieves fingerprint and places it in a textbox.
-- [ ] Check if Panda is flashed
-- [ ] Output if Vehicle Detected by Fingerprint
-- [ ] A general "health" check view to make it easier to know if things are okay.
+- [x] Has tabs for all of the various ZMQ messages sent in real-time over wifi from EON.
 
 ## Ideas / Concepts
 
-- [ ] Add addl tools as we see fit...
-- [ ] Install a fork of Openpilot from a git url
+- [ ] Automatic task scripts for EON configuration / maintenance.
 - [ ] Reinstall Comma Openpilot Release2
 - [ ] Backup videos
 - [ ] Review videos
