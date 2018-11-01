@@ -116,6 +116,10 @@ app.on('ready', async () => {
   startServer();
   listenForNetworkScanner();
   listenForZmq();
+  
+  const menuBuilder = new MenuBuilder(mainWindow);
+  menuBuilder.buildMenu();
+
   // mainWindow.on('resize', () => {
     // console.log(store.get('windowBounds'));
     // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with
@@ -144,8 +148,5 @@ app.on('ready', async () => {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
-
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
 
 });
