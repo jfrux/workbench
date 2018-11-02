@@ -17,11 +17,8 @@ const dist = path.join(__dirname, 'app', 'renderer', 'dll');
 
 export default merge.smart(baseConfig, {
   context: process.cwd(),
-
   devtool: 'eval',
-
   mode: 'development',
-
   target: 'electron-renderer',
 
   externals: ['ws', 'fsevents', 'crypto-browserify'],
@@ -66,9 +63,9 @@ export default merge.smart(baseConfig, {
     new webpack.LoaderOptionsPlugin({
       debug: true,
       options: {
-        context: path.resolve(process.cwd(), 'app'),
+        context: path.resolve(process.cwd(), 'app', 'renderer'),
         output: {
-          path: path.resolve(process.cwd(), 'dll')
+          path: path.resolve(process.cwd(), 'renderer', 'dll')
         }
       }
     })
