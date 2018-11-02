@@ -13,7 +13,7 @@ import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
 
 CheckNodeEnv('development');
 
-const dist = path.resolve(process.cwd(), 'dll');
+const dist = path.join(__dirname, 'app', 'renderer', 'dll');
 
 export default merge.smart(baseConfig, {
   context: process.cwd(),
@@ -60,7 +60,7 @@ export default merge.smart(baseConfig, {
      * development checks
      */
     new webpack.EnvironmentPlugin({
-      NODE_ENV: 'development'
+      NODE_ENV: 'production'
     }),
 
     new webpack.LoaderOptionsPlugin({

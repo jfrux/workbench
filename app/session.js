@@ -1,7 +1,7 @@
 const {EventEmitter} = require('events');
 const {StringDecoder} = require('string_decoder');
 
-// const defaultShell = require('default-shell');
+const defaultShell = require('default-shell');
 
 const {getDecoratedEnv} = require('./plugins');
 const {productName, version} = require('./package');
@@ -14,7 +14,7 @@ const createNodePtyError = () =>
 
 let spawn;
 try {
-  spawn = require('node-pty-prebuilt').spawn;
+  spawn = require('node-pty').spawn;
 } catch (err) {
   throw createNodePtyError();
 }
@@ -46,11 +46,11 @@ module.exports = class Session extends EventEmitter {
     }
 
     const decoder = new StringDecoder('utf8');
-// 
+
     const defaultShellArgs = ['--login'];
 
     try {
-      this.pty = spawn(shell || argv.shell && argv.shell !== '' ? argv.shell : process.platform === 'win32' ? 'cmd.exe' : 'bash', shellArgs || defaultShellArgs, {
+      this.pty = spawn(shell || defaultShell, shellArgs || defaultShellArgs, {
         cols: columns,
         rows,
         cwd,

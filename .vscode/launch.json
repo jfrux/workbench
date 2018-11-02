@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Workbench",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+      "program": "${workspaceRoot}/app/index.js",
+      "protocol": "inspector"
+    },
+     {
+      "type": "node",
+      "request": "launch",
+      "name": "cli",
+      "runtimeExecutable": "node",
+      "program": "${workspaceRoot}/bin/cli.js",
+      "args": ["--help"],
+      "protocol": "inspector"
+    }
+  ]
+}

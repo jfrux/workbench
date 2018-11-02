@@ -42,7 +42,7 @@ exports.createMenu = (createWindow, getLoadedPluginVersions) => {
     dialog.showMessageBox({
       title: `About ${appName}`,
       message: `${appName} ${appVersion} (${updateChannel})`,
-      detail: `<3 @jfrux\nCopyright © 2018 Joshua F. Rountree`,
+      detail: `Plugins: ${pluginList}\n\nCreated by Guillermo Rauch\nCopyright © 2018 ZEIT, Inc.`,
       buttons: [],
       icon
     });
@@ -52,7 +52,7 @@ exports.createMenu = (createWindow, getLoadedPluginVersions) => {
     shellMenu(commandKeys, execCommand),
     editMenu(commandKeys, execCommand),
     viewMenu(commandKeys, execCommand),
-    // pluginsMenu(commandKeys, execCommand),
+    pluginsMenu(commandKeys, execCommand),
     windowMenu(commandKeys, execCommand),
     helpMenu(commandKeys, showAbout)
   ];

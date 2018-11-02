@@ -49,7 +49,6 @@ const _importConf = function() {
 
 exports._import = () => {
   const imported = _importConf();
-  // console.warn("imported config:",imported);
   defaultConfig = imported.defaultCfg;
   const result = _init(imported);
   return result;

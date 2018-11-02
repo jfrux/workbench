@@ -1,0 +1,25 @@
+{
+  "name": "workbench",
+  "productName": "Workbench",
+  "version": "0.0.32",
+  "description": "The Openpilot Workbench is to help people fix problems with EON, Openpilot, etc.",
+  "main": "./main.prod.js",
+  "author": {
+    "name": "jfrux",
+    "email": "support@opc.ai",
+    "url": "https://github.com/jfrux"
+  },
+  "scripts": {
+    "electron-rebuild": "node -r babel-register ../internals/scripts/ElectronRebuild.js",
+    "postinstall": "yarn electron-rebuild"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "node-pty-prebuilt": "^0.7.6",
+    "babel-register": "^6.26.0",
+    "bufferutil": "^4.0.0",
+    "utf-8-validate": "^5.0.1",
+    "winattr": "^2.0.0",
+    "zeromq": "^5.1.0"
+  }
+}

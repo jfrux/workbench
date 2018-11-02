@@ -8,7 +8,7 @@ import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import baseConfig from './webpack.config.base';
 import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
-
+const path = require("path");
 CheckNodeEnv('production');
 
 export default merge.smart(baseConfig, {
@@ -18,17 +18,17 @@ export default merge.smart(baseConfig, {
 
   target: 'electron-main',
 
-  entry: './app/main.new.dev',
+  entry: './lib/main.new.dev',
 
   output: {
-    path: __dirname,
-    filename: './app/main.prod.js'
+    path: path.join(__dirname, 'app', 'renderer'),
+    filename: 'main.prod.js'
   },
 
   optimization: {
     minimizer: [
       new UglifyJSPlugin({
-        exclude: /app\/capnp/,
+        exclude: /lib\/capnp/,
         parallel: true,
         sourceMap: true,
         cache: true

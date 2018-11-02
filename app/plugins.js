@@ -243,7 +243,6 @@ exports.subscribe = fn => {
 };
 
 function getPaths() {
-  console.warn("PLUGINS:",plugins);
   return {
     plugins: plugins.plugins.map(name => {
       return resolve(path, 'node_modules', name.split('#')[0].split('@')[0]);

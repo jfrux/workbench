@@ -34,8 +34,8 @@ const plugs = {
   local: resolve(plugins, 'local'),
   cache: resolve(plugins, 'cache')
 };
-const yarn = resolve(__dirname, '../bin/yarn-standalone.js');
-const cliScriptPath = resolve(__dirname, '../bin/workbench');
+const yarn = resolve(__dirname, '../../bin/yarn-standalone.js');
+const cliScriptPath = resolve(__dirname, '../../bin/workbench');
 const cliLinkPath = '/usr/local/bin/workbench';
 
 const icon = resolve(__dirname, '../static/icon96x96.png');
