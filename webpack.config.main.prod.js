@@ -13,18 +13,13 @@ CheckNodeEnv('production');
 
 export default merge.smart(baseConfig, {
   devtool: 'source-map',
-
   mode: 'production',
-
   target: 'electron-main',
-
   entry: './lib/main.new.dev',
-
   output: {
     path: path.join(__dirname, 'app', 'renderer'),
     filename: 'main.prod.js'
   },
-
   optimization: {
     minimizer: [
       new UglifyJSPlugin({
