@@ -8,7 +8,7 @@
  *
  */
 import { app, ipcMain, BrowserWindow } from 'electron';
-import MenuBuilder from './menu';
+// import MenuBuilder from './menu';
 import log from 'electron-log';
 import { autoUpdater } from "electron-updater";
 import { startServer } from './server';
@@ -116,9 +116,6 @@ app.on('ready', async () => {
   startServer();
   listenForNetworkScanner();
   listenForZmq();
-  
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
 
   // mainWindow.on('resize', () => {
     // console.log(store.get('windowBounds'));
