@@ -65,7 +65,7 @@ class ReactTerminal extends React.Component {
   getTermDocument() {
     // eslint-disable-next-line no-console
     // console.warn(
-    //   'The underlying terminal engine of Hyper no longer ' +
+    //   'The underlying terminal engine of Workbench no longer ' +
     //     'uses iframes with individual `document` objects for each ' +
     //     'terminal instance. This method call is retained for ' +
     //     "backwards compatibility reasons. It's ok to attach directly" +

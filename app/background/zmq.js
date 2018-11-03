@@ -43,26 +43,30 @@ function onMessage(sender, event_message, service, cb) {
   sender.send(types.MESSAGE, msgResp);
 }
 
-export function listenForZmq() {
-  writeLog("Waiting for ZMQ...");
-  const sock = zmq.socket('sub');
-  sock.subscribe('');
-  
-  let msgHandler;
-  ipcMain.on(types.CONNECT, (evt, ip, service) => {
-    const { sender } = evt;
-    const addr = `tcp://${ip}:${service.port}`;
-    msgHandler = throttle((msg) => { return onMessage(sender, msg, service); }, 200, { leading: true });
-    sock.on('message', msgHandler);
-    writeLog(`Connecting to ${addr}`, service.key);
-    sock.connect(addr);
-  });
+export function startZmq() {
+  return new Promise((resolve, reject) => {
+    const sock = zmq.socket('sub');
+    sock.subscribe('');
+    
+    let msgHandler;
+    ipcMain.on(types.CONNECT, (evt, ip, service) => {
+      const { sender } = evt;
+      const addr = `tcp://${ip}:${service.port}`;
+      msgHandler = throttle((msg) => { return onMessage(sender, msg, service); }, 200, { leading: true });
+      sock.on('message', msgHandler);
+      writeLog(`Connecting to ${addr}`, service.key);
+      sock.connect(addr);
+    });
 
-  ipcMain.on(types.DISCONNECT, (evt, ip, service) => {
-    const { sender } = evt;
-    const addr = `tcp://${ip}:${service.port}`;
-    sock.removeListener('message', msgHandler);
-    writeLog(`Disconnect from ${addr}`, service.key);
-    sock.disconnect(addr);
+    ipcMain.on(types.DISCONNECT, (evt, ip, service) => {
+      const { sender } = evt;
+      const addr = `tcp://${ip}:${service.port}`;
+      sock.removeListener('message', msgHandler);
+      writeLog(`Disconnect from ${addr}`, service.key);
+      sock.disconnect(addr);
+    });
+
+    writeLog("Started ØMQ Service");
+    resolve();
   });
 }

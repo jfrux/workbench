@@ -11,9 +11,9 @@ import { app, ipcMain, BrowserWindow } from 'electron';
 import MenuBuilder from './menu';
 import log from 'electron-log';
 import { autoUpdater } from "electron-updater";
-import { startServer } from './server';
-import { listenForNetworkScanner } from './background/network-scanner';
-import { listenForZmq } from './background/zmq';
+import { startServer } from './background/server';
+import { startScanner } from './background/network-scanner';
+import { startZmq } from './background/zmq';
 //-------------------------------------------------------------------
 // Logging
 //
@@ -97,15 +97,9 @@ app.on('ready', async () => {
   // }
 
   mainWindow = new BrowserWindow({
-    // show: false,
     frame: (process.platform !== 'darwin') ? true : false,
     titleBarStyle: (process.platform !== 'darwin') ? null : "hiddenInset",
-    // titleBarStyle: 'hiddenIn set',
     backgroundColor: "#000000",
-    // width: 540,
-    // height: 640,
-    // maxWidth: 540,
-    // maxHeight: 640,
     minWidth: 540,
     minHeight: 640
   });
@@ -113,23 +107,14 @@ app.on('ready', async () => {
   
   mainWindow.loadURL(`file://${__dirname}/app.html`);
   
-  startServer();
-  listenForNetworkScanner();
-  listenForZmq();
-  
+  Promise.all({
+    server: startServer(),
+    scanner: startScanner(),
+    zmq: startZmq()
+  });
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
-  // mainWindow.on('resize', () => {
-    // console.log(store.get('windowBounds'));
-    // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with
-    // the height, width, and x and y coordinates.
-    // let { width, height } = mainWindow.getBounds();
-    // Now that we have them, save them using the `set` method.
-    // settings.set('windowBounds', { width, height });
-  // });
-  // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   webContents.on('did-finish-load', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');

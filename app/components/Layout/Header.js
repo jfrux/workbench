@@ -86,7 +86,7 @@ export default class Header extends React.PureComponent {
       onChange: this.onChangeIntent
     });
     const {borderColor} = props;
-    let title = 'Hyper';
+    let title = 'Workbench';
     if (props.tabs.length === 1 && props.tabs[0].title) {
       // if there's only one tab we use its title as the window title
       title = props.tabs[0].title;

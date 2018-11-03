@@ -48,14 +48,17 @@ function scanNetwork(sender) {
   }));
 }
 
-export function listenForNetworkScanner() {
-  writeLog("Waiting for Network Scans...");
-  ipcMain.on(types.SCAN_NETWORK,(evt) => {
-    const { sender } = evt;
-    scanNetwork(sender).then((results) => {
-      sender.send(types.SCAN_NETWORK_COMPLETE,results);
-    }).catch((err) => {
-      sender.send(types.SCAN_NETWORK_FAIL,err);
+export function startScanner() {
+  return new Promise((resolve, reject) => {
+    ipcMain.on(types.SCAN_NETWORK,(evt) => {
+      const { sender } = evt;
+      scanNetwork(sender).then((results) => {
+        sender.send(types.SCAN_NETWORK_COMPLETE,results);
+      }).catch((err) => {
+        sender.send(types.SCAN_NETWORK_FAIL,err);
+      });
     });
+    writeLog("Started Scanner Service");
+    resolve();
   });
 }

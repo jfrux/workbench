@@ -117,12 +117,15 @@ app.ws('/terminals/:pid', function (ws, req) {
 
 module.exports = {
   startServer() {
-    if (!port) {
-      console.error('Please provide a port: node ./src/server.js --port=XXXX');
-      process.exit(1);
-    } else {
-      app.listen(port, host);
-      writeLog('Workbench terminal emulator server listening at http://' + host + ':' + port);
-    }
+    return new Promise((resolve, reject) => {
+      if (!port) {
+        console.error('Please provide a port: node ./src/server.js --port=XXXX');
+        process.exit(1);
+        reject();
+      } else {
+        writeLog("Started Terminal Service");
+        resolve(app.listen(port, host));
+      }
+    });
   }
-} 
+}
