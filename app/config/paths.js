@@ -2,7 +2,7 @@
 const {homedir} = require('os');
 const {statSync} = require('fs');
 const {resolve, join} = require('path');
-const isDev = require('electron-is-dev');
+// const isDev = require('electron-is-dev');
 
 const cfgFile = '.workbench.js';
 const defaultCfgFile = 'config-default.js';
@@ -13,19 +13,28 @@ let cfgDir = homeDir;
 
 const devDir = resolve(__dirname, '../..');
 const devCfg = join(devDir, cfgFile);
-const defaultCfg = resolve(__dirname, defaultCfgFile);
+let defaultCfg = resolve(__dirname, defaultCfgFile);
+let keymapPath = resolve(__dirname, '../keymaps');
+let icon = resolve(__dirname, '../resources/icons/96x96.png');
+if (process.env.NODE_ENV === 'production') {
+  defaultCfg = resolve(__dirname, './config', defaultCfgFile);
+  keymapPath = resolve(__dirname,'./keymaps');
+}
+// if (isDev) {
+//   console.warn("IS DEVELOPMENT");
+// }
 
-if (isDev) {
+// if (!isDev) {
+//   defaultCfg = resolve(__dirname, './config', defaultCfgFile);
+// }
   // if a local config file exists, use it
-  try {
-    statSync(devCfg);
-    cfgPath = devCfg;
-    cfgDir = devDir;
-    //eslint-disable-next-line no-console
-    console.log('using config file:', cfgPath);
-  } catch (err) {
-    // ignore
-  }
+try {
+  statSync(devCfg);
+  cfgPath = devCfg;
+  cfgDir = devDir;
+  //eslint-disable-next-line no-console
+} catch (err) {
+  // ignore
 }
 
 // const plugins = resolve(cfgDir, '.workbench_plugins');
@@ -35,9 +44,7 @@ if (isDev) {
 //   cache: resolve(plugins, 'cache')
 // };
 
-const icon = resolve(__dirname, '../resources/icons/96x96.png');
 
-const keymapPath = resolve(__dirname, '../keymaps');
 const darwinKeys = join(keymapPath, 'darwin.json');
 const win32Keys = join(keymapPath, 'win32.json');
 const linuxKeys = join(keymapPath, 'linux.json');

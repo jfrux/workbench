@@ -5,7 +5,7 @@ const _openConfig = require('./config/open');
 const win = require('./config/windows');
 const {cfgPath, cfgDir} = require('./config/paths');
 const {getColorMap} = require('./utils/colors');
-
+// console.log("CONFIG PATH:", cfgPath);
 const watchers = [];
 let cfg = {};
 let _watcher;
@@ -82,12 +82,12 @@ exports.openConfig = () => {
   return _openConfig();
 };
 
-exports.getPlugins = () => {
-  return {
-    plugins: cfg.plugins,
-    localPlugins: cfg.localPlugins
-  };
-};
+// exports.getPlugins = () => {
+//   return {
+//     plugins: cfg.plugins,
+//     localPlugins: cfg.localPlugins
+//   };
+// };
 
 exports.getKeymaps = () => {
   return cfg.keymaps;

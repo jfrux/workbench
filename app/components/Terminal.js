@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 const { app } = remote;
 import path from 'path';
+import * as uiActions from '../actions/ui_actions';
 // import * as attach from 'xterm/lib/addons/attach/attach';
 import * as attach from '../addons/attach';
 import * as fit from 'xterm/lib/addons/fit/fit';
@@ -85,6 +86,9 @@ class ReactTerminal extends React.Component {
     this.term.write(data);
   }
   focus() {
+    this.setState({
+      focused: true
+    });
     this.term.focus();
   }
   clear() {
@@ -109,6 +113,16 @@ class ReactTerminal extends React.Component {
     // Has Mousetrap flagged this event as a command?
     return !e.catched;
   }
+  onContextMenu = (event, test) => {
+    const targetClass = event.target.className;
+    // console.warn("target",);
+    if (targetClass === 'xterm-cursor-layer') {
+      const selection = window.getSelection().toString();
+      // const {props: {uid}} = this.getActiveTerm();
+      console.warn("isTermActive:",this.props.isTermActive);
+      this.props.OPEN_CONTEXTMENU(0, selection);
+    }
+  }
   componentDidMount() {
     const {props} = this;
     this.term = new Terminal({
@@ -119,48 +133,48 @@ class ReactTerminal extends React.Component {
     this.term.open(this.termRef);
     this.term.webLinksInit();
     this.term.winptyCompatInit();
-    // window.addEventListener('contextmenu', () => {
-    //   const selection = window.getSelection().toString();
-    //   // const {props: {uid}} = this.getActiveTerm();
-    //   // this.props.onContextMenu(uid, selection);
-    // });
+
+    
     if (props.term) {
       //We need to set options again after reattaching an existing term
       Object.keys(this.termOptions).forEach(option => this.term.setOption(option, this.termOptions[option]));
     }
-    if (this.props.isTermActive) {
-      this.term.focus();
-    }
+    // if (this.props.isTermActive) {
+    //   this.term.focus();
+    // }
 
-    this.onOpen(this.termOptions);
+    // this.onOpen(this.termOptions);
 
-    if (props.onTitle) {
-      this.term.on('title', props.onTitle);
-    }
+    // if (props.onTitle) {
+    //   this.term.on('title', props.onTitle);
+    // }
 
-    if (props.onActive) {
-      this.term.on('focus', props.onActive);
-    }
+    // if (props.onActive) {
+    //   this.term.on('focus', props.onActive);
+    // }
 
-    if (props.onData) {
-      this.term.on('data', props.onData);
-    }
+    // if (props.onData) {
+    //   this.term.on('data', props.onData);
+    // }
 
-    if (props.onResize) {
-      this.term.on('resize', ({cols, rows}) => {
-        props.onResize(cols, rows);
-      });
-    }
+    // if (props.onResize) {
+    //   this.term.on('resize', ({cols, rows}) => {
+    //     props.onResize(cols, rows);
+    //   });
+    // }
 
-    if (props.onCursorMove) {
-      this.term.on('cursormove', () => {
-        e
-        props.onCursorMove(cursorFrame);
-      });
-    }
+    // if (props.onCursorMove) {
+    //   this.term.on('cursormove', () => {
+    //     e
+    //     props.onCursorMove(cursorFrame);
+    //   });
+    // }
+    window.addEventListener('contextmenu', this.onContextMenu);
+
     window.addEventListener('resize',() => {
       this.term.fit();
     });
+
     window.addEventListener('resize', this.onWindowResize, {
       passive: true
     });
@@ -168,6 +182,7 @@ class ReactTerminal extends React.Component {
     window.addEventListener('paste', this.onWindowPaste, {
       capture: true
     });
+
     this.term.on('resize', ({ cols, rows }) => {
       if (!this.pid) return;
       fetch(
@@ -177,15 +192,19 @@ class ReactTerminal extends React.Component {
         { method: 'POST' }
       );
     });
+
     this.term.decreaseFontSize = () => {
       this.term.setOption('fontSize', --this.fontSize);
       this.term.fit();
     };
+
     this.term.increaseFontSize = () => {
       this.term.setOption('fontSize', ++this.fontSize);
       this.term.fit();
     };
+
     this.fitResize();
+
     this._connectToServer();
     
     this.term.textarea.onkeydown = e => {
@@ -229,11 +248,10 @@ class ReactTerminal extends React.Component {
     this.socket.close();
     this.socket = null;
     ['title', 'focus', 'data', 'resize', 'cursormove'].forEach(type => this.term.off(type));
-
+    window.removeEventListener('contextmenu', this.onContextMenu);
     window.removeEventListener('resize', this.onWindowResize, {
       passive: true
     });
-
     window.removeEventListener('paste', this.onWindowPaste, {
       capture: true
     });
@@ -329,7 +347,7 @@ ReactTerminal.propTypes = {
 };
 
 function mapDispatchToProps(dispatch) {
-  // return bindActionCreators(EonActions, dispatch);
+  return bindActionCreators(uiActions, dispatch);
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -345,5 +363,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  // mapDispatchToProps
+  mapDispatchToProps
 )(ReactTerminal);
