@@ -42,9 +42,11 @@ export const CONNECT_SSH = 'eon/CONNECT_SSH';
 export const CONNECT_SSH_SUCCESS = 'eon/CONNECT_SSH_SUCCESS';
 export const CONNECT_SSH_FAIL = 'eon/CONNECT_SSH_FAIL';
 
-export const SSH_COMMAND = 'eon/SSH_COMMAND';
-export const SSH_COMMAND_SUCCESS = 'eon/SSH_COMMAND_SUCCESS';
-export const SSH_COMMAND_RESPONSE = 'eon/SSH_COMMAND_RESPONSE';
-export const SSH_COMMAND_FAIL = 'eon/SSH_COMMAND_FAIL';
+export const SHOW_COMMAND = 'eon/SHOW_COMMAND';
+export const HIDE_COMMAND = 'eon/HIDE_COMMAND';
+export const RUN_COMMAND = 'eon/RUN_COMMAND';
+export const RUN_COMMAND_SUCCESS = 'eon/RUN_COMMAND_SUCCESS';
+export const RUN_COMMAND_RESPONSE = 'eon/RUN_COMMAND_RESPONSE';
+export const RUN_COMMAND_FAIL = 'eon/RUN_COMMAND_FAIL';
 
 export const STOP_POLLING = 'eon/STOP_POLLING';

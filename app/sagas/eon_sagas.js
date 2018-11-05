@@ -80,7 +80,13 @@ function* addEonListError() {
     )
   );
 }
+function* handleRunCommand(action) {
+  const command = action.payload;
 
+  if (command === 'reboot') {
+    yield put(push(routes.EON_LIST));
+  }
+}
 function* handleSelectEon(action) {
   const { eonDetail } = yield select();
   const { activeTab } = eonDetail;
@@ -94,6 +100,7 @@ export function* eonSagas() {
   // console.warn("types:",types);
   
   yield all([
+    takeLatest(types.RUN_COMMAND, handleRunCommand),
     takeLatest(eonListTypes.SELECT_EON, handleSelectEon),
     // takeLatest('@@router/LOCATION_CHANGE', routeWatcher),
     takeEvery(types.CONNECT_FAILED, addEonListError),

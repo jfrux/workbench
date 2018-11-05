@@ -267,6 +267,7 @@
     "react-hot-loader": "^4.3.4",
     "react-input-mask": "^2.0.4",
     "react-json-pretty": "^1.7.9",
+    "react-json-view": "^1.19.1",
     "react-lazy-load": "^3.0.13",
     "react-moment": "^0.8.1",
     "react-redux": "^5.0.7",

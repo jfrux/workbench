@@ -6,8 +6,10 @@ import StateListItem from './StateListItem';
 import LoadingOverlay from '../../LoadingOverlay';
 import services from '../../../constants/service_list.yaml';
 import JSONPretty from 'react-json-pretty';
+import ReactJson from 'react-json-view';
 import * as ZmqActions from '../../../actions/zmq_actions';
-import { ListGroup, Card, CardHeader, CardBody, } from 'reactstrap'
+// import { ListGroup, Card, CardHeader, CardBody } from 'reactstrap'
+import StateListToolbar from './StateListToolbar';
 const propTypes = {
   // messageCount: PropTypes.number,
   // messages: PropTypes.array,
@@ -15,22 +17,13 @@ const propTypes = {
   // latestMessage: PropTypes.object,
   // sampling: PropTypes.bool,
   data: PropTypes.any,
-  type: PropTypes.string
+  type: PropTypes.string,
+  depth: PropTypes.number
 };
 
 class StateList extends React.PureComponent {
   service = services[this.props.type]
-  clearSampling = () => {
-    this.setState({
-      messages: []
-    });
-  }
-
-  toggleSampling = () => {
-    this.setState({
-      sampling: !this.state.sampling
-    });
-  }
+  
   componentDidMount(props) {
     this.props.CONNECT(this.props.type);
   }
@@ -38,12 +31,8 @@ class StateList extends React.PureComponent {
     this.props.DISCONNECT(this.props.type);
   }
   render() {
-    let { type, data } = this.props;
-    // let { fields } = this.service;
-
-    // let items = fields.map((field) => {
-    //   return <StateListItem key={field} type={type} field={field} />
-    // });
+    let { type, data, depth } = this.props;
+ 
     let loadingMessage = "Waiting for messages...";
     
     if (!data) {
@@ -51,6 +40,24 @@ class StateList extends React.PureComponent {
     }
     
     if (data) {
+      return (
+        <div>
+          <div className={"state-toolbar"}>
+            <StateListToolbar type={type} />
+          </div>
+          <div className={"state-data"}>
+            <ReactJson 
+              name={type} 
+              src={data} 
+              collapsed={depth} 
+              style={{
+                backgroundColor: '#000', 
+                opacity: 1
+              }}
+              theme="brewer" />
+          </div>
+        </div>
+      );
       return (<div><JSONPretty json={JSON.parse(JSON.stringify(data))} /></div>);
     } else {
       return (<div></div>);
@@ -66,12 +73,17 @@ function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = (state, {type}) => {
   let data;
+  let depth = 1;
 
   if (state.zmq.data && state.zmq.data[type] && state.zmq.data[type].latestMessage) {
     data = state.zmq.data[type].latestMessage;
   }
+  if (state.ui && state.ui.stateListDepth >= 0) {
+    depth = state.ui.stateListDepth;
+  }
   return {
-    data
+    data,
+    depth
   };
 };
 

@@ -1,11 +1,14 @@
 /* reducer for managing state for individual eon */
 import * as types from '../constants/eon_detail_action_types';
 import settings from 'electron-settings';
+import { min } from 'gl-matrix/src/gl-matrix/vec2';
 
 const defaultTmuxLogLength = 300;
 
 const initialState = {
   activeTab: 'console',
+  activeCommand: null,
+  lastRunCommand: null,
   previousTab: null,
   updated: null,
   vehicleConnection: null,
@@ -32,8 +35,25 @@ export default function eonDetailReducer(state = initialState, action) {
     case types.CHANGE_TAB:
       return {
         ...state,
+        activeCommand: null,
         previousTab: state.activeTab,
         activeTab: action.payload
+      };
+    case types.RUN_COMMAND:
+      return {
+        ...state,
+        lastRunCommand: action.payload,
+        activeCommand: null
+      };
+    case types.SHOW_COMMAND:
+      return {
+        ...state,
+        activeCommand: action.payload
+      };
+    case types.HIDE_COMMAND:
+      return {
+        ...state,
+        activeCommand: null
       };
     case types.CONNECT:
       return {

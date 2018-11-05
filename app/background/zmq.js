@@ -26,20 +26,22 @@ function onMessage(sender, event_message, service, cb) {
   if (service.id === "logMessage") {
     jsonData = JSON.parse(jsonData);
   }
-  newData = {
-    fields: Object.keys(jsonData),
-    latestMessage: jsonData
-  };
-  if (!data[service.id]) {
-    data[service.id] = {};
-  }
+  // newData = {
+  //   ,
+  //   latestMessage: jsonData
+  // };
+  
   data[service.id] = {
-    ...data[service.id],
-    ...newData
+    fields: Object.keys(jsonData),
+    latestMessage: jsonData,
+    messages: [
+      ...data[service.id].messages,
+      jsonData
+    ]
   };
-
+  writeLog("message count: " + data[service.id].messages.length);
   let msgResp = {};
-  msgResp[service.id] = data[service.id]
+  msgResp[service.id] = data[service.id];
   sender.send(types.MESSAGE, msgResp);
 }
 
@@ -52,6 +54,16 @@ export function startZmq() {
     ipcMain.on(types.CONNECT, (evt, ip, service) => {
       const { sender } = evt;
       const addr = `tcp://${ip}:${service.port}`;
+      if (!data[service.id]) {
+        data[service.id] = {
+          latestMessage: {},
+          messages: []
+        };
+      }
+      // if (!data[service.id].messages) {
+      //   data[service.id].messages = [];
+      // }
+      data[service.id].messages = [];
       msgHandler = throttle((msg) => { return onMessage(sender, msg, service); }, 200, { leading: true });
       sock.on('message', msgHandler);
       writeLog(`Connecting to ${addr}`, service.key);

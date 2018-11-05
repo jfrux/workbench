@@ -16,6 +16,18 @@
   overflow-x: hidden;
   overflow-y: auto;
   .nav-item {
+    width:100%;
+    > .nav {
+      .nav-item {
+        .nav-link {
+          padding-left:30px;
+          &.active {
+            font-weight:normal;
+            background-color:initial;
+          }
+        }
+      }
+    }
     .nav-link {
       position:relative;
       line-height: 21px;
@@ -26,7 +38,7 @@
       text-align:left;
       background-color:darken(#03111C,2);
       color:rgba(#FFF,0.5);
-    
+      
       &:before {
         position: absolute;
         bottom: -1px;

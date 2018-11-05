@@ -17,6 +17,11 @@ $right-content-width: calc(100% - #{$left-bar-width});
 body {
   background-color:#000;
 }
+.react-json-view {
+  * {
+    opacity:1!important;
+  }
+}
 .app-wrapper {
   $darker_col: 6;
   padding-top:0;
@@ -37,6 +42,8 @@ body {
   @import "styles/tab-list";
   @import "styles/tab-content";
   @import "styles/loading-overlay";
+  @import "styles/state-list";
+  @import "styles/command-bar";
   @import "styles/is-mac";
   
   .container-fluid {
@@ -69,7 +76,7 @@ body {
     position:relative;
     height:100%;
     width:100%;
-    padding:15px;
+    padding:0;
     .json-pretty {
       background-color:#000;
     }

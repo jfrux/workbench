@@ -1,0 +1,86 @@
+.command-box {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width:250px;
+  height:100%;
+  z-index: 1000;
+  background-color:rgba(#000,0.8);
+  color:#FFF;
+  border-left:1px solid rgba(#FFF,0.1);
+  .form-group {
+    margin:0;
+    padding:15px;
+    label {
+      font-size:12px;
+    }
+    input,textarea {
+      border-radius:0;
+      font-size:12px;
+      padding:10px;
+      line-height:1em;
+      height:initial;
+    }
+  }
+  h3,p {
+    padding:5px 10px;
+  }
+
+  h3 {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    background-color: rgba(18, 18, 18, 0.9);
+    margin-bottom: 0;
+    padding: 10px;
+  }
+
+  .btn-group {
+    display:flex;
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    .btn {
+      flex:1;
+      border-radius:0;
+      background-color:#212121;
+      border:0;
+      position:relative;
+      font-size:12px;
+      &:first-child {
+        background-color:var(--blue);
+        &:before {
+          content: "";
+          background-color: rgba(0, 0, 0, 0.15);
+          width: 1px;
+          top: 0;
+          height: 100%;
+          position: absolute;
+          right: 0;
+          z-index: 10000;
+        }
+      }
+    }
+  }
+  p {
+    color:rgba(#FFF,0.8);
+    font-size:12px;
+    padding-top:5px;
+  }
+  > div > .btn {
+    display:block;
+    width:100%;
+    border-radius:0;
+    background-color:#212121;
+    border:0;
+    outline: none;
+    margin:0;
+    font-size:12px;
+    box-shadow:none;
+    
+    &:active,&:focus,&:hover {
+      box-shadow:none;
+      outline:none;
+    }
+  }
+}

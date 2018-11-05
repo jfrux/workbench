@@ -100,8 +100,8 @@ app.on('ready', async () => {
     frame: (process.platform !== 'darwin') ? true : false,
     titleBarStyle: (process.platform !== 'darwin') ? null : "hiddenInset",
     backgroundColor: "#000000",
-    minWidth: 540,
-    minHeight: 640
+    minWidth: 320,
+    minHeight: 240
   });
   let webContents = mainWindow.webContents;
   

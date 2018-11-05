@@ -3,9 +3,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Terminal } from 'xterm';
 import { remote, clipboard } from 'electron';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 const { app } = remote;
 import path from 'path';
-
 // import * as attach from 'xterm/lib/addons/attach/attach';
 import * as attach from '../addons/attach';
 import * as fit from 'xterm/lib/addons/fit/fit';
@@ -26,7 +27,6 @@ class ReactTerminal extends React.Component {
     super(props);
     this.HOST = `127.0.0.1:9788`;
     this.SOCKET_URL = `ws://${this.HOST}/terminals/`;
-    // this.elementId = `terminal_${ getId() }`;
     this.failures = 0;
     this.interval = null;
     this.fontSize = 16;
@@ -47,39 +47,18 @@ class ReactTerminal extends React.Component {
     this.termRef = component;
   }
   onOpen(termOptions) {
-    // we need to delay one frame so that styles
-    // get applied and we can make an accurate measurement
-    // of the container width and height
     requestAnimationFrame(() => {
-      // at this point it would make sense for character
-      // measurement to have taken place but it seems that
-      // xterm.js might be doing this asynchronously, so
-      // we force it instead
-      // eslint-disable-next-line no-debugger
-      //debugger;
-      // this.term.charMeasure.measure(termOptions);
       this.fitResize();
     });
   }
 
   getTermDocument() {
-    // eslint-disable-next-line no-console
-    // console.warn(
-    //   'The underlying terminal engine of Workbench no longer ' +
-    //     'uses iframes with individual `document` objects for each ' +
-    //     'terminal instance. This method call is retained for ' +
-    //     "backwards compatibility reasons. It's ok to attach directly" +
-    //     'to the `document` object of the main `window`.'
-    // );
     return document;
   }
 
   onWindowResize() {
     this.fitResize();
   }
-
-  // intercepting paste event for any necessary processing of
-  // clipboard data, if result is falsy, paste event continues
   onWindowPaste(e) {
     if (!this.props.isTermActive) return;
 
@@ -90,7 +69,6 @@ class ReactTerminal extends React.Component {
       this.term.send(processed);
     }
   }
-
   onMouseUp(e) {
     if (this.props.quickEdit && e.button === 2) {
       if (this.term.hasSelection()) {
@@ -106,27 +84,21 @@ class ReactTerminal extends React.Component {
   write(data) {
     this.term.write(data);
   }
-
   focus() {
     this.term.focus();
   }
-
   clear() {
     this.term.clear();
   }
-
   reset() {
     this.term.reset();
   }
-
   resize(cols, rows) {
     this.term.resize(cols, rows);
   }
-
   selectAll() {
     this.term.selectAll();
   }
-
   fitResize() {
     if (!this.termWrapperRef) {
       return;
@@ -182,14 +154,7 @@ class ReactTerminal extends React.Component {
 
     if (props.onCursorMove) {
       this.term.on('cursormove', () => {
-        const cursorFrame = {
-          x: this.term.buffer.x * this.term.renderer.dimensions.actualCellWidth,
-          y: this.term.buffer.y * this.term.renderer.dimensions.actualCellHeight,
-          width: this.term.renderer.dimensions.actualCellWidth,
-          height: this.term.renderer.dimensions.actualCellHeight,
-          col: this.term.buffer.y,
-          row: this.term.buffer.x
-        };
+        e
         props.onCursorMove(cursorFrame);
       });
     }
@@ -274,11 +239,19 @@ class ReactTerminal extends React.Component {
     });
   }
   render() {
+    const { activeCommand, CommandPane } = this.props;
     return (
-      <div ref={this.onTermWrapperRef} className="term_fit term_wrapper">
-      <div
-        ref={this.onTermRef}
-      />
+      <div>
+        {activeCommand && CommandPane && 
+          <div className={"command-box"}>
+            <CommandPane onRunCommand={(command) => { console.warn("Sending command: ",command); this.sendCommand (command); }} />
+          </div>
+        }
+        <div ref={this.onTermWrapperRef} className="term_fit term_wrapper">
+          <div
+            ref={this.onTermRef}
+          />
+        </div>
       </div>
     );
   }
@@ -351,23 +324,26 @@ class ReactTerminal extends React.Component {
 
 ReactTerminal.propTypes = {
   eonIp: PropTypes.string,
-  options: PropTypes.object
+  options: PropTypes.object,
+  activeCommand: PropTypes.string
 };
 
-function listenToWindowResize(callback) {
-  var resizeTimeout;
-
-  function resizeThrottler() {
-    // ignore resize events as long as an actualResizeHandler execution is in the queue
-    if (!resizeTimeout) {
-      resizeTimeout = setTimeout(function() {
-        resizeTimeout = null;
-        callback();
-      }, 66);
-    }
-  }
-
-  window.addEventListener('resize', resizeThrottler, false);
+function mapDispatchToProps(dispatch) {
+  // return bindActionCreators(EonActions, dispatch);
 }
 
-export default ReactTerminal;
+const mapStateToProps = (state, ownProps) => {
+  let activeCommand;
+
+  if (state.eonDetail.activeCommand) {
+    activeCommand = state.eonDetail.activeCommand;
+  }
+  return {
+    activeCommand
+  }
+};
+
+export default connect(
+  mapStateToProps,
+  // mapDispatchToProps
+)(ReactTerminal);

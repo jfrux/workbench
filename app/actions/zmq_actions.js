@@ -23,3 +23,8 @@ export function ERROR(err) {
     payload: err
   };
 }
+export function TOGGLE_PAUSE() {
+  return {
+    type: types.TOGGLE_PAUSE
+  };
+}

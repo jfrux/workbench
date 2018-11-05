@@ -6,6 +6,7 @@ import services from '../constants/service_list.yaml';
 function mapStateToProps(state) {
   return {
     activeTab: state.eonDetail.activeTab,
+    activeCommand: state.eonDetail.activeCommand,
     selectedEon: state.eonList.selectedEon,
     eon: state.eonList.eons[state.eonList.selectedEon],
     network: state.networkConnection.status,

@@ -10,18 +10,23 @@ const deleteProperty = ({[key]: _, ...newObj}, key) => newObj;
 export default function zmqReducer(state = initialState, action) {
   switch (action.type) {
     case types.MESSAGE:
+      if (!state.paused) {
+        return {
+          ...state,
+          data: {
+            ...state.data,
+            ...action.payload
+          }
+        };
+      }
+      return {
+        ...state
+      };
+    case types.TOGGLE_PAUSE:
       return {
         ...state,
-        data: {
-          ...state.data,
-          ...action.payload
-        }
-      }
-    // case types.SET_TERMINAL_FONT_SIZE:
-    //   return {
-    //     ...state,
-    //     terminalFontSize: action.payload
-    //   }
+        paused: !state.paused
+      };
     default:
       return state;
     }

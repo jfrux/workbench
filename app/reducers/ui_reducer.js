@@ -1,8 +1,9 @@
 /* reducer for managing list of eons and scanning for eons */
-import * as types from '../constants/network_scanner_action_types';
+import * as types from '../constants/ui_action_types';
 
 const initialState = {
-  terminalFontSize: '16px'
+  terminalFontSize: '16px',
+  stateListDepth: 1
 };
 
 const deleteProperty = ({[key]: _, ...newObj}, key) => newObj;
@@ -12,6 +13,12 @@ export default function uiReducer(state = initialState, action) {
       return {
         ...state,
         terminalFontSize: action.payload
+      }
+    case types.SET_STATE_LIST_DEPTH:
+      console.warn("Set depth to: ", action.payload);
+      return {
+        ...state,
+        stateListDepth: action.payload
       }
     default:
       return state;
