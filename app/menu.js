@@ -10,7 +10,7 @@ export default class MenuBuilder {
   }
 
   buildMenu() {
-    this.setupContextMenu();
+    // this.setupContextMenu();
     const template =
       process.platform === 'darwin'
         ? this.buildDarwinTemplate()
@@ -139,29 +139,23 @@ export default class MenuBuilder {
       label: 'Help',
       submenu: [
         {
-          label: 'Learn More',
+          label: 'Submit Feedback & Issues',
           click() {
-            shell.openExternal('https://opc.ai/apps/workbench');
+            shell.openExternal('https://github.com/openpilot-community/workbench/issues');
           }
         },
         {
           label: 'Documentation',
           click() {
             shell.openExternal(
-              'https://opc.ai/apps/workbench/docs'
+              'https://github.com/openpilot-community/workbench/tree/master/docs'
             );
           }
         },
         {
-          label: 'Community',
+          label: 'Community Website',
           click() {
             shell.openExternal('https://opc.ai/');
-          }
-        },
-        {
-          label: 'Search Issues',
-          click() {
-            shell.openExternal('https://github.com/openpilot-community/workbench/issues');
           }
         }
       ]

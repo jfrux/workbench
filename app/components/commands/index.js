@@ -9,7 +9,7 @@ export default {
   InstallOpenpilot,
   BackupOpenpilot,
   GetFingerprint,
-  // TakeScreenshot,
+  TakeScreenshot,
   LaunchAndroidSettings,
   RebootEon
 };

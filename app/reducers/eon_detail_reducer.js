@@ -42,7 +42,7 @@ export default function eonDetailReducer(state = initialState, action) {
     case types.RUN_COMMAND:
       return {
         ...state,
-        lastRunCommand: action.payload,
+        lastRunCommand: state.activeCommand,
         activeCommand: null
       };
     case types.SHOW_COMMAND:

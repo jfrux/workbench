@@ -6,13 +6,18 @@ class TakeScreenshot extends PureComponent {
     super(props);
     this.name = "Take Screenshot";
     this.description = "Snap a picture of the EON screen and save it to your computer.";
-    this.commands = [];
+    this.requireSu = true;
+    this.commands = [
+      "mkdir -p /data/screenshots",
+      "screencap -p /data/screenshots/screenshot.png"
+    ];
   }
 
   render() { return(
     <TerminalCommand 
       name={this.name} 
       description={this.description} 
+      requireSu={this.requireSu}
       commands={this.commands}
       {...this.props} />);
   }

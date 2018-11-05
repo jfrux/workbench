@@ -5,7 +5,6 @@ const PORT = 9788;
 const express = require('express');
 const app = express();
 const pty = require('node-pty-prebuilt');
-var log = require('electron-log');
 const chalk = require('chalk');
 const prefix = chalk.bold.blue;
 const bgTaskColor = chalk.green;

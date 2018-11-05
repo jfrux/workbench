@@ -6,6 +6,7 @@ import {
   takeEvery,
   select
 } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import { push } from 'connected-react-router'
 import { remote } from 'electron';
 const { app } = remote;
@@ -80,13 +81,42 @@ function* addEonListError() {
     )
   );
 }
-function* handleRunCommand(action) {
-  const command = action.payload;
 
-  if (command === 'reboot') {
+function* retrieveScreenshot() {
+  const { eonList } = yield select();
+  const { selectedEon, eons } = eonList;
+  const eon = eons[selectedEon];
+  const pk = yield call(getPrivateKey);
+  let screenshotsDir = path.join(require('os').homedir(), 'Desktop', 'eon_screenshots');
+  let Client = require('ssh2-sftp-client');
+  mkdirp.sync(screenshotsDir);
+  let sftp = new Client();
+  sftp.connect({
+      host: eon.ip,
+      port: '8022',
+      username: 'root',
+      privateKey: pk
+  }).then(() => {
+    return sftp.fastGet('/data/screenshots/screenshot.png', path.join(screenshotsDir,'EON_' + new Date().getTime() + '.png'));
+  }).then((data) => {
+      console.log(data, 'the data info');
+  }).catch((err) => {
+      console.log(err, 'catch error');
+  });
+}
+
+function* handleRunCommand(action) {
+  const { eonDetail } = yield select();
+  const { lastRunCommand } = eonDetail;
+  if (lastRunCommand === 'RebootEon') {
+    yield put(eonListActions.ADD_ERROR("Connection to EON was lost... Rebooting."))
     yield put(push(routes.EON_LIST));
+  } else if (lastRunCommand === 'TakeScreenshot') {
+    yield delay(1000);
+    yield call(retrieveScreenshot);
   }
 }
+
 function* handleSelectEon(action) {
   const { eonDetail } = yield select();
   const { activeTab } = eonDetail;

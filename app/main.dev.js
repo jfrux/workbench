@@ -10,10 +10,63 @@
 import { app, ipcMain, BrowserWindow } from 'electron';
 import MenuBuilder from './menu';
 import log from 'electron-log';
-import { autoUpdater } from "electron-updater";
+const notify = require('./notify');
+const fetchNotifications = require('./notifications');
 import { startServer } from './background/server';
 import { startScanner } from './background/network-scanner';
 import { startZmq } from './background/zmq';
+import { autoUpdater } from "electron-updater";
+const toElectronBackgroundColor = require('./utils/to-electron-background-color');
+const config = require('./config');
+const {gitDescribe} = require('git-describe');
+const isDev = require('electron-is-dev');
+// set up config
+config.setup();
+app.config = config;
+const chalk = require('chalk');
+const prefix = chalk.bold.blue;
+const bgTaskColor = chalk.white;
+
+function writeLog(...params) {
+  console.info(prefix('workbench') + ' ' + chalk.bold(bgTaskColor('[main]')), bgTaskColor(...params));
+}
+
+const checkSquirrel = () => {
+  let squirrel;
+
+  try {
+    squirrel = require('electron-squirrel-startup');
+    //eslint-disable-next-line no-empty
+  } catch (err) {}
+
+  if (squirrel) {
+    // eslint-disable-next-line unicorn/no-process-exit
+    process.exit();
+  }
+};
+
+// handle startup squirrel events
+if (process.platform === 'win32') {
+  // eslint-disable-next-line import/order
+  const systemContextMenu = require('./system-context-menu');
+
+  switch (process.argv[1]) {
+    case '--squirrel-install':
+    case '--squirrel-updated':
+      systemContextMenu.add(() => {
+        checkSquirrel();
+      });
+      break;
+    case '--squirrel-uninstall':
+      systemContextMenu.remove(() => {
+        checkSquirrel();
+      });
+      break;
+    default:
+      checkSquirrel();
+  }
+}
+
 //-------------------------------------------------------------------
 // Logging
 //
@@ -40,6 +93,23 @@ if (shouldQuit) {
 // import settings from 'electron-settings';
 app.commandLine.appendSwitch('--enable-viewport-meta', 'true');
 app.commandLine.appendSwitch('disable-pinch');
+//eslint-disable-next-line no-console
+console.log('Disabling Chromium GPU blacklist');
+app.commandLine.appendSwitch('ignore-gpu-blacklist');
+if (isDev) {
+  //eslint-disable-next-line no-console
+  console.log('running in dev mode');
+
+  // Override default appVersion which is set from package.json
+  gitDescribe({customArguments: ['--tags']}, (error, gitInfo) => {
+    if (!error) {
+      app.setVersion(gitInfo.raw);
+    }
+  });
+} else {
+  //eslint-disable-next-line no-console
+  console.log('running in prod mode');
+}
 let mainWindow = null;
 
 if (process.env.NODE_ENV === 'production') {
@@ -79,6 +149,7 @@ app.on('window-all-closed', () => {
     app.quit();
   // }
 });
+
 app.on('ready', async () => {
   autoUpdater.checkForUpdatesAndNotify();
   // if (!settings.get("windowBounds")) {
@@ -99,21 +170,18 @@ app.on('ready', async () => {
   mainWindow = new BrowserWindow({
     frame: (process.platform !== 'darwin') ? true : false,
     titleBarStyle: (process.platform !== 'darwin') ? null : "hiddenInset",
-    backgroundColor: "#000000",
+    title: 'Workbench.app',
+    // we want to go frameless on Windows and Linux
+    frame: process.platform === 'darwin',
+    transparent: process.platform === 'darwin',
+    backgroundColor: toElectronBackgroundColor('#000'),
     minWidth: 320,
     minHeight: 240
   });
+
   let webContents = mainWindow.webContents;
   
   mainWindow.loadURL(`file://${__dirname}/app.html`);
-  
-  Promise.all({
-    server: startServer(),
-    scanner: startScanner(),
-    zmq: startZmq()
-  });
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
 
   webContents.on('did-finish-load', () => {
     if (!mainWindow) {
@@ -133,5 +201,10 @@ app.on('ready', async () => {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
-
+  startServer();
+  startScanner();
+  startZmq();
+  const menuBuilder = new MenuBuilder(mainWindow);
+  menuBuilder.buildMenu();
+  
 });

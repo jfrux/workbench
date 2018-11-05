@@ -61,7 +61,7 @@ class ReactTerminal extends React.Component {
   }
   onWindowPaste(e) {
     if (!this.props.isTermActive) return;
-
+    console.warn("Pasted");
     const processed = processClipboard();
     if (processed) {
       e.preventDefault();

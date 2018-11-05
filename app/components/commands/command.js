@@ -11,6 +11,7 @@ const propTypes = {
   description: PropTypes.string,
   commands: PropTypes.array,
   fields: PropTypes.array,
+  requireSu: PropTypes.bool,
   runCommand: PropTypes.func
 };
 
@@ -65,8 +66,11 @@ class TerminalCommand extends React.PureComponent {
         });
       }
       return command;
-    }).join("; ") + "\r";
-
+    }).join("; ")
+    if (this.props.requireSu) {
+      fullCommand = `su -c '${fullCommand}'`;
+    }
+    fullCommand = `${fullCommand}\r`;
     return fullCommand;
   }
 
@@ -79,9 +83,11 @@ class TerminalCommand extends React.PureComponent {
       this.props.RUN_COMMAND(command);
     }
   }
+
   hideCommand = () => {
     this.props.HIDE_COMMAND();
   }
+
   setFieldValue = (field, value) => {
     console.warn(`${field}: ${value}`); 
     this[field] = value;
