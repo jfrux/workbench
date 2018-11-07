@@ -9,8 +9,11 @@ function decorateObject(base, key) {
 
 export function getDecoratedKeymaps() {
   const baseKeymaps = getKeymaps();
-  // Ensure that all keys are in an array and don't use deprecated key combination`
-  const decoratedKeymaps = mapKeys(decorateObject(baseKeymaps, 'decorateKeymaps'));
-  console.warn("decoratedKeymaps",decoratedKeymaps);
-  return decoratedKeymaps;
+  console.log(baseKeymaps);
+  if (baseKeymaps) {
+    // Ensure that all keys are in an array and don't use deprecated key combination`
+    const decoratedKeymaps = mapKeys(decorateObject(baseKeymaps, 'decorateKeymaps'));
+    console.warn("decoratedKeymaps",decoratedKeymaps);
+    return decoratedKeymaps;
+  }
 };

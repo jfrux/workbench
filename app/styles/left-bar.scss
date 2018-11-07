@@ -16,9 +16,9 @@
   width:$left-bar-width;
   left:0;
   top:0;
-  -webkit-app-region: drag;
+  // -webkit-app-region: drag;
   height: calc(100% - #{$top-bar-height});
-  background-color: $base-color;
+  background-color: $dark-color;
   z-index:1;
   position:relative;
   .nav {

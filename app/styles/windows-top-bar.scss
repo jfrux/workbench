@@ -1,5 +1,5 @@
 #electron-app-title-bar {
-  height: 28px;
+  height: 30px;
   background: $base-color;
   // border-bottom: 1px solid #000;
   -webkit-app-region: drag;
@@ -33,9 +33,9 @@
 
 /*icon*/
 #electron-app-title-bar img.icon {
-  height: 16px;
-  width: 16px;
-  margin: 6px;
+  height: 18px;
+  width: 18px;
+  margin: 6px 10px;
 }
 
 /*toolbar button*/
@@ -137,7 +137,7 @@
 
 #electron-app-title-bar .toolbar-button > button .description {
   color: #959da5;
-  font-size: 11px;
+  font-size: 12px;
   position: relative;
 }
 
@@ -170,7 +170,7 @@
   padding: 0 10px;
   border: 1px solid #e1e4e8;
   height: 25px;
-  color: $base-color;
+  color: $light-color;
   background-color: #fafbfc;
   border-radius: 2px;
 }
@@ -223,7 +223,7 @@
 }
 
 #electron-app-title-bar .toolbar-dropdown.open > .toolbar-button > button {
-  color: rgba(#FFF,0.5);
+  color: rgba(#FFF,0.8);
   background-color: lighten($base-color,3);
   border-color: #fff;
 }
@@ -237,7 +237,7 @@
 }
 
 #electron-app-title-bar .toolbar-dropdown:not(.open) .menu-item .menu-label {
-  opacity: 0.6;
+  opacity: 1;
 }
 
 /*menubar*/

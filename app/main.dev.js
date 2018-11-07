@@ -17,7 +17,7 @@ import { startScanner } from './background/network-scanner';
 import { startZmq } from './background/zmq';
 import { autoUpdater } from "electron-updater";
 const createRPC = require('./rpc');
-const contextMenuTemplate = require('./contextmenu');
+// const contextMenuTemplate = require('./contextmenu');
 const AppMenu = require('./menus/menu');
 // import icon from '../resources/icons/96x96.png';
 import * as settings from './settings';
@@ -28,7 +28,7 @@ const chalk = require('chalk');
 const prefix = chalk.bold.blue;
 const bgTaskColor = chalk.white;
 
-app.appMenuTemplate = AppMenu.createMenu();
+// app.appMenuTemplate = AppMenu.createMenu();
 app.setName("Workbench");
 
 function writeLog(...params) {
@@ -130,22 +130,22 @@ app.on('ready', async () => {
   //   await installExtensions();
   // }
   const makeMenu = () => {
-    const menu = AppMenu.createMenu(app.createWindow);
+    // const menu = AppMenu.createMenu(app.createWindow);
     
-    // If we're on Mac make a Dock Menu
-    if (process.platform === 'darwin') {
-      const dockMenu = Menu.buildFromTemplate([
-        {
-          label: 'New Window',
-          click() {
-            app.createWindow();
-          }
-        }
-      ]);
-      app.dock.setMenu(dockMenu);
-    }
+    // // If we're on Mac make a Dock Menu
+    // if (process.platform === 'darwin') {
+    //   const dockMenu = Menu.buildFromTemplate([
+    //     {
+    //       label: 'New Window',
+    //       click() {
+    //         app.createWindow();
+    //       }
+    //     }
+    //   ]);
+    //   app.dock.setMenu(dockMenu);
+    // }
   
-    Menu.setApplicationMenu(AppMenu.buildMenu(menu));
+    // Menu.setApplicationMenu(AppMenu.buildMenu(menu));
   };
   // const newIcon = nativeImage.createFromDataURL(icon);
   mainWindow = new BrowserWindow({

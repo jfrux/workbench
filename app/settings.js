@@ -3,6 +3,7 @@ import open from './settings/open';
 
 export function setup() {
   let currentSettings = settings.getAll();
+  console.log(currentSettings);
   settings.setAll({
     eonSshKeyPath: "",
     config: {
