@@ -1,5 +1,4 @@
 import React from 'react';
-
 export default class Header extends React.PureComponent {
   constructor() {
     super();
@@ -79,18 +78,19 @@ export default class Header extends React.PureComponent {
 
   render() {
     const {isMac} = this.props;
-    const props = getTabsProps(this.props, {
-      tabs: this.props.tabs,
-      borderColor: this.props.borderColor,
-      onClose: this.props.onCloseTab,
-      onChange: this.onChangeIntent
-    });
+    // const props = getTabsProps(this.props, {
+    //   tabs: this.props.tabs,
+    //   borderColor: this.props.borderColor,
+    //   onClose: this.props.onCloseTab,
+    //   onChange: this.onChangeIntent
+    // });
+    const props = this.props;
     const {borderColor} = props;
     let title = 'Workbench';
-    if (props.tabs.length === 1 && props.tabs[0].title) {
-      // if there's only one tab we use its title as the window title
-      title = props.tabs[0].title;
-    }
+    // if (props.tabs.length === 1 && props.tabs[0].title) {
+    //   // if there's only one tab we use its title as the window title
+    //   title = props.tabs[0].title;
+    // }
     const {hambMenu, winCtrls} = this.getWindowHeaderConfig();
     const left = winCtrls === 'left';
     const maxButtonHref = this.props.maximized
@@ -105,7 +105,7 @@ export default class Header extends React.PureComponent {
       >
         {!isMac && (
           <div
-            className={`header_windowHeader ${props.tabs.length > 1 ? 'header_windowHeaderWithBorder' : ''}`}
+            className={`header_windowHeader header_windowHeaderWithBorder`}
             style={{borderColor}}
           >
             {hambMenu && (
@@ -141,7 +141,6 @@ export default class Header extends React.PureComponent {
             )}
           </div>
         )}
-        <Tabs {...props} />
       </header>
     );
   }

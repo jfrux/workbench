@@ -11,7 +11,7 @@ import * as ZmqActions from '../../../actions/zmq_actions';
 // import { ListGroup, Card, CardHeader, CardBody } from 'reactstrap'
 import StateListToolbar from './StateListToolbar';
 const propTypes = {
-  // messageCount: PropTypes.number,
+  messageCount: PropTypes.number,
   // messages: PropTypes.array,
   // messagesFile: PropTypes.string,
   // latestMessage: PropTypes.object,
@@ -31,11 +31,11 @@ class StateList extends React.PureComponent {
     this.props.DISCONNECT(this.props.type);
   }
   render() {
-    let { type, data, depth } = this.props;
+    let { type, data, depth, messageCount } = this.props;
  
     let loadingMessage = "Waiting for messages...";
     
-    if (!data) {
+    if (!data || messageCount <= 0) {
       return <LoadingOverlay message={loadingMessage} />;
     }
     
@@ -73,8 +73,13 @@ function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = (state, {type}) => {
   let data;
+  let messageCount = 0;
   let depth = 1;
-
+  if (state.zmq.data && state.zmq.data[type]) {
+    if (state.zmq.data[type].messages) {
+      messageCount = state.zmq.data[type].messages.length;
+    }
+  }
   if (state.zmq.data && state.zmq.data[type] && state.zmq.data[type].latestMessage) {
     data = state.zmq.data[type].latestMessage;
   }
@@ -83,6 +88,7 @@ const mapStateToProps = (state, {type}) => {
   }
   return {
     data,
+    messageCount,
     depth
   };
 };

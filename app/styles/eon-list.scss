@@ -31,7 +31,7 @@
   display:block;
   min-height:68px;
   border-radius:0!important;
-  background-color:rgba(#FFF,0.05)!important;
+  background-color:darken($base-color,8)!important;
   &:hover {
     background-color:rgba(#FFF,0.1)!important;
   }
@@ -64,7 +64,7 @@
   // min-height: $eons-list-top-height;
   // width: $right-content-width;
   z-index:100;
-  border-bottom:1px solid rgba(#000,0.1);
+  border-bottom:1px solid $base-color;
 }
 
 .eons-list {

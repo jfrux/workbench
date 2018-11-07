@@ -1,7 +1,6 @@
 &.is-mac {
     $top-bar-height: 36px;
     $left-bar-padding-top: $top-bar-height;
-
     @import "styles/top-bar";
     @import "styles/eon";
     @import "styles/eon-list";
@@ -12,6 +11,8 @@
     @import "styles/loading-overlay";
     @import "styles/state-list";
     @import "styles/command-bar";
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius:6px;
 
     .top-bar {
       .title {

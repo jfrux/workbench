@@ -1,10 +1,10 @@
 const {shell} = require('electron');
-const {cfgPath} = require('./paths');
+const { cfgPath } = require('../constants/paths');
 
-module.exports = () => Promise.resolve(shell.openItem(cfgPath));
-
+// HANDLE WINDOWS DEFAULT EDITOR
 // Windows opens .js files with  WScript.exe by default
 // If the user hasn't set up an editor for .js files, we fallback to notepad.
+
 if (process.platform === 'win32') {
   const Registry = require('winreg');
   const {exec} = require('child_process');
@@ -74,4 +74,8 @@ if (process.platform === 'win32') {
         console.error('Open config with default app error:', err);
         return openNotepad(cfgPath);
       });
+}
+
+export default () => {
+  return Promise.resolve(shell.openItem(cfgPath));
 }

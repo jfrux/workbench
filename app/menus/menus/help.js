@@ -1,20 +1,26 @@
 const {release} = require('os');
 const {app, shell} = require('electron');
 
-const {getConfig, getPlugins} = require('../../config');
+const {getAll} = require('../../settings');
 const {arch, env, platform, versions} = process;
 const {version} = require('../../package.json');
 
-module.exports = (commands, showAbout) => {
+export default function(commands, showAbout) {
   const submenu = [
     {
-      label: `${app.getName()} Website`,
+      label: `Workbench Docs`,
       click() {
-        shell.openExternal('https://workbench.is');
+        shell.openExternal('https://github.com/openpilot-community/workbench/tree/master/docs');
       }
     },
     {
-      label: 'Report Issue',
+      label: `Community Guides`,
+      click() {
+        shell.openExternal('https://opc.ai/');
+      }
+    },
+    {
+      label: 'Report Workbench Issue',
       click() {
         const body = `
 <!--
@@ -24,15 +30,12 @@ module.exports = (commands, showAbout) => {
   If not, please try and fulfil these first.
 -->
 <!-- 👉 Checked checkbox should look like this: [x] -->
-  - [ ] Your Workbench.app version is **${version}**. Please verify your using the [latest](https://github.com/openpilot-community/workbench/releases/latest) Workbench.app version
+  - [ ] Your Workbench.app version is **${version}**. Please verify you're using the [latest](https://github.com/openpilot-community/workbench/releases/latest) Workbench.app version
   - [ ] I have searched the [issues](https://github.com/openpilot-community/workbench/issues) of this repo and believe that this is not a duplicate
 
   ---
   - **Any relevant information from devtools?** _(CMD+ALT+I on macOS, CTRL+SHIFT+I elsewhere)_:
 <!-- 👉 Replace with info if applicable, or N/A -->
-
-  - **Is the issue reproducible in vanilla Workbench.app?**
-<!-- 👉 Replace with info if applicable, or Is Vanilla. (Vanilla means Workbench.app without any add-ons or extras. Straight out of the box.) -->
 
 ## Issue
 <!-- 👉 Now feel free to write your issue, but please be descriptive! Thanks again 🙌 ❤️ -->
@@ -53,14 +56,39 @@ module.exports = (commands, showAbout) => {
     <summary><strong> ~/.workbench.js contents</strong></summary>
       <pre>
         <code>
-          ${JSON.stringify(getConfig(), null, 2)}
-
-          ${JSON.stringify(getPlugins(), null, 2)}
+          ${JSON.stringify(getAll(), null, 2)}
         </code>
       </pre>
   </details>`;
 
         shell.openExternal(`https://github.com/openpilot-community/workbench/issues/new?body=${encodeURIComponent(body)}`);
+      }
+    },
+    {
+      type: 'separator'
+    },
+    {
+      label: `Comma Wiki`,
+      click() {
+        shell.openExternal('https://wiki.comma.ai/');
+      }
+    },
+    {
+      label: `Comma Slack`,
+      click() {
+        shell.openExternal('https://comma.slack.com/');
+      }
+    },
+    {
+      label: `Comma.ai GitHub`,
+      click() {
+        shell.openExternal('https://github.com/commaai');
+      }
+    },
+    {
+      label: `Shop Comma`,
+      click() {
+        shell.openExternal('https://comma.ai/shop/?ref=7');
       }
     }
   ];
@@ -77,6 +105,7 @@ module.exports = (commands, showAbout) => {
     );
   }
   return {
+    label: 'Help',
     role: 'help',
     submenu
   };

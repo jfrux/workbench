@@ -42,6 +42,7 @@ class EonList extends Component {
     this.state = {
       value: '',
       manualError: '',
+      showAddForm: false,
       scanningStarted: false
     };
   }
@@ -49,7 +50,11 @@ class EonList extends Component {
     this.props.resetScanNetwork();
   }
   handleScanNetwork = () => {
+    this.setState({showAddForm: false});
     this.props.BEGIN_scanNetwork();
+  }
+  toggleAddForm = () => {
+    this.setState({showAddForm: !this.state.showAddForm});
   }
   handleChange = (event) => {
     this.setState({value: event.target.value});
@@ -99,7 +104,7 @@ class EonList extends Component {
       progress
     } = this.props;
     const progressPercString = Math.round(progress*100) + "%";
-    const { manualError } = this.state;
+    const { manualError, showAddForm } = this.state;
     // const scanResultsList = Object.keys(scanResults)
     const eonList = eonIds;
     // console.log("scanResults:",scanResults);
@@ -116,6 +121,15 @@ class EonList extends Component {
 
     const contextActions = [
       <NavItem key={1} className={"nav_item"}>
+        <NavLink className={classnames({ nav_link: true, disabled: scanning })} onClick={this.toggleAddForm} id={"Add-Manually"}>
+          {showAddForm && <FontAwesomeIcon icon="times" />}
+          {!showAddForm && <FontAwesomeIcon icon="plus" />}
+        </NavLink>
+        <UncontrolledTooltip placement={'right'} target={"Add-Manually"}>
+          Add EON Manually
+        </UncontrolledTooltip>
+      </NavItem>,
+      <NavItem key={2} className={"nav_item"}>
         <NavLink className={classnames({ nav_link: true, disabled: scanning })} onClick={this.handleScanNetwork} id={"Tooltip-Refresh"}>
           <FontAwesomeIcon icon="sync" className={classnames({
             "fa-spin": scanning
@@ -127,11 +141,11 @@ class EonList extends Component {
       </NavItem>
     ];
     return (
-      <Layout title="" contextActions={contextActions}>
+      <Layout title="Workbench" contextActions={contextActions}>
         <div className={"eon-list-top"}>
-          <div className={"add_form_area"}>
+          <Collapse className={"add_form_area"} isOpen={!scanning && showAddForm}>
             <Form inline onSubmit={this.handleSubmit} className={"p-0 m-0"}>
-              <FormGroup className={"col col-8 p-0 h-100"}>
+              <FormGroup className={"col col-10 p-0 h-100"}>
                 <Input placeholder="___.___.___.___" disabled={addingEon} className={"add_field d-block w-100"} value={this.state.value} onChange={this.handleChange} />
               </FormGroup>
               <FormGroup className={"col col-2 p-0 h-100"}>
@@ -139,22 +153,16 @@ class EonList extends Component {
                   {addingEon && <FontAwesomeIcon icon="spinner-third" className={classnames({
                     "fa-spin": addingEon
                   })} />}
-                  {!addingEon && <FontAwesomeIcon icon="plus" />}
+                  {!addingEon && <FontAwesomeIcon icon="check" />}
                 </Button>
               </FormGroup>
-              <FormGroup className={"col col-2 p-0 h-100"}>
-                <Button className={"refresh_button"} type="button" disabled={scanning} onClick={this.handleScanNetwork}>
-                <FontAwesomeIcon icon="sync" className={classnames({
-                  "fa-spin": scanning
-                })} /> Scan</Button>
-              </FormGroup>
             </Form>
-          </div>
+          </Collapse>
 
           <Collapse className={"message"} isOpen={scanning}>
             <Card body inverse color="primary" className={"scanning-message"}>
               <CardBody className={"scanning-message-body"}>
-                Scanning for EON... {progressPercString}
+                Scanning for EON...
                 {foundCount > 0 &&
                   <div>Found {foundCount} EON on the network...</div>
                 }

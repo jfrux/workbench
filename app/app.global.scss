@@ -6,22 +6,32 @@
 @import "~xterm/src/xterm.css";
 @import "~react-json-pretty/src/JSONPretty.monikai.css";
 
+$base-color: #24292e;
+$light-color: lighten(#24292e,5);
+$dark-color: darken(#24292e,5);
+$darker-color: darken(#24292e,8);
+$active-color: var(--blue);
 $left-bar-width: 50px;
 $left-bar-padding-top: 0;
-$top-bar-height: 0;
+$top-bar-height: 28px;
 $child-list-width: 200px;
 $eons-list-top-top: $top-bar-height;
 $eons-list-top-height: 30px;
 $eons-list-top: $top-bar-height+$eons-list-top-height;
 $right-content-width: calc(100% - #{$left-bar-width});
 body {
-  background-color:#000;
+  background-color:#212121;
+}
+#foldout-container {
+  z-index:10000;
+  position:fixed!important;
 }
 .react-json-view {
   * {
     opacity:1!important;
   }
 }
+
 .app-wrapper {
   $darker_col: 6;
   padding-top:0;
@@ -31,9 +41,9 @@ body {
   display:flex;
   flex-flow: wrap;
   position:fixed;
-  background-color: darken(#232c39,$darker_col)!important;
-  background: radial-gradient(619.87px at 50% 6.62%, #072339 0%, #051B2C 100%)!important;
-
+  background-color: #000;
+  // background: radial-gradient(619.87px at 50% 6.62%, #072339 0%, #051B2C 100%)!important;
+  @import "styles/windows-top-bar";
   @import "styles/top-bar";
   @import "styles/eon";
   @import "styles/eon-list";
@@ -175,7 +185,9 @@ body {
   // width:100%!important;
   margin:0;
   
-  background:transparent!important;
+  background:darken($base-color,5)!important;
+  background:darken($base-color,5)!important;
+  border-radius:0;
   text-align:center!important;
   box-shadow:none!important;
   display:block;
@@ -187,15 +199,15 @@ body {
   padding:0!important;
   margin:0;
   line-height: 30px;
-  background-color:rgba(#FFF,0.05)!important;
+  background-color:darken($base-color,2)!important;
   border:0!important;
   border-radius:0!important;
   text-align:center;
   display:block;
-  color:rgba(#FFF,0.4);
+  color:lighten($base-color,10);
   height:100%;
   width:100%;
-  border-right:1px solid rgba(#FFF,0.05)!important;
+  border-left:1px solid lighten($base-color,1)!important;
 }
 
 .refresh_button {

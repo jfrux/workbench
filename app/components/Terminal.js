@@ -5,6 +5,7 @@ import { Terminal } from 'xterm';
 import { remote, clipboard } from 'electron';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import settings from 'electron-settings';
 const { app } = remote;
 import path from 'path';
 import * as uiActions from '../actions/ui_actions';
@@ -302,13 +303,17 @@ class ReactTerminal extends React.Component {
             console.log('CONNECTED TO SHELL');
             this.term.attach(this.socket);
             console.warn(process.platform);
-            if (process.platform === 'win32') {
-              const userHome = app.getPath('home');
-              const filePath = path.join(userHome, '.ssh', 'openpilot_rsa');
+            let filePath;
+            const userHome = app.getPath('home');
+            filePath = path.join(userHome, '.ssh', 'openpilot_rsa');
+
+            let userKeyPath = settings.get('eonSshKeyPath');
+            if (userKeyPath) {
+              filePath = userKeyPath;
             }
 
             this.sendCommand(
-              `ssh root@${this.props.eonIp} -p 8022 -i ~/.ssh/openpilot_rsa\r`
+              `ssh root@${this.props.eonIp} -p 8022 -i ${filePath}\r`
             );
           };
           // this.socket.onclose = () => {

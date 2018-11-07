@@ -5,7 +5,6 @@ frame:
   port: 8002
   label: "Frame"
   fields:
-    -
   description: "Frame syncing packet"
 sensorEvents:
   id: "sensorEvents"
@@ -14,7 +13,6 @@ sensorEvents:
   port: 8003
   label: "Sensor Events"
   fields:
-    -
   description: "Accel, gyro, and compass"
 gpsNMEA:
   id: "gpsNMEA"
@@ -23,7 +21,6 @@ gpsNMEA:
   port: 8004
   label: "GPS NMEA"
   fields:
-    -
   description: "GPS data, also global timestamp"
 gpsLocation:
   id: "gpsLocation"
@@ -87,14 +84,7 @@ live100:
   port: 8007
   label: "Live 100"
   fields:
-    -
   description:
-#liveEvent:
-  # port: 8008
-  # label: "Live Event"
-  # fields:
-    # -
-  # description:
 model:
   id: "model"
   type: "Object"
@@ -102,7 +92,6 @@ model:
   port: 8009
   label: "Model"
   fields:
-    -
   description:
 features:
   id: "features"
@@ -111,7 +100,6 @@ features:
   port: 8010
   label: "Features"
   fields:
-    -
   description:
 health:
   id: "health"
@@ -120,7 +108,6 @@ health:
   port: 8011
   label: "Health"
   fields:
-    -
   description:
 live20:
   id: "live20"
@@ -129,7 +116,6 @@ live20:
   port: 8012
   label: "Live 20"
   fields:
-    -
   description:
 #liveUI:
   # port: 8014
@@ -144,7 +130,6 @@ encodeIdx:
   port: 8015
   label: "Encode Idx"
   fields:
-    -
   description:
 liveTracks:
   id: "liveTracks"
@@ -153,7 +138,6 @@ liveTracks:
   port: 8016
   label: "Live Tracks"
   fields:
-    -
   description:
 sendcan:
   id: "sendcan"
@@ -162,7 +146,7 @@ sendcan:
   port: 8017
   label: "Send CAN"
   fields:
-    -
+  hide: true
   description:
 logMessage:
   id: "logMessage"
@@ -171,7 +155,6 @@ logMessage:
   port: 8018
   label: "Log Message"
   fields:
-    -
   description:
 liveCalibration:
   id: "liveCalibration"
@@ -180,16 +163,14 @@ liveCalibration:
   port: 8019
   label: "Live Calibration"
   fields:
-    -
   description: ""
 androidLog:
   id: "androidLog"
   type: "Object"
-  key: "AndroidLog"
+  key: "AndroidLogEntry"
   port: 8020
   label: "Android Log"
   fields:
-    -
   description:
 carState:
   id: "carState"
@@ -198,7 +179,6 @@ carState:
   port: 8021
   label: "Car State"
   fields:
-    -
   description:
 carControl:
   id: "carControl"
@@ -207,7 +187,6 @@ carControl:
   port: 8023
   label: "Car Control"
   fields:
-    -
   description:
 plan:
   id: "plan"
@@ -216,7 +195,6 @@ plan:
   port: 8024
   label: "Plan"
   fields:
-    -
   description:
 liveLocation:
   id: "liveLocation"
@@ -225,7 +203,6 @@ liveLocation:
   port: 8025
   label: "Live Location"
   fields:
-    -
   description: ""
 ethernetData:
   id: "ethernetData"
@@ -234,7 +211,6 @@ ethernetData:
   port: 8027
   label: "Ethernet Data"
   fields:
-    -
   description: " "
 navUpdate:
   id: "navUpdate"
@@ -243,16 +219,14 @@ navUpdate:
   port: 8028
   label: "Nav Update"
   fields:
-    -
   description:
 qcomGnss:
   id: "qcomGnss"
   type: "Object"
-  key: "QcomGNSS"
+  key: "QcomGnss"
   port: 8029
   label: "QCOM GNSS"
   fields:
-    -
   description:
 lidarPts:
   id: "lidarPts"
@@ -261,7 +235,6 @@ lidarPts:
   port: 8030
   label: "Lidar Pts"
   fields:
-    -
   description:
 procLog:
   id: "procLog"
@@ -270,7 +243,6 @@ procLog:
   port: 8031
   label: "Proc Log"
   fields:
-    -
   description:
 gpsLocationExternal:
   id: "gpsLocationExternal"
@@ -279,7 +251,6 @@ gpsLocationExternal:
   port: 8032
   label: "GPS Location External"
   fields:
-    -
   description: ""
 ubloxGnss:
   id: "ubloxGnss"
@@ -288,7 +259,6 @@ ubloxGnss:
   port: 8033
   label: "Ublox GNSS"
   fields:
-    -
   description:
 clocks:
   id: "clocks"
@@ -310,7 +280,6 @@ liveMpc:
   port: 8035
   label: "Live Mpc"
   fields:
-    -
   description:
 liveLongitudinalMpc:
   id: "liveLongitudinalMpc"
@@ -319,7 +288,6 @@ liveLongitudinalMpc:
   port: 8036
   label: "Live Longitudinal Mpc"
   fields:
-    -
   description: ""
 plusFrame:
   id: "plusFrame"
@@ -328,7 +296,6 @@ plusFrame:
   port: 8037
   label: "Plus Frame"
   fields:
-    -
   description:
 navStatus:
   id: "navStatus"
@@ -337,7 +304,6 @@ navStatus:
   port: 8038
   label: "Nav Status"
   fields:
-    -
   description:
 gpsLocationTrimble:
   id: "gpsLocationTrimble"
@@ -346,7 +312,6 @@ gpsLocationTrimble:
   port: 8039
   label: "GPS Location Trimble"
   fields:
-    -
   description: ""
 trimbleGnss:
   id: "trimbleGnss"
@@ -355,7 +320,6 @@ trimbleGnss:
   port: 8041
   label: "Trimble GNSS"
   fields:
-    -
   description:
 ubloxRaw:
   id: "ubloxRaw"
@@ -364,7 +328,6 @@ ubloxRaw:
   port: 8042
   label: "Ublox Raw"
   fields:
-    -
   description:
 gpsPlannerPoints:
   id: "gpsPlannerPoints"
@@ -373,7 +336,6 @@ gpsPlannerPoints:
   port: 8043
   label: "GPS Planner Points"
   fields:
-    -
   description: ""
 gpsPlannerPlan:
   id: "gpsPlannerPlan"
@@ -382,7 +344,6 @@ gpsPlannerPlan:
   port: 8044
   label: "GPS Planner Plan"
   fields:
-    -
   description: ""
 applanixRaw:
   id: "applanixRaw"
@@ -391,7 +352,6 @@ applanixRaw:
   port: 8046
   label: "Applanix Raw"
   fields:
-    -
   description:
 orbLocation:
   id: "orbLocation"
@@ -400,7 +360,6 @@ orbLocation:
   port: 8047
   label: "Orb Location"
   fields:
-    -
   description:
 trafficEvents:
   id: "trafficEvents"
@@ -409,7 +368,6 @@ trafficEvents:
   port: 8048
   label: "Traffic Events"
   fields:
-    -
   description: ""
 liveLocationTiming:
   id: "liveLocationTiming"
@@ -418,7 +376,6 @@ liveLocationTiming:
   port: 8049
   label: "Live Location Timing"
   fields:
-    -
   description: " "
 orbslamCorrection:
   id: "orbslamCorrection"
@@ -427,7 +384,6 @@ orbslamCorrection:
   port: 8050
   label: "Orbslam Correction"
   fields:
-    -
   description: " "
 liveLocationCorrected:
   id: "liveLocationCorrected"
@@ -436,7 +392,6 @@ liveLocationCorrected:
   port: 8051
   label: "Live Location Corrected"
   fields:
-    -
   description: " "
 orbObservation:
   id: "orbObservation"
@@ -445,7 +400,6 @@ orbObservation:
   port: 8052
   label: "Orb Observation"
   fields:
-    -
   description: ""
 applanixLocation:
   id: "applanixLocation"
@@ -454,7 +408,6 @@ applanixLocation:
   port: 8053
   label: "Applanix Location"
   fields:
-    -
   description: ""
 liveLocationKalman:
   id: "liveLocationKalman"
@@ -463,7 +416,6 @@ liveLocationKalman:
   port: 8054
   label: "Live Location Kalman"
   fields:
-    -
   description: ""
 uiNavigationEvent:
   id: "uiNavigationEvent"
@@ -472,7 +424,6 @@ uiNavigationEvent:
   port: 8055
   label: "UI Navigation Event"
   fields:
-    -
   description: ""
 orbOdometry:
   id: "orbOdometry"
@@ -481,7 +432,6 @@ orbOdometry:
   port: 8057
   label: "Orb Odometry"
   fields:
-    -
   description:
 orbFeatures:
   id: "orbFeatures"
@@ -490,7 +440,6 @@ orbFeatures:
   port: 8058
   label: "Orb Features"
   fields:
-    -
   description:
 orbKeyFrame:
   id: "orbKeyFrame"
@@ -499,7 +448,6 @@ orbKeyFrame:
   port: 8059
   label: "Orb Key Frame"
   fields:
-    -
   description:
 uiLayoutState:
   id: "uiLayoutState"
@@ -508,7 +456,6 @@ uiLayoutState:
   port: 8060
   label: "UI Layout State"
   fields:
-    -
   description: ""
 frontEncodeIdx:
   id: "frontEncodeIdx"
@@ -517,7 +464,6 @@ frontEncodeIdx:
   port: 8061
   label: "Front Encode Idx"
   fields:
-    -
   description: ""
 orbFeaturesSummary:
   id: "orbFeaturesSummary"
@@ -526,7 +472,6 @@ orbFeaturesSummary:
   port: 8062
   label: "Orb Features Summary"
   fields:
-    -
   description: ""
 driverMonitoring:
   id: "driverMonitoring"
@@ -535,7 +480,6 @@ driverMonitoring:
   port: 8063
   label: "Driver Monitoring"
   fields:
-    -
   description: ""
 testModel:
   id: "testModel"
@@ -544,7 +488,6 @@ testModel:
   port: 8040
   label: "Test Model"
   fields:
-    -
   description:
 testLiveLocation:
   id: "testLiveLocation"
@@ -553,7 +496,6 @@ testLiveLocation:
   port: 8045
   label: "Test Live Location"
   fields:
-    -
   description: ""
 testJoystick:
   id: "testJoystick"
@@ -562,5 +504,4 @@ testJoystick:
   port: 8056
   label: "Test Joystick"
   fields:
-    -
   description:

@@ -9,7 +9,7 @@
   position: relative;
   top: initial;
   flex-flow: column;
-  background-color: #000;
+  background-color: $dark-color;
   padding-left: 0;
   display: flex;
   z-index: 1;
@@ -17,26 +17,30 @@
   overflow-y: auto;
   .nav-item {
     width:100%;
+    &.hide {
+      display:none;
+    }
     > .nav {
       .nav-item {
         .nav-link {
           padding-left:30px;
           &.active {
+            color:rgba(#FFF,0.8);
             font-weight:normal;
-            background-color:initial;
+            background-color:$dark-color;
           }
         }
       }
     }
     .nav-link {
       position:relative;
-      line-height: 21px;
+      line-height: 25px;
       padding-top:0;
       white-space: nowrap;
       padding-bottom:0;
       text-transform: initial;
       text-align:left;
-      background-color:darken(#03111C,2);
+      background-color:$darker-color;
       color:rgba(#FFF,0.5);
       
       &:before {
@@ -47,7 +51,7 @@
         height: 1px;
         content: "";
         z-index: 100;
-        background-color: rgba(#FFF, 0.04);
+        background-color: rgba(#FFF, 0.01);
       }
       &:after {
         position: absolute;
@@ -57,12 +61,12 @@
         height: 1px;
         content: "";
         z-index: 100;
-        background-color: rgba(#000, 0.6);
+        background-color: rgba(#000, 0.2);
       }
       &.active {
         color:#FFF;
-        font-weight:bold;
-        background-color:var(--blue);
+        font-weight:initial;
+        background-color:$dark-color;
         // box-shadow:inset 3px 0 15px rgba(#000,1);
         // &:before, &:after {
         //   display:none;

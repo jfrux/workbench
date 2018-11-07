@@ -56,7 +56,7 @@ class EonDetail extends React.PureComponent {
     stateTabs = serviceIds.map((key) => {
       const service = services[key];
       return (
-        <NavItem key={key + "-tab-link"}>
+        <NavItem className={classnames({ hide: service.hide })} key={key + "-tab-link"}>
           <NavLink
             className={classnames({
               test: true,
@@ -104,9 +104,11 @@ class EonDetail extends React.PureComponent {
               onClick={() => { this.setTab('console'); }}>
               Console
             </NavLink>
-            <Nav tabs className={'command-list'}>
-              {commandTabs}
-            </Nav>
+            {activeTab === 'console' && 
+              <Nav tabs className={'command-list'}>
+                {commandTabs}
+              </Nav>
+            }
           </NavItem>
           {stateTabs}
         </Nav>

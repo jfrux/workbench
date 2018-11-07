@@ -11,6 +11,7 @@ import { delay } from 'redux-saga';
 import { push } from 'connected-react-router'
 import { remote } from 'electron';
 const { app } = remote;
+import settings from 'electron-settings';
 import mkdirp from 'mkdirp';
 import RSAKey from 'rsa-key';
 import path from 'path';
@@ -24,7 +25,12 @@ import * as eonDetailActions from '../actions/eon_detail_actions';
 function* getPrivateKey() {
   const userHome = app.getPath('home');
   mkdirp.sync(path.join(userHome, '.ssh'));
-  const filePath = path.join(userHome, '.ssh', 'openpilot_rsa');
+  let filePath = path.join(userHome, '.ssh', 'openpilot_rsa');
+  let userKeyPath = settings.get('eonSshKeyPath');
+  if (userKeyPath) {
+    filePath = userKeyPath;
+  }
+  console.warn("Using Key Path:",filePath);
   if (!fs.existsSync(filePath)) {
     fs.writeFileSync(
       filePath,

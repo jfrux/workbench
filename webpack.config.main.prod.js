@@ -27,15 +27,24 @@ export default merge.smart(baseConfig, {
 
   optimization: {
     minimizer: [
-      new UglifyJSPlugin({
-        exclude: /app\/capnp/,
-        parallel: true,
-        sourceMap: true,
-        cache: true
-      })
+      // new UglifyJSPlugin({
+      //   exclude: /app\/capnp/,
+      //   parallel: true,
+      //   sourceMap: true,
+      //   cache: true
+      // })
     ]
   },
-
+  module: {
+    rules: [
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: [
+          'url-loader'
+        ]
+      }
+    ]
+  },
   plugins: [
     new BundleAnalyzerPlugin({
       analyzerMode:

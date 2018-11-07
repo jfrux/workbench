@@ -1,5 +1,5 @@
 const {app} = require('electron');
-const {openConfig} = require('./config');
+const {openConfig} = require('./settings');
 // const {updatePlugins} = require('./plugins');
 // const {installCLI} = require('./utils/cli-install');
 

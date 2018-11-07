@@ -5,10 +5,11 @@ import EonDetail from '../components/EonDetail';
 import * as NetworkConnectionActions from '../actions/network_connection_actions';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
-import { faPause, faPlay, faSpinnerThird, faUndo, faCheck, faCircle, faTimesOctagon, faSync, faChevronLeft, faChevronRight, faPlus } from '@fortawesome/pro-solid-svg-icons';
+import notify from '../utils/notify';
+import { faPause, faTimes, faPlay, faSpinnerThird, faUndo, faCheck, faCircle, faTimesOctagon, faSync, faChevronLeft, faChevronRight, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
-
-library.add(faPause,faUndo,faPlay,faSpinnerThird, faCheck,faCircle, faGithub, faTimesOctagon, faSync, faChevronLeft, faPlus, faChevronRight);
+import settings from 'electron-settings';
+library.add(faPause, faTimes, faUndo, faPlay, faSpinnerThird, faCheck, faCircle, faGithub, faTimesOctagon, faSync, faChevronLeft, faPlus, faChevronRight);
 
 function mapStateToProps(state) {
   return {};
@@ -18,6 +19,16 @@ function mapDispatchToProps(dispatch) {
 }
 class App extends React.Component {
   componentDidMount() {
+    settings.watch("config",() => {
+      
+      notify('Workbench config updated!');
+    });
+    settings.watch("keymaps",() => {
+      notify('Workbench keymaps updated!');
+    });
+    settings.watch("eonSshKeyPath",() => {
+      notify('Workbench SSH Key Path updated!', 'Disconnect / reconnect to EON to use new key.');
+    });
     this.props.setupNetworkEvents();
   }
   render() {

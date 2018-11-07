@@ -1,9 +1,9 @@
 const editMenu = require('./menus/menus/edit');
-const shellMenu = require('./menus/menus/shell');
+const fileMenu = require('./menus/menus/file');
 const { execCommand } = require('./commands');
 const separator = {type: 'separator'};
-const config = require('./config');
-const { getDecoratedKeymaps } = require('./plugins');
+const config = require('./settings');
+const { getDecoratedKeymaps } = require('./keymaps/decorators');
 const notify = require('./notify');
 
 const getCommandKeys = keymaps =>
@@ -23,7 +23,7 @@ const filterCutCopy = (selection, menuItem) => {
 
 module.exports = (createWindow, selection) => {
   const commandKeys = getCommandKeys(getDecoratedKeymaps());
-  const _shell = shellMenu(commandKeys, execCommand).submenu;
+  const _file = fileMenu(commandKeys, execCommand).submenu;
   const _edit = editMenu(commandKeys, execCommand).submenu.filter(filterCutCopy.bind(null, selection));
-  return _edit.concat(separator, _shell).filter(menuItem => !menuItem.hasOwnProperty('enabled') || menuItem.enabled);
+  return _edit.concat(separator, _file).filter(menuItem => !menuItem.hasOwnProperty('enabled') || menuItem.enabled);
 };

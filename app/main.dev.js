@@ -7,10 +7,9 @@
  * `./app/main.prod.js` using webpack. This gives us some performance wins.
  *
  */
-import { app, BrowserWindow, shell, Menu } from 'electron';
+import { app, BrowserWindow, shell, Menu, nativeImage } from 'electron';
 const { createWindow } = app;
-import MenuBuilder from './menu';
-import log from 'electron-log';
+import electronSettings from 'electron-settings';
 const notify = require('./notify');
 const fetchNotifications = require('./notifications');
 import { startServer } from './background/server';
@@ -18,23 +17,22 @@ import { startScanner } from './background/network-scanner';
 import { startZmq } from './background/zmq';
 import { autoUpdater } from "electron-updater";
 const createRPC = require('./rpc');
-const config = require('./config');
-const plugins = require('./plugins');
 const contextMenuTemplate = require('./contextmenu');
-const toElectronBackgroundColor = require('./utils/to-electron-background-color');
 const AppMenu = require('./menus/menu');
-const {icon, cfgDir} = require('./config/paths');
+// import icon from '../resources/icons/96x96.png';
+import * as settings from './settings';
 const {gitDescribe} = require('git-describe');
 const isDev = (process.env.NODE_ENV === 'development');
-// set up config
-config.setup();
-app.config = config;
-app.plugins = plugins;
+
 const chalk = require('chalk');
 const prefix = chalk.bold.blue;
 const bgTaskColor = chalk.white;
 
+app.appMenuTemplate = AppMenu.createMenu();
+app.setName("Workbench");
+
 function writeLog(...params) {
+  //eslint-disable-next-line no-console
   console.info(prefix('workbench') + ' ' + chalk.bold(bgTaskColor('[main]')), bgTaskColor(...params));
 }
 
@@ -51,7 +49,7 @@ const checkSquirrel = () => {
     process.exit();
   }
 };
-
+process.env['APP_PATH'] = app.getAppPath();
 // handle startup squirrel events
 if (process.platform === 'win32') {
   // eslint-disable-next-line import/order
@@ -74,71 +72,37 @@ if (process.platform === 'win32') {
   }
 }
 
-//-------------------------------------------------------------------
-// Logging
-//
-// THIS SECTION IS NOT REQUIRED
-//
-// This logging setup is not required for auto-updates to work,
-// but it sure makes debugging easier :)
-//-------------------------------------------------------------------
-autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = 'info';
+writeLog('Starting Workbench');
 
-writeLog('App starting...');
-
-// import settings from 'electron-settings';
+/**
+ * App Switches
+ */
+writeLog('Enabling Viewport Meta');
 app.commandLine.appendSwitch('--enable-viewport-meta', 'true');
+writeLog('Disabling Pinch to zoom');
 app.commandLine.appendSwitch('disable-pinch');
-//eslint-disable-next-line no-console
 writeLog('Disabling Chromium GPU blacklist');
 app.commandLine.appendSwitch('ignore-gpu-blacklist');
 
 if (isDev) {
-  //eslint-disable-next-line no-console
   writeLog('Development Mode');
 
   // Override default appVersion which is set from package.json
-  // gitDescribe({customArguments: ['--tags']}, (error, gitInfo) => {
-  //   if (!error) {
-  //     app.setVersion(gitInfo.raw);
-  //   }
-  // });
+  gitDescribe({customArguments: ['--tags']}, (error, gitInfo) => {
+    if (!error) {
+      app.setVersion(gitInfo.raw);
+    }
+  });
 } else {
   //eslint-disable-next-line no-console
   writeLog('Production Mode');
 }
-let mainWindow = null;
 
-if (process.env.NODE_ENV === 'production') {
-  const sourceMapSupport = require('source-map-support');
-  sourceMapSupport.install();
-}
-
-if (
-  process.env.NODE_ENV === 'development' ||
-  process.env.DEBUG_PROD === 'true'
-) {
-  require('electron-debug')();
-  const path = require('path');
-  const p = path.join(__dirname, '..', 'app', 'node_modules');
-  require('module').globalPaths.push(p);
-}
-
-// const installExtensions = async () => {
-//   const installer = require('electron-devtools-installer');
-//   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-//   const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
-
-//   return Promise.all(
-//     extensions.map(name => installer.default(installer[name], forceDownload))
-//   ).catch(console.log);
-// };
+let mainWindow;
 
 /**
  * Add event listeners...
  */
-
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
@@ -150,6 +114,7 @@ app.on('window-all-closed', () => {
 
 app.on('ready', async () => {
   autoUpdater.checkForUpdatesAndNotify();
+  settings.setup();
   // if (!settings.get("windowBounds")) {
     // settings.set("windowBounds", { width: 800, height: 800 })
   // }
@@ -165,7 +130,7 @@ app.on('ready', async () => {
   //   await installExtensions();
   // }
   const makeMenu = () => {
-    const menu = AppMenu.createMenu(createWindow);
+    const menu = AppMenu.createMenu(app.createWindow);
     
     // If we're on Mac make a Dock Menu
     if (process.platform === 'darwin') {
@@ -173,7 +138,7 @@ app.on('ready', async () => {
         {
           label: 'New Window',
           click() {
-            createWindow();
+            app.createWindow();
           }
         }
       ]);
@@ -182,37 +147,24 @@ app.on('ready', async () => {
   
     Menu.setApplicationMenu(AppMenu.buildMenu(menu));
   };
-  
+  // const newIcon = nativeImage.createFromDataURL(icon);
   mainWindow = new BrowserWindow({
-    // titleBarStyle: 'hidden-inset',
-    title: 'Hyper.app',
+    titleBarStyle: 'hiddenInset',
+    title: 'Workbench',
     // we want to go frameless on Windows and Linux
     frame: process.platform === 'darwin',
-    // transparent: process.platform === 'darwin',
-    backgroundColor: '#000000',
-    icon,
+    transparent: process.platform === 'darwin',
+    backgroundColor: '#000',
+    // icon: newIcon,
     minWidth: 320,
     minHeight: 240
   });
   const rpc = createRPC(mainWindow);
+
   let webContents = mainWindow.webContents;
   
-  // const cfgUnsubscribe = app.config.subscribe(() => {
-  //   const cfg_ = app.plugins.getDecoratedConfig();
+  
 
-  //   // notify renderer
-  //   webContents.send('config change');
-
-  //   // notify user that shell changes require new sessions
-  //   if (cfg_.shell !== cfg.shell || JSON.stringify(cfg_.shellArgs) !== JSON.stringify(cfg.shellArgs)) {
-  //     notify('Shell configuration changed!', 'Ensure you aren\'t connected to EON, and try connecting to EON again.');
-  //   }
-
-  //   // update background color if necessary
-  //   // updateBackgroundColor();
-
-  //   cfg = cfg_;
-  // });
   rpc.on('init', () => {
     writeLog("rpc init");
     mainWindow.show();
@@ -350,10 +302,14 @@ app.on('ready', async () => {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
-  startServer();
+  
+  makeMenu();
+
+  try {
+    startServer();
+  } catch (e) {
+    console.log("Server could not be started.",e);
+  }
   startScanner();
   startZmq();
-  // const menuBuilder = new MenuBuilder(mainWindow);
-  // menuBuilder.buildMenu();
-  makeMenu();
 });

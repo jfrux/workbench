@@ -16,7 +16,7 @@ app.on('ready', () => {
   const win_ = new BrowserWindow({
     show: false
   });
-  const url = 'file://' + resolve(isDev ? __dirname : app.getAppPath(), 'notify.html');
+  const url = `file://${__dirname}/notify.html`;
   win_.loadURL(url);
   win_.webContents.on('dom-ready', () => {
     win = win_;

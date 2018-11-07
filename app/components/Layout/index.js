@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Comma from "../../images/comma.svg";
-const { shell } = require('electron');
+import windowsMenu from '../../menus/windows-menu';
 import classnames from 'classnames';
 import Header from './Header';
 import * as networkScannerActions from '../../actions/network_scanner_actions';
 import PropTypes from 'prop-types';
+import { TitleBar } from 'electron-react-titlebar';
+import icon from '../../images/icons/36x36.png';
 const isMac = /Mac/.test(navigator.userAgent);
+
 import {
   NavItem,
   UncontrolledTooltip,
@@ -42,17 +45,20 @@ class Layout extends React.PureComponent {
       'app-wrapper': true,
       'is-mac': isMac
     }];
+    // const menu = AppMenu.createMenu();
     if (className) {
       layoutClasses.push(className);
     }
+    // console.warn("appMenu:",);
     return (
       <div className={classnames(layoutClasses)}>
-        {isMac &&
           <div className={'top-bar'}>
-            <span className={'title'}>{title}</span>
+          {isMac && <span className={'title'}>{title}</span>}
+          {!isMac && 
+            <TitleBar menu={windowsMenu} icon={"https://github.com/openpilot-community/workbench/blob/master/resources/icons/36x36.png?raw=true"}>
+              <span className={'title'}>{title}</span>
+            </TitleBar>}
           </div>
-        }
-
         <div className={'left-bar'}>
           <Nav>
             {contextActions}

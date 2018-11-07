@@ -2,7 +2,7 @@ module.exports = (commandKeys, execCommand) => {
   const isMac = process.platform === 'darwin';
 
   return {
-    label: isMac ? 'Shell' : 'File',
+    label: 'File',
     submenu: [
       // {
       //   label: 'New Tab',
@@ -38,18 +38,18 @@ module.exports = (commandKeys, execCommand) => {
       // {
       //   type: 'separator'
       // },
-      // {
-      //   label: 'Close',
-      //   accelerator: commandKeys['pane:close'],
-      //   click(item, focusedWindow) {
-      //     execCommand('pane:close', focusedWindow);
-      //   }
-      // },
-      // {
-      //   label: isMac ? 'Close Window' : 'Quit',
-      //   role: 'close',
-      //   accelerator: commandKeys['window:close']
-      // }
+      {
+        label: 'Close',
+        accelerator: commandKeys['pane:close'],
+        click(item, focusedWindow) {
+          execCommand('pane:close', focusedWindow);
+        }
+      },
+      {
+        label: isMac ? 'Close Window' : 'Quit',
+        role: 'close',
+        accelerator: commandKeys['window:close']
+      }
     ]
   };
 };

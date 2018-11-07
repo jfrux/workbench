@@ -2,14 +2,14 @@
   .top-bar {
     height: $top-bar-height;
     min-height: $top-bar-height;
-    background-color: rgba(#000,0.7);
+    background-color: $base-color;
     top: initial;
     left: initial;
     right: initial;
     position:relative;
     flex: 0 0 100%;
     width: 100%;
-    z-index: 2;
+    z-index: 100000;
     text-align: center;
     user-select: none;
     -webkit-app-region: drag;

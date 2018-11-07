@@ -15,33 +15,51 @@ function writeLog(...params) {
 
 function onMessage(sender, event_message, service, cb) {
   // console.warn(arguments);
-  const msg = new EventMessage(event_message);
-  
-  let jsonData = JSON.parse(JSON.stringify(msg))[service.key];
-  // // const state = this.state;
-  // let parsedJson;
-
-  writeLog(`${service.id} msg received.`);
-  let newData = {};
-  if (service.id === "logMessage") {
-    jsonData = JSON.parse(jsonData);
+  let msg, jsonData, dataKeys, newData, msgResp;
+  try {
+    writeLog("Translating ZMQ data...");
+    msg = new EventMessage(event_message);
+  } catch (e) {
+    writeLog("ERROR: Failed to parse ZMQ Message.",e.message);
+    return;
   }
-  // newData = {
-  //   ,
-  //   latestMessage: jsonData
-  // };
+
+  try {
+    writeLog(`Converting EventMessage to JSON...`);
+    jsonData = JSON.parse(JSON.stringify(msg));
+  } catch (e) {
+    writeLog("ERROR: Failed to convert EventMessage to JSON", e.message, service, msg);
+    return;
+  }
   
-  data[service.id] = {
-    fields: Object.keys(jsonData),
-    latestMessage: jsonData,
-    messages: [
-      ...data[service.id].messages,
-      jsonData
-    ]
-  };
-  writeLog("message count: " + data[service.id].messages.length);
-  let msgResp = {};
-  msgResp[service.id] = data[service.id];
+  try {
+    writeLog(`Extracting ${service.key} from JSON...`);
+    jsonData = jsonData[service.key];
+  } catch (e) {
+    writeLog(`ERROR: Failed to extract key ${service.key} from JSON`, e.message, service, jsonData);
+  }
+  newData = {};
+
+  if (jsonData) {
+    if (service.id === "logMessage") {
+      jsonData = JSON.parse(jsonData);
+    }
+
+    dataKeys = Object.keys(jsonData);
+    data[service.id] = {
+      fields: dataKeys,
+      latestMessage: jsonData,
+      messages: [
+        ...data[service.id].messages,
+        jsonData
+      ]
+    };
+    writeLog("message count: " + data[service.id].messages.length);
+  
+    msgResp = {};
+    msgResp[service.id] = data[service.id];
+  }
+
   sender.send(types.MESSAGE, msgResp);
 }
 
@@ -54,27 +72,31 @@ export function startZmq() {
     ipcMain.on(types.CONNECT, (evt, ip, service) => {
       const { sender } = evt;
       const addr = `tcp://${ip}:${service.port}`;
-      if (!data[service.id]) {
-        data[service.id] = {
-          latestMessage: {},
-          messages: []
-        };
+      if (service && service.id) {
+        if (!data[service.id]) {
+          data[service.id] = {
+            latestMessage: {},
+            messages: []
+          };
+        }
+        // if (!data[service.id].messages) {
+        //   data[service.id].messages = [];
+        // }
+        data[service.id].messages = [];
+        writeLog('ServiceID:',service.id);
+        writeLog('Service Key:',service.key);
+        msgHandler = throttle((msg) => { return onMessage(sender, msg, service); }, 200, { leading: true });
+        sock.on('message', msgHandler);
+        writeLog(`Connecting to ${addr}`, service.id);
+        sock.connect(addr);
       }
-      // if (!data[service.id].messages) {
-      //   data[service.id].messages = [];
-      // }
-      data[service.id].messages = [];
-      msgHandler = throttle((msg) => { return onMessage(sender, msg, service); }, 200, { leading: true });
-      sock.on('message', msgHandler);
-      writeLog(`Connecting to ${addr}`, service.key);
-      sock.connect(addr);
     });
 
     ipcMain.on(types.DISCONNECT, (evt, ip, service) => {
       const { sender } = evt;
       const addr = `tcp://${ip}:${service.port}`;
       sock.removeListener('message', msgHandler);
-      writeLog(`Disconnect from ${addr}`, service.key);
+      writeLog(`Disconnect from ${addr}`, service.id);
       sock.disconnect(addr);
     });
 

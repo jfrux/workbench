@@ -1,0 +1,491 @@
+#electron-app-title-bar {
+  height: 28px;
+  background: $base-color;
+  // border-bottom: 1px solid #000;
+  -webkit-app-region: drag;
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  color: $base-color;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+  font-size: 12px;
+}
+
+/*resize handler*/
+#electron-app-title-bar .resize-handle {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  -webkit-app-region: no-drag;
+}
+
+#electron-app-title-bar .resize-handle.resize-handle-left {
+  width: 3px;
+  height: 28px;
+}
+
+#electron-app-title-bar .resize-handle.resize-handle-top {
+  width: 100%;
+  height: 3px;
+}
+
+/*icon*/
+#electron-app-title-bar img.icon {
+  height: 16px;
+  width: 16px;
+  margin: 6px;
+}
+
+/*toolbar button*/
+#electron-app-title-bar .toolbar-button {
+  min-width: 0;
+  position: relative;
+}
+
+#electron-app-title-bar .toolbar-button > button {
+  -webkit-appearance: none;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  border-radius: 0;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+#electron-app-title-bar .toolbar-button > button:active {
+  box-shadow: none;
+}
+
+#electron-app-title-bar .toolbar-button > button:focus {
+  background-color: #2f363d;
+  outline-offset: -4px;
+  border-color: black;
+  box-shadow: none;
+}
+
+#electron-app-title-bar .toolbar-button > button:focus .progress {
+  background: #444d56;
+}
+
+#electron-app-title-bar .toolbar-button > button:focus:not(.focus-ring) {
+  outline: none;
+  background-color: transparent;
+}
+
+#electron-app-title-bar .toolbar-button > button:focus:not(.focus-ring) .progress {
+  background: #2f363d;
+}
+
+#electron-app-title-bar .toolbar-button > button:not(:disabled):hover {
+  background-color: #2f363d;
+  color: #fff;
+  border-color: black;
+}
+
+#electron-app-title-bar .toolbar-button > button:not(:disabled):hover .description {
+  color: #959da5;
+}
+
+#electron-app-title-bar .toolbar-button > button:not(:disabled):hover .progress {
+  background: #444d56;
+}
+
+#electron-app-title-bar .toolbar-button > button {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px;
+  margin: 0;
+  overflow: hidden;
+  background-color: transparent;
+  color: #fff;
+  border-right: 1px solid black;
+}
+
+#electron-app-title-bar .toolbar-button > button .icon {
+  flex-shrink: 0;
+  margin-right: 10px;
+  position: relative;
+}
+
+#electron-app-title-bar .toolbar-button > button .dropdownArrow {
+  width: 9px;
+  height: 13px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+#electron-app-title-bar .toolbar-button > button .text {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 0;
+  margin-right: 10px;
+  position: relative;
+}
+
+#electron-app-title-bar .toolbar-button > button .title {
+  font-weight: 600;
+  position: relative;
+}
+
+#electron-app-title-bar .toolbar-button > button .description {
+  color: #959da5;
+  font-size: 11px;
+  position: relative;
+}
+
+#electron-app-title-bar .toolbar-button > button .title, .toolbar-button > button .description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#electron-app-title-bar .toolbar-button > button .progress {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background: #2f363d;
+  transform-origin: left;
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+#electron-app-title-bar .toolbar-button.has-progress > button:disabled {
+  opacity: 1;
+}
+
+/*button component*/
+#electron-app-title-bar .button-component {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+  font-size: 12px;
+  padding: 0 10px;
+  border: 1px solid #e1e4e8;
+  height: 25px;
+  color: $base-color;
+  background-color: #fafbfc;
+  border-radius: 2px;
+}
+
+#electron-app-title-bar .button-component:not(:disabled):hover {
+  border-color: #d1d5da;
+  background-color: #fff;
+}
+
+#electron-app-title-bar .button-component:focus {
+  background-color: #fff;
+  border-color: #d1d5da;
+  box-shadow: 0 0 0 1px rgba(225, 228, 232, 0.75);
+}
+
+#electron-app-title-bar .button-component:disabled {
+  opacity: 0.6;
+}
+
+#electron-app-title-bar .button-component .octicon {
+  vertical-align: middle;
+}
+
+#electron-app-title-bar .button-component[type='submit'] {
+  background-color: #0366d6;
+  color: #fff;
+  border: 1px solid #0366d6;
+}
+
+#electron-app-title-bar .button-component[type='submit']:not(:disabled):hover {
+  border-color: #0366d6;
+  background-color: #0372ef;
+}
+
+#electron-app-title-bar .button-component[type='submit']:focus {
+  border: 1px solid #005cc5;
+  background-color: #0372ef;
+  box-shadow: 0 0 0 2px rgba(3, 102, 214, 0.25);
+}
+
+
+/*dropdown*/
+#electron-app-title-bar .toolbar-dropdown {
+  min-width: 0;
+}
+
+#electron-app-title-bar .toolbar-dropdown > .toolbar-button {
+  width: 100%;
+  height: 100%;
+}
+
+#electron-app-title-bar .toolbar-dropdown.open > .toolbar-button > button {
+  color: rgba(#FFF,0.5);
+  background-color: lighten($base-color,3);
+  border-color: #fff;
+}
+
+#electron-app-title-bar .toolbar-dropdown.open > .toolbar-button > button .description {
+  color: #6a737d;
+}
+
+#electron-app-title-bar .toolbar-dropdown.open > .toolbar-button > button .progress {
+  background-color: #e1e4e8;
+}
+
+#electron-app-title-bar .toolbar-dropdown:not(.open) .menu-item .menu-label {
+  opacity: 0.6;
+}
+
+/*menubar*/
+#electron-app-title-bar #app-menu-bar {
+  display: flex;
+  -webkit-app-region: no-drag;
+  max-width: calc(100% - 163px);
+  overflow: hidden;
+}
+
+#electron-app-title-bar #app-menu-bar .toolbar-button > button {
+  padding: 0 10px;
+  border: 0;
+}
+
+#electron-app-title-bar #app-menu-bar .toolbar-button > button .access-key.highlight {
+  text-decoration: underline;
+}
+
+#electron-app-title-bar #app-menu-bar .toolbar-dropdown:not(.open) > .toolbar-button > button {
+  color: #959da5;
+}
+
+#electron-app-title-bar #app-menu-bar .toolbar-dropdown:not(.open) > .toolbar-button > button:hover, #app-menu-bar .toolbar-dropdown:not(.open) > .toolbar-button > button:focus {
+  color: #fff;
+}
+
+#electron-app-title-bar #app-menu-bar #foldout-container .foldout {
+  background: transparent;
+  pointer-events: none;
+}
+
+#electron-app-title-bar #app-menu-bar #foldout-container .foldout .menu-pane {
+  background: darken($base-color,3);
+  pointer-events: all;
+  text-align:left;
+}
+
+#electron-app-title-bar #foldout-container {
+  z-index: 8;
+}
+
+#electron-app-title-bar #foldout-container .overlay {
+  background: black;
+  opacity: 0.4;
+  height: 100%;
+  overflow: hidden;
+}
+
+#electron-app-title-bar #foldout-container .overlay:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+
+#electron-app-title-bar #foldout-container .foldout {
+  background: $base-color;
+  color: #FFF;
+}
+
+/*menupane*/
+#electron-app-title-bar #app-menu-foldout {
+  height: 100%;
+  display: flex;
+}
+
+#electron-app-title-bar .list {
+  flex-grow: 1;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+#electron-app-title-bar .list .ReactVirtualized__Grid {
+  background: transparent;
+}
+
+#electron-app-title-bar .list-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  // &:first-child {
+  //   border-top:5px solid darken($base-color,4);
+  // }
+}
+
+#electron-app-title-bar .list-item.selected {
+  color: #fff;
+  background-color: #0366d6;
+}
+
+#electron-app-title-bar .list-item.selected:focus {
+  color: #fff;
+  background-color: #0366d6;
+}
+
+#electron-app-title-bar .list-item:focus {
+  outline: none;
+}
+
+#electron-app-title-bar .menu-pane {
+  height: 100%;
+  width: 240px;
+}
+
+#electron-app-title-bar .menu-pane:not(:first-child) {
+  border-left: 1px solid lighten($base-color,3);
+}
+
+#electron-app-title-bar .menu-pane:not(:last-child) .list-item.selected {
+  color: #fff;
+  background-color: #0366d6;
+}
+
+#electron-app-title-bar .menu-pane .ReactVirtualized__Grid:focus {
+  outline: none;
+}
+
+#electron-app-title-bar .menu-pane .menu-item {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  min-width: 0;
+}
+
+#electron-app-title-bar .menu-pane .menu-item.disabled {
+  opacity: 0.3;
+}
+
+#electron-app-title-bar .menu-pane .menu-item .menu-label {
+  flex-grow: 1;
+  margin-left: 10px;
+  margin-right: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#electron-app-title-bar .menu-pane .menu-item .submenu-arrow {
+  flex-shrink: 0;
+  opacity: 0.7;
+  height: 12px;
+  margin-right: 10px;
+}
+
+#electron-app-title-bar .menu-pane .menu-item .accelerator {
+  flex-shrink: 0;
+  margin-right: 10px;
+  color: #6a737d;
+}
+
+#electron-app-title-bar .list-item.selected .accelerator {
+  color: #fff;
+}
+
+#electron-app-title-bar .menu-pane .menu-item.checked .menu-label {
+  margin-left: 0;
+}
+
+#electron-app-title-bar .menu-pane .menu-item.checked .icon {
+  flex-grow: 0;
+  margin: 2px 0;
+}
+
+#electron-app-title-bar .menu-pane .menu-item .access-key.highlight {
+  text-decoration: underline;
+}
+
+#electron-app-title-bar .menu-pane hr {
+  display: block;
+  width: 100%;
+  border: none;
+  height: 1px;
+  border-bottom: 1px solid lighten($base-color,3);;
+}
+
+#electron-app-title-bar .menu-pane .menu-endblock {
+  height: 5px;
+}
+
+#electron-app-title-bar .status-icon {
+  margin-left: 10px;
+  width: 12px;
+  height: 12px;
+}
+
+#electron-app-title-bar .status-icon svg {
+  width: 100%;
+  height: 100%;
+}
+/*window-controls*/
+#electron-app-title-bar .window-controls {
+  flex-grow: 0;
+  flex-shrink: 0;
+  margin-left: auto;
+  height: 100%;
+}
+
+#electron-app-title-bar .window-controls button {
+  -webkit-app-region: no-drag;
+  display: inline-block;
+  position: relative;
+  width: 45px;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  color: #a0a0a0;
+  background-color: transparent;
+  transition: background-color 0.25s ease;
+}
+
+#electron-app-title-bar .window-controls button:not(:disabled):focus {
+  outline: none;
+}
+
+#electron-app-title-bar .window-controls button:not(:disabled):hover {
+  background-color: #888;
+  color: #fff;
+}
+
+#electron-app-title-bar .window-controls button:not(:disabled):hover:active {
+  background-color: #666;
+  transition: none;
+}
+
+#electron-app-title-bar .window-controls button.window-close:not(:disabled):hover {
+  background-color: #e81123;
+  color: #fff;
+}
+
+#electron-app-title-bar .window-controls button.window-close:not(:disabled):hover:active {
+  background-color: #bf0f1d;
+  transition: none;
+}
+
+#electron-app-title-bar .window-controls button svg {
+  fill: currentColor;
+}
+
+#electron-app-title-bar :not(input):not(textarea), :not(input):not(textarea)::after, :not(input):not(textarea)::before {
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: default;
+}

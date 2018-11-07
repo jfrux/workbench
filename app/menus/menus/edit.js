@@ -1,39 +1,50 @@
 module.exports = (commandKeys, execCommand) => {
   const submenu = [
-    {
-      label: 'Undo',
-      accelerator: commandKeys['editor:undo'],
-      enabled: false
-    },
-    {
-      label: 'Redo',
-      accelerator: commandKeys['editor:redo'],
-      enabled: false
-    },
-    {
-      type: 'separator'
-    },
+    // {
+    //   label: 'Undo',
+    //   accelerator: commandKeys['editor:undo'],
+    //   enabled: false
+    // },
+    // {
+    //   label: 'Redo',
+    //   accelerator: commandKeys['editor:redo'],
+    //   enabled: false
+    // },
+    // {
+    //   type: 'separator'
+    // },
     {
       label: 'Cut',
       accelerator: commandKeys['editor:cut'],
-      enabled: false
+      enabled: false,
+      click(item, focusedWindow) {
+        document.execCommand('cut');
+      }
     },
     {
+      label: 'Copy',
       role: 'copy',
       command: 'editor:copy',
+      click(item, focusedWindow) {
+        document.execCommand('copy');
+      },
       accelerator: commandKeys['editor:copy']
     },
     {
+      label: 'Paste',
       role: 'paste',
+      click(item, focusedWindow) {
+        document.execCommand('paste');
+      },
       accelerator: commandKeys['editor:paste']
     },
-    // {
-    //   label: 'Select All',
-    //   accelerator: commandKeys['editor:selectAll'],
-    //   click(item, focusedWindow) {
-    //     execCommand('editor:selectAll', focusedWindow);
-    //   }
-    // },
+    {
+      label: 'Select All',
+      accelerator: commandKeys['editor:selectAll'],
+      click(item, focusedWindow) {
+        execCommand('editor:selectAll', focusedWindow);
+      }
+    },
     // {
     //   type: 'separator'
     // },

@@ -1,17 +1,18 @@
 // Packages
-const {app, dialog, Menu} = require('electron');
-
+// import { icon } from '../constants/paths';
+// import icon from '../../resources/icons/96x96.png';
+const {app, dialog, Menu, nativeImage} = require('electron');
+const { resolve } = require("path");
 // Utilities
-const {getConfig} = require('../config');
-const {icon} = require('../config/paths');
+const {getConfig} = require('../settings');
+const fileMenu = require('./menus/file');
 const viewMenu = require('./menus/view');
-const shellMenu = require('./menus/shell');
 const editMenu = require('./menus/edit');
-// const pluginsMenu = require('./menus/plugins');
+const externalToolsMenu = require('./menus/external_tools');
 const windowMenu = require('./menus/window');
 const helpMenu = require('./menus/help');
 const darwinMenu = require('./menus/darwin');
-const { getDecoratedKeymaps } = require('../plugins');
+const { getDecoratedKeymaps } = require('../keymaps/decorators');
 const { execCommand } = require('../commands');
 
 const appName = app.getName();
@@ -19,8 +20,7 @@ const appVersion = app.getVersion();
 
 let menu_ = [];
 
-exports.createMenu = (createWindow, getLoadedPluginVersions) => {
-  const config = getConfig();
+export function createMenu() {
   // We take only first shortcut in array for each command
   const allCommandKeys = getDecoratedKeymaps();
   const commandKeys = Object.keys(allCommandKeys).reduce((result, command) => {
@@ -30,37 +30,32 @@ exports.createMenu = (createWindow, getLoadedPluginVersions) => {
 
   let updateChannel = 'stable';
 
-  if (config && config.updateChannel && config.updateChannel === 'canary') {
-    updateChannel = 'canary';
-  }
-
   const showAbout = () => {
-    const loadedPlugins = getLoadedPluginVersions();
-    const pluginList =
-      loadedPlugins.length === 0 ? 'none' : loadedPlugins.map(plugin => `\n  ${plugin.name} (${plugin.version})`);
-
+    console.log(nativeImage);
+    // const newIcon = nativeImage.createFromDataURL(icon);
     dialog.showMessageBox({
       title: `About ${appName}`,
       message: `${appName} ${appVersion} (${updateChannel})`,
-      detail: `Plugins: ${pluginList}\n\nCreated by Guillermo Rauch\nCopyright © 2018 ZEIT, Inc.`,
+      detail: `\nWith <3 jfrux\nCopyright © 2018`,
       buttons: [],
-      icon
+      // icon: newIcon
     });
   };
+  console.warn(commandKeys);
   const menu = [
     ...(process.platform === 'darwin' ? [darwinMenu(commandKeys, execCommand, showAbout)] : []),
-    // shellMenu(commandKeys, execCommand),
+    fileMenu(commandKeys, execCommand),
     editMenu(commandKeys, execCommand),
     viewMenu(commandKeys, execCommand),
-    // pluginsMenu(commandKeys, execCommand),
     windowMenu(commandKeys, execCommand),
+    externalToolsMenu(commandKeys, execCommand),
     helpMenu(commandKeys, showAbout)
   ];
-
+  
   return menu;
 };
 
-exports.buildMenu = template => {
+export function buildMenu(template) {
   menu_ = Menu.buildFromTemplate(template);
   return menu_;
 };

@@ -192,13 +192,14 @@ export default merge.smart(baseConfig, {
       // SVG Font
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
+        use: [
+          {
           loader: 'url-loader',
           options: {
             limit: 10000,
             mimetype: 'image/svg+xml'
           }
-        }
+        }]
       },
       // Common Image Formats
       {

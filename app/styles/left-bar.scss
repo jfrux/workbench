@@ -17,8 +17,8 @@
   left:0;
   top:0;
   -webkit-app-region: drag;
-  height:100%;
-  background-color:rgba(#000,0.3335);
+  height:calc(100% - $top-bar-height);
+  background-color: $base-color;
   z-index:1;
   position:relative;
   .nav {
@@ -28,6 +28,7 @@
   .nav-item {
     width:100%;
     .nav-link {
+      color:#FFF;
       text-align:center;
     }
   }
