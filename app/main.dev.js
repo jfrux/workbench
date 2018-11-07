@@ -300,6 +300,8 @@ app.on('ready', async () => {
   mainWindow.rpc = rpc;
 
   mainWindow.on('closed', () => {
+    writeLog("Window closed...");
+    app.quit();
     mainWindow = null;
   });
   
