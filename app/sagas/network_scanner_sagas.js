@@ -11,24 +11,7 @@ import * as networkConnectionTypes from '../constants/network_connection_action_
 import * as networkScannerActions from '../actions/network_scanner_actions';
 import * as eonListActions from '../actions/eon_list_actions';
 import ping from 'net-ping';
-function timer(secs) {
-  return eventChannel(emitter => {
-      const iv = setInterval(() => {
-        secs -= 1;
-        if (secs > 0) {
-          emitter(secs);
-        } else {
-          // this causes the channel to close
-          emitter(END);
-        }
-      }, 1000);
-      // The subscriber must return an unsubscribe function
-      return () => {
-        clearInterval(iv);
-      };
-    }
-  );
-}
+
 function revisedRandId() {
   return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
 }
@@ -172,18 +155,23 @@ function* resolveEon(action) {
 function pingEon(eon) {
   // console.warn("Pinging EON",eon);
   return new Promise((resolve,reject) => {
-    var session = ping.createSession();
+    try {
+      var session = ping.createSession();
 
-    session.pingHost(eon.ip, function pingEon(error, target) {
-      if (error) {
-        console.warn("No response from EON",error.toString());
-        reject(eon, "Could not ping EON...", error.toString());
-      } else {
-        resolve(true);
-        // console.warn("Response found for EON",eon);
-        session.close();
-      }
-    });
+      session.pingHost(eon.ip, function pingEon(error, target) {
+        if (error) {
+          console.warn("No response from EON",error.toString());
+          reject(eon, "Could not ping EON...", error.toString());
+        } else {
+          resolve(true);
+          // console.warn("Response found for EON",eon);
+          session.close();
+        }
+      });
+    } catch (e) {
+      console.warn("Cannot ping on this platform...");
+      resolve(true);
+    }
   });
 }
 
@@ -210,7 +198,7 @@ function* pingEons() {
   const { foundCount } = networkScanner;
   const { eons, unresolvedEons } = eonList;
   let eonKeys = Object.keys(eons);
-  rpc.emit('notify',{title: 'Workbench finished scanning!',body: `Found ${foundCount} EON on the network.`});
+  // rpc.emit('notify',{title: 'Workbench finished scanning!',body: `Found ${foundCount} EON on the network.`});
   // console.warn("Pinging EONS:",eonKeys);
   yield all(eonKeys.map(function * (key) {
     const eon = eons[key];

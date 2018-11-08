@@ -20,7 +20,6 @@ export default (() => {
   const env = process.env;
   let userShell;
   let shell;
-  
   if (userConfig && userConfig.shell && (userConfig.shell+'').length > 0) {
     return userConfig.shell;
   } else {
@@ -28,7 +27,7 @@ export default (() => {
       shell = userShell || env.SHELL || '/bin/bash';
     } else if (process.platform === 'win32') {
       // Tests commands on the operating system and sets the userConfig to use that shell.
-      for (i = 0; i < windowsShells.length; i++) {
+      for (let i = 0; i < windowsShells.length; i++) {
         const testShell = windowsShells[i];
 
         if (shellExists(testShell)) {
