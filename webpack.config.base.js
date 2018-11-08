@@ -41,6 +41,10 @@ export default {
         use: 'node-loader'
       },
       {
+        test: /\.(txt|sh)$/,
+        use: 'raw-loader'
+      },
+      {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         use: {

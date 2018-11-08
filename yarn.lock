@@ -3687,6 +3687,11 @@ combined-stream@^1.0.6, combined-stream@~1.0.6:
   dependencies:
     delayed-stream "~1.0.0"
 
+command-exists@^1.2.8:
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/command-exists/-/command-exists-1.2.8.tgz#715acefdd1223b9c9b37110a149c6392c2852291"
+  integrity sha512-PM54PkseWbiiD/mMsbvW351/u+dafwTJ0ye2qB60G1aGQP9j3xK2gmMDc+R34L3nDtx4qMCitXT75mkbkGJDLw==
+
 commander@2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.6.0.tgz#9df7e52fb2a0cb0fb89058ee80c3104225f37e1d"
@@ -9657,6 +9662,11 @@ mz@^2.6.0:
     object-assign "^4.0.1"
     thenify-all "^1.0.0"
 
+nan@2.10.*:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.10.0.tgz#96d0cd610ebd58d4b4de9cc0c6828cda99c7548f"
+  integrity sha512-bAdJv7fBLhWC+/Bls0Oza+mvTaNQtP+1RyhhhvD95pgUJz6XM5IzgmxOkItJ9tkoCiplvAnXI1tNmmUD/eScyA==
+
 nan@^2.10.0, nan@^2.9.2:
   version "2.11.1"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.11.1.tgz#90e22bccb8ca57ea4cd37cc83d3819b52eea6766"
@@ -9718,6 +9728,13 @@ neo-async@^2.5.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
   integrity sha512-MFh0d/Wa7vkKO3Y3LlacqAEeHK0mckVqzDieUKTT+KGxi+zIpeVsFxymkIiRpbpDziHc290Xr9A1O4Om7otoRA==
+
+net-ping@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/net-ping/-/net-ping-1.2.3.tgz#c4dd248f6e3d8d73db6928002106bb71ceae4a40"
+  integrity sha512-ZKxj/kVPKL2RIsV9nR6I8nMT8Pi3k6ciTBKxD/6gd5lga9qcNmlyqNv+dbXqYGBvHsmG9yIpsfajr8X054x2fQ==
+  dependencies:
+    raw-socket "*"
 
 netmask@~1.0.4:
   version "1.0.6"
@@ -11757,6 +11774,13 @@ raw-loader@^0.5.1:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/raw-loader/-/raw-loader-0.5.1.tgz#0c3d0beaed8a01c966d9787bf778281252a979aa"
   integrity sha1-DD0L6u2KAclm2Xh793goElKpeao=
+
+raw-socket@*:
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/raw-socket/-/raw-socket-1.6.4.tgz#adf3b0dbb6c2707386e6c13aca401240552067c1"
+  integrity sha512-ab/By3tp0gTDzwEJxgKUv+uIma0JFVnJElNMKNAqNiET+GQ2VAfR6eUVfnm0yRG/vxGu8gO2BYWhR30sQOTebg==
+  dependencies:
+    nan "2.10.*"
 
 rc@^1.0.1, rc@^1.1.2, rc@^1.1.6, rc@^1.2.1, rc@^1.2.7:
   version "1.2.8"

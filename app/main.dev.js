@@ -10,7 +10,7 @@
 import { app, BrowserWindow, shell, Menu, nativeImage } from 'electron';
 const { createWindow } = app;
 import electronSettings from 'electron-settings';
-const notify = require('./notify');
+const notify = require('./utils/notify');
 const fetchNotifications = require('./notifications');
 import { startServer } from './background/server';
 import { startScanner } from './background/network-scanner';
@@ -174,6 +174,7 @@ app.on('ready', async () => {
   rpc.on('init', () => {
     writeLog("rpc init");
     mainWindow.show();
+    mainWindow.focus();
     // fetchNotifications(mainWindow);
   });
   rpc.on('exit', ({uid}) => {
@@ -227,10 +228,7 @@ app.on('ready', async () => {
     const {buildFromTemplate} = Menu;
     buildFromTemplate(contextMenuTemplate(createWindow, selection)).popup(mainWindow);
   });
-  rpc.on('open hamburger menu', ({x, y}) => {
-    writeLog("rpc open hamburger menu");
-    Menu.getApplicationMenu().popup(Math.ceil(x), Math.ceil(y));
-  });
+  
   // Same deal as above, grabbing the window titlebar when the window
   // is maximized on Windows results in unmaximize, without hitting any
   // app buttons
@@ -244,6 +242,10 @@ app.on('ready', async () => {
   rpc.on('close', () => {
     writeLog("rpc close");
     mainWindow.close();
+  });
+  rpc.on('notify', ({title, body})  => {
+    writeLog("rpc notify",title, body);
+    notify(title, body);
   });
   rpc.on('command', command => {
     writeLog("rpc command",command);
@@ -276,9 +278,6 @@ app.on('ready', async () => {
     webContents.setLayoutZoomLevelLimits(0, 0);
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
-    } else {
-      mainWindow.show();
-      mainWindow.focus();
     }
   });
 

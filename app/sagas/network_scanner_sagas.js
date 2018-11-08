@@ -2,6 +2,7 @@ import { all, take, call, join, fork,spawn, put, takeLatest, takeEvery, select }
 import { eventChannel, END } from 'redux-saga';
 import electron from 'electron';
 const { ipcRenderer } = electron;
+import rpc from '../rpc-client';
 import arp from 'node-arp';
 import * as routes from '../constants/routes.json';
 import * as eonListTypes from '../constants/eon_list_action_types';
@@ -9,10 +10,29 @@ import * as types from '../constants/network_scanner_action_types';
 import * as networkConnectionTypes from '../constants/network_connection_action_types';
 import * as networkScannerActions from '../actions/network_scanner_actions';
 import * as eonListActions from '../actions/eon_list_actions';
-
+import ping from 'net-ping';
+function timer(secs) {
+  return eventChannel(emitter => {
+      const iv = setInterval(() => {
+        secs -= 1;
+        if (secs > 0) {
+          emitter(secs);
+        } else {
+          // this causes the channel to close
+          emitter(END);
+        }
+      }, 1000);
+      // The subscriber must return an unsubscribe function
+      return () => {
+        clearInterval(iv);
+      };
+    }
+  );
+}
 function revisedRandId() {
   return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
 }
+
 
 function* createScanner(scanner, ips) {
   const channel = yield call(createScannerEventChannel, scanner);
@@ -102,6 +122,7 @@ function* handleAddEon(action) {
     yield put(networkScannerActions.REMOVE_SCANNED_RESULT(payload.id));
   }
 }
+
 function* handleConnected(action) {
   const { router } = yield select();
 
@@ -124,8 +145,7 @@ function fetchMacAddress(eon) {
 }
 
 function* resolveEon(action) {
-  const eonKey = Object.keys(action.payload)[0]
-  const eon = action.payload[eonKey];
+  const eon = action.payload.data;
   let updatedEon = JSON.parse(JSON.stringify(eon));
 
   try {
@@ -137,13 +157,86 @@ function* resolveEon(action) {
     } else {
       updatedEon.addStatus = 2;
       yield put(eonListActions.UPDATE_UNRESOLVED(JSON.parse(JSON.stringify(updatedEon))));
+      // console.warn("UPDATE01");
     }
   } catch (e) {
     updatedEon.addStatus = 2;
     yield put(eonListActions.UPDATE_UNRESOLVED(JSON.parse(JSON.stringify(updatedEon))));
+    // console.warn("UPDATE02");
+  } finally {
+    // yield put(eonListActions.UPDATE_UNRESOLVED(JSON.parse(JSON.stringify(updatedEon))));
+    // console.warn("UPDATE03");
   }
 }
 
+function pingEon(eon) {
+  // console.warn("Pinging EON",eon);
+  return new Promise((resolve,reject) => {
+    var session = ping.createSession();
+
+    session.pingHost(eon.ip, function pingEon(error, target) {
+      if (error) {
+        console.warn("No response from EON",error.toString());
+        reject(eon, "Could not ping EON...", error.toString());
+      } else {
+        resolve(true);
+        // console.warn("Response found for EON",eon);
+        session.close();
+      }
+    });
+  });
+}
+
+function* handlePingEon(action) {
+  const eon = action.payload.data;
+  yield put(eonListActions.PING_EON(eon));
+  try {
+    const pingResp = yield call(pingEon, eon);
+    console.warn(pingResp);
+    if (pingResp) {
+      yield put(eonListActions.PING_EON_SUCCESS(eon));
+    } else {
+      yield put(eonListActions.PING_EON_FAILED(eon));
+    }
+  } catch (e) {
+    console.warn("Error pinging EON:",e.message);
+    yield put(eonListActions.PING_EON_FAILED(eon));
+  }
+}
+
+function* pingEons() {
+  const state = yield select();
+  const { eonList,networkScanner } = state;
+  const { foundCount } = networkScanner;
+  const { eons, unresolvedEons } = eonList;
+  let eonKeys = Object.keys(eons);
+  rpc.emit('notify',{title: 'Workbench finished scanning!',body: `Found ${foundCount} EON on the network.`});
+  // console.warn("Pinging EONS:",eonKeys);
+  yield all(eonKeys.map(function * (key) {
+    const eon = eons[key];
+    yield put(eonListActions.DO_PING_EON(eon));
+  }));
+  // yield put(networkScannerActions.PINGED_EONS());
+}
+
+function* cleanUp() {
+  const state = yield select();
+  const { eonList } = state;
+  const { eons, unresolvedEons } = eonList;
+  let eonKeys = Object.keys(eons);
+  let unresolvedEonKeys = Object.keys(unresolvedEons);
+  let eonIps = eonKeys.map((key) => {
+    const eon = eons[key];
+    return eon.ip;
+  });
+  unresolvedEonKeys.forEach(function * (key) {
+    const unresolvedEon = unresolvedEons[key];
+    if (eonIps.includes(unresolvedEon.ip)) {
+      yield put(eonListActions.REMOVE_UNRESOLVED_EON(JSON.parse(JSON.stringify(unresolvedEon))));
+    }
+    // console.warn("cleaning up eon:",eon);
+  });
+}
 // EXPORT ROOT SAGA
 export function* scannerSagas() {
   yield all([
@@ -151,6 +244,9 @@ export function* scannerSagas() {
     takeLatest(eonListTypes.ADD_EON, handleAddEon),
     takeLatest(eonListTypes.ADD_EON_SUCCESS, resolveEon),
     takeEvery(types.SCAN_NETWORK_RESULT, handleAddEon),
-    takeLatest(types.SCAN_NETWORK, scanNetwork)
+    takeLatest(types.SCAN_NETWORK, scanNetwork),
+    takeEvery(types.SCAN_NETWORK_COMPLETE, pingEons),
+    takeLatest(eonListTypes.DO_PING_EON, handlePingEon),
+    takeLatest(types.PINGED_EONS, cleanUp)
   ]);
 }

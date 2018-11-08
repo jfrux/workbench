@@ -7,6 +7,7 @@ import classnames from 'classnames';
 import Header from './Header';
 import * as networkScannerActions from '../../actions/network_scanner_actions';
 import PropTypes from 'prop-types';
+// import LoadingOverlay from '../LoadingOverlay';
 import { TitleBar } from 'electron-react-titlebar';
 import icon from '../../images/icons/36x36.png';
 const isMac = /Mac/.test(navigator.userAgent);
@@ -17,6 +18,9 @@ import {
   NavLink,
   Nav } from 'reactstrap';
 
+const propTypes = {
+  appReady: PropTypes.bool,
+}
 class Layout extends React.PureComponent {
   
   constructor(props) {
@@ -39,12 +43,16 @@ class Layout extends React.PureComponent {
       isOpen: !this.state.isOpen
     });
   }
+
   render() {
-    const { backBtn, scanning, title, hideLogo, selectedEon, contextActions, className } = this.props;
+    const { appReady, title, contextActions, className } = this.props;
     let layoutClasses = [{
       'app-wrapper': true,
       'is-mac': isMac
     }];
+    // if (!appReady) {
+      // return <LoadingOverlay message={"Loading Workbench"} />;
+    // }
     // const menu = AppMenu.createMenu();
     if (className) {
       layoutClasses.push(className);
@@ -81,6 +89,7 @@ class Layout extends React.PureComponent {
         </div>
         
         <div className={'content'}>
+        
           {this.props.children}
         </div>
       </div>
@@ -90,8 +99,7 @@ class Layout extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    selectedEon: state.eonList.selectedEon,
-    scanning: state.networkScanner.scanning
+    appReady: state.ui.appReady
   };
 }
 

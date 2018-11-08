@@ -1,5 +1,11 @@
 import * as types from '../constants/ui_action_types';
-import rpc from '../rpc';
+import rpc from '../rpc-client';
+
+export function APP_READY() {
+  return {
+    type: types.APP_READY
+  };
+}
 
 export function SET_TERMINAL_FONT_SIZE(fontSize) {
   return {

@@ -36,8 +36,15 @@
     background-color:rgba(#FFF,0.1)!important;
   }
 
-  .fa {
+  .loading-indicator {
     color:#FFF!important;
+    height:36px;
+    width:36px;
+    display:block;
+    position:absolute;
+    top:50%;
+    left:10px;
+    transform:translateY(-50%);
   }
 }
 
@@ -97,7 +104,7 @@
       svg {
         opacity:0.25;
       }
-      svg.fa-check,svg.fa-times-octagon,svg.fa-spinner-third {
+      svg.fa-check,svg.fa-times-octagon,svg.fa-times,svg.fa-spinner-third,svg.fa-question {
         position: absolute;
         top: 1px;
         left: 18px;
@@ -110,7 +117,13 @@
       svg.fa-check {
         color:var(--green);
       }
-      svg.fa-times-octagon {
+      svg.fa-question {
+        color:rgba(#FFF,0.2);
+      }
+      svg.fa-times {
+        left:21px;
+      }
+      svg.fa-times-octagon, svg.fa-times {
         color:var(--red);
       }
     }

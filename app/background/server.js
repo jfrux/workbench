@@ -1,26 +1,21 @@
 var terminals = {};
 var logs = {};
-
 const PORT = 9788;
 const express = require('express');
 const app = express();
+import defaultShell from '../utils/default-shell';
 const pty = require('node-pty-prebuilt');
 const chalk = require('chalk');
 const prefix = chalk.bold.blue;
 const bgTaskColor = chalk.green;
-
 function writeLog(...params) {
   console.info(prefix('workbench') + ' ' + chalk.bold(bgTaskColor('[terminal]')), bgTaskColor(...params));
 }
-// try {
-//   spawn = require('node-pty-prebuilt').spawn;
-// } catch (err) {
-//   throw "pty could not be spawned";
-// }
-const argv = require('yargs').argv;
 
+const argv = require('yargs').argv;
 const port = argv.port || PORT;
 const host = '127.0.0.1';
+
 const ALLOWED_ORIGINS = [
   '0.0.0.0',
   '127.0.0.1',
@@ -51,7 +46,7 @@ app.use('/', express.static(__dirname + '/../build'));
 require('express-ws')(app);
 
 app.post('/terminals', function (req, res) {
-  let shell = argv.shell && argv.shell !== '' ? argv.shell : process.platform === 'win32' ? 'cmd.exe' : 'bash';
+  let shell = defaultShell;
   let cols = parseInt(req.query.cols, 10);
   let rows = parseInt(req.query.rows, 10);
   let term = pty.fork(shell, [], {
@@ -118,12 +113,16 @@ module.exports = {
   startServer() {
     return new Promise((resolve, reject) => {
       if (!port) {
-        console.error('Please provide a port: node ./src/server.js --port=XXXX');
+        writeLog('ERROR: Please provide a port: node ./src/server.js --port=XXXX');
         process.exit(1);
         reject();
       } else {
         writeLog("Started Terminal Service");
-        resolve(app.listen(port, host));
+        try {
+          resolve(app.listen(port, host));
+        } catch (e) {
+          writeLog('ERROR: Could not start background/server...', e.message);
+        }
       }
     });
   }

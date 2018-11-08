@@ -45,33 +45,21 @@ export default function eonListReducer(state = initialState, action) {
         }
       };
     case types.ADD_EON_SUCCESS:
+      let unresolveds = Object.assign({}, state.unresolvedEons, {
+        [action.payload.id]: action.payload.data
+      });
       return {
         ...state,
         addingEon: false,
         eonToAdd: null,
         addingEonError: null,
         error: null,
-        unresolvedEons: {
-          ...state.unresolvedEons,
-          ...action.payload
-        }
+        unresolvedEons: unresolveds
       };
     case types.REMOVE_UNRESOLVED_EON:
       delete state.unresolvedEons[action.payload.id];  
       return {
         ...state
-      };
-    case types.ADD_EON_ALREADY_EXISTS:
-      return {
-        ...state,
-        addingEon: false,
-        addingEonError: null,
-        error: null,
-        eonToAdd: null,
-        unresolvedEons: {
-          ...state.unresolvedEons,
-          ...action.payload
-        }
       };
     case types.ADD_EON_FAILED:
       return {
@@ -92,7 +80,7 @@ export default function eonListReducer(state = initialState, action) {
         ...state,
         eons: {
           ...state.eons,
-          ...action.payload
+          [action.payload.id]: action.payload.data
         }
       };
     case types.UPDATE_UNRESOLVED:
@@ -100,7 +88,43 @@ export default function eonListReducer(state = initialState, action) {
         ...state,
         unresolvedEons: {
           ...state.unresolvedEons,
-          ...action.payload
+          [action.payload.id]: action.payload.data
+        }
+      };
+    case types.PING_EON:
+      return {
+        ...state,
+        eons: {
+          ...state.eons,
+          [action.payload.id]: {
+            ...state.eons[action.payload.id],
+            reachable: 0,
+            pinging: true
+          }
+        }
+      };
+    case types.PING_EON_SUCCESS:
+      return {
+        ...state,
+        eons: {
+          ...state.eons,
+          [action.payload.id]: {
+            ...state.eons[action.payload.id],
+            reachable: 1,
+            pinging: false
+          }
+        }
+      };
+    case types.PING_EON_FAILED:
+      return {
+        ...state,
+        eons: {
+          ...state.eons,
+          [action.payload.id]: {
+            ...state.eons[action.payload.id],
+            reachable: 2,
+            pinging: false
+          }
         }
       };
     case types.SELECT_EON:

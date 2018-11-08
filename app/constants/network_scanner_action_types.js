@@ -10,3 +10,5 @@ export const MAC_ADDRESS_REQUEST = 'scanner/MAC_ADDRESS_REQUEST';
 export const MAC_ADDRESS_SUCCESS = 'scanner/MAC_ADDRESS_SUCCESS';
 export const MAC_ADDRESS_ERROR = 'scanner/MAC_ADDRESS_ERROR';
 export const REMOVE_SCANNED_RESULT = 'scanner/REMOVE_SCANNED_RESULT';
+
+export const PINGED_EONS = 'scanner/PINGED_EONS';

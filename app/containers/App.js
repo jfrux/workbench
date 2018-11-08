@@ -6,10 +6,10 @@ import * as NetworkConnectionActions from '../actions/network_connection_actions
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import notify from '../utils/notify';
-import { faPause, faTimes, faPlay, faUndo, faCheck, faCircle, faTimesOctagon, faSync, faChevronLeft, faChevronRight, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPause, faTimes, faPlay, faUndo, faCheck, faCircle, faQuestion, faSync, faChevronLeft, faChevronRight, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import settings from 'electron-settings';
-library.add(faPause, faTimes, faUndo, faPlay, faCheck, faCircle, faGithub, faSync, faChevronLeft, faPlus, faChevronRight);
+library.add(faPause, faTimes, faUndo, faPlay, faCheck, faCircle, faGithub, faQuestion, faSync, faChevronLeft, faPlus, faChevronRight);
 
 function mapStateToProps(state) {
   return {};

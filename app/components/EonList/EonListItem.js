@@ -5,8 +5,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { ListGroupItem } from 'reactstrap';
 import classNames from 'classnames';
+import LoadingIndicator from '../LoadingIndicator';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as EonListActions from '../../actions/eon_list_actions';
+
 const propTypes = {
   index: PropTypes.number,
   eon: PropTypes.any,
@@ -14,36 +16,50 @@ const propTypes = {
 };
 
 class EonListItem extends Component {
+  componentDidMount() {
+    if (this.props.eon.addStatus === 1) {
+      this.props.DO_PING_EON(this.props.eon);
+    }
+  }
   render() {
     const { eon, action, index} = this.props;
-    const { ip, mac, status, addStatus } = eon;
+    const { ip, mac, status, addStatus, reachable } = eon;
+    const disabled = (addStatus === 0) || (reachable === 2) || (reachable === 0);
     var eonClasses = classNames({
       'eon-list-item': true,
       results_button: true,
-      disabled: addStatus === 0
+      disabled
     });
-    return (<ListGroupItem key={index} onClick={action} className={eonClasses} tag="button">
+    return (<ListGroupItem key={index} onClick={action} disabled={disabled} className={eonClasses} tag="button">
         <span className={"eon_icon"}>
-          {(eon.addStatus === 1) && 
-            <FontAwesomeIcon icon={'check'}/>
+          {(addStatus === 1 && reachable === 1) && 
+            [<FontAwesomeIcon icon={'check'} key={'icon-'+index}/>,
+            <Eon width="100%" height="100%" key={'eonIcon-'+index} />]
           }
-          {(eon.addStatus === 0) &&  
-            <FontAwesomeIcon icon="spinner-third" className={classNames({
-              "fa-spin": true
-            })} />
+          {(addStatus === 1 && reachable === 2) && 
+            [<FontAwesomeIcon icon={'times'} key={'icon-'+index}/>,
+            <Eon width="100%" height="100%" key={'eonIcon-'+index} />]
           }
-          {(eon.addStatus === 2) && 
-            <FontAwesomeIcon icon={'times-octagon'}/>
+          {(reachable === 0) &&  
+            <LoadingIndicator className={"loading-indicator"} />
           }
-          <Eon width="100%" height="100%" />
+          {(addStatus === 2) && 
+            [<FontAwesomeIcon icon={'question'} key={'icon-'+index}/>,
+            <Eon width="100%" height="100%" key={'eonIcon-'+index} />]
+          }
+          {(addStatus === 3) && 
+            [<FontAwesomeIcon icon={'check'} key={'icon-'+index}/>,
+            <Eon width="100%" height="100%" key={'eonIcon-'+index} />]
+          }
         </span>
         <span className={"results_details"}>
           <span className={"results_button_ip"}>
-            {(eon.addStatus === 0) && "Identifying Device..."}
-            {(eon.addStatus === 1) && eon.mac}
-            {(eon.addStatus === 2) && "Unidentified Device"}
+            {(addStatus === 0) && "Identifying Device..."}
+            {(addStatus === 1) && mac}
+            {(addStatus === 2) && "Unidentified Device"}
+            {(addStatus === 3) && (mac ? mac : "Unidentified Device")}
           </span>
-          <span className={"results_button_mac"}>{eon.ip}</span>
+          <span className={"results_button_mac"}>{ip}</span>
         </span>
         <span className={"results_button_selected"}><FontAwesomeIcon icon={'chevron-right'}/></span>
     </ListGroupItem>);

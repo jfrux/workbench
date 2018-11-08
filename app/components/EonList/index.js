@@ -6,6 +6,7 @@ import Layout from '../Layout';
 import classnames from 'classnames';
 import NoConnection from './NoConnection';
 import EonListItem from './EonListItem';
+import LoadingIndicator from '../LoadingIndicator';
 import { ListGroup, UncontrolledTooltip, Collapse, Card, CardBody, NavItem, NavLink, Form, Button, FormGroup, Input} from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -46,7 +47,8 @@ class EonList extends Component {
       scanningStarted: false
     };
   }
-  componentWillMount() {
+  componentDidMount() {
+    this.props.APP_READY();
     this.props.resetScanNetwork();
   }
   handleScanNetwork = () => {
@@ -150,9 +152,7 @@ class EonList extends Component {
               </FormGroup>
               <FormGroup className={"col col-2 p-0 h-100"}>
                 <Button className={"add_ip_button"} type="submit" disabled={addingEon}>
-                  {addingEon && <FontAwesomeIcon icon="spinner" className={classnames({
-                    "fa-spin": addingEon
-                  })} />}
+                  {addingEon && <LoadingIndicator />}
                   {!addingEon && <FontAwesomeIcon icon="check" />}
                 </Button>
               </FormGroup>
@@ -163,9 +163,6 @@ class EonList extends Component {
             <Card body inverse color="primary" className={"scanning-message"}>
               <CardBody className={"scanning-message-body"}>
                 Scanning for EON...
-                {foundCount > 0 &&
-                  <div>Found {foundCount} EON on the network...</div>
-                }
               </CardBody>
             </Card>
           </Collapse>

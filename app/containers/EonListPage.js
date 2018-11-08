@@ -4,6 +4,7 @@ import Eons from '../components/EonList';
 
 import * as networkScannerActions from '../actions/network_scanner_actions';
 import * as eonListActions from '../actions/eon_list_actions';
+import * as uiActions from '../actions/ui_actions';
 
 function mapStateToProps(state) {
   const { eonList, networkScanner, networkConnection } = state;
@@ -31,7 +32,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({...eonListActions,...networkScannerActions},dispatch);
+  return bindActionCreators({...eonListActions,...networkScannerActions,...uiActions},dispatch);
 }
 
 export default connect(

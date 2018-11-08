@@ -8,7 +8,6 @@ export function ADD_ERROR(error) {
   };
 }
 
-
 export function RESET_ERROR() {
   return {
     type: types.RESET_ERROR
@@ -18,7 +17,10 @@ export function RESET_ERROR() {
 export function ADD_EON(eon) {
   return {
     type: types.ADD_EON,
-    payload: eon
+    payload: {
+      id: eon.id,
+      data: eon
+    }
   };
 }
 
@@ -30,13 +32,12 @@ export function ADDING_EON(eon) {
 }
 
 export function ADD_EON_SUCCESS(eon) {
-  let addEon = {};
-
-  addEon[eon.id] = eon;
+  console.warn("ADD_EON_SUCCESS:",eon);
   return {
     type: types.ADD_EON_SUCCESS,
     payload: {
-      ...addEon
+      id: eon.id,
+      data: eon
     }
   };
 }
@@ -45,8 +46,8 @@ export function ADD_EON_FAILED(eon, error) {
   return {
     type: types.ADD_EON_FAILED,
     payload: {
-      eonToAdd: eon,
-      addingEonError: error
+      id: eon.id,
+      data: eon
     }
   };
 }
@@ -65,26 +66,67 @@ export function REMOVE_UNRESOLVED_EON(removeId) {
     payload: removeId
   };
 }
+
+export function DO_PING_EON(eon) {
+  return {
+    type: types.DO_PING_EON,
+    payload: {
+      id: eon.id,
+      data: eon
+    }
+  };
+}
+export function PING_EON(eon) {
+  return {
+    type: types.PING_EON,
+    payload: {
+      id: eon.id,
+      data: eon
+    }
+  };
+}
+export function PING_EON_SUCCESS(eon) {
+  return {
+    type: types.PING_EON_SUCCESS,
+    payload: {
+      id: eon.id,
+      data: eon
+    }
+  };
+}
+export function PING_EON_FAILED(eon) {
+  return {
+    type: types.PING_EON_FAILED,
+    payload: {
+      id: eon.id,
+      data: eon
+    }
+  };
+}
+
 export function RESOLVED_EON(eon, mac) {
   let updatedEon = {};
   eon.addStatus = 1;
+  eon.reachable = 1;
   eon.mac = mac;
   eon.id = mac;
-  updatedEon[eon.mac] = eon;
+  // updatedEon[eon.mac] = eon;
+  
   return {
     type: types.RESOLVED_EON,
     payload: {
-      ...updatedEon
+      id: eon.id,
+      data: eon
     }
   };
 }
 export function UPDATE_UNRESOLVED(eon) {
   let updatedEon = {};
-  updatedEon[eon.id] = eon;
   return {
     type: types.UPDATE_UNRESOLVED,
     payload: {
-      ...updatedEon
+      id: eon.id,
+      data: eon
     }
   };
 }

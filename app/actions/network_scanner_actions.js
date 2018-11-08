@@ -8,6 +8,11 @@ export function BEGIN_scanNetwork() {
     type: types.SCAN_NETWORK
   };
 }
+export function PINGED_EONS() {
+  return {
+    type: types.PINGED_EONS
+  };
+}
 
 export function updateScanCount(count) {
   return {
@@ -31,6 +36,8 @@ export function RESULT_scanNetwork(result) {
       payload: result
     };
   }
+
+  
   // console.warn("OPEN " + result.ip,result);
   // newEon[randomId] = {
   //   ...result,

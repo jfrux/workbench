@@ -1,3 +1,4 @@
 export const SET_TERMINAL_FONT_SIZE = 'ui/SET_TERMINAL_FONT_SIZE';
 export const SET_STATE_LIST_DEPTH = 'ui/SET_STATE_LIST_DEPTH';
 export const UI_CONTEXTMENU_OPEN = 'ui/CONTEXTMENU_OPEN';
+export const APP_READY = 'ui/APP_READY';

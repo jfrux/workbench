@@ -11,9 +11,14 @@ function* handleContextMenu(action) {
     rpc.emit('open context menu', selection);
   }
 }
+
+function* handleAppReady() {
+  rpc.emit('init');
+}
 // EXPORT ROOT SAGA
 export function* uiSagas() {
   yield all([
+    take(types.APP_READY, handleAppReady),
     takeEvery(types.UI_CONTEXTMENU_OPEN, handleContextMenu)
   ]);
 }

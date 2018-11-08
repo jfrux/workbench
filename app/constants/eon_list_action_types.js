@@ -22,3 +22,8 @@ export const INSTALL_FORK_FAIL = 'eonList/INSTALL_FORK_FAIL';
 export const CHECK_EON_STATUS = 'eonList/CHECK_EON_STATUS';
 export const CHECK_EON_STATUS_ONLINE = 'eonList/CHECK_EON_STATUS_ONLINE';
 export const CHECK_EON_STATUS_OFFLINE = 'eonList/CHECK_EON_STATUS_OFFLINE';
+
+export const DO_PING_EON = 'scanner/DO_PING_EON';
+export const PING_EON = 'scanner/PING_EON';
+export const PING_EON_SUCCESS = 'scanner/PING_EON_SUCCESS';
+export const PING_EON_FAILED = 'scanner/PING_EON_FAILED';
