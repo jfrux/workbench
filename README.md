@@ -47,9 +47,48 @@ Download the latest version from the links below.
 - [ ] Review videos
 - [ ] Monitor uploads
 
-## Contributing
+## Contribute
 
-If you have React / Electron experience, I'd love to merge PRs asap!
+Regardless of the platform you are working on, you will need to have Yarn installed. If you have never installed Yarn before, you can find out how at: https://yarnpkg.com/en/docs/install.
+
+1. Install necessary packages:
+  * Windows
+    - Be sure to run  `yarn global add windows-build-tools` to install `windows-build-tools`.
+  * macOS
+    - Once you have installed Yarn, you can skip this section!
+  * Linux(You can see [here](https://en.wikipedia.org/wiki/List_of_Linux_distributions) what your Linux is based on.)
+    - RPM-based
+        + `GraphicsMagick`
+        + `libicns-utils`
+        + `xz` (Installed by default on some distributions.)
+    - Debian-based
+        + `graphicsmagick`
+        + `icnsutils`
+        + `xz-utils`
+2. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
+3. Install the dependencies: `yarn`
+4. Build the code and watch for changes: `yarn run dev`
+5. Note: You may have to run `yarn run package` once before to get the node-pty binaries in place.
+
+To make sure that your code works in the finished application, you can generate the binaries like this:
+
+```bash
+yarn run package
+```
+
+After that, you will see the binary in the `./releases` folder!
+
+#### Known issues that can happen during development
+
+##### Error related to `node-pty-prebuilt`
+
+If after building during development you get an alert dialog related to `node-pty` issues,
+make sure its build process is working correctly by running `yarn run package`.
+
+##### Error with `codesign` on macOS when running `yarn run dist`
+
+If you have issues in the `codesign` step when running `yarn run package` on macOS, you can temporarily disable code signing locally by setting
+`export CSC_IDENTITY_AUTO_DISCOVERY=false` for the current terminal session.
 
 ## Bug Reports / Feature Requests
 

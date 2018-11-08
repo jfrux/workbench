@@ -25,7 +25,7 @@ class EonListItem extends Component {
     return (<ListGroupItem key={index} onClick={action} className={eonClasses} tag="button">
         <span className={"eon_icon"}>
           {(eon.addStatus === 1) && 
-            <FontAwesomeIcon icon={['fas', 'check']}/>
+            <FontAwesomeIcon icon={'check'}/>
           }
           {(eon.addStatus === 0) &&  
             <FontAwesomeIcon icon="spinner-third" className={classNames({
@@ -33,7 +33,7 @@ class EonListItem extends Component {
             })} />
           }
           {(eon.addStatus === 2) && 
-            <FontAwesomeIcon icon={['fas', 'times-octagon']}/>
+            <FontAwesomeIcon icon={'times-octagon'}/>
           }
           <Eon width="100%" height="100%" />
         </span>
@@ -45,7 +45,7 @@ class EonListItem extends Component {
           </span>
           <span className={"results_button_mac"}>{eon.ip}</span>
         </span>
-        <span className={"results_button_selected"}><FontAwesomeIcon icon={['fas', 'chevron-right']}/></span>
+        <span className={"results_button_selected"}><FontAwesomeIcon icon={'chevron-right'}/></span>
     </ListGroupItem>);
   }
 }

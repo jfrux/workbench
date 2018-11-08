@@ -20,7 +20,6 @@ import { autoUpdater } from "electron-updater";
 const createRPC = require('./rpc');
 const contextMenuTemplate = require('./contextmenu');
 const AppMenu = require('./menus/menu');
-// import icon from '../resources/icons/96x96.png';
 import * as settings from './settings';
 const {gitDescribe} = require('git-describe');
 const isDev = (process.env.NODE_ENV === 'development');
@@ -29,7 +28,6 @@ const chalk = require('chalk');
 const prefix = chalk.bold.blue;
 const bgTaskColor = chalk.white;
 
-// app.appMenuTemplate = AppMenu.createMenu();
 app.setName("Workbench");
 
 function writeLog(...params) {

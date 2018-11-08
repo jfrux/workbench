@@ -150,7 +150,7 @@ class EonList extends Component {
               </FormGroup>
               <FormGroup className={"col col-2 p-0 h-100"}>
                 <Button className={"add_ip_button"} type="submit" disabled={addingEon}>
-                  {addingEon && <FontAwesomeIcon icon="spinner-third" className={classnames({
+                  {addingEon && <FontAwesomeIcon icon="spinner" className={classnames({
                     "fa-spin": addingEon
                   })} />}
                   {!addingEon && <FontAwesomeIcon icon="check" />}
