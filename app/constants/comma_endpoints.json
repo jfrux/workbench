@@ -7,12 +7,16 @@
       "devices": "/me/devices/"
     }
   },
+  
   "Video": {
     "Base": "https://video.comma.ai/hls",
     "Endpoint": {
       "hls": "/:segment_string/index.m3u8",
       "thumb": ""
     }
+  },
+  "Video2": {
+    "Base": "https://my-comma-video.azureedge.net/hls",
   },
   "Thumbnail": {
     "Base": "https://chffrprivate-vzn.azureedge.net/chffrprivate3/v2",

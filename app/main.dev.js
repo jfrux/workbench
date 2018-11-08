@@ -14,10 +14,11 @@ const notify = require('./notify');
 const fetchNotifications = require('./notifications');
 import { startServer } from './background/server';
 import { startScanner } from './background/network-scanner';
+import { startStreamer } from './background/streamer';
 import { startZmq } from './background/zmq';
 import { autoUpdater } from "electron-updater";
 const createRPC = require('./rpc');
-// const contextMenuTemplate = require('./contextmenu');
+const contextMenuTemplate = require('./contextmenu');
 const AppMenu = require('./menus/menu');
 // import icon from '../resources/icons/96x96.png';
 import * as settings from './settings';
@@ -111,7 +112,16 @@ app.on('window-all-closed', () => {
     app.quit();
   // }
 });
-
+app.on('ready', async () => {
+  startStreamer();
+  try {
+    startServer();
+  } catch (e) {
+    console.log("Server could not be started.",e);
+  }
+  startScanner();
+  startZmq();
+});
 app.on('ready', async () => {
   autoUpdater.checkForUpdatesAndNotify();
   settings.setup();
@@ -130,22 +140,22 @@ app.on('ready', async () => {
   //   await installExtensions();
   // }
   const makeMenu = () => {
-    // const menu = AppMenu.createMenu(app.createWindow);
+    const menu = AppMenu.createMenu(app.createWindow);
     
-    // // If we're on Mac make a Dock Menu
-    // if (process.platform === 'darwin') {
-    //   const dockMenu = Menu.buildFromTemplate([
-    //     {
-    //       label: 'New Window',
-    //       click() {
-    //         app.createWindow();
-    //       }
-    //     }
-    //   ]);
-    //   app.dock.setMenu(dockMenu);
-    // }
+    // If we're on Mac make a Dock Menu
+    if (process.platform === 'darwin') {
+      const dockMenu = Menu.buildFromTemplate([
+        {
+          label: 'New Window',
+          click() {
+            app.createWindow();
+          }
+        }
+      ]);
+      app.dock.setMenu(dockMenu);
+    }
   
-    // Menu.setApplicationMenu(AppMenu.buildMenu(menu));
+    Menu.setApplicationMenu(AppMenu.buildMenu(menu));
   };
   // const newIcon = nativeImage.createFromDataURL(icon);
   mainWindow = new BrowserWindow({
@@ -163,33 +173,10 @@ app.on('ready', async () => {
 
   let webContents = mainWindow.webContents;
   
-  
-
   rpc.on('init', () => {
     writeLog("rpc init");
     mainWindow.show();
-    // updateBackgroundColor();
-
-    // If no callback is passed to createWindow,
-    // a new session will be created by default.
-    // if (!fn) {
-    //   fn = win => win.rpc.emit('termgroup add req');
-    // }
-
-    // app.windowCallback is the createWindow callback
-    // that can be set before the 'ready' app event
-    // and createWindow definition. It's executed in place of
-    // the callback passed as parameter, and deleted right after.
-    // (app.windowCallback || fn)(mainWindow);
-    // delete app.windowCallback;
-    fetchNotifications(mainWindow);
-    // auto updates
-    // if (!isDev) {
-    //   updater(mainWindow);
-    // } else {
-    //   //eslint-disable-next-line no-console
-    //   console.log('ignoring auto updates during dev');
-    // }
+    // fetchNotifications(mainWindow);
   });
   rpc.on('exit', ({uid}) => {
     writeLog("rpc exit");
@@ -306,12 +293,4 @@ app.on('ready', async () => {
   });
   
   makeMenu();
-
-  try {
-    startServer();
-  } catch (e) {
-    console.log("Server could not be started.",e);
-  }
-  startScanner();
-  startZmq();
 });

@@ -32,6 +32,7 @@ body {
   }
 }
 
+@import "styles/loading-overlay";
 .app-wrapper {
   $darker_col: 6;
   padding-top:0;
@@ -51,7 +52,6 @@ body {
   @import "styles/left-bar";
   @import "styles/tab-list";
   @import "styles/tab-content";
-  @import "styles/loading-overlay";
   @import "styles/state-list";
   @import "styles/command-bar";
   @import "styles/is-mac";

@@ -3,7 +3,6 @@ import open from './settings/open';
 
 export function setup() {
   let currentSettings = settings.getAll();
-  console.log(currentSettings);
   settings.setAll({
     eonSshKeyPath: "",
     config: {
@@ -121,9 +120,6 @@ export function setup() {
         // if `true` (without backticks and without quotes), selected text will automatically be copied to the clipboard
         copyOnSelect: false,
     
-        // if `true` (without backticks and without quotes), hyper will be set as the default protocol client for SSH
-        defaultSSHApp: true,
-    
         // if `true` (without backticks and without quotes), on right click selected text will be copied or pasted if no
         // selection is present (`true` by default on Windows and disables the context menu feature)
         // quickEdit: true,
@@ -131,7 +127,7 @@ export function setup() {
         // URL to custom bell
         // bellSoundURL: 'http://example.com/bell.mp3',
     
-        // for advanced config flags please refer to https://hyper.is/#cfg
+        // for advanced config flags please refer to https://opc.ai/workbench/#cfg
       },
     
     keymaps: {

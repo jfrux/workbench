@@ -21,6 +21,7 @@ const appVersion = app.getVersion();
 let menu_ = [];
 
 export function createMenu() {
+  // console.warn("createMenu()");
   // We take only first shortcut in array for each command
   const allCommandKeys = getDecoratedKeymaps();
   const commandKeys = Object.keys(allCommandKeys).reduce((result, command) => {
@@ -31,7 +32,7 @@ export function createMenu() {
   let updateChannel = 'stable';
 
   const showAbout = () => {
-    console.log(nativeImage);
+    // console.log(nativeImage);
     // const newIcon = nativeImage.createFromDataURL(icon);
     dialog.showMessageBox({
       title: `About ${appName}`,
@@ -41,7 +42,7 @@ export function createMenu() {
       // icon: newIcon
     });
   };
-  console.warn(commandKeys);
+  // console.warn(commandKeys);
   const menu = [
     ...(process.platform === 'darwin' ? [darwinMenu(commandKeys, execCommand, showAbout)] : []),
     fileMenu(commandKeys, execCommand),
