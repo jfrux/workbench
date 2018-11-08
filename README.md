@@ -66,9 +66,11 @@ Regardless of the platform you are working on, you will need to have Yarn instal
         + `icnsutils`
         + `xz-utils`
 2. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
+3. Checkout a new branch for your feature... something like `feature/what-is-it` or `bugfix/the-fix-for-something`
 3. Install the dependencies: `yarn`
 4. Build the code and watch for changes: `yarn run dev`
 5. Note: You may have to run `yarn run package` once before to get the node-pty binaries in place.
+6. Push your change up to GitHub and create a Pull Request to merge your new feature / bugfix branch into the master branch.
 
 To make sure that your code works in the finished application, you can generate the binaries like this:
 
