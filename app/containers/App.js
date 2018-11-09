@@ -5,7 +5,7 @@ import EonDetail from '../components/EonDetail';
 import * as NetworkConnectionActions from '../actions/network_connection_actions';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
-import notify from '../utils/notify';
+import rpc from '../rpc-client';
 import { faPause, faTimes, faPlay, faUndo, faCheck, faCircle, faQuestion, faSync, faChevronLeft, faChevronRight, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import settings from 'electron-settings';
@@ -20,14 +20,13 @@ function mapDispatchToProps(dispatch) {
 class App extends React.Component {
   componentDidMount() {
     settings.watch("config",() => {
-      
-      notify('Workbench config updated!');
+      rpc.emit('notify',{title:'Workbench config updated!', body: 'Reopen Workbench'});
     });
     settings.watch("keymaps",() => {
-      notify('Workbench keymaps updated!');
+      rpc.emit('notify',{title:'Workbench keymaps updated!', body: 'Reopen Workbench'});
     });
     settings.watch("eonSshKeyPath",() => {
-      notify('Workbench SSH Key Path updated!', 'Disconnect / reconnect to EON to use new key.');
+      rpc.emit('notify',{title:'Workbench SSH Key Path updated!', body: 'Reopen Workbench'});
     });
     this.props.setupNetworkEvents();
   }

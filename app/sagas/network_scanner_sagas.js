@@ -206,7 +206,7 @@ function* pingEons() {
   const { eons, unresolvedEons } = eonList;
   let eonKeys = Object.keys(eons);
   try {
-    rpc.emit('notify',{title: 'Workbench finished scanning!',body: `Found ${foundCount} EON on the network.`});
+    rpc.emit('notify',{ title: 'Workbench finished scanning!', body: `Found ${foundCount} EON on the network.` });
   } catch (e) {
     console.warn("Cannot send notification right now...");
   }

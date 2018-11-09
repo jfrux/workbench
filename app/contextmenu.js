@@ -4,7 +4,7 @@ const { execCommand } = require('./commands');
 const separator = {type: 'separator'};
 const config = require('./settings');
 const { getDecoratedKeymaps } = require('./keymaps/decorators');
-const notify = require('./notify');
+const notify = require('./main/notify');
 
 const getCommandKeys = keymaps =>
   Object.keys(keymaps).reduce((commandKeys, command) => {

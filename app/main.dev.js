@@ -7,33 +7,27 @@
  * `./app/main.prod.js` using webpack. This gives us some performance wins.
  *
  */
+import writeLog from './main/log';
 import { app, BrowserWindow, shell, Menu, nativeImage } from 'electron';
-const { createWindow } = app;
+import * as Splashscreen from "@trodi/electron-splashscreen";
 import electronSettings from 'electron-settings';
-const notify = require('./utils/notify');
-const fetchNotifications = require('./notifications');
-import { startServer } from './background/server';
-import { startScanner } from './background/network-scanner';
-import { startStreamer } from './background/streamer';
-import { startZmq } from './background/zmq';
-import { autoUpdater } from "electron-updater";
-const createRPC = require('./rpc');
-const contextMenuTemplate = require('./contextmenu');
-const AppMenu = require('./menus/menu');
 import * as settings from './settings';
+import debounce from "lodash.debounce";
+import { startServer } from './main/services/server';
+import { startScanner } from './main/services/network-scanner';
+import { startStreamer } from './main/services/streamer';
+import { startZmq } from './main/services/zmq';
+import { startRpc } from "./main/services/rpc";
+import { autoUpdater } from "electron-updater";
+import path from 'path';
+
+writeLog('Starting Workbench');
+
+const AppMenu = require('./menus/menu');
 const {gitDescribe} = require('git-describe');
 const isDev = (process.env.NODE_ENV === 'development');
 
-const chalk = require('chalk');
-const prefix = chalk.bold.blue;
-const bgTaskColor = chalk.white;
-
 app.setName("Workbench");
-
-function writeLog(...params) {
-  //eslint-disable-next-line no-console
-  console.info(prefix('workbench') + ' ' + chalk.bold(bgTaskColor('[main]')), bgTaskColor(...params));
-}
 
 const checkSquirrel = () => {
   let squirrel;
@@ -48,7 +42,6 @@ const checkSquirrel = () => {
     process.exit();
   }
 };
-process.env['APP_PATH'] = app.getAppPath();
 // handle startup squirrel events
 if (process.platform === 'win32') {
   // eslint-disable-next-line import/order
@@ -71,7 +64,6 @@ if (process.platform === 'win32') {
   }
 }
 
-writeLog('Starting Workbench');
 
 /**
  * App Switches
@@ -102,7 +94,8 @@ let mainWindow;
 /**
  * Add event listeners...
  */
-app.on('window-all-closed', () => {
+
+ app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
   // if (process.platform !== 'darwin') {
@@ -110,52 +103,26 @@ app.on('window-all-closed', () => {
     app.quit();
   // }
 });
-app.on('ready', async () => {
-  startStreamer();
-  try {
-    startServer();
-  } catch (e) {
-    console.log("Server could not be started.",e);
-  }
-  startScanner();
-  startZmq();
-});
-app.on('ready', async () => {
-  autoUpdater.checkForUpdatesAndNotify();
-  settings.setup();
-  // if (!settings.get("windowBounds")) {
-    // settings.set("windowBounds", { width: 800, height: 800 })
-  // }
-  // console.log("Settings are stored in:\n" + settings.file());
-  // let { width, height } = settings.get('windowBounds');
 
-  // console.warn("width:",width);
-  // console.warn("height:",height);
-  // if (
-  //   process.env.NODE_ENV === 'development' ||
-  //   process.env.DEBUG_PROD === 'true'
-  // ) {
-  //   await installExtensions();
-  // }
-  const makeMenu = () => {
-    const menu = AppMenu.createMenu(app.createWindow);
-    
-    // If we're on Mac make a Dock Menu
-    if (process.platform === 'darwin') {
-      const dockMenu = Menu.buildFromTemplate([
-        {
-          label: 'New Window',
-          click() {
-            app.createWindow();
-          }
-        }
-      ]);
-      app.dock.setMenu(dockMenu);
-    }
-  
-    Menu.setApplicationMenu(AppMenu.buildMenu(menu));
+
+app.on('ready', async () => {
+  if (!electronSettings.get("config.windowBounds")) {
+    electronSettings.set("windowBounds", { width: 800, height: 800 })
+  }
+  let { width, height } = electronSettings.get('windowBounds');
+  writeLog("Setting Window Properties");
+  let windowOpts = {
+    titleBarStyle: 'hiddenInset',
+    title: 'Workbench',
+    frame: (process.platform === 'darwin'),
+    transparent: (process.platform === 'darwin'),
+    backgroundColor: '#000',
+    width,
+    height,
+    minWidth: 320,
+    minHeight: 240
   };
-  // const newIcon = nativeImage.createFromDataURL(icon);
+  writeLog("Setting Splash Properties");
   mainWindow = new BrowserWindow({
     titleBarStyle: 'hiddenInset',
     title: 'Workbench',
@@ -163,111 +130,36 @@ app.on('ready', async () => {
     frame: process.platform === 'darwin',
     transparent: process.platform === 'darwin',
     backgroundColor: '#000',
-    // icon: newIcon,
+    width,
+    height,
     minWidth: 320,
     minHeight: 240
   });
-  const rpc = createRPC(mainWindow);
+  writeLog("Checking for Updates...");
+  autoUpdater.checkForUpdatesAndNotify();
+  writeLog("Setting up config file");
+  settings.setup();
+  writeLog("Settings are located at " + electronSettings.file());
 
-  let webContents = mainWindow.webContents;
+  const makeMenu = () => {
+    const menu = AppMenu.createMenu(app.createWindow);
   
-  rpc.on('init', () => {
-    writeLog("rpc init");
-    mainWindow.show();
-    mainWindow.focus();
-    // fetchNotifications(mainWindow);
-  });
-  rpc.on('exit', ({uid}) => {
-    writeLog("rpc exit");
-    // const session = sessions.get(uid);
-    // if (session) {
-    //   session.exit();
-    // }
-  });
-  rpc.on('unmaximize', () => {
-    writeLog("rpc unmaximize");
-    mainWindow.unmaximize();
-  });
-  rpc.on('maximize', () => {
-    writeLog("rpc maximize");
-    mainWindow.maximize();
-  });
-  rpc.on('minimize', () => {
-    writeLog("rpc minimize");
-    mainWindow.minimize();
-  });
-  rpc.on('resize', ({uid, cols, rows}) => {
-    writeLog("rpc resize");
-    // const session = sessions.get(uid);
-    // if (session) {
-    //   session.resize({cols, rows});
-    // }
-  });
-  rpc.on('data', ({uid, data, escaped}) => {
-    writeLog("rpc data");
-    // const session = sessions.get(uid);
-    // if (session) {
-    //   if (escaped) {
-    //     const escapedData = session.shell.endsWith('cmd.exe')
-    //       ? `"${data}"` // This is how cmd.exe does it
-    //       : `'${data.replace(/'/g, `'\\''`)}'`; // Inside a single-quoted string nothing is interpreted
+    Menu.setApplicationMenu(AppMenu.buildMenu(menu));
+  };
 
-    //     session.write(escapedData);
-    //   } else {
-    //     session.write(data);
-    //   }
-    // }
-  });
-  rpc.on('open external', ({url}) => {
-    writeLog("rpc open external");
-    // shell.openExternal(url);
-  });
-  rpc.on('open context menu', selection => {
-    writeLog("rpc open context menu");
-    const {createWindow} = app;
-    const {buildFromTemplate} = Menu;
-    buildFromTemplate(contextMenuTemplate(createWindow, selection)).popup(mainWindow);
-  });
-  
-  // Same deal as above, grabbing the window titlebar when the window
-  // is maximized on Windows results in unmaximize, without hitting any
-  // app buttons
-  for (const ev of ['maximize', 'unmaximize', 'minimize', 'restore']) {
-    mainWindow.on(ev, () => rpc.emit('windowGeometry change'));
-  }
-  rpc.win.on('move', () => {
-    writeLog("rpc win on move");
-    rpc.emit('move');
-  });
-  rpc.on('close', () => {
-    writeLog("rpc close");
-    mainWindow.close();
-  });
-  rpc.on('notify', ({title, body})  => {
-    writeLog("rpc notify",title, body);
-    notify(title, body);
-  });
-  rpc.on('command', command => {
-    writeLog("rpc command",command);
-    const focusedWindow = BrowserWindow.getFocusedWindow();
-    execCommand(command, focusedWindow);
-  });
-  // const deleteSessions = () => {
-  //   sessions.forEach((session, key) => {
-  //     session.removeAllListeners();
-  //     session.destroy();
-  //     sessions.delete(key);
-  //   });
-  // };
-  // we reset the rpc channel only upon
-  // subsequent refreshes (ie: F5)
-  // let i = 0;
-  // mainWindow.webContents.on('did-navigate', () => {
-  //   if (i++) {
-  //     deleteSessions();
-  //   }
-  // });
   mainWindow.loadURL(`file://${__dirname}/app.html`);
+  
+  let webContents = mainWindow.webContents;
+  mainWindow.on('resize', debounce((msg) => { 
+    // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with
+    // the height, width, and x and y coordinates.
+    let { width, height } = mainWindow.getBounds();
+    writeLog("Resized window",{ width, height });
+    // Now that we have them, save them using the `set` method.
+    new Promise((resolve) => {
+      electronSettings.set('config.windowBounds', { width, height });
+    });
+  }, 1000));
 
   webContents.on('did-finish-load', () => {
     if (!mainWindow) {
@@ -281,8 +173,6 @@ app.on('ready', async () => {
     }
   });
 
-  mainWindow.rpc = rpc;
-
   mainWindow.on('closed', () => {
     writeLog("Window closed...");
     app.quit();
@@ -290,4 +180,17 @@ app.on('ready', async () => {
   });
   
   makeMenu();
+});
+app.on('ready', async () => {
+  // startStreamer().catch((e) => {
+  //   writeLog("Streamer service could not be started.", e.message);
+  // });
+  try {
+    startServer();
+  } catch (e) {
+    console.log("Server could not be started.", e.message);
+  }
+  startRpc(mainWindow, app);
+  startScanner();
+  startZmq();
 });

@@ -6,7 +6,7 @@ import {
   takeEvery,
   select
 } from 'redux-saga/effects';
-const notify = require('../utils/notify');
+const rpc = require('../rpc-client');
 import { delay } from 'redux-saga';
 import { push } from 'connected-react-router'
 import { remote } from 'electron';
@@ -106,7 +106,7 @@ function* retrieveScreenshot() {
   }).then(() => {
     return sftp.fastGet('/data/screenshots/screenshot.png', path.join(screenshotsDir,'EON_' + new Date().getTime() + '.png'));
   }).then((data) => {
-    notify('Screenshot captured!', 'Workbench has saved the screenshot to:\n' + screenshotsDir);
+    rpc.emit('notify', 'Screenshot captured!', 'Workbench has saved the screenshot to:\n' + screenshotsDir);
   }).catch((err) => {
       console.log(err, 'catch error');
   });

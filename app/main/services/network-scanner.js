@@ -1,8 +1,8 @@
 import IpUtil from "ip";
 import arp from 'node-arp';
 import evilscan from 'evilscan';
-import * as networkActions from '../actions/network_connection_actions';
-import * as types from '../constants/network_scanner_action_types';
+import * as networkActions from '../../actions/network_connection_actions';
+import * as types from '../../constants/network_scanner_action_types';
 import { ipcMain } from 'electron';
 
 var log = require('electron-log');
