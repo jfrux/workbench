@@ -156,7 +156,14 @@ function pingEon(eon) {
   // console.warn("Pinging EON",eon);
   return new Promise((resolve,reject) => {
     try {
-      var session = ping.createSession();
+      var session = ping.createSession({
+        networkProtocol: ping.NetworkProtocol.IPv4,
+        packetSize: 16,
+        retries: 1,
+        sessionId: (process.pid % 65535),
+        timeout: 5000,
+        ttl: 128
+      });
 
       session.pingHost(eon.ip, function pingEon(error, target) {
         if (error) {
@@ -198,7 +205,11 @@ function* pingEons() {
   const { foundCount } = networkScanner;
   const { eons, unresolvedEons } = eonList;
   let eonKeys = Object.keys(eons);
-  // rpc.emit('notify',{title: 'Workbench finished scanning!',body: `Found ${foundCount} EON on the network.`});
+  try {
+    rpc.emit('notify',{title: 'Workbench finished scanning!',body: `Found ${foundCount} EON on the network.`});
+  } catch (e) {
+    console.warn("Cannot send notification right now...");
+  }
   // console.warn("Pinging EONS:",eonKeys);
   yield all(eonKeys.map(function * (key) {
     const eon = eons[key];

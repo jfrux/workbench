@@ -98,7 +98,7 @@ export default function eonListReducer(state = initialState, action) {
           ...state.eons,
           [action.payload.id]: {
             ...state.eons[action.payload.id],
-            reachable: 0,
+            // reachable: 0,
             pinging: true
           }
         }
