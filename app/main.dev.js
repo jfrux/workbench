@@ -9,7 +9,6 @@
  */
 import writeLog from './main/log';
 import { app, BrowserWindow, shell, Menu, nativeImage } from 'electron';
-import * as Splashscreen from "@trodi/electron-splashscreen";
 import electronSettings from 'electron-settings';
 import * as settings from './settings';
 import debounce from "lodash.debounce";
@@ -21,6 +20,7 @@ import { startRpc } from "./main/services/rpc";
 import { autoUpdater } from "electron-updater";
 import path from 'path';
 
+require('electron-debug')({ showDevTools: process.env.NODE_ENV === 'development' })
 writeLog('Starting Workbench');
 
 const AppMenu = require('./menus/menu');
