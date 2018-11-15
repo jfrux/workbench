@@ -3,6 +3,7 @@ import * as commandExists from 'command-exists';
 
 const shellExists = commandExists.sync;
 const windowsShells = [
+    "C:\\Program\ Files\\Git\\bin\\bash.exe",
     "C:\\Windows\\System32\\bash.exe",
     "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
     "cmd.exe"
