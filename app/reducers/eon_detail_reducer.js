@@ -1,7 +1,6 @@
 /* reducer for managing state for individual eon */
 import * as types from '../constants/eon_detail_action_types';
 import settings from 'electron-settings';
-import { min } from 'gl-matrix/src/gl-matrix/vec2';
 
 const defaultTmuxLogLength = 300;
 
