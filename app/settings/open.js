@@ -14,7 +14,7 @@ if (process.platform === 'win32') {
     const keys = await new Promise((resolve, reject) => {
       new Registry({
         hive: Registry.HKCU,
-        key: '\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.js'
+        key: '\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.json'
       }).keys((error, items) => {
         if (error) {
           reject(error);
@@ -66,7 +66,7 @@ if (process.platform === 'win32') {
           return shell.openItem(cfgPath);
         }
         //eslint-disable-next-line no-console
-        console.warn('No default app set for .js files, using notepad.exe fallback');
+        console.warn('No default app set for .json files, using notepad.exe fallback');
         return openNotepad(cfgPath);
       })
       .catch(err => {

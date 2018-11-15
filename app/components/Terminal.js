@@ -313,7 +313,7 @@ class ReactTerminal extends React.Component {
             }
 
             this.sendCommand(
-              `ssh root@${this.props.eonIp} -p 8022 -i ${filePath}\r`
+              `ssh root@${this.props.eonIp} -p 8022 -i "${filePath}"\r`
             );
           };
           // this.socket.onclose = () => {
