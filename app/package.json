@@ -15,9 +15,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "node-pty-prebuilt": "^0.7.6",
     "babel-register": "^6.26.0",
     "bufferutil": "^4.0.0",
+    "node-pty-prebuilt": "^0.7.6",
+    "raw-socket": "^1.6.4",
     "utf-8-validate": "^5.0.1",
     "winattr": "^2.0.0",
     "zeromq": "^5.1.0"

@@ -265,6 +265,7 @@
     "node-cidr": "^1.0.0",
     "node-cmd": "^3.0.0",
     "node-ssh": "^5.1.2",
+    "node-windows": "^0.1.14",
     "popper.js": "^1.14.4",
     "react": "^16.4.1",
     "react-chartkick": "^0.3.0",

@@ -20,7 +20,7 @@ import { startRpc } from "./main/services/rpc";
 import { autoUpdater } from "electron-updater";
 import path from 'path';
 
-// require('electron-debug')({ showDevTools: process.env.NODE_ENV === 'development' })
+require('electron-debug')({ showDevTools: process.env.NODE_ENV === 'development' })
 writeLog('Starting Workbench');
 
 const AppMenu = require('./menus/menu');

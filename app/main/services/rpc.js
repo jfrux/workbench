@@ -2,6 +2,7 @@ import { app, BrowserWindow, Menu } from 'electron';
 import notify  from '../notify';
 import createRPC from '../rpc';
 import writeLog from '../log';
+const contextMenuTemplate = require('../../contextmenu');
 export function startRpc(mainWindow, app) {
   const rpc = createRPC(mainWindow);
   rpc.on('init', () => {
@@ -64,6 +65,7 @@ export function startRpc(mainWindow, app) {
   });
 
   rpc.on('open context menu', selection => {
+    const {createWindow} = app;
     // writeLog("rpc open context menu");
     const {buildFromTemplate} = Menu;
     buildFromTemplate(contextMenuTemplate(createWindow, selection)).popup(mainWindow);

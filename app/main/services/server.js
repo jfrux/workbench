@@ -57,6 +57,7 @@ app.post('/terminals', function (req, res) {
     env: process.env
   });
 
+  // term.write(`powershell.exe -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"\r`)
   writeLog('Created terminal with PID: ' + term.pid);
   terminals[term.pid] = term;
   logs[term.pid] = '';
