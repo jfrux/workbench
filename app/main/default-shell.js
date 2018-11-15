@@ -20,9 +20,9 @@ export default (() => {
   const env = process.env;
   let userShell;
   let shell;
-  // if (userConfig && userConfig.shell && (userConfig.shell+'').length > 0) {
-  //   return userConfig.shell;
-  // } else {
+  if (userConfig && userConfig.shell && (userConfig.shell+'').length > 0) {
+    return userConfig.shell;
+  } else {
     if (process.platform === 'darwin') {
       shell = userShell || env.SHELL || '/bin/bash';
     } else if (process.platform === 'win32') {
@@ -40,5 +40,5 @@ export default (() => {
     }
     settings.set("config.shell",shell);
     return shell;
-  // }
+  }
 })();
