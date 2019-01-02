@@ -10,8 +10,6 @@
 Workbench is a desktop application to help you manage your Comma EON(s) as well as assisting with installing Openpilot.
 It also has a goal of providing easier porting of new vehicles.
 
-> It's in its infancy so it doesn't actually fulfill that mission above quite yet but it's getting better by the day.
-
 ### Help Support Openpilot Community Efforts
 
 <a href="https://www.patreon.com/bePatron?u=9861134" ><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" /></a>
