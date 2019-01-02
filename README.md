@@ -27,7 +27,6 @@ Download the latest version from the links below.
 - [Mac OS](https://github.com/openpilot-community/workbench/releases/latest)
 - [Ubuntu / Debian](https://github.com/openpilot-community/workbench/releases/latest)
 
-### Usage
 > IMPORTANT: Workbench manages your EON over SSH.  You must enable SSH in your Settings on EON.
 
 # Features
