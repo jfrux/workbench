@@ -1,8 +1,8 @@
-![](https://opc.ai/assets/workbench-readme-splash.png)
-<!-- [![Travis](https://img.shields.io/travis/openpilot-community/workbench.svg?style=flat-square&label=Travis+CI)](https://travis-ci.org/openpilot-community/workbench)
+<!-- ![](https://opc.ai/assets/workbench-readme-splash.png)
+[![Travis](https://img.shields.io/travis/openpilot-community/workbench.svg?style=flat-square&label=Travis+CI)](https://travis-ci.org/openpilot-community/workbench)
 [![CircleCI](https://img.shields.io/circleci/project/openpilot-community/workbench/desktop.svg?style=flat-square&label=CircleCI)](https://circleci.com/gh/openpilot-community/workbench)
-![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/ow6duui01jcsag3l?svg=true) -->
-[![Build status](https://ci.appveyor.com/api/projects/status/ow6duui01jcsag3l?svg=true)](https://ci.appveyor.com/project/jfrux/workbench)
+![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/ow6duui01jcsag3l?svg=true)
+[![Build status](https://ci.appveyor.com/api/projects/status/ow6duui01jcsag3l?svg=true)](https://ci.appveyor.com/project/jfrux/workbench) -->
 
 [![license](https://img.shields.io/github/license/openpilot-community/workbench.svg)](https://github.com/openpilot-community/workbench/blob/master/LICENSE)
 
