@@ -15,8 +15,10 @@
   z-index: 1;
   overflow-x: hidden;
   overflow-y: auto;
+  cursor: pointer;
   .nav-item {
     width:100%;
+    cursor: pointer;
     &.hide {
       display:none;
     }
@@ -29,10 +31,18 @@
             font-weight:normal;
             background-color:$dark-color;
           }
+          
         }
       }
     }
+    .command-list {
+      .nav-link {
+        cursor: pointer;
+        background-color:lighten($dark-color,4);
+      }
+    }
     .nav-link {
+      cursor: pointer;
       position:relative;
       line-height: 25px;
       padding-top:0;
@@ -42,7 +52,19 @@
       text-align:left;
       background-color:$darker-color;
       color:rgba(#FFF,0.5);
-      
+      padding-left:30px;
+      &:hover {
+        color:#FFF;
+        background-color:lighten($darker-color,3);
+      }
+      .icon {
+        display:block;
+        width:30px;
+        height:100%;
+        position:absolute;
+        left:0;
+        text-align:center;
+      }
       &:before {
         position: absolute;
         bottom: -1px;
@@ -51,12 +73,14 @@
         height: 1px;
         content: "";
         z-index: 100;
+        cursor:pointer;
         background-color: rgba(#FFF, 0.01);
       }
       &:after {
         position: absolute;
         bottom: 0;
         left: 0;
+        cursor:pointer;
         width: 100%;
         height: 1px;
         content: "";

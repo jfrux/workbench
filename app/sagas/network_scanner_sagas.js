@@ -140,15 +140,15 @@ function* resolveEon(action) {
     } else {
       updatedEon.addStatus = 2;
       yield put(eonListActions.UPDATE_UNRESOLVED(JSON.parse(JSON.stringify(updatedEon))));
-      // console.warn("UPDATE01");
+      console.warn("UPDATE01");
     }
   } catch (e) {
     updatedEon.addStatus = 2;
     yield put(eonListActions.UPDATE_UNRESOLVED(JSON.parse(JSON.stringify(updatedEon))));
-    // console.warn("UPDATE02");
+    console.warn("UPDATE02");
   } finally {
-    // yield put(eonListActions.UPDATE_UNRESOLVED(JSON.parse(JSON.stringify(updatedEon))));
-    // console.warn("UPDATE03");
+    yield put(eonListActions.UPDATE_UNRESOLVED(JSON.parse(JSON.stringify(updatedEon))));
+    console.warn("UPDATE03");
   }
 }
 
