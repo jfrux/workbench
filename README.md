@@ -6,7 +6,7 @@
 
 [![license](https://img.shields.io/github/license/openpilot-community/workbench.svg)](https://github.com/openpilot-community/workbench/blob/master/LICENSE)
 
-# Openpilot Workbench
+# Workbench for Openpilot
 Workbench is a desktop application to help you manage your Comma EON(s) as well as assisting with installing Openpilot.
 It also has a goal of providing easier porting of new vehicles.
 
@@ -41,13 +41,15 @@ https://patreon.com/openpilotcommunity
 - [x] Automatic task scripts for EON configuration / maintenance.
 - [x] Reinstall Comma Openpilot Release2
 
-## Ideas / Concepts
+## Upcoming Concepts / Features
 
+- [ ] Built-in Openpilot / EON IDE (code editor)
+- [ ] Real-time tuning
 - [ ] Backup videos
 - [ ] Review videos
 - [ ] Monitor uploads
 
-## Do you want to help develop Workbench?
+## For Workbench Developers
 
 Regardless of the platform you are working on, you will need to have Yarn installed. If you have never installed Yarn before, you can find out how at: https://yarnpkg.com/en/docs/install.
 
