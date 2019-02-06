@@ -3,6 +3,8 @@
   "productName": "Workbench",
   "description": "The Openpilot Workbench is to help people fix problems with EON, Openpilot, etc.",
   "scripts": {
+    "clean": "rm -rf node_modules && rm -rf app/node_modules && rm -f ./package-lock.json && rm -f ./app/package-lock.json && rm -f ./yarn.lock && rm -f ./app/yarn.lock && yarn cache clean",
+    "setup": "yarn remove zeromq; yarn install; npm install zeromq --zmq-external; cd app/ && yarn install && cd ../",
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
     "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.renderer.dev.dll.js --colors",
     "build-main": "cross-env NODE_ENV=production node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.main.prod.js --colors",
@@ -298,7 +300,8 @@
     "winreg": "^1.2.4",
     "ws": "^6.1.0",
     "xterm": "^3.8.0",
-    "yaml-loader": "^0.5.0"
+    "yaml-loader": "^0.5.0",
+    "zeromq": "^5.1.0"
   },
   "devEngines": {
     "node": ">=7.x",

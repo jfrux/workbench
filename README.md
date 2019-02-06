@@ -53,6 +53,14 @@ Regardless of the platform you are working on, you will need to have Yarn instal
   * Windows
     - Be sure to run  `yarn global add windows-build-tools` to install `windows-build-tools`.
   * macOS
+    - Install xcode build tools: 
+      `xcode-select --install`
+    - Install Homebrew if you don't have it. 
+      `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+    - Now install Yarn
+      `brew install yarn`
+    - Now install zmq
+      `brew install zmq`
     - Once you have installed Yarn, you can skip this section!
   * Linux(You can see [here](https://en.wikipedia.org/wiki/List_of_Linux_distributions) what your Linux is based on.)
     - RPM-based
