@@ -134,6 +134,7 @@ function* handleConnected(action) {
 }
 
 function fetchMacAddress(eon) {
+  console.warn(`[NETWORK_SCANNER] fetchMacAddress(eon)`,eon);
   return new Promise((resolve,reject) => {
     arp.getMAC(eon.ip, function(err, mac) {
       if (!err) {
@@ -149,7 +150,9 @@ function* resolveEon(action) {
   const eon = action.payload.data;
   let updatedEon = JSON.parse(JSON.stringify(eon));
 
-  try {
+  // try {
+    console.warn("resolveEon action",action);
+    console.warn("eon.ip:",eon.ip);
     const mac = yield call(fetchMacAddress,eon);
 
     if (mac) {
@@ -160,14 +163,14 @@ function* resolveEon(action) {
       yield put(eonListActions.UPDATE_UNRESOLVED(JSON.parse(JSON.stringify(updatedEon))));
       // console.warn("UPDATE01");
     }
-  } catch (e) {
-    updatedEon.addStatus = 2;
-    yield put(eonListActions.UPDATE_UNRESOLVED(JSON.parse(JSON.stringify(updatedEon))));
+  // } catch (e) {
+  //   updatedEon.addStatus = 2;
+  //   yield put(eonListActions.UPDATE_UNRESOLVED(JSON.parse(JSON.stringify(updatedEon))));
     // console.warn("UPDATE02");
-  } finally {
-    // yield put(eonListActions.UPDATE_UNRESOLVED(JSON.parse(JSON.stringify(updatedEon))));
-    // console.warn("UPDATE03");
-  }
+  // } finally {
+  //   // yield put(eonListActions.UPDATE_UNRESOLVED(JSON.parse(JSON.stringify(updatedEon))));
+  //   // console.warn("UPDATE03");
+  // }
 }
 
 function pingEon(eon) {

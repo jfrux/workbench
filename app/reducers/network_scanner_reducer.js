@@ -2,9 +2,9 @@
 import * as types from '../constants/network_scanner_action_types';
 
 const initialState = {
-  scanning: true,
+  scanning: false,
   scanResults: {},
-  status: "scanning",
+  status: "not_scanning",
   progress: 0,
   scanCount: 0,
   maxCount: 762,

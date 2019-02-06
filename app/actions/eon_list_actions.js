@@ -32,7 +32,12 @@ export function ADDING_EON(eon) {
 }
 
 export function ADD_EON_SUCCESS(eon) {
-  console.warn("ADD_EON_SUCCESS2:",eon);
+  if (eon.data) {
+    eon = {
+      ...eon,
+      ...eon.data
+    }
+  }
   return {
     type: types.ADD_EON_SUCCESS,
     payload: {
