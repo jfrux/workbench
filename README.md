@@ -12,7 +12,10 @@ It also has a goal of providing easier porting of new vehicles.
 
 ### Help fuel development!
 
-<a href="https://www.patreon.com/bePatron?u=9861134" ><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" /></a>
+Please help support my devleopments... $1/month even?
+Any little contribution helps...
+
+<a href="https://www.patreon.com/bePatron?u=9861134" ><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" width="120" /></a>
 
 The Openpilot Community nor jfrux are funded by Comma.ai, Inc. or any other commercial entity.
 Your support is all we have.  Growing expenses with opc.ai, cloud hosting, and costs running great services for the community is not free.
