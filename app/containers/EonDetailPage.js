@@ -8,6 +8,7 @@ function mapStateToProps(state) {
     activeTab: state.eonDetail.activeTab,
     activeCommand: state.eonDetail.activeCommand,
     selectedEon: state.eonList.selectedEon,
+    terminalPort: state.eonList.terminalPort,
     eon: state.eonList.eons[state.eonList.selectedEon],
     network: state.networkConnection.status,
     networkIp: state.networkConnection.ip,

@@ -11,6 +11,7 @@ export const ADD_EON_FAILED = 'eonList/ADD_EON_FAILED';
 export const ADD_EON_SUCCESS = 'eonList/ADD_EON_SUCCESS';
 export const DESELECT_EON = 'eonList/DESELECT_EON';
 export const SELECT_EON = 'eonList/SELECT_EON';
+export const SET_TERMINAL_PORT = 'eonList/SET_TERMINAL_PORT';
 export const CLEAR_UNRESOLVED_EONS = 'eonList/CLEAR_UNRESOLVED_EONS';
 export const CREATE_PRIVATE_KEY = 'eonList/CREATE_PRIVATE_KEY';
 

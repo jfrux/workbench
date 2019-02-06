@@ -189,7 +189,14 @@ app.on('ready', async () => {
   } catch (e) {
     console.log("Server could not be started.", e.message);
   }
+
+  writeLog(`Starting RPC`);
   startRpc(mainWindow, app);
+  writeLog(`Done RPC`);
+  writeLog(`Scanner RPC`);
   startScanner();
+  writeLog(`Done Scanner RPC`);
+  writeLog(`Start Zmq RPC`);
   startZmq();
+  writeLog(`Done Scanner RPC`);
 });

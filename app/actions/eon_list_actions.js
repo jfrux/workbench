@@ -8,6 +8,12 @@ export function ADD_ERROR(error) {
   };
 }
 
+export function SET_TERMINAL_PORT(port) {
+  return {
+    type: types.SET_TERMINAL_PORT,
+    payload: port
+  };
+}
 export function RESET_ERROR() {
   return {
     type: types.RESET_ERROR
