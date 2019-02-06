@@ -47,21 +47,18 @@ https://patreon.com/openpilotcommunity
 
 ## For Workbench Developers
 
-Regardless of the platform you are working on, you will need to have Yarn installed. If you have never installed Yarn before, you can find out how at: https://yarnpkg.com/en/docs/install.
-
-1. Install necessary packages:
+1. Install necessary development dependencies:
   * Windows
-    - Be sure to run  `yarn global add windows-build-tools` to install `windows-build-tools`.
+    - Install `windows-build-tools`
+    `npm install -g windows-build-tools`
   * macOS
     - Install xcode build tools: 
       `xcode-select --install`
     - Install Homebrew if you don't have it. 
       `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
-    - Now install Yarn
-      `brew install yarn`
+    - Install `nvm` or nodenv or some sort of nodejs version manager.
     - Now install zmq
       `brew install zmq`
-    - Once you have installed Yarn, you can skip this section!
   * Linux(You can see [here](https://en.wikipedia.org/wiki/List_of_Linux_distributions) what your Linux is based on.)
     - RPM-based
         + `GraphicsMagick`
@@ -72,16 +69,22 @@ Regardless of the platform you are working on, you will need to have Yarn instal
         + `icnsutils`
         + `xz-utils`
 2. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
-3. Install the dependencies: `yarn`
-4. Build the code and watch for changes: `yarn run dev`
-5. Note: You may have to run `yarn run package` once before to get the node-pty binaries in place.
-6. Checkout a new branch for your feature... something like `feature/what-is-it` or `bugfix/the-fix-for-something`
-7. Push your change up to GitHub and create a Pull Request to merge your new feature / bugfix branch into the master branch.
+3. Change to the newly cloned directory `cd workbench`
+4. Install a version of nodejs with `nvm` or your node version manager.
+   `nvm install 8.14.0` is the version I recommend.
+   `nvm use 8.14.0`
+5. Move to the cloned directory and install the dependencies: 
+  `npm run setup`
+6. Build the code and watch for changes:
+  `npm run dev`
+7. Note: You may have to run `npm run package` once before to get the node-pty binaries in place.
+8. Checkout a new branch for your feature... something like `feature/what-is-it` or `bugfix/the-fix-for-something`
+9. Push your change up to your own GitHub fork and create a New Pull Request to request your new feature / bugfix branch  be upstreamed into the master for inclusion in the next release.
 
 To make sure that your code works in the finished application, you can generate the binaries like this:
 
 ```bash
-yarn run package
+npm run package
 ```
 
 After that, you will see the binary in the `./releases` folder!
@@ -93,9 +96,9 @@ After that, you will see the binary in the `./releases` folder!
 If after building during development you get an alert dialog related to `node-pty` issues,
 make sure its build process is working correctly by running `yarn run package`.
 
-##### Error with `codesign` on macOS when running `yarn run dist`
+##### Error with `codesign` on macOS when running `npm run dist`
 
-If you have issues in the `codesign` step when running `yarn run package` on macOS, you can temporarily disable code signing locally by setting
+If you have issues in the `codesign` step when running `npm run package` on macOS, you can temporarily disable code signing locally by setting
 `export CSC_IDENTITY_AUTO_DISCOVERY=false` for the current terminal session.
 
 ## Bug Reports / Feature Requests
