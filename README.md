@@ -13,7 +13,9 @@ It also has a goal of providing easier porting of new vehicles.
 ### Help fuel development!
 
 Please help support my devleopments... 
+
 $1/month even?
+
 Every little contribution helps...
 
 <a href="https://www.patreon.com/bePatron?u=9861134" ><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" width="120" /></a>
