@@ -31,12 +31,13 @@ const requiredByDLLConfig = module.parent.filename.includes(
  */
 if (!requiredByDLLConfig && !(fs.existsSync(dll) && fs.existsSync(manifest))) {
   console.log(
-    chalk.black.bgYellow.bold(
-      'The DLL files are missing. Sit back while we build them for you with "npm run package"'
-    )
+    chalk.black.bgYellow.bold(`Some DLL files are missing and need generated.
+No worries, go grab a coffee while we build them for you with "npm run build-dll" and "npm run package"
+Lucky for you, we only have to do this once and then things are a lot faster.`)
   );
   try {
-    execSync('npm run package');
+    execSync('npm run build-dll', {stdio: 'inherit'});
+    execSync('npm run package', {stdio: 'inherit'});
   } catch(e) {
     console.log(
       chalk.black.bgYellow.bold(
@@ -45,11 +46,10 @@ if (!requiredByDLLConfig && !(fs.existsSync(dll) && fs.existsSync(manifest))) {
     );
   }
   console.log(
-    chalk.black.bgYellow.bold(
-      'Now re-trying "npm run dev"'
+    chalk.white.bgGreen.bold(
+      'All set! Now you can re-try "npm run dev"...'
     )
   );
-  execSync('npm run dev');
 }
 
 export default merge.smart(baseConfig, {
