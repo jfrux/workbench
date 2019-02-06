@@ -238,6 +238,7 @@
     "electron-updater": "^3.1.2",
     "evilscan": "^1.7.1",
     "express-ws": "^4.0.0",
+    "get-port": "^4.1.0",
     "geval": "^2.2.0",
     "git-describe": "^4.0.3",
     "hexdump-nodejs": "^0.1.0",

@@ -27,7 +27,7 @@ Terminal.applyAddon(winptyCompat);
 class ReactTerminal extends React.Component {
   constructor(props) {
     super(props);
-    this.HOST = `127.0.0.1:9788`;
+    this.HOST = `127.0.0.1:${process.env.WORKBENCH_SHELL_PORT}`;
     this.SOCKET_URL = `ws://${this.HOST}/terminals/`;
     this.failures = 0;
     this.interval = null;
@@ -320,7 +320,8 @@ class ReactTerminal extends React.Component {
           //   this.term.writeln('Server disconnected!');
           //   this._connectToServer();
           // };
-          this.socket.onerror = () => {
+          this.socket.onerror = (error) => {
+            console.error(error);
             this.term.writeln('Critical error, restart Workbench!');
             this._connectToServer();
           };
