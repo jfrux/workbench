@@ -9,7 +9,7 @@
  */
 import writeLog from './main/log';
 import { app, BrowserWindow, shell, Menu, nativeImage } from 'electron';
-import electronSettings from 'electron-settings';
+
 import * as settings from './settings';
 import debounce from "lodash.debounce";
 import { startServer } from './main/services/server';
@@ -105,6 +105,7 @@ let mainWindow;
 
 
 app.on('ready', async () => {
+  const electronSettings = require('electron-settings');
   if (!electronSettings.get("windowBounds")) {
     electronSettings.set("windowBounds", { width: 800, height: 800 })
   }

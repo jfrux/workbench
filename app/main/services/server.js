@@ -2,7 +2,7 @@ import defaultShell from '../default-shell';
 var terminals = {};
 var logs = {};
 import getPort from 'get-port';
-// import { ipcMain } from 'electron';
+import { app as electronApp } from 'electron';
 import * as types from '../../constants/eon_list_action_types';
 const express = require('express');
 const app = express();
@@ -17,7 +17,7 @@ module.exports = {
   startServer() {
     const argv = require('yargs').argv;
     return getPort({port: argv.port || 9778}).then((port) => {
-
+      electronApp.TERMINAL_PORT = port;
       writeLog(`Listening for ${types.SELECT_EON}`);
       // ipcMain.on(types.SELECT_EON, (evt) => {
       //   const { sender } = evt;
