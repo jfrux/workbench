@@ -32,10 +32,24 @@ const requiredByDLLConfig = module.parent.filename.includes(
 if (!requiredByDLLConfig && !(fs.existsSync(dll) && fs.existsSync(manifest))) {
   console.log(
     chalk.black.bgYellow.bold(
-      'The DLL files are missing. Sit back while we build them for you with "yarn build-dll"'
+      'The DLL files are missing. Sit back while we build them for you with "npm run package"'
     )
   );
-  execSync('yarn build-dll');
+  try {
+    execSync('npm run package');
+  } catch(e) {
+    console.log(
+      chalk.black.bgYellow.bold(
+        'If you see errors relating to codesign, you can ignore these for now.'
+      )
+    );
+  }
+  console.log(
+    chalk.black.bgYellow.bold(
+      'Now re-trying "npm run dev"'
+    )
+  );
+  execSync('npm run dev');
 }
 
 export default merge.smart(baseConfig, {
