@@ -10,7 +10,7 @@
 Workbench is a desktop application to help you manage your Comma EON(s) as well as assisting with installing Openpilot.
 It also has a goal of providing easier porting of new vehicles.
 
-### Help Support Openpilot Community Efforts
+### Help fuel development!
 
 <a href="https://www.patreon.com/bePatron?u=9861134" ><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" /></a>
 
@@ -26,7 +26,7 @@ https://patreon.com/openpilotcommunity
 
 > IMPORTANT: Workbench manages your EON over SSH.  You must enable SSH in your Settings on EON.
 
-# Features
+## Features
 
 - [x] Scans your network for your EON so you don't need to find the IP.
 - [x] Connects to EON via SSH (and automatically, installs SSH key for you)
