@@ -75,33 +75,51 @@ function* handleAddEon(action) {
   const { unresolvedEons } = eonList; 
   let { payload } = action;
   let randomId = revisedRandId();
+  console.warn(`[NETWORK_SCANNER] handleAddEon(${action})`);
   
   let newEon = {};
+
+  console.warn(`[NETWORK_SCANNER] Adding EON...`);
   yield put(eonListActions.ADDING_EON());
-  
   let existingEons = Object.keys(unresolvedEons).filter((key) => {
     const eon = unresolvedEons[key];
-    return eon.ip === payload.ip;
+    const eonExists = eon.ip === payload.ip;
+
+    console.warn(`[NETWORK_SCANNER] Checking if EON already exists...`);
+
+    if (eonExists) {
+      console.warn(`[NETWORK_SCANNER] EON Exists in unresolvedEons list...`);
+    }
+    return eonExists;
   });
 
   if (existingEons.length > 0) {
+
     let topEonKey = existingEons[0];
+    console.warn(`[NETWORK_SCANNER] Handling existing EON (id: ${topEonKey})...`);
     newEon = {
       ...unresolvedEons[topEonKey],
       ip: payload.ip,
       addStatus: 0
     };
+    console.warn(`[NETWORK_SCANNER] Dispatching ADD_EON_ALREADY_EXISTS (id: ${topEonKey})...`,newEon);
     yield put(eonListActions.ADD_EON_ALREADY_EXISTS(newEon));
+    console.warn(`[NETWORK_SCANNER] Removing scanned result (id: ${payload.id})`);
     yield put(networkScannerActions.REMOVE_SCANNED_RESULT(payload.id));
   } else {
+    console.warn(`[NETWORK_SCANNER] EON did not already exist...`);
     if (!payload.id) {
+      console.warn(`[NETWORK_SCANNER] Payload didn't have an id...`);
       newEon = {
         ...payload,
         id: randomId,
         addStatus: 0
       };
+      console.warn(`[NETWORK_SCANNER] Assigned ID to new EON...`, newEon);
     }
+    console.warn(`[NETWORK_SCANNER] Dispatching ADD_EON_SUCCESS...`, newEon);
     yield put(eonListActions.ADD_EON_SUCCESS(newEon));
+    console.warn(`[NETWORK_SCANNER] Dispatching REMOVE_SCANNED_RESULT...`, newEon);
     yield put(networkScannerActions.REMOVE_SCANNED_RESULT(payload.id));
   }
 }
@@ -240,8 +258,8 @@ function* cleanUp() {
 export function* scannerSagas() {
   yield all([
     takeLatest(networkConnectionTypes.CONNECTED, handleConnected),
-    takeLatest(eonListTypes.ADD_EON, handleAddEon),
-    takeLatest(eonListTypes.ADD_EON_SUCCESS, resolveEon),
+    takeEvery(eonListTypes.ADD_EON, handleAddEon),
+    takeEvery(eonListTypes.ADD_EON_SUCCESS, resolveEon),
     takeEvery(types.SCAN_NETWORK_RESULT, handleAddEon),
     takeLatest(types.SCAN_NETWORK, scanNetwork),
     takeEvery(types.SCAN_NETWORK_COMPLETE, pingEons),

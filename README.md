@@ -77,9 +77,8 @@ https://patreon.com/openpilotcommunity
   `npm run setup`
 6. Build the code and watch for changes:
   `npm run dev`
-7. Note: You may have to run `npm run package` once before to get the node-pty binaries in place.
-8. Checkout a new branch for your feature... something like `feature/what-is-it` or `bugfix/the-fix-for-something`
-9. Push your change up to your own GitHub fork and create a New Pull Request to request your new feature / bugfix branch  be upstreamed into the master for inclusion in the next release.
+7. Checkout a new branch for your feature... something like `feature/what-is-it` or `bugfix/the-fix-for-something`
+8. Push your change up to your own GitHub fork and create a New Pull Request to request your new feature / bugfix branch  be upstreamed into the master for inclusion in the next release.
 
 To make sure that your code works in the finished application, you can generate the binaries like this:
 
