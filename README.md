@@ -20,7 +20,7 @@ If you have a few bucks, please consider [becoming a patreon](https://patreon.co
 
 https://patreon.com/openpilotcommunity
 
-## Usage
+## Getting Started
 
 ### [Download Workbench](https://opc.ai/workbench)
 
@@ -32,11 +32,11 @@ https://patreon.com/openpilotcommunity
 - [x] Connects to EON via SSH (and automatically, installs SSH key for you)
 - [x] Dumps you into an SSH shell connection to your EON with one click.
 - [x] Has tabs for all of the various ZMQ messages sent in real-time over wifi from EON.
+- [x] Automatic task scripts for EON configuration / maintenance.
+- [x] Reinstall Comma Openpilot Release2
 
 ## Ideas / Concepts
 
-- [ ] Automatic task scripts for EON configuration / maintenance.
-- [ ] Reinstall Comma Openpilot Release2
 - [ ] Backup videos
 - [ ] Review videos
 - [ ] Monitor uploads
