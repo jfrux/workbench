@@ -22,7 +22,7 @@ https://patreon.com/openpilotcommunity
 
 ## Usage
 
-[Download Workbench](https://opc.ai/workbench)
+### [Download Workbench](https://opc.ai/workbench)
 
 > IMPORTANT: Workbench manages your EON over SSH.  You must enable SSH in your Settings on EON.
 
