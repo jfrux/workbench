@@ -22,7 +22,7 @@ Consider becoming a Patreon supporter and help us support you!
 
 The Openpilot Community nor any of its contributors are funded by Comma.ai, Inc. or any other commercial entity.
 Your support is all we have.  Growing expenses with opc.ai, cloud hosting, and costs running great services for the community is not free.
-If you have a few bucks, please consider [becoming a patreon](https://patreon.com/openpilotcommunity) for the Openpilot Community and support further uptime and dev time.  Finances will be out in the open on the patreon page for everyone to see.
+If you have a few bucks, please consider [becoming a patreon](https://patreon.com/openpilotcommunity) for the Openpilot Community and support further uptime and dev time.
 
 https://patreon.com/openpilotcommunity
 
