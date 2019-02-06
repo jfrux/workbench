@@ -22,10 +22,7 @@ https://patreon.com/openpilotcommunity
 
 ## Usage
 
-Download the latest version from the links below.
-- [Windows](https://github.com/openpilot-community/workbench/releases/latest)
-- [Mac OS](https://github.com/openpilot-community/workbench/releases/latest)
-- [Ubuntu / Debian](https://github.com/openpilot-community/workbench/releases/latest)
+[Download Workbench](https://opc.ai/workbench)
 
 > IMPORTANT: Workbench manages your EON over SSH.  You must enable SSH in your Settings on EON.
 
@@ -44,7 +41,7 @@ Download the latest version from the links below.
 - [ ] Review videos
 - [ ] Monitor uploads
 
-## Contribute
+## Do you want to help develop Workbench?
 
 Regardless of the platform you are working on, you will need to have Yarn installed. If you have never installed Yarn before, you can find out how at: https://yarnpkg.com/en/docs/install.
 
