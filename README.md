@@ -20,8 +20,6 @@ Consider becoming a Patreon supporter and help us support you!
 
 <a href="https://www.patreon.com/bePatron?u=9861134" ><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" width="120" /></a>
 
-https://patreon.com/openpilotcommunity
-
 ## Getting Started
 
 ### [Download Workbench](https://opc.ai/workbench)
