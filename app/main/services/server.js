@@ -58,6 +58,7 @@ module.exports = {
 
       app.post('/terminals', function (req, res) {
         let shell = defaultShell;
+        writeLog("Using shell...",shell);
         let cols = parseInt(req.query.cols, 10);
         let rows = parseInt(req.query.rows, 10);
         let term = pty.fork(shell, [], {

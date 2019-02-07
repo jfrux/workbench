@@ -215,6 +215,7 @@ function pingEon(eon) {
 }
 
 function* handlePingEon(action) {
+  console.warn(`[NetworkScanner] Pinging IP address to check validity`,action);
   const eon = action.payload.data;
   yield put(eonListActions.PING_EON(eon));
   try {

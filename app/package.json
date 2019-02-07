@@ -19,8 +19,10 @@
     "bufferutil": "^4.0.0",
     "ndb-node-pty-prebuilt": "^0.8.0",
     "net-ping": "^1.2.3",
+    "node-pty-prebuilt": "^0.7.6",
     "raw-socket": "^1.6.4",
     "utf-8-validate": "^5.0.1",
-    "winattr": "^2.0.0"
+    "winattr": "^2.0.0",
+    "zeromq": "^5.1.0"
   }
 }

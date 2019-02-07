@@ -5,7 +5,7 @@ platform:
 
 environment:
   matrix:
-    - nodejs_version: 8
+    - nodejs_version: 8.14.0
   GH_TOKEN:
     secure: JQTogieeX60CDa5l+4NGvmE3do+t8iDPrrppjHYfGbx2vlGMvNUtPbJvnsqZ07tF
 
@@ -19,18 +19,18 @@ matrix:
   fast_finish: true
 
 build: off
-deploy:
-  release: v$(appveyor_build_version)
-  description: 'Features'
-  provider: GitHub
-  auth_token:
-    secure: 'JQTogieeX60CDa5l+4NGvmE3do+t8iDPrrppjHYfGbx2vlGMvNUtPbJvnsqZ07tF' # your encrypted token from GitHub
-  artifact: /.*\.exe/            # upload all NuGet packages to release assets
-  draft: false
-  prerelease: false
-  on:
-    branch: master                 # release from master branch only
-    appveyor_repo_tag: true
+# deploy:
+#   release: v$(appveyor_build_version)
+#   description: 'Features'
+#   provider: GitHub
+#   auth_token:
+#     secure: 'JQTogieeX60CDa5l+4NGvmE3do+t8iDPrrppjHYfGbx2vlGMvNUtPbJvnsqZ07tF' # your encrypted token from GitHub
+#   artifact: /.*\.exe/            # upload all NuGet packages to release assets
+#   draft: false
+#   prerelease: false
+#   on:
+#     branch: master                 # release from master branch only
+#     appveyor_repo_tag: true
 version: '{build}'
 
 shallow_clone: true
@@ -42,7 +42,9 @@ install:
   - set CI=true
   # NOTE: Remove this if your project is private and you don't have a paid greenkeeper account
   # - yarn global add greenkeeper-lockfile@2
-  - yarn
+  - npm run setup
+  - npm run build-dll
+  - npm run package
 
 # NOTE: Remove this if your project is private and you don't have a paid greenkeeper account
 # before_test:

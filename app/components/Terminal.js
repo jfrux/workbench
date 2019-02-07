@@ -1,5 +1,6 @@
 /* eslint-disable no-use-before-define */
 import React from 'react';
+import defaultShell from '../main/default-shell';
 import PropTypes from 'prop-types';
 import { Terminal } from 'xterm';
 import electron from 'electron';
@@ -17,8 +18,8 @@ import * as webLinks from 'xterm/lib/addons/webLinks/webLinks';
 import * as fullscreen from 'xterm/lib/addons/fullscreen/fullscreen';
 import * as search from 'xterm/lib/addons/search/search';
 import * as winptyCompat from 'xterm/lib/addons/winptyCompat/winptyCompat';
+const fs = require('fs');
 import processClipboard from '../utils/paste';
-console.log(processClipboard);
 const { ipcRenderer, remote, clipboard } = electron;
 const { app } = remote;
 
