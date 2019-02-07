@@ -9,14 +9,11 @@
  */
 import writeLog from './main/log';
 import { app, BrowserWindow, shell, Menu, nativeImage } from 'electron';
-
-import * as settings from './settings';
+import Analytics from 'electron-google-analytics';
+const uuidv1 = require('uuid/v1');
+const { version } = require('./package.json');
 import debounce from "lodash.debounce";
-import { startServer } from './main/services/server';
-import { startScanner } from './main/services/network-scanner';
-import { startStreamer } from './main/services/streamer';
-import { startZmq } from './main/services/zmq';
-import { startRpc } from "./main/services/rpc";
+
 import { autoUpdater } from "electron-updater";
 import path from 'path';
 
@@ -105,25 +102,34 @@ let mainWindow;
 
 
 app.on('ready', async () => {
+  writeLog("Ready.");
+  let analytics; 
+  try {
+    analytics = new Analytics('UA-122297332-4', { userAgent: `workbench-${version}` });
+  } catch (e) {
+    writeLog(`Failed to initialize analytics...`)
+    writeLog(e);
+  }
+  app.analytics = analytics;
   const electronSettings = require('electron-settings');
+  const settings = require('./settings');
   if (!electronSettings.get("windowBounds")) {
     electronSettings.set("windowBounds", { width: 800, height: 800 })
+  }
+
+  if (!electronSettings.get("clientId")) {
+    electronSettings.set("clientId",uuidv1());
+  }
+  try {
+    analytics.set('uid', electronSettings.get("clientId"));
+    app.clientId = electronSettings.get("clientId");
+  } catch (e) {
+    writeLog(`Failed to set uid and clientId for analytics...`)
+    writeLog(e);
   }
   let { width, height } = electronSettings.get('windowBounds');
   writeLog("Setting Window Properties");
   let windowOpts = {
-    titleBarStyle: 'hiddenInset',
-    title: 'Workbench',
-    frame: (process.platform === 'darwin'),
-    transparent: (process.platform === 'darwin'),
-    backgroundColor: '#000',
-    width,
-    height,
-    minWidth: 320,
-    minHeight: 240
-  };
-  writeLog("Setting Splash Properties");
-  mainWindow = new BrowserWindow({
     titleBarStyle: 'hiddenInset',
     title: 'Workbench',
     // we want to go frameless on Windows and Linux
@@ -134,7 +140,16 @@ app.on('ready', async () => {
     height,
     minWidth: 320,
     minHeight: 240
-  });
+  };
+  try {
+    analytics.event('App', 'open', { evLabel: 'opened-workbench', evValue: true, clientId: app.clientId });
+    analytics.screen("workbench", version, "ai.opc.workbench", "ai.opc.workbench.installer", "loading", app.clientId);
+  } catch(e) {
+    writeLog(`Failed to send event / screen for analytics...`)
+    writeLog(e);
+  }
+  writeLog("Setting Splash Properties");
+  mainWindow = new BrowserWindow(windowOpts);
   writeLog("Checking for Updates...");
   autoUpdater.checkForUpdatesAndNotify();
   writeLog("Setting up config file");
@@ -182,6 +197,11 @@ app.on('ready', async () => {
   makeMenu();
 });
 app.on('ready', async () => {
+  const { startServer } = require("./main/services/server");
+  const { startScanner } = require("./main/services/network-scanner");
+  const { startStreamer } = require("./main/services/streamer");
+  const { startZmq } = require("./main/services/zmq");
+  const { startRpc } = require("./main/services/rpc");
   // startStreamer().catch((e) => {
   //   writeLog("Streamer service could not be started.", e.message);
   // });
