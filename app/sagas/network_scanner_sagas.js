@@ -27,20 +27,25 @@ function* createScanner(scanner, ips) {
 }
 
 export function* createScannerEventChannel(scanner) {
+  console.log("[NETWORK_SCANNER] createScannerEventChannel",scanner);
   return eventChannel(emit => {
     const scanError = (data) => {
+      console.log("[NETWORK_SCANNER] scanError",data);
       emit(networkScannerActions.FAIL_scanNetwork(data.toString()));
     };
 
     const scanResult = (evt, data) => {
+      console.log("[NETWORK_SCANNER] scanResult",data);
       emit(networkScannerActions.RESULT_scanNetwork(data));
     };
 
     const scanPartialComplete = (evt, data) => {
+      console.log("[NETWORK_SCANNER] scanPartialComplete",data);
       emit(networkScannerActions.PARTIALCOMPLETE_scanNetwork(data));
     };
     
     const scanComplete = () => {
+      console.log("[NETWORK_SCANNER] scanComplete");
       emit(networkScannerActions.COMPLETE_scanNetwork());
       emit(END);
     };
@@ -150,9 +155,9 @@ function* resolveEon(action) {
   const eon = action.payload.data;
   let updatedEon = JSON.parse(JSON.stringify(eon));
 
-  // try {
-    console.warn("resolveEon action",action);
-    console.warn("eon.ip:",eon.ip);
+  try {
+    console.warn("[NETWORK_SCANNER] resolveEon action",action);
+    console.warn("[NETWORK_SCANNER] eon.ip:",eon.ip);
     const mac = yield call(fetchMacAddress,eon);
 
     if (mac) {
@@ -163,14 +168,14 @@ function* resolveEon(action) {
       yield put(eonListActions.UPDATE_UNRESOLVED(JSON.parse(JSON.stringify(updatedEon))));
       // console.warn("UPDATE01");
     }
-  // } catch (e) {
-  //   updatedEon.addStatus = 2;
-  //   yield put(eonListActions.UPDATE_UNRESOLVED(JSON.parse(JSON.stringify(updatedEon))));
-    // console.warn("UPDATE02");
+  } catch (e) {
+    updatedEon.addStatus = 2;
+    yield put(eonListActions.UPDATE_UNRESOLVED(JSON.parse(JSON.stringify(updatedEon))));
+    console.warn("UPDATE02");
   // } finally {
-  //   // yield put(eonListActions.UPDATE_UNRESOLVED(JSON.parse(JSON.stringify(updatedEon))));
+  //   yield put(eonListActions.UPDATE_UNRESOLVED(JSON.parse(JSON.stringify(updatedEon))));
   //   // console.warn("UPDATE03");
-  // }
+  }
 }
 
 function pingEon(eon) {

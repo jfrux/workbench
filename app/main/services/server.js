@@ -6,7 +6,7 @@ import { app as electronApp } from 'electron';
 import * as types from '../../constants/eon_list_action_types';
 const express = require('express');
 const app = express();
-const pty = require('node-pty-prebuilt');
+const pty = require('ndb-node-pty-prebuilt');
 const chalk = require('chalk');
 const prefix = chalk.bold.blue;
 const bgTaskColor = chalk.green;

@@ -49,7 +49,7 @@ class EonList extends Component {
   }
   componentDidMount() {
     this.props.APP_READY();
-    // this.props.resetScanNetwork();
+    this.props.resetScanNetwork();
   }
   handleScanNetwork = () => {
     this.setState({showAddForm: false});

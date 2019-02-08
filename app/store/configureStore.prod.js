@@ -7,7 +7,7 @@ import { createLogger } from 'redux-logger';
 import rootReducer from '../reducers';
 import rootSaga from '../sagas';
 // import * as zmqTypes from '../constants/zmq_action_types';
-// import * as networkScannerTypes from '../constants/network_scanner_action_types';
+import * as networkScannerTypes from '../constants/network_scanner_action_types';
 // import * as eonListActions from '../actions/eon_list_actions';
 // import * as eonDetailActions from '../actions/eon_detail_actions';
 import persistConfig from './persist';
@@ -37,16 +37,16 @@ const configureStore = (initialState) => {
   middleware.push(thunk);
 
   // Logging Middleware
-  // const logger = createLogger({
-  //   level: 'info',
-  //   predicate: (getState, action) => ![networkScannerTypes.SCAN_NETWORK_PROGRESS].includes(action.type),
-  //   collapsed: true
-  // });
+  const logger = createLogger({
+    level: 'info',
+    predicate: (getState, action) => ![networkScannerTypes.SCAN_NETWORK_PROGRESS].includes(action.type),
+    collapsed: true
+  });
 
   // Skip redux logs in console during the tests
-  // if (process.env.NODE_ENV !== 'test') {
-  //   middleware.push(logger);
-  // }
+  if (process.env.NODE_ENV !== 'test') {
+    middleware.push(logger);
+  }
 
   // Router Middleware
   const router = routerMiddleware(history);

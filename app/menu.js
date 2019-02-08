@@ -1,4 +1,3 @@
-// @flow
 import { app, Menu, shell, BrowserWindow } from 'electron';
 import electron from 'electron';
 
