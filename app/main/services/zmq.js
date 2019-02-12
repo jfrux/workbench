@@ -10,7 +10,7 @@ const bgTaskColor = chalk.magenta;
 const data = {};
 import throttle from "lodash.throttle";
 function writeLog(...params) {
-  console.info(prefix('workbench') + ' ' + chalk.bold(bgTaskColor('[zmq]')), bgTaskColor(...params));
+  console.info(prefix('workbench') + ' ' + chalk.bold(bgTaskColor('[ZEROMQ]')), bgTaskColor(...params));
 }
 
 function onMessage(sender, event_message, service, cb) {
@@ -63,7 +63,8 @@ function onMessage(sender, event_message, service, cb) {
   sender.send(types.MESSAGE, msgResp);
 }
 
-export function startZmq() {
+export function startZmq(mainWindow, app) {
+  writeLog("Starting ZeroMQ Service...");
   return new Promise((resolve, reject) => {
     const sock = zmq.socket('sub');
     sock.subscribe('');
@@ -100,7 +101,7 @@ export function startZmq() {
       sock.disconnect(addr);
     });
 
-    writeLog("Started ØMQ Service");
+    writeLog("Started ZeroMQ Service!");
     resolve();
   });
 }

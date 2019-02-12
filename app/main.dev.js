@@ -7,7 +7,7 @@
  * `./app/main.prod.js` using webpack. This gives us some performance wins.
  *
  */
-import writeLog from './main/log';
+import { writeLog, writeFailed, writeSuccess} from './main/log';
 import { app, BrowserWindow, shell, Menu, nativeImage } from 'electron';
 import Analytics from 'electron-google-analytics';
 const uuidv1 = require('uuid/v1');
@@ -197,27 +197,37 @@ app.on('ready', async () => {
   makeMenu();
 });
 app.on('ready', async () => {
-  const { startServer } = require("./main/services/server");
+  // const { startServer } = require("./main/services/server");
+  const { startShellService } = require("./main/services/shell-service");
   const { startScanner } = require("./main/services/network-scanner");
-  const { startStreamer } = require("./main/services/streamer");
   const { startZmq } = require("./main/services/zmq");
   const { startRpc } = require("./main/services/rpc");
   // startStreamer().catch((e) => {
   //   writeLog("Streamer service could not be started.", e.message);
   // });
   try {
-    startServer();
+    await startShellService();
+    writeSuccess('Shell Service');
   } catch (e) {
-    console.log("Server could not be started.", e.message);
+    writeFailed('Shell Service', e)
   }
-
-  writeLog(`Starting RPC`);
-  startRpc(mainWindow, app);
-  writeLog(`Done RPC`);
-  writeLog(`Scanner RPC`);
-  startScanner();
-  writeLog(`Done Scanner RPC`);
-  writeLog(`Start Zmq RPC`);
-  startZmq();
-  writeLog(`Done Scanner RPC`);
+  try {
+    await startRpc(mainWindow, app);
+    writeSuccess('RPC Service');
+  } catch (e) {
+    writeFailed('RPC Service', e);
+  }
+  try {
+    await startScanner();
+    writeSuccess('Network Scanner Service');
+  } catch (e) {
+    writeFailed('Network Scanner Service', e);
+  }
+  try {
+    await startZmq();
+    writeSuccess('ZeroMQ Service');
+  } catch (e) {
+    writeFailed('ZeroMQ Service', e);
+  }
+  writeSuccess("All Services Started!");
 });

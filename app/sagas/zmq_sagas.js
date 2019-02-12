@@ -75,7 +75,6 @@ function* handleDisconnect(action) {
   const service = serviceList[action.payload];
   yield call(disconnectZmq, eon.ip, service);
 }
-
 // EXPORT ROOT SAGA
 export function* zmqSagas() {
   yield all([

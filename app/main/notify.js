@@ -1,6 +1,6 @@
 
 import { Notification } from 'electron';
-import writeLog from './log';
+import {writeLog} from './log';
 /* global Notification */
 /* eslint no-new:0 */
 export default function notify(title, body) {

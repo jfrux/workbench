@@ -1,4 +1,4 @@
-import {clipboard} from 'electron';
+import { clipboard } from 'electron';
 
 const getPath = platform => {
   switch (platform) {
