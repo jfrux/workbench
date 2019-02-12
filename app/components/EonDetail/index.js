@@ -43,6 +43,8 @@ class EonDetail extends React.PureComponent {
     }
     let stateTabs, statePanes;
     let commandTabs = commandKeys.map((key,index) => {
+      const command = new commands[key];
+      console.log(command);
       return (<NavItem key={key + "-tab-link"}>
         <NavLink
           className={classnames({
@@ -51,7 +53,7 @@ class EonDetail extends React.PureComponent {
             active: commandKeys.length && activeCommand === key,
             disabled: !commandKeys.length
           })} onClick={() => { this.showCommand(key); }}>
-          {inflection.titleize(inflection.underscore(key)).replace('Eon','EON')}
+          {command.name}
         </NavLink>
       </NavItem>
       );

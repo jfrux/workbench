@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react';
 import TerminalCommand from './command';
 
-class LaunchAndroidSettings extends PureComponent {
+class CloseAndroidSettings extends PureComponent {
   constructor(props) {
     super(props);
-    this.name = "Android Settings > Open";
-    this.description = "This opens the base-Android system settings.  Allows you to change things that the EON interfaces do not.";
+    this.name = "Android Settings > Close";
+    this.description = "This closes the base-Android system settings. Use this after you use Launch Android Settings to return back to Openpilot.";
     this.commands = [
-      "am start -a android.settings.SETTINGS"
+      "am force-stop com.android.settings"
     ];
   }
   render() { return(
@@ -19,4 +19,4 @@ class LaunchAndroidSettings extends PureComponent {
   }
 }
 
-export default LaunchAndroidSettings;
+export default CloseAndroidSettings;
