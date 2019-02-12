@@ -9,7 +9,7 @@
   position: relative;
   top: initial;
   flex-flow: column;
-  background-color: $dark-color;
+  background-color: darken($dark-color,2);
   padding-left: 0;
   display: flex;
   z-index: 1;
@@ -34,7 +34,7 @@
     }
     .nav-link {
       position:relative;
-      line-height: 25px;
+      line-height: 35px;
       padding-top:0;
       white-space: nowrap;
       padding-bottom:0;
