@@ -100,16 +100,7 @@ class EonDetail extends React.PureComponent {
     }
 
   // STASHING THIS FOR LATER.  
-  // <NavItem key={"editor-tab-link"}>
-  //   <NavLink className={classnames({
-  //       "no-select": true,
-  //       active: activeTab === 'editor',
-  //       disabled: !serviceIds.length
-  //     })}
-  //     onClick={() => { this.setTab('editor'); }}>
-  //     <span className={"icon"}><FontAwesomeIcon icon="code" /></span> Code Editor
-  //   </NavLink>
-  // </NavItem>
+  
     return (
       <Layout className={'eon-detail'} title={`${this.props.eon.ip}`} contextActions={contextActions}>
         <Nav tabs className={'tab-list'}>
@@ -129,6 +120,16 @@ class EonDetail extends React.PureComponent {
               </Nav>
             }
           </NavItem>
+          <NavItem key={"editor-tab-link"}>
+              <NavLink className={classnames({
+                  "no-select": true,
+                  active: activeTab === 'editor',
+                  disabled: !serviceIds.length
+                })}
+                onClick={() => { this.setTab('editor'); }}>
+                <span className={"icon"}><FontAwesomeIcon icon="code" /></span> Code Editor
+              </NavLink>
+            </NavItem>
           <NavItem key={"live_data-tab-link"}>
             <NavLink className={classnames({
                 "no-select": true,
@@ -145,15 +146,17 @@ class EonDetail extends React.PureComponent {
               </Nav>
             }
           </NavItem>
-          
-          
         </Nav>
         <TabContent className={'tab-content'} activeTab={activeTab}>
           <TabPane className={"console-tab console-tab-pane"} key={"console-tab-pane"} tabId={'console'}>
-            <Terminal eonIp={eon.ip} activeCommand={activeCommand} CommandPane={CommandPane} />
+            {activeTab === 'console' && 
+              <Terminal eonIp={eon.ip} activeCommand={activeCommand} CommandPane={CommandPane} />
+            }
           </TabPane>
           <TabPane className={"editor-tab editor-tab-pane"} key={"editor-tab-pane"} tabId={'editor'}>
-            <Editor eonIp={eon.ip} />
+            {activeTab === 'editor' && 
+              <Editor eonIp={eon.ip} />
+            }
           </TabPane>
           {statePanes}
         </TabContent>

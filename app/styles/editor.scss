@@ -1,0 +1,15 @@
+.react-monaco-editor-container,.monaco-editor,.overflow-guard {
+  position:absolute;
+  top:0;
+  left:0;
+  height:100%!important;
+  width:100%!important;
+  overflow:hidden;
+}
+$monaco-color: darken($dark-color,5);
+.monaco-editor .margin {
+  background-color: $monaco-color;
+}
+.monaco-editor, .monaco-editor-background, .monaco-editor .inputarea.ime-input {
+  background-color: $monaco-color
+}

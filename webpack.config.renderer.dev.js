@@ -15,7 +15,7 @@ import merge from 'webpack-merge';
 import { spawn, execSync } from 'child_process';
 import baseConfig from './webpack.config.base';
 import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+// const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 CheckNodeEnv('development');
 
@@ -64,6 +64,11 @@ export default merge.smart(baseConfig, {
     'react-hot-loader/patch',
     `webpack-dev-server/client?http://localhost:${port}/`,
     'webpack/hot/only-dev-server',
+    // 'monaco-editor/esm/vs/editor/editor.worker.js',
+    // 'monaco-editor/esm/vs/language/json/json.worker',
+		// 'monaco-editor/esm/vs/language/css/css.worker',
+	  // 'monaco-editor/esm/vs/language/html/html.worker',
+		// 'monaco-editor/esm/vs/language/typescript/ts.worker',
     path.join(__dirname, 'app/index.js')
   ],
 
@@ -71,7 +76,10 @@ export default merge.smart(baseConfig, {
     publicPath: `http://localhost:${port}/dist/`,
     filename: 'renderer.dev.js'
   },
-
+  // resolve: {
+  //   extensions: ['.js', '.jsx', '.json'],
+  //   alias: { 'react-monaco-editor': MonacoEditorSrc }
+  // },
   module: {
     rules: [
       {
@@ -232,10 +240,6 @@ export default merge.smart(baseConfig, {
           manifest: require(manifest),
           sourceType: 'var'
         }),
-    new MonacoWebpackPlugin({
-      // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
-      languages: ['json','python','cpp','javascript','markdown','ruby','xml','yaml']
-    }),
     new webpack.HotModuleReplacementPlugin({
       // multiStep: true
     }),
@@ -260,7 +264,8 @@ export default merge.smart(baseConfig, {
 
     new webpack.LoaderOptionsPlugin({
       debug: true
-    })
+    }),
+    // new MonacoWebpackPlugin(),
   ],
 
   node: {

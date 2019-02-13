@@ -8,6 +8,7 @@ import fs from 'fs';
 // import node from 'file.node';
 import { dependencies as externals } from './app/package.json';
 import { dependencies as possibleExternals } from './package.json';
+// const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 // Find all the dependencies without a `main` property and add them as webpack externals
 function filterDepWithoutEntryPoints(dep) {
@@ -75,7 +76,10 @@ export default {
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production'
     }),
-
+    // new MonacoWebpackPlugin({
+    //   // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
+    //   languages: ['json','python','cpp','javascript','markdown','ruby','xml','yaml']
+    // }),
     new webpack.NamedModulesPlugin()
   ]
 };
