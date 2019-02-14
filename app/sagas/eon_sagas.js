@@ -188,7 +188,7 @@ function* handleSelectEon() {
   const { eonDetail } = yield select();
   const { activeTab } = eonDetail;
   yield call(getPrivateKey);
-  yield put(eonDetailActions.CHANGE_TAB('console', activeTab));
+  // yield put(eonDetailActions.CHANGE_TAB('androidLog', activeTab));
   yield put(push(routes.EON_DETAIL));
   yield call(connect);
 }
@@ -197,7 +197,14 @@ function* handleFetchDirectory(data) {
   const { action, payload } = data;
   console.log("Fetching directory...",payload);
   let newFiles = [];
-  let allFiles = yield call(listDirectory,payload);
+  let allFiles;
+  try {
+    allFiles = yield call(listDirectory,payload);
+  } catch (e) {
+    console.log("Failed to fetch directory...", e);
+    yield delay(2000);
+    return yield call(handleFetchDirectory,data);
+  }
   let dirs = allFiles.filter((file) => {
     return (file.type === 'd');
   });
@@ -234,6 +241,7 @@ function* handleFetchDirectory(data) {
       ...file,
       isDirectory: file.type === 'd',
       filePath,
+      parentPath: payload,
       allowOpen: !disallow.includes(fileExt),
       hidden: hide.includes(fileExt),
       fileType
@@ -251,12 +259,12 @@ function* handleFetchDirectory(data) {
 function* handleFetchFile(data) {
   const { action, payload } = data;
   console.log("Fetching file...",payload);
-  let file = yield call(retrieveFile,payload);
+  let file = yield call(retrieveFile,payload.filePath);
   let fileContent = yield toString(file);
   console.log("Fetched file...",file);
   yield put(fileListActions.FETCH_FILE_SUCCESS({
     ...file,
-    filePath: payload,
+    ...payload,
     content: fileContent
   }));
 }

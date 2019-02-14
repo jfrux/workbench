@@ -6,7 +6,9 @@ import routes from '../../constants/routes.json';
 import PropTypes from 'prop-types';
 import Layout from '../Layout';
 import SplitPane from 'react-split-pane';
+import Pane from './Pane';
 import StateList from './StateList';
+import StateListToolbar from './StateList/StateListToolbar';
 import { TabContent, Nav, NavItem, NavLink, TabPane } from 'reactstrap';
 import Terminal from '../Terminal';
 import Editor from './Editor';
@@ -37,13 +39,14 @@ class EonDetail extends React.PureComponent {
     this.props.TOGGLE_DATA();
   }
   render() {
-    const { activeTab, activeCommand, network, devices, currentStateKeys, eon, services, serviceIds } = this.props;
+    const { activeTab,openedFiles,activeCommand, network, devices, currentStateKeys, eon, services, serviceIds } = this.props;
     const commandKeys = Object.keys(commands);
     
     if (network === 'disconnected' || eon == null) {
       return (<Redirect to={routes.EON_LIST} />);
     }
-    let stateTabs, statePanes;
+    let stateTabs;
+
     let commandTabs = commandKeys.map((key,index) => {
       const command = new commands[key];
       console.log(command);
@@ -60,25 +63,6 @@ class EonDetail extends React.PureComponent {
       </NavItem>
       );
     });
-    
-    stateTabs = serviceIds.map((key) => {
-      const service = services[key];
-      return (
-        <NavItem className={classnames({ hide: service.hide })} key={key + "-tab-link"}>
-          <NavLink
-            className={classnames({
-              test: true,
-              "no-select": true,
-              active: serviceIds.length && activeTab === key,
-              disabled: !serviceIds.length
-            })}
-            onClick={() => { this.setTab(key); }}
-            >
-            {service.label}
-          </NavLink>
-        </NavItem>
-      );
-    });
 
     const contextActions = [
       <NavItem key={1} className={"nav_item"}>
@@ -93,11 +77,7 @@ class EonDetail extends React.PureComponent {
     if (activeCommand) {
       CommandPane = commands[activeCommand];
     }
-    const StateTabs = <Nav tabs className={'tab-list'}>
-      <Nav tabs className={'command-list'}>
-        {stateTabs}
-      </Nav>
-    </Nav>;
+   
     // const ELEMENT_MAP = {
     //   files: <FileList directory="/data/openpilot" />,
     //   states: StateTabs,
@@ -105,31 +85,60 @@ class EonDetail extends React.PureComponent {
     //   editor: <Editor />,
     //   console: <Terminal eonIp={eon.ip} activeCommand={activeCommand} CommandPane={CommandPane} />,
     // };
-  
+    const hasOpenedFiles = Object.keys(openedFiles).length;
+    console.log("hasOpenedFiles:",hasOpenedFiles);
     return (
       <Layout className={'eon-detail'} title={`${this.props.eon.ip}`} contextActions={contextActions}>
-          <SplitPane split="vertical" size={"20%"} minSize={200}>
-            <div>
-              <SplitPane split="horizontal" size={"70%"} minSize={100}>
-                <div className="file-list"><FileList directory="/data/openpilot" /></div>
-                <div className="commands">
-                  <Nav tabs className={'tab-list'}>
-                    <Nav tabs className={'command-list'}>
-                      {commandTabs}
-                    </Nav>
-                  </Nav>
+        <SplitPane split="vertical" size={"20%"} minSize={200}>
+          <div>
+            <SplitPane split="horizontal" size={"70%"} minSize={100}>
+              { 
+                //Openpilot File Browser
+              }
+              <Pane title="Files" className="file-list" allowCollapse={true}>
+                <FileList directory="/data/openpilot" />
+              </Pane>
+              { 
+                //Command Tasks List
+              }
+              <Pane title="Tasks" className="commands task-list" allowCollapse={true}>
+                <Nav tabs className={'tab-list command-list'}>
+                  {commandTabs}
+                </Nav>
+              </Pane>
+            </SplitPane>
+          </div>
+          
+          {hasOpenedFiles && 
+            <SplitPane split="horizontal" size={"50%"} minSize={100}>
+              <div><Editor /></div>
+              <SplitPane split="vertical" size={"50%"} minSize={100}>
+                <div><Terminal CommandPane={CommandPane} eonIp={eon.ip} /></div>
+                <div>
+                  <div className={"state-toolbar"}>
+                    <StateListToolbar />
+                  </div>
+                  {activeTab && 
+                    <StateList />
+                  }
                 </div>
               </SplitPane>
-          </div>
-          <SplitPane split="horizontal" size={"50%"} minSize={100}>
-            <div><Editor /></div>
-            
-            <SplitPane split="vertical" size={"50%"} minSize={100}>
-              <div><Terminal eonIp={eon.ip} /></div>
-              <div><StateList type={serviceIds[0]} /></div>
             </SplitPane>
-          </SplitPane>
-
+          }
+          {!hasOpenedFiles && 
+            <div>
+            <SplitPane split="vertical" size={"50%"} minSize={100}>
+              <div><Terminal CommandPane={CommandPane} eonIp={eon.ip} /></div>
+              <div>
+                <div className={"state-toolbar"}>
+                  <StateListToolbar />
+                </div>
+                {activeTab && 
+                  <StateList />
+                }
+              </div>
+            </SplitPane></div>
+          }
         </SplitPane>
       </Layout>
     );

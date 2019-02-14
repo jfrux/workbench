@@ -41,7 +41,7 @@ class FileList extends React.Component {
     }
   }
   onFileClick = (file) =>{
-    return file.filePath && this.props.FETCH_FILE(file.filePath)
+    return file.filePath && this.props.FETCH_FILE(file)
   }
   onChange(newValue, e) {
     console.log('onChange', newValue, e);
@@ -86,7 +86,7 @@ class FileList extends React.Component {
             </li>
             :
             <li className={fileClassName} key={filePath} onClick={() => this.onFileClick(file)}>
-              <File name={fileName} />
+              <File name={fileName} allowOpen={file.allowOpen} hidden={file.hidden} fileType={file.fileType} />
             </li>;
           })
         }

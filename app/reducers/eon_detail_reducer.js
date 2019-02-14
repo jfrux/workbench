@@ -5,7 +5,7 @@ import settings from 'electron-settings';
 const defaultTmuxLogLength = 300;
 
 const initialState = {
-  activeTab: 'console',
+  activeTab: 'androidLog',
   activeCommand: null,
   lastRunCommand: null,
   previousTab: null,

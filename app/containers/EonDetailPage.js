@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import EonDetail from '../components/EonDetail';
 import * as EonActions from '../actions/eon_detail_actions';
 import services from '../constants/service_list.yaml';
+import getSortedServiceIds from '../selectors/get_sorted_service_ids';
+// import { debugOnlyWastedRenderDetector } from "wastedrendersdetector";
+
 function mapStateToProps(state) {
   return {
     activeTab: state.eonDetail.activeTab,
@@ -12,7 +15,8 @@ function mapStateToProps(state) {
     eon: state.eonList.eons[state.eonList.selectedEon],
     network: state.networkConnection.status,
     networkIp: state.networkConnection.ip,
-    serviceIds: Object.keys(services).sort(),
+    openedFiles: state.fileList.openedFiles,
+    serviceIds: getSortedServiceIds(),
     services
   };
 }

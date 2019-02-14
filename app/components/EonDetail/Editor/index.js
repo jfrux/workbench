@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as EonActions from '../../../actions/eon_detail_actions';
+import FileIcon from '../FileList/FileIcon';
 import MonacoEditor from 'react-monaco-editor';
 const propTypes = {
   file: PropTypes.any
@@ -24,6 +25,12 @@ class Editor extends React.Component {
     };
     console.log("editorProps:",this.props);
     return (<div className="editor">
+      <div className="editor-tabs">
+        <div className="editor-tab no-select">
+          <FileIcon extension={fileType} /> {name}
+        </div>
+      </div>
+      {content &&
         <MonacoEditor
           language={"python"}
           theme="vs-dark"
@@ -32,6 +39,7 @@ class Editor extends React.Component {
           onChange={this.onChange}
           editorDidMount={this.editorDidMount}
         />
+      }
       </div>);
     // return (<div></div>);
   }
@@ -53,7 +61,7 @@ const mapStateToProps = (state) => {
   if (filesKeys.length === 0) return {};
   let openedFilePath = filesKeys[0];
   const openedFile = openedFiles[openedFilePath];
-  // console.log("props:",openedFile);
+  console.log("props:",openedFile);
   if (!openedFile) return;
   return {
     ...openedFile

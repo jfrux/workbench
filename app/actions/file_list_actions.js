@@ -19,10 +19,10 @@ export function FETCH_DIRECTORY_SUCCESS(files) {
     payload: files
   };
 }
-export function FETCH_FILE(filePath) {
+export function FETCH_FILE(file) {
   return {
     type: types.FETCH_FILE,
-    payload: filePath
+    payload: file
   };
 }
 export function FETCH_FILE_SUCCESS(file) {

@@ -7,6 +7,7 @@ import * as EonActions from '../../actions/eon_detail_actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const propTypes = {
+  className: PropTypes.string,
   name: PropTypes.string,
   description: PropTypes.string,
   commands: PropTypes.array,
@@ -95,7 +96,7 @@ class TerminalCommand extends React.PureComponent {
   }
 
   render() {
-    const { name, description, commands, fields, children } = this.props;
+    const { name, description, commands, fields, children, className } = this.props;
     let fieldTags;
     if (fields && fields.length) {
       fieldTags = fields.map((field, index) => {

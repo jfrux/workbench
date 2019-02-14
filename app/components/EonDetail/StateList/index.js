@@ -9,7 +9,7 @@ import JSONPretty from 'react-json-pretty';
 import ReactJson from 'react-json-view';
 import * as ZmqActions from '../../../actions/zmq_actions';
 // import { ListGroup, Card, CardHeader, CardBody } from 'reactstrap'
-import StateListToolbar from './StateListToolbar';
+import { debugOnlyWastedRenderDetector } from "wastedrendersdetector";
 const propTypes = {
   messageCount: PropTypes.number,
   // messages: PropTypes.array,
@@ -42,9 +42,6 @@ class StateList extends React.PureComponent {
     if (data) {
       return (
         <div>
-          <div className={"state-toolbar"}>
-            <StateListToolbar type={type} />
-          </div>
           <div className={"state-data"}>
             <ReactJson 
               name={type} 
@@ -71,10 +68,11 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(ZmqActions, dispatch);
 }
 
-const mapStateToProps = (state, {type}) => {
+const mapStateToProps = (state) => {
   let data;
   let messageCount = 0;
   let depth = 1;
+  let type = state.eonDetail.activeTab;
   if (state.zmq.data && state.zmq.data[type]) {
     if (state.zmq.data[type].messages) {
       messageCount = state.zmq.data[type].messages.length;
@@ -88,6 +86,7 @@ const mapStateToProps = (state, {type}) => {
   }
   return {
     data,
+    type,
     messageCount,
     depth
   };
@@ -96,4 +95,4 @@ const mapStateToProps = (state, {type}) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(StateList);
+)(debugOnlyWastedRenderDetector(StateList));

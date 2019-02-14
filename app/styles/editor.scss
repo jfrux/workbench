@@ -1,4 +1,68 @@
+$monaco-color: darken($dark-color,5);
+$file-name-color: lighten($light-color,40);
+$hidden-file-name-color: rgba($file-name-color,0.4);
+$state-toolbar-height: 40px;
+.state-toolbar {
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:2;
+  height:$state-toolbar-height;
+}
+.command-pane {
+  position:fixed;
+  right:0;
+  top:0;
+  background-color:$monaco-color;
+}
+.state-data {
+  position:absolute;
+  top:$state-toolbar-height;
+  height: calc(100% - #{$state-toolbar-height});
+  width:100%;
+  left:0;
+  overflow:auto;
+}
+.service-list-dropdown {
+  height: 200px;
+  overflow:auto;
+}
+$pane-heading-height: 30px;
+.pane {
+  position:relative;
+  height:100%;
+  width:100%;
+  .pane-heading {
+    z-index: 2;
+    display:block;
+    border:0;
+    background-color:$light-color;
+    color:lighten($light-color,40);
+    width:100%;
+    text-align:left;
+    height:$pane-heading-height;
+    font-weight:bold;
+    font-size:13px;
+    text-transform:uppercase;
+    cursor: pointer;
+    position:absolute;
+    top:0;
+    left:0;
+  }
+  .pane-content {
+    position:absolute;
+    top:$pane-heading-height;
+    height: calc(100% - #{$pane-heading-height});
+    left:0;
+    overflow:auto;
+    width:100%;
 
+  }
+  .command-list {
+    position:relative;
+  }
+}
 .Resizer {
   background: $light-color;
   opacity: 0.6;
@@ -54,7 +118,7 @@ border-color: transparent;
   left:0;
   top:0;
 }
-.react-monaco-editor-container,.monaco-editor,.overflow-guard {
+.react-monaco-editor-container,.overflow-guard {
   position:absolute;
   top:0;
   left:0;
@@ -62,9 +126,6 @@ border-color: transparent;
   width:100%!important;
   overflow:hidden;
 }
-$monaco-color: darken($dark-color,5);
-$file-name-color: lighten($light-color,40);
-$hidden-file-name-color: rgba($file-name-color,0.4);
 
 .react-json-view {
   font-size:14px;
@@ -75,16 +136,17 @@ $hidden-file-name-color: rgba($file-name-color,0.4);
   background-color:$monaco-color!important;
 }
 .xterm-screen,.term_wrapper {
-
   background-color:$monaco-color!important;
 }
 .monaco-editor .margin {
   background-color: $monaco-color;
 }
+.react-monaco-editor-container {
+  top:37px;
+  padding:10px 5px;
+}
 .monaco-editor, .monaco-editor-background, .monaco-editor .inputarea.ime-input {
   background-color: $monaco-color
-}
-.SplitPane {
 }
 .Pane {
   overflow-x: hidden;
@@ -110,19 +172,32 @@ $hidden-file-name-color: rgba($file-name-color,0.4);
       padding:0;
       margin:0;
       white-space:nowrap;
+      span {
+        display:block;
+      }
       > div > div > span {
         display:block;
         padding:2px 8px 2px 4px;
       }
-      svg {
+      i {
         // margin-right:6px;
-        width:16px;
+        width: 16px;
+        text-align: center;
+        top: 2px;
+        font-size: 15px;
+        position: relative;
+        margin-right: 5px;
+        font-weight:100!important;
+        color:$file-name-color;
       }
       &.allowed {
         color:$file-name-color;
       }
       &.hidden {
-        color:$hidden-file-name-color
+        color:$hidden-file-name-color;
+        i {
+          color: $hidden-file-name-color!important;
+        }
       }
     }
     .file {
@@ -140,8 +215,13 @@ $hidden-file-name-color: rgba($file-name-color,0.4);
         }
       }
     }
+    .file {
+      > span { margin-left:8px; }
+    }
     .directory {
-      
+      > div {
+        margin-left:12px;
+      }
         > div > div > span {
           &:hover {
             background-color:$dark-color;
@@ -168,4 +248,19 @@ $hidden-file-name-color: rgba($file-name-color,0.4);
   height:100%;
   top:0;
   left:0;
+  .editor-tabs {
+    display:block;
+    background-color: $dark-color;
+    
+  }
+  .editor-tab {
+    display:inline-block;
+    background-color:$monaco-color;
+    min-width:130px;
+    padding:5px;
+    color:lighten($light-color,50);
+    i {
+      margin-right:5px;
+    }
+  }
 }
