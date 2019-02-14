@@ -1,4 +1,4 @@
-export default class Client {
+export default class RpcClient {
   constructor() {
     const electron = window.require('electron');
     const EventEmitter = window.require('events');

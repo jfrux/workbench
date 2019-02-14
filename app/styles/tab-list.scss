@@ -1,17 +1,17 @@
 
 .tab-list {
   position: relative;
-  width: 200px;
-  flex: 0 0 200px;
+  width: 100%;
+  // flex: 0 0 200px;
   min-height: 100%;
   height: calc(100% - #{$top-bar-height});
   left: initial;
   position: relative;
   top: initial;
-  flex-flow: column;
+  // flex-flow: column;
   background-color: darken($dark-color,2);
   padding-left: 0;
-  display: flex;
+  display: block;
   z-index: 1;
   overflow-x: hidden;
   overflow-y: auto;

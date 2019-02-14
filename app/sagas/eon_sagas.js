@@ -7,6 +7,7 @@ import {
   select
 } from 'redux-saga/effects';
 const rpc = require('../rpc-client');
+import toString from 'stream-to-string';
 import { delay } from 'redux-saga';
 import { push } from 'connected-react-router'
 import { remote } from 'electron';
@@ -16,12 +17,15 @@ import mkdirp from 'mkdirp';
 import RSAKey from 'rsa-key';
 import path from 'path';
 import fs from 'fs';
+import arraySort from 'array-sort';
 import * as routes from '../constants/routes.json';
 import * as types from '../constants/eon_detail_action_types';
 import * as eonListTypes from '../constants/eon_list_action_types';
+import * as fileListActionTypes from '../constants/file_list_action_types';
 import * as eonListActions from '../actions/eon_list_actions';
 import * as eonDetailActions from '../actions/eon_detail_actions';
-
+import * as fileListActions from '../actions/file_list_actions';
+const Client = require('ssh2-sftp-client');
 function* getPrivateKey() {
   const userHome = app.getPath('home');
   mkdirp.sync(path.join(userHome, '.ssh'));
@@ -89,27 +93,83 @@ function* addEonListError() {
   );
 }
 
-function* retrieveScreenshot() {
+/**
+ * SFTP
+ */
+const rootRemoteDir = "/data/openpilot";
+function* connect() {
+  if (app.sftpClient) return;
   const { eonList } = yield select();
   const { selectedEon, eons } = eonList;
   const eon = eons[selectedEon];
   const pk = yield call(getPrivateKey);
-  let screenshotsDir = path.join(require('os').homedir(), 'Desktop', 'eon_screenshots');
-  let Client = require('ssh2-sftp-client');
-  mkdirp.sync(screenshotsDir);
-  let sftp = new Client();
-  sftp.connect({
-      host: eon.ip,
-      port: '8022',
-      username: 'root',
-      privateKey: pk
-  }).then(() => {
-    return sftp.fastGet('/data/screenshots/screenshot.png', path.join(screenshotsDir,'EON_' + new Date().getTime() + '.png'));
-  }).then((data) => {
-    rpc.emit('notify', 'Screenshot captured!', 'Workbench has saved the screenshot to:\n' + screenshotsDir);
-  }).catch((err) => {
-      console.log(err, 'catch error');
+  console.log(`[sftp] Attempting to connect to EON (${eon.ip})`);
+  app.sftpClient = new Client();
+  yield app.sftpClient.connect({
+    host: eon.ip,
+    port: '8022',
+    username: 'root',
+    privateKey: pk
   });
+  console.log(`[sftp] Connected to EON (${eon.ip})`);
+}
+
+function* retrieveFile(remoteFile) {
+  yield connect();
+  console.log(`[sftp] Retrieving file ${remoteFile}...`);
+  return yield app.sftpClient.get(remoteFile);
+  console.log(`[sftp] Retrieved file ${remoteFile}`);
+}
+
+function* downloadFile(remoteFile,localFile) {
+  yield connect();
+  console.log(`[sftp] Downloading file ${remoteFile} to ${localFile}...`);
+  return yield app.sftpClient.fastGet(remoteFile, localFile);
+  console.log(`[sftp] Download complete for ${remoteFile} to ${localFile}...`);
+}
+
+function* downloadScreenshot() {
+  let screenshotFile;
+  let remoteScreenshotFile = '/data/screenshots/screenshot.png';
+  let localScreenshotsDir = path.join(require('os').homedir(), 'Desktop', 'eon_screenshots');
+  let localScreenshotsFile = path.join(localScreenshotsDir,'EON_' + new Date().getTime() + '.png');
+
+  console.log(`[sftp] Downloading screenshot from EON...`);
+  mkdirp.sync(localScreenshotsDir);
+  try {
+    screenshotFile = yield downloadFile(remoteScreenshotFile, localScreenshotsFile);
+    console.log(`[sftp] Screenshot downloaded to ${localScreenshotsFile}.`);
+    rpc.emit('notify', 'Screenshot captured!', 'Workbench has saved the screenshot to:\n' + localScreenshotsDir);
+  } catch (e) {
+    console.error(e);
+    rpc.emit('notify', 'ERROR! Screenshot failed!', 'Workbench could not take a screenshot.');
+  }
+}
+function* listDirectory(remotePath) {
+  yield connect();
+  return yield app.sftpClient.list(remotePath);
+}
+// function* listDirectoryDeep(file) {
+//     console.log("path:", file.path);
+//     let nextPath = path.join(file.path, file.name);
+//     let items = yield listDirectory(file.path);
+//     items.map((item) => {
+//       return listDirectoryDeep(item.path);
+//     });
+//   };
+//   const baseFileList = 
+//   console.log(baseFileList);
+//   return Promise.all(baseFileList.map((file) => {
+    
+//   }));
+// }
+function* refreshFileList() {
+  let baseItems = {};
+  const items = yield listDirectory(rootRemoteDir);
+  items.forEach((item) => {
+    baseItems[path.join(rootRemoteDir,item.name)] = item;
+  });
+  yield put(eonDetailActions.REFRESH_FILE_LIST_SUCCESS(baseItems));
 }
 
 function* handleRunCommand(action) {
@@ -120,18 +180,86 @@ function* handleRunCommand(action) {
     yield put(push(routes.EON_LIST));
   } else if (lastRunCommand === 'TakeScreenshot') {
     yield delay(1000);
-    yield call(retrieveScreenshot);
+    yield call(downloadScreenshot);
   }
 }
 
-function* handleSelectEon(action) {
+function* handleSelectEon() {
   const { eonDetail } = yield select();
   const { activeTab } = eonDetail;
   yield call(getPrivateKey);
   yield put(eonDetailActions.CHANGE_TAB('console', activeTab));
   yield put(push(routes.EON_DETAIL));
+  yield call(connect);
 }
 
+function* handleFetchDirectory(data) {
+  const { action, payload } = data;
+  console.log("Fetching directory...",payload);
+  let newFiles = [];
+  let allFiles = yield call(listDirectory,payload);
+  let dirs = allFiles.filter((file) => {
+    return (file.type === 'd');
+  });
+  let files = allFiles.filter((file) => {
+    return (file.type !== 'd');
+  });
+
+  dirs = arraySort(dirs, 'name');
+  files = arraySort(files, 'name');
+  let filesByPath = {};
+  newFiles = [
+    ...dirs,
+    ...files
+  ]
+  const disallow = [
+    'pyc'
+  ];
+  const hide = [
+    'gitignore',
+    'gitkeep',
+    'git'
+  ];
+  let items = newFiles.map((file) => {
+    const filePath = path.join(payload,file.name);
+    let fileSplit = filePath.split('.');
+    let fileExt = fileSplit[fileSplit.length-1];
+    if ((fileSplit.length-1) === 0) {
+      fileExt = "";
+    }
+    const fileType = (fileExt) ? fileExt : "";
+  
+    // console.log(fileExt);
+    let fileObj = {
+      ...file,
+      isDirectory: file.type === 'd',
+      filePath,
+      allowOpen: !disallow.includes(fileExt),
+      hidden: hide.includes(fileExt),
+      fileType
+    }
+    filesByPath[filePath] = fileObj;
+    return fileObj;
+  })
+  yield put(fileListActions.FETCH_DIRECTORY_SUCCESS({
+    filePath: payload,
+    filesByPath,
+    items
+  }));
+}
+
+function* handleFetchFile(data) {
+  const { action, payload } = data;
+  console.log("Fetching file...",payload);
+  let file = yield call(retrieveFile,payload);
+  let fileContent = yield toString(file);
+  console.log("Fetched file...",file);
+  yield put(fileListActions.FETCH_FILE_SUCCESS({
+    ...file,
+    filePath: payload,
+    content: fileContent
+  }));
+}
 // EXPORT ROOT SAGA
 export function* eonSagas() {
   // console.warn("types:",types);
@@ -139,8 +267,9 @@ export function* eonSagas() {
   yield all([
     takeLatest(types.RUN_COMMAND, handleRunCommand),
     takeLatest(eonListTypes.SELECT_EON, handleSelectEon),
-    // takeLatest('@@router/LOCATION_CHANGE', routeWatcher),
     takeEvery(types.CONNECT_FAILED, addEonListError),
+    takeEvery(fileListActionTypes.FETCH_DIRECTORY, handleFetchDirectory),
+    takeEvery(fileListActionTypes.FETCH_FILE, handleFetchFile)
     // throttle(250,types.MESSAGE_RECEIVED,handleMessage),
   ]);
 }

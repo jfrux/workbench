@@ -63,8 +63,8 @@ function onMessage(sender, event_message, service, cb) {
   sender.send(types.MESSAGE, msgResp);
 }
 
-export function startZmq(mainWindow, app) {
-  writeLog("Starting ZeroMQ Service...");
+export function startZmqService(mainWindow, app) {
+  // writeLog("Starting ZeroMQ Service...");
   return new Promise((resolve, reject) => {
     const sock = zmq.socket('sub');
     sock.subscribe('');
@@ -101,7 +101,7 @@ export function startZmq(mainWindow, app) {
       sock.disconnect(addr);
     });
 
-    writeLog("Started ZeroMQ Service!");
+    // writeLog("Started ZeroMQ Service!");
     resolve();
   });
 }

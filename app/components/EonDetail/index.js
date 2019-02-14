@@ -5,11 +5,14 @@ import { Redirect } from 'react-router';
 import routes from '../../constants/routes.json';
 import PropTypes from 'prop-types';
 import Layout from '../Layout';
+import SplitPane from 'react-split-pane';
 import StateList from './StateList';
 import { TabContent, Nav, NavItem, NavLink, TabPane } from 'reactstrap';
 import Terminal from '../Terminal';
-import Editor from '../Editor';
+import Editor from './Editor';
+import FileList from './FileList';
 import commands from '../commands';
+// import GoldenLayout from 'golden-layout';
 import inflection from 'inflection';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const propTypes = {
@@ -20,7 +23,6 @@ const propTypes = {
   serviceIds: PropTypes.array,
   services: PropTypes.object
 };
-
 class EonDetail extends React.PureComponent {
   setTab = (tab) => {
     this.props.CHANGE_TAB(tab);
@@ -77,14 +79,6 @@ class EonDetail extends React.PureComponent {
         </NavItem>
       );
     });
-    statePanes = serviceIds.map((key) => {
-      const service = services[key];
-      return (
-        <TabPane key={key + "-tab-pane"} className={key + "-tab-pane"} tabId={key}>
-          {activeTab === key && <StateList type={key} />}
-        </TabPane>
-      );
-    });
 
     const contextActions = [
       <NavItem key={1} className={"nav_item"}>
@@ -93,73 +87,50 @@ class EonDetail extends React.PureComponent {
         </NavLink>
       </NavItem>
     ];
+
     let CommandPane;
     const isLiveDataTab = (activeTab === 'live_data' || serviceIds.includes(activeTab));
     if (activeCommand) {
       CommandPane = commands[activeCommand];
     }
-
-  // STASHING THIS FOR LATER.  
+    const StateTabs = <Nav tabs className={'tab-list'}>
+      <Nav tabs className={'command-list'}>
+        {stateTabs}
+      </Nav>
+    </Nav>;
+    // const ELEMENT_MAP = {
+    //   files: <FileList directory="/data/openpilot" />,
+    //   states: StateTabs,
+    //   commands: CommandTabs,
+    //   editor: <Editor />,
+    //   console: <Terminal eonIp={eon.ip} activeCommand={activeCommand} CommandPane={CommandPane} />,
+    // };
   
     return (
       <Layout className={'eon-detail'} title={`${this.props.eon.ip}`} contextActions={contextActions}>
-        <Nav tabs className={'tab-list'}>
-          <NavItem key={"console-tab-link"}>
-            <NavLink className={classnames({
-                "no-select": true,
-                active: activeTab === 'console',
-                disabled: !serviceIds.length
-              })}
-              onClick={() => { this.setTab('console'); }}>
-              <span className={"icon"}><FontAwesomeIcon icon="terminal" /></span> Console
-            </NavLink>
+          <SplitPane split="vertical" size={"20%"} minSize={200}>
+            <div>
+              <SplitPane split="horizontal" size={"70%"} minSize={100}>
+                <div className="file-list"><FileList directory="/data/openpilot" /></div>
+                <div className="commands">
+                  <Nav tabs className={'tab-list'}>
+                    <Nav tabs className={'command-list'}>
+                      {commandTabs}
+                    </Nav>
+                  </Nav>
+                </div>
+              </SplitPane>
+          </div>
+          <SplitPane split="horizontal" size={"50%"} minSize={100}>
+            <div><Editor /></div>
             
-            {activeTab === 'console' && 
-              <Nav tabs className={'command-list'}>
-                {commandTabs}
-              </Nav>
-            }
-          </NavItem>
-          <NavItem key={"editor-tab-link"}>
-              <NavLink className={classnames({
-                  "no-select": true,
-                  active: activeTab === 'editor',
-                  disabled: !serviceIds.length
-                })}
-                onClick={() => { this.setTab('editor'); }}>
-                <span className={"icon"}><FontAwesomeIcon icon="code" /></span> Code Editor
-              </NavLink>
-            </NavItem>
-          <NavItem key={"live_data-tab-link"}>
-            <NavLink className={classnames({
-                "no-select": true,
-                active: serviceIds.length && isLiveDataTab,
-                disabled: !serviceIds.length
-              })}
-              onClick={() => { this.setTab('live_data'); }}>
-              <span className={"icon"}><FontAwesomeIcon icon="stream" /></span> Live Data
-            </NavLink>
+            <SplitPane split="vertical" size={"50%"} minSize={100}>
+              <div><Terminal eonIp={eon.ip} /></div>
+              <div><StateList type={serviceIds[0]} /></div>
+            </SplitPane>
+          </SplitPane>
 
-            {(activeTab === 'live_data' || serviceIds.includes(activeTab)) &&
-              <Nav tabs className={'command-list'}>
-                {stateTabs}
-              </Nav>
-            }
-          </NavItem>
-        </Nav>
-        <TabContent className={'tab-content'} activeTab={activeTab}>
-          <TabPane className={"console-tab console-tab-pane"} key={"console-tab-pane"} tabId={'console'}>
-            {activeTab === 'console' && 
-              <Terminal eonIp={eon.ip} activeCommand={activeCommand} CommandPane={CommandPane} />
-            }
-          </TabPane>
-          <TabPane className={"editor-tab editor-tab-pane"} key={"editor-tab-pane"} tabId={'editor'}>
-            {activeTab === 'editor' && 
-              <Editor eonIp={eon.ip} />
-            }
-          </TabPane>
-          {statePanes}
-        </TabContent>
+        </SplitPane>
       </Layout>
     );
   }

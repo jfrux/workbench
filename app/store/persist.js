@@ -6,6 +6,7 @@ export default {
   stateReconciler: autoMergeLevel2,
   blacklist: [
     'router',
+    'fileList',
     'networkConnection',
     'eonDetail',
     'eonList.scanning',

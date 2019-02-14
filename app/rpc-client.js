@@ -1,3 +1,3 @@
-import RPC from './utils/rpc';
+import RpcClient from './utils/rpc-client';
 
-export default new RPC();
+export default new RpcClient();

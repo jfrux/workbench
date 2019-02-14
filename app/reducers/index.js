@@ -5,6 +5,7 @@ import eonDetailReducer from './eon_detail_reducer';
 import networkConnectionReducer from './network_connection_reducer';
 import networkScannerReducer from './network_scanner_reducer';
 import uiReducer from './ui_reducer';
+import fileListReducer from './file_list_reducer';
 import zmqReducer from './zmq_reducer';
 
 const rootReducer = combineReducers({
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
   networkConnection: networkConnectionReducer,
   networkScanner: networkScannerReducer,
   ui: uiReducer,
-  zmq: zmqReducer
+  zmq: zmqReducer,
+  fileList: fileListReducer
 });
 
 export default rootReducer;

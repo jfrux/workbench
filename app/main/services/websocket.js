@@ -14,10 +14,9 @@ function writeLog(...params) {
   console.info(prefix('workbench') + ' ' + chalk.bold(bgTaskColor('[terminal]')), bgTaskColor(...params));
 }
 module.exports = {
-  startServer() {
-    const argv = require('yargs').argv;
-    return getPort({port: argv.port || 9778}).then((port) => {
-      electronApp.TERMINAL_PORT = port;
+  startWsService() {
+    return new Promise((resolve, reject) => {
+      electronApp.TERMINAL_PORT = 12843;
       writeLog(`Listening for ${types.SELECT_EON}`);
       // ipcMain.on(types.SELECT_EON, (evt) => {
       //   const { sender } = evt;
@@ -121,21 +120,19 @@ module.exports = {
           delete logs[term.pid];
         });
       });
-      return new Promise((resolve, reject) => {
-        if (!port) {
-          writeLog('ERROR: Please provide a port: node ./src/server.js --port=XXXX');
-          process.exit(1);
-          reject();
-        } else {
-          writeLog(`Started Terminal Service for ${port}`);
-          try {
-            resolve(app.listen(port, host));
-            writeLog("Past resolve");
-          } catch (e) {
-            writeLog('ERROR: Could not start background/server...', e.message);
-          }
+      if (!port) {
+        writeLog('ERROR: Please provide a port: node ./src/server.js --port=XXXX');
+        process.exit(1);
+        reject();
+      } else {
+        writeLog(`Started Terminal Service for ${port}`);
+        try {
+          resolve(app.listen(port, host));
+          writeLog("Past resolve");
+        } catch (e) {
+          writeLog('ERROR: Could not start background/server...', e.message);
         }
-      });
+      }
     });
     
   }

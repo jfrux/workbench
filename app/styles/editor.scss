@@ -1,3 +1,59 @@
+
+.Resizer {
+  background: $light-color;
+  opacity: 0.6;
+  z-index: 1;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding;
+  background-clip: padding-box;
+}
+
+.Resizer:hover {
+  -webkit-transition: all 2s ease;
+  transition: all 2s ease;
+}
+
+.Resizer.horizontal {
+  height: 11px;
+  margin: -5px 0;
+  border-top: 5px solid rgba(255, 255, 255, 0);
+  border-bottom: 5px solid rgba(255, 255, 255, 0);
+  cursor: row-resize;
+  width: 100%;
+}
+.Resizer.horizontal:hover {
+  border-top: 5px solid rgba(0, 0, 0, 0.5);
+  border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+}
+
+.Resizer.vertical {
+  width: 11px;
+  margin: 0 -5px;
+  border-left: 5px solid rgba(255, 255, 255, 0);
+  border-right: 5px solid rgba(255, 255, 255, 0);
+  cursor: col-resize;
+}
+
+.Resizer.vertical:hover {
+  border-left: 5px solid rgba(0, 0, 0, 0.5);
+  border-right: 5px solid rgba(0, 0, 0, 0.5);
+}
+.Resizer.disabled {
+cursor: not-allowed;
+}
+.Resizer.disabled:hover {
+border-color: transparent;
+}
+.mosaic-blueprint-theme {
+  width:100%;
+  height:100%;
+  position:absolute;
+  left:0;
+  top:0;
+}
 .react-monaco-editor-container,.monaco-editor,.overflow-guard {
   position:absolute;
   top:0;
@@ -7,9 +63,109 @@
   overflow:hidden;
 }
 $monaco-color: darken($dark-color,5);
+$file-name-color: lighten($light-color,40);
+$hidden-file-name-color: rgba($file-name-color,0.4);
+
+.react-json-view {
+  font-size:14px;
+  font-family:"Helvetica Neue","Sans Serif"!important;
+  background-color:$monaco-color!important;
+}
+.xterm .xterm-viewport {
+  background-color:$monaco-color!important;
+}
+.xterm-screen,.term_wrapper {
+
+  background-color:$monaco-color!important;
+}
 .monaco-editor .margin {
   background-color: $monaco-color;
 }
 .monaco-editor, .monaco-editor-background, .monaco-editor .inputarea.ime-input {
   background-color: $monaco-color
+}
+.SplitPane {
+}
+.Pane {
+  overflow-x: hidden;
+  overflow-y:auto;
+  background-color:$monaco-color;
+}
+.file-list {
+  position:relative;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  overflow-x: hidden;
+  overflow-y:auto;
+  .file-tree {
+    list-style:none;
+    padding:0;
+    margin:0;
+    .directory, .file {
+      cursor:pointer;
+      color:$hidden-file-name-color;
+      font-size:14px;
+      padding:0;
+      margin:0;
+      white-space:nowrap;
+      > div > div > span {
+        display:block;
+        padding:2px 8px 2px 4px;
+      }
+      svg {
+        // margin-right:6px;
+        width:16px;
+      }
+      &.allowed {
+        color:$file-name-color;
+      }
+      &.hidden {
+        color:$hidden-file-name-color
+      }
+    }
+    .file {
+      white-space:nowrap;
+      cursor:pointer;
+      > span {
+        display:block;
+        padding:2px 8px 2px 4px;
+        
+      }
+      
+      &:hover, &.active {
+        > span {
+          background-color:$dark-color;
+        }
+      }
+    }
+    .directory {
+      
+        > div > div > span {
+          &:hover {
+            background-color:$dark-color;
+          }
+        }
+      .file {
+        > span {
+          margin-left:15px;
+        }
+      }
+      .directory {
+        > div {
+          margin-left:15px;
+        }
+      }
+      
+    }
+  }
+}
+
+.editor {
+  position:absolute;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
 }

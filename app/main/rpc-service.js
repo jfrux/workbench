@@ -2,27 +2,29 @@ const {EventEmitter} = require('events');
 const {ipcMain} = require('electron');
 const uuid = require('uuid');
 
-class Server extends EventEmitter {
+class RpcServer extends EventEmitter {
   constructor(win) {
     super();
     this.win = win;
+    // this.win.services = this.win.services || {}
     this.ipcListener = this.ipcListener.bind(this);
-
+    
     if (this.destroyed) {
       return;
     }
 
-    const uid = uuid.v4();
-    this.id = uid;
-
-    ipcMain.on(uid, this.ipcListener);
+    this.id = uuid.v4();
+    ipcMain.on(this.id, this.ipcListener);
 
     // we intentionally subscribe to `on` instead of `once`
     // to support reloading the window and re-initializing
     // the channel
     this.wc.on('did-finish-load', () => {
-      this.wc.send('init', uid);
+      this.wc.send('init', this.id);
     });
+
+    // Register with the Window;
+    // this.win.services[uid] = this;
   }
 
   get wc() {
@@ -34,13 +36,14 @@ class Server extends EventEmitter {
   }
 
   emit(ch, data) {
+    console.log("emit:",this.id, ch,data);
     this.wc.send(this.id, {ch, data});
   }
 
   destroy() {
     this.removeAllListeners();
     this.wc.removeAllListeners();
-    if (this.id) {
+    if (this.type) {
       ipcMain.removeListener(this.id, this.ipcListener);
     } else {
       // mark for `genUid` in constructor
@@ -49,6 +52,4 @@ class Server extends EventEmitter {
   }
 }
 
-module.exports = win => {
-  return new Server(win);
-};
+module.exports = RpcServer;

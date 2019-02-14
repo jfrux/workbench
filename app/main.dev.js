@@ -195,36 +195,42 @@ app.on('ready', async () => {
   });
   
   makeMenu();
-});
-app.on('ready', async () => {
-  // const { startServer } = require("./main/services/server");
-  const { startShellService } = require("./main/services/shell-service");
-  const { startScanner } = require("./main/services/network-scanner");
-  const { startZmq } = require("./main/services/zmq");
-  const { startRpc } = require("./main/services/rpc");
+
+  // const { startWsService } = require("./main/services/websocket");
+  const { startShellService } = require("./main/services/shell");
+  const { startNetworkScannerService } = require("./main/services/network-scanner");
+  const { startZmqService } = require("./main/services/zmq");
+  const { startSftpService } = require("./main/services/sftp");
+  const { startUiService } = require("./main/services/ui");
   // startStreamer().catch((e) => {
   //   writeLog("Streamer service could not be started.", e.message);
   // });
   try {
-    await startShellService();
+    await startSftpService(mainWindow, app);
+    writeSuccess('SFTP Service');
+  } catch (e) {
+    writeFailed('SFTP Service', e)
+  }
+  try {
+    await startShellService(mainWindow, app);
     writeSuccess('Shell Service');
   } catch (e) {
     writeFailed('Shell Service', e)
   }
   try {
-    await startRpc(mainWindow, app);
+    await startUiService(mainWindow, app);
     writeSuccess('RPC Service');
   } catch (e) {
     writeFailed('RPC Service', e);
   }
   try {
-    await startScanner();
+    await startNetworkScannerService(mainWindow, app);
     writeSuccess('Network Scanner Service');
   } catch (e) {
     writeFailed('Network Scanner Service', e);
   }
   try {
-    await startZmq();
+    await startZmqService(mainWindow, app);
     writeSuccess('ZeroMQ Service');
   } catch (e) {
     writeFailed('ZeroMQ Service', e);

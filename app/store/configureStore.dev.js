@@ -40,7 +40,7 @@ const configureStore = (initialState) => {
   // Logging Middleware
   const logger = createLogger({
     level: 'info',
-    predicate: (getState, action) => ![networkScannerTypes.SCAN_NETWORK_PROGRESS].includes(action.type),
+    predicate: (getState, action) => ![networkScannerTypes.SCAN_NETWORK_PROGRESS,zmqTypes.MESSAGE].includes(action.type),
     collapsed: true
   });
 

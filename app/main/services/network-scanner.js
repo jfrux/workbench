@@ -1,7 +1,5 @@
 import IpUtil from "ip";
-import arp from 'node-arp';
 import evilscan from 'evilscan';
-import createRPC from '../rpc';
 import * as networkActions from '../../actions/network_connection_actions';
 import * as types from '../../constants/network_scanner_action_types';
 import { ipcMain } from 'electron';
@@ -55,7 +53,7 @@ function scanNetwork(sender) {
   }));
 }
 
-export function startScanner(mainWindow, app) {
+export function startNetworkScannerService(mainWindow, app) {
   // writeLog("Starting Scanner Service...");
   return new Promise((resolve, reject) => {
     ipcMain.on(types.SCAN_NETWORK,(evt) => {

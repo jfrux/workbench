@@ -12,6 +12,10 @@ const initialState = {
   updated: null,
   vehicleConnection: null,
   service: null,
+  fileList: null,
+  fileListLoading: true,
+  fileContent: null,
+  fileContentLoading: false,
   drives: null,
   devices: null,
   activeDrive: null,
@@ -31,6 +35,18 @@ const initialState = {
 
 export default function eonDetailReducer(state = initialState, action) {
   switch (action.type) {
+    case types.REFRESH_FILE_LIST:
+      return {
+        ...state,
+        fileList: null,
+        fileListLoading: true
+      };
+    case types.REFRESH_FILE_LIST_SUCCESS:
+      return {
+        ...state,
+        fileList: action.payload,
+        fileListLoading: false
+      };
     case types.CHANGE_TAB:
       return {
         ...state,
