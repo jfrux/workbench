@@ -32,12 +32,12 @@ class Pane extends React.PureComponent {
     }
   }
   render() {
-    const { title, children, className } = this.props;
+    const { title, children, className, allowCollapse } = this.props;
     const { collapsed } = this.state;
     return (
       <div className={"pane " + className}>
         <button className={"pane-heading"} onClick={(ev) => { this.togglePane(ev); }}>
-          <FontAwesomeIcon icon="caret-down" /> {title}
+          {allowCollapse && <FontAwesomeIcon icon="caret-down" />} {title}
         </button>
         {!collapsed && 
           <div className={"pane-content"}>

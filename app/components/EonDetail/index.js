@@ -113,30 +113,34 @@ class EonDetail extends React.PureComponent {
             <SplitPane split="horizontal" size={"50%"} minSize={100}>
               <div><Editor /></div>
               <SplitPane split="vertical" size={"50%"} minSize={100}>
-                <div><Terminal CommandPane={CommandPane} eonIp={eon.ip} /></div>
-                <div>
+              <Pane title="Terminal" className="eon-console" allowCollapse={false}>
+                <Terminal CommandPane={CommandPane} eonIp={eon.ip} />
+              </Pane>
+              <Pane title="Console" className="state-console" allowCollapse={false}>
                   <div className={"state-toolbar"}>
                     <StateListToolbar />
                   </div>
                   {activeTab && 
                     <StateList />
                   }
-                </div>
+              </Pane>
               </SplitPane>
             </SplitPane>
           }
           {!hasOpenedFiles && 
             <div>
             <SplitPane split="vertical" size={"50%"} minSize={100}>
-              <div><Terminal CommandPane={CommandPane} eonIp={eon.ip} /></div>
-              <div>
-                <div className={"state-toolbar"}>
-                  <StateListToolbar />
-                </div>
-                {activeTab && 
-                  <StateList />
-                }
-              </div>
+              <Pane title="Terminal" className="eon-console" allowCollapse={false}>
+                <Terminal CommandPane={CommandPane} eonIp={eon.ip} />
+              </Pane>
+              <Pane title="Console" className="state-console" allowCollapse={false}>
+                  <div className={"state-toolbar"}>
+                    <StateListToolbar />
+                  </div>
+                  {activeTab && 
+                    <StateList />
+                  }
+              </Pane>
             </SplitPane></div>
           }
         </SplitPane>
