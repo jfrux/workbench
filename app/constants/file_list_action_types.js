@@ -6,3 +6,5 @@ export const FETCH_DIRECTORY = 'fileList/FETCH_DIRECTORY';
 export const FETCH_DIRECTORY_SUCCESS = 'fileList/FETCH_DIRECTORY_SUCCESS';
 export const FETCH_FILE = 'fileList/FETCH_FILE';
 export const FETCH_FILE_SUCCESS = 'fileList/FETCH_FILE_SUCCESS';
+export const UPDATE_CONTENT = 'fileList/UPDATE_CONTENT';
+export const CLOSE_FILE = 'fileList/CLOSE_FILE';

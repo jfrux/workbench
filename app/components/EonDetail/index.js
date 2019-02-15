@@ -11,11 +11,11 @@ import StateList from './StateList';
 import StateListToolbar from './StateList/StateListToolbar';
 import { TabContent, Nav, NavItem, NavLink, TabPane } from 'reactstrap';
 import Terminal from '../Terminal';
+import EditorTabs from './Editor/EditorTabs';
 import Editor from './Editor';
 import FileList from './FileList';
 import commands from '../commands';
 // import GoldenLayout from 'golden-layout';
-import inflection from 'inflection';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const propTypes = {
   activeTab: PropTypes.string,
@@ -39,7 +39,7 @@ class EonDetail extends React.PureComponent {
     this.props.TOGGLE_DATA();
   }
   render() {
-    const { activeTab,openedFiles,activeCommand, network, devices, currentStateKeys, eon, services, serviceIds } = this.props;
+    const { activeTab, activeCommand, network, eon, serviceIds } = this.props;
     const commandKeys = Object.keys(commands);
     
     if (network === 'disconnected' || eon == null) {
@@ -49,7 +49,6 @@ class EonDetail extends React.PureComponent {
 
     let commandTabs = commandKeys.map((key,index) => {
       const command = new commands[key];
-      console.log(command);
       return (<NavItem key={key + "-tab-link"}>
         <NavLink
           className={classnames({
@@ -85,8 +84,7 @@ class EonDetail extends React.PureComponent {
     //   editor: <Editor />,
     //   console: <Terminal eonIp={eon.ip} activeCommand={activeCommand} CommandPane={CommandPane} />,
     // };
-    const hasOpenedFiles = Object.keys(openedFiles).length;
-    console.log("hasOpenedFiles:",hasOpenedFiles);
+    // const hasOpenedFiles = Object.keys(openedFiles).length;
     return (
       <Layout className={'eon-detail'} title={`${this.props.eon.ip}`} contextActions={contextActions}>
         <SplitPane split="vertical" size={"20%"} minSize={200}>
@@ -109,40 +107,25 @@ class EonDetail extends React.PureComponent {
             </SplitPane>
           </div>
           
-          {hasOpenedFiles && 
-            <SplitPane split="horizontal" size={"50%"} minSize={100}>
-              <div><Editor /></div>
-              <SplitPane split="vertical" size={"50%"} minSize={100}>
-              <Pane title="Terminal" className="eon-console" allowCollapse={false}>
-                <Terminal CommandPane={CommandPane} eonIp={eon.ip} />
-              </Pane>
-              <Pane title="Console" className="state-console" allowCollapse={false}>
-                  <div className={"state-toolbar"}>
-                    <StateListToolbar />
-                  </div>
-                  {activeTab && 
-                    <StateList />
-                  }
-              </Pane>
-              </SplitPane>
-            </SplitPane>
-          }
-          {!hasOpenedFiles && 
-            <div>
+          <SplitPane split="horizontal" size={"50%"} minSize={100}>
+            <div className="editor-container">
+              <EditorTabs />
+              <Editor />
+            </div>
             <SplitPane split="vertical" size={"50%"} minSize={100}>
-              <Pane title="Terminal" className="eon-console" allowCollapse={false}>
-                <Terminal CommandPane={CommandPane} eonIp={eon.ip} />
-              </Pane>
-              <Pane title="Console" className="state-console" allowCollapse={false}>
-                  <div className={"state-toolbar"}>
-                    <StateListToolbar />
-                  </div>
-                  {activeTab && 
-                    <StateList />
-                  }
-              </Pane>
-            </SplitPane></div>
-          }
+            <Pane title="Terminal" className="eon-console" allowCollapse={false}>
+              <Terminal CommandPane={CommandPane} eonIp={eon.ip} />
+            </Pane>
+            <Pane title="Console" className="state-console" allowCollapse={false}>
+                <div className={"state-toolbar"}>
+                  <StateListToolbar />
+                </div>
+                {activeTab && 
+                  <StateList />
+                }
+            </Pane>
+            </SplitPane>
+          </SplitPane>
         </SplitPane>
       </Layout>
     );

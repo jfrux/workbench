@@ -37,7 +37,7 @@ $pane-heading-height: 30px;
     z-index: 2;
     display:block;
     border:0;
-    background-color:$light-color;
+    background-color:lighten($dark-color,3);
     color:lighten($light-color,40);
     width:100%;
     text-align:left;
@@ -242,25 +242,49 @@ border-color: transparent;
   }
 }
 
-.editor {
+.editor-container {
   position:absolute;
-  width:100%;
-  height:100%;
   top:0;
   left:0;
+  width:100%;
+  height:100%;
   .editor-tabs {
-    display:block;
-    background-color: $dark-color;
-    
+    position: absolute;
+    display: block;
+    background-color:$dark-color;
+    width: 100%;
+    left: 0;
+    top: 0;
+    z-index: 2;
   }
   .editor-tab {
-    display:inline-block;
-    background-color:$monaco-color;
-    min-width:130px;
-    padding:5px;
+    display: inline-block;
+    background-color: $monaco-color;
+    min-width: 130px;
+    padding: 5px;
+    position:relative;
+    padding-right: 30px;
     color:lighten($light-color,50);
+    line-height: 1em;
+    font-size: 14px;
     i {
       margin-right:5px;
     }
+    svg {
+      position:absolute;
+      top:50%;
+      transform: translateY(-50%);
+      right:10px;
+      &.fa-circle {
+        font-size:10px;
+      }
+    }
+  }
+  .editor {
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
   }
 }

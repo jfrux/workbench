@@ -3,40 +3,44 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import * as FileListActions from '../../../actions/file_list_actions';
 import * as EonActions from '../../../actions/eon_detail_actions';
 import FileIcon from '../FileList/FileIcon';
+import {getOpenedFilesKeysSelector} from '../../../selectors/get_opened_files_keys';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import MonacoEditor from 'react-monaco-editor';
+import { debugOnlyWastedRenderDetector } from "wastedrendersdetector";
 const propTypes = {
   file: PropTypes.any
 };
 
-class Editor extends React.Component {
+class Editor extends React.PureComponent {
   editorDidMount = (editor, monaco) => {
-    console.log('editorDidMount', editor);
+    // console.log('editorDidMount', editor);
     editor.focus();
   }
-  onChange(newValue, e) {
-    console.log('onChange', newValue, e);
+  
+  onChange = (evt, newValue)  => {
+    // console.log('onChange', newValue, e);
+    // console.log(this);
+    this.props.UPDATE_CONTENT(this.props.filePath,newValue);
   }
   render() {
-    const { fileType, name, content } = this.props;
+    const { fileType, name, content, hidden, allowOpen,  isDirty, _original } = this.props;
     const options = {
-      selectOnLineNumbers: true
+      selectOnLineNumbers: true,
+      renderSideBySide: true
     };
-    console.log("editorProps:",this.props);
+    // console.log("rendering...");
     return (<div className="editor">
-      <div className="editor-tabs">
-        <div className="editor-tab no-select">
-          <FileIcon extension={fileType} /> {name}
-        </div>
-      </div>
-      {content &&
+      {content && 
         <MonacoEditor
           language={"python"}
           theme="vs-dark"
           value={content}
+          original={_original}
           options={options}
-          onChange={this.onChange}
+          onChange={(newValue, e) => this.onChange(e, newValue)}
           editorDidMount={this.editorDidMount}
         />
       }
@@ -48,27 +52,27 @@ class Editor extends React.Component {
 Editor.propTypes = propTypes;
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(EonActions, dispatch);
+  return bindActionCreators({...FileListActions,...EonActions}, dispatch);
 }
 
-const mapStateToProps = (state) => {
-  const { fileList } = state;
+const mapStateToProps = ({fileList}) => {
   const { openedFiles } = fileList;
   //Temporarily just doing one file at a time for proof of concept purposes.
   // Needs updated to work with tabs.
   // console.log(openedFiles);
-  let filesKeys = Object.keys(openedFiles);
+  let filesKeys = getOpenedFilesKeysSelector(openedFiles);
   if (filesKeys.length === 0) return {};
   let openedFilePath = filesKeys[0];
   const openedFile = openedFiles[openedFilePath];
-  console.log("props:",openedFile);
+  const { fileType, filePath, hidden, allowOpen, content, _original,isDirty, name } = openedFile;
+  // console.log(openedFile);
   if (!openedFile) return;
   return {
-    ...openedFile
+    fileType, filePath, content, hidden, allowOpen, _original, isDirty, name
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Editor);
+)(debugOnlyWastedRenderDetector(Editor));

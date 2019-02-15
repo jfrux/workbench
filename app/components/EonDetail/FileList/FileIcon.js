@@ -11,7 +11,6 @@ export default (props) => {
   if (!extension) {
     extension = 'none';
   }
-  console.log(FileTypeIconMapping);
   let icon = FileTypeIconMapping[extension];
   if (icon) {
     iconName = icon.name;
@@ -33,6 +32,5 @@ export default (props) => {
   if (!allowOpen) {
     iconColor = DARK;
   }
-  console.log("icon:",icon);
   return (<Icon iconName={iconName} style={{color: iconColor, fontWeight: 'bold' }} />);
 };

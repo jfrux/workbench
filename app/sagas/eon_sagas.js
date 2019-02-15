@@ -265,7 +265,9 @@ function* handleFetchFile(data) {
   yield put(fileListActions.FETCH_FILE_SUCCESS({
     ...file,
     ...payload,
-    content: fileContent
+    isDirty: false,
+    _original: "" + fileContent,
+    content: "" + fileContent
   }));
 }
 // EXPORT ROOT SAGA

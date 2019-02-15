@@ -20,7 +20,6 @@ export default function fileListReducer(state = initialState, action) {
         }
       };
     case types.FETCH_DIRECTORY_SUCCESS:
-      console.log(action.payload);
       return {
         ...state,
         filesByPath: {
@@ -33,13 +32,32 @@ export default function fileListReducer(state = initialState, action) {
         }
       };
     case types.FETCH_FILE_SUCCESS:
-      console.log(action.payload);
       return {
         ...state,
         openedFiles: {
           [action.payload.filePath]: action.payload
         },
         activeFile: action.payload.filePath
+      };
+    case types.UPDATE_CONTENT:
+      return {
+        ...state,
+        openedFiles: {
+          [action.payload.filePath]: {
+            ...state.openedFiles[action.payload.filePath],
+            content: action.payload.content,
+            isDirty: action.payload.content !== state.openedFiles[action.payload.filePath]._original
+          }
+        }
+      };
+    case types.CLOSE_FILE:
+      delete state.openedFiles[action.payload.filePath];
+      
+      return {
+        ...state,
+        openedFiles: {
+          ...state.openedFiles
+        }
       };
     default:
       return state;

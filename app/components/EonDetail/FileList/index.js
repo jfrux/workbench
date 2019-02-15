@@ -43,12 +43,9 @@ class FileList extends React.Component {
   onFileClick = (file) =>{
     return file.filePath && this.props.FETCH_FILE(file)
   }
-  onChange(newValue, e) {
-    console.log('onChange', newValue, e);
-  }
   render() {
     const { filePath, isVisible, openedFiles, directory, files } = this.props;
-    console.log("files:", files);
+    // console.log("files:", files);
     if (!files) {
       return (
         <ul className="file-tree" >
@@ -101,15 +98,14 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(FileListActions, dispatch);
 }
 
-const mapStateToProps = (state, props) => {
-  const { fileList } = state;
-  const { directory } = props;
-  const { openedDirectories, openedFiles, isVisible } = fileList;
+const mapStateToProps = ({fileList}, {directory}) => {
+  const { openedDirectories, isVisible, openedFiles } = fileList;
   const files = openedDirectories[directory];
   return {
     files,
-    openedDirectories, isVisible,
-    openedFiles
+    openedDirectories, 
+    openedFiles,
+    isVisible
   };
 };
 

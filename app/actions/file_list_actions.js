@@ -31,3 +31,18 @@ export function FETCH_FILE_SUCCESS(file) {
     payload: file
   };
 }
+export function UPDATE_CONTENT(filePath,content) {
+  return {
+    type: types.UPDATE_CONTENT,
+    payload: {
+      filePath,
+      content
+    }
+  };
+}
+export function CLOSE_FILE(file) {
+  return {
+    type: types.CLOSE_FILE,
+    payload: file
+  };
+}
