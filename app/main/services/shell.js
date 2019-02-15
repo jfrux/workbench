@@ -3,7 +3,7 @@ import defaultShell from '../default-shell';
 import { ipcMain } from 'electron';
 import * as eonListTypes from '../../constants/eon_list_action_types';
 import * as types from '../../constants/terminal_action_types';
-const pty = require('ndb-node-pty-prebuilt');
+const pty = require('node-pty-prebuilt');
 const chalk = require('chalk');
 const prefix = chalk.bold.blue;
 const bgTaskColor = chalk.green;

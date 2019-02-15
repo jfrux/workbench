@@ -29,10 +29,10 @@
     "test-all": "npm run lint && npm run build && npm run test && npm run test-e2e",
     "test-e2e": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 node --trace-warnings -r babel-register ./internals/scripts/RunTests.js e2e",
     "test-watch": "npm run test --watch",
-    "release": "NODE_ENV=production npm run build && electron-builder build --publish always",
-    "release-all": "NODE_ENV=production npm run build && electron-builder build -mwl --publish always",
-    "release-linux": "NODE_ENV=production npm run build && electron-builder build --linux --publish always",
-    "release-win": "NODE_ENV=production npm run build && electron-builder build --win --x64 --publish always"
+    "release": "cross-env NODE_ENV=production npm run build && electron-builder build --publish always",
+    "release-all": "cross-env NODE_ENV=production npm run build && electron-builder build -mwl --publish always",
+    "release-linux": "cross-env NODE_ENV=production npm run build && electron-builder build --linux --publish always",
+    "release-win": "cross-env NODE_ENV=production npm run build && electron-builder build --win --x64 --publish always"
   },
   "browserslist": "electron 1.6",
   "lint-staged": {
