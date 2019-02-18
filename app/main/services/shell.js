@@ -80,7 +80,7 @@ export function startShellService(mainWindow, app) {
       const { sender } = evt;
       pid = parseInt(pid, 10);
       const term = terminals[pid];
-      term.kill();
+      // term.kill();
       writeLog('Closed terminal ' + term.pid);
       // Clean things up
       delete terminals[term.pid];

@@ -68,10 +68,11 @@ class ReactTerminal extends React.Component {
     this.fitResize();
   }
   onWindowPaste(e) {
-    console.warn('Pasted');
+    console.warn('Pasted',e);
     let paste = (e.clipboardData || window.clipboardData).getData('text');
-
-    this.sendCommand(paste);
+    if (e.path[0].className === 'xterm-helper-textarea') {
+      this.sendCommand(paste);
+    }
   }
   onMouseUp(e) {
     if (this.props.quickEdit && e.button === 2) {

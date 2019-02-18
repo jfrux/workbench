@@ -5,15 +5,15 @@ import { Redirect } from 'react-router';
 import routes from '../../constants/routes.json';
 import PropTypes from 'prop-types';
 import Layout from '../Layout';
+import LoadingOverlay from '../LoadingOverlay';
 import SplitPane from 'react-split-pane';
 import Pane from './Pane';
-import StateList from './StateList';
-import StateListToolbar from './StateList/StateListToolbar';
 import { TabContent, Nav, NavItem, NavLink, TabPane } from 'reactstrap';
 import Terminal from '../Terminal';
 import EditorTabs from './Editor/EditorTabs';
 import Editor from './Editor';
 import FileList from './FileList';
+import Console from './Console';
 import commands from '../commands';
 // import GoldenLayout from 'golden-layout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -26,6 +26,9 @@ const propTypes = {
   services: PropTypes.object
 };
 class EonDetail extends React.PureComponent {
+  componentWillMount() {
+    this.props.BOOTSTRAP_EON();
+  }
   setTab = (tab) => {
     this.props.CHANGE_TAB(tab);
   }
@@ -39,9 +42,10 @@ class EonDetail extends React.PureComponent {
     this.props.TOGGLE_DATA();
   }
   render() {
-    const { activeTab, activeCommand, network, eon, serviceIds } = this.props;
+    const { activeTab, connecting, activeCommand, network, eon, serviceIds } = this.props;
     const commandKeys = Object.keys(commands);
     
+    if (connecting) return (<LoadingOverlay message={"Connecting to EON..."} />);
     if (network === 'disconnected' || eon == null) {
       return (<Redirect to={routes.EON_LIST} />);
     }
@@ -117,12 +121,7 @@ class EonDetail extends React.PureComponent {
               <Terminal CommandPane={CommandPane} eonIp={eon.ip} />
             </Pane>
             <Pane title="Console" className="state-console" allowCollapse={false}>
-                <div className={"state-toolbar"}>
-                  <StateListToolbar />
-                </div>
-                {activeTab && 
-                  <StateList />
-                }
+              <Console activeEvent={activeTab} />
             </Pane>
             </SplitPane>
           </SplitPane>

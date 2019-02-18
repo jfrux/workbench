@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import TerminalCommand from './command';
-
 class InstallOpenpilot extends PureComponent {
   constructor(props) {
     super(props);

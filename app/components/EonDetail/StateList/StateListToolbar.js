@@ -58,7 +58,7 @@ class StateListToolbar extends Component {
       );
     });
     return (
-      <Nav>
+      <Nav className="events-toolbar">
         <NavItem>
           <NavLink href="#" onClick={this.togglePause}>
             {paused && <FontAwesomeIcon icon={"play"} />}

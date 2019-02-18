@@ -18,6 +18,8 @@ function mapStateToProps({eonDetail,eonList,networkConnection}) {
     eon: eonList.eons[eonList.selectedEon],
     network: networkConnection.status,
     networkIp: networkConnection.ip,
+    connecting: eonDetail.connecting,
+    connected: eonDetail.connected,
     serviceIds,
     services
   };

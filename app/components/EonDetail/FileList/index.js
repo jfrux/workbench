@@ -37,7 +37,7 @@ class FileList extends React.Component {
     this.props.TOGGLE_VISIBILITY(file.filePath);
     if ((this.props.openedDirectories && !this.props.openedDirectories[file.filePath]) || this.props.isVisible[file.filePath]) {
       
-      return file.filePath && this.props.FETCH_DIRECTORY(file.filePath)
+      return file.filePath && this.props.FETCH_DIRECTORY(file.filePath);
     }
   }
   onFileClick = (file) =>{
