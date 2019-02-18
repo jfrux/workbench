@@ -21,6 +21,9 @@ const initialState = {
   fileContentLoading: false,
   drives: null,
   devices: null,
+  activeRouteId: null,
+  activeRouteLoading: false,
+  activeRouteError: false,
   activeDrive: null,
   health: null,
   fingerprint: null,
@@ -69,6 +72,32 @@ export default function eonDetailReducer(state = initialState, action) {
       return {
         ...state,
         activeCommand: action.payload
+      };
+    case types.HIDE_ROUTE:
+      return {
+        ...state,
+        activeRouteId: null,
+        activeRouteLoading: false,
+        activeRouteError: false
+      };
+    case types.SHOW_ROUTE:
+      return {
+        ...state,
+        activeRouteId: action.payload,
+        activeRouteLoading: true,
+        activeRouteError: false
+      };
+    case types.SHOW_ROUTE_SUCCESS:
+      return {
+        ...state,
+        activeRouteLoading: false,
+        activeRouteError: false
+      };
+    case types.SHOW_ROUTE_FAILED:
+      return {
+        ...state,
+        activeRouteLoading: false,
+        activeRouteError: action.payload
       };
     case types.HIDE_COMMAND:
       return {
@@ -225,23 +254,24 @@ export default function eonDetailReducer(state = initialState, action) {
     case types.FETCH_SEGMENTS:
       return {
         ...state,
-        segments: {},
-        segmentsLoading: true,
-        segmentsError: false
+        routes: {},
+        routesLoading: true,
+        routesError: false
       }
     case types.FETCH_SEGMENTS_SUCCESS:
       return {
         ...state,
-        segments: action.payload,
-        segmentsLoading: false,
-        segmentsError: false
+        routes: action.payload.routesById,
+        routesSorted: action.payload.routesSorted,
+        routesLoading: false,
+        routesError: false
       }
     case types.FETCH_SEGMENTS_FAILED:
       return {
         ...state,
-        segments: {},
-        segmentsLoading: false,
-        segmentsError: action.payload
+        routes: {},
+        routesLoading: false,
+        routesError: action.payload
       }
     case types.FETCH_ANNOTATIONS:
       return {
@@ -286,13 +316,14 @@ export default function eonDetailReducer(state = initialState, action) {
         authLoading: false,
         authError: action.payload
       }
+
     case types.FETCH_ROUTE_FILE_LINKS:
       return {
         ...state,
         routes: {
           ...state.routes,
           [action.payload]: {
-            ...[action.payload],
+            ...state.routes[action.payload],
             fileLinksLoading: true,
             fileLinksError: false,
             fileLinks: {}
@@ -306,7 +337,7 @@ export default function eonDetailReducer(state = initialState, action) {
         routes: {
           ...state.routes,
           [action.payload.routeId]: {
-            ...[action.payload.routeId],
+            ...state.routes[action.payload.routeId],
             fileLinksLoading: false,
             fileLinksError: false,
             fileLinks: action.payload.links

@@ -1,0 +1,177 @@
+$console-tabs-height: 34px;
+.console {
+  position:relative;
+}
+.console-tabs {
+  height: $console-tabs-height;
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:100;
+  display:flex;
+  justify-content: flex-start;
+  li {
+    width:25%;
+    a.nav-link { color:$text-color;
+      &:hover {
+        color:lighten($text-color,10);
+      }
+      &.active {
+        background-color:$monaco-color;
+      }
+    }
+  }
+}
+.console-pane {
+  position:absolute;
+  top:$console-tabs-height;
+  left:0;
+  width:100%;
+  height: calc(100% - #{$console-tabs-height});
+  .drives {
+    .drives-list {
+      .drive {
+        display:flex;
+        // flex-flow;
+        border-bottom:1px solid $light-color;
+        cursor:pointer;
+        &:hover {
+          background-color:lighten($monaco-color,10);
+        }
+        .drive-thumbnail {
+          flex: 0 0 40px;
+          img {
+            max-width:100%;
+            width:100%;
+          }
+        }
+        .drive-title {
+          flex: 0 0 calc(50% - 50px);
+          font-size: 13px;
+          line-height: 2em;
+          padding: 0 10px;
+          white-space:nowrap;
+          color:$text-color;
+          text-overflow: ellipsis;
+        }
+        .drive-actions {
+          display:flex;
+          flex-direction: row;
+          .btn {
+            font-size:10px;
+            background-color:transparent;
+            border:0;
+            &:hover {
+              background-color:lighten($monaco-color,10);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.drive-modal.command-box {
+  $modal-header-height: 45px;
+  $modal-footer-height: 45px;
+
+  width:30%;
+  position: fixed;
+  height: calc(100% - #{$top-bar-height});
+  top: $top-bar-height;
+  right:0;
+  z-index:1000;
+  .command-close {
+    position:absolute;
+    top:3px;
+    right:3px;
+    background-color:transparent;
+    font-size:14px;
+    border:0;
+  }
+  .command-body {
+    max-height:100%;
+    height:calc(100% - #{$top-bar-height} - #{$modal-header-height});
+    width:100%;
+    overflow:auto;
+    position:absolute;
+    top:$top-bar-height;
+    padding:15px;
+  }
+  .command-button-bar {
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:$modal-footer-height;
+  }
+
+  .segment {
+    display:flex;
+    // flex-flow;
+    border-bottom:1px solid $light-color;
+    .segment-thumb {
+      flex: 0 0 40px;
+      img {
+        max-width:100%;
+        width:100%;
+      }
+    }
+    .segment-label {
+      flex: 0 0 calc(50% - 50px);
+      font-size: 13px;
+      line-height: 2em;
+      padding: 0 10px;
+      white-space:nowrap;
+      text-overflow: ellipsis;
+    }
+    .segment-actions {
+      display:flex;
+      flex-direction: row;
+      .btn {
+        font-size:10px;
+        background-color:transparent;
+        border:0;
+        &:hover {
+          background-color:lighten($monaco-color,10);
+        }
+      }
+    }
+  }
+}
+// .drive-modal {
+//   height:100%;
+//   .modal-dialog {
+//     height:calc(100% - #{$top-bar-height});
+//     position: absolute;
+//     top:$top-bar-height;
+//     right:0;
+//     margin-top:0;
+//     // transform: translateX(-50%)!important;
+//     width:500px;
+//     max-width:500px;
+//   }
+//   .modal-content {
+//     height:100%;
+//     width:100%;
+//     background-color: $monaco-color;
+//   }
+//   .modal-header {
+//     padding:5px;
+//     height: $modal-header-height;
+//     border-color:$light-color;
+//   }
+//   .modal-title {
+//     font-size:14px;
+//     color:$text-color;
+//   }
+  
+//   .modal-footer {
+//     position:absolute;
+//     bottom:0;
+//     width:100%;
+//     height:$modal-footer-height;
+//     border-color:$light-color;
+//     background-color:$monaco-color;
+//   }
+// }

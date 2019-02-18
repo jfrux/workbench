@@ -17,7 +17,10 @@ export const CHANGE_TAB = 'eon/CHANGE_TAB';
 export const AUTH_REQUEST = 'eon/AUTH_REQUEST';
 export const AUTH_REQUEST_SUCCESS = 'eon/AUTH_REQUEST_SUCCESS';
 export const AUTH_REQUEST_FAIL = 'eon/AUTH_REQUEST_FAIL';
-
+export const HIDE_ROUTE = 'eon/HIDE_ROUTE';
+export const SHOW_ROUTE = 'eon/SHOW_ROUTE';
+export const SHOW_ROUTE_SUCCESS = 'eon/SHOW_ROUTE_SUCCESS';
+export const SHOW_ROUTE_FAILED = 'eon/SHOW_ROUTE_FAILED';
 export const OPEN_DRIVE = 'eon/OPEN_DRIVE';
 export const CLOSE_DRIVE = 'eon/CLOSE_DRIVE';
 
@@ -90,7 +93,3 @@ export const FETCH_ROUTE_FILE_LINKS_FAILED = 'eon/FETCH_ROUTE_FILE_LINKS_FAILED'
 export const FETCH_ROUTE_FILES = 'eon/FETCH_ROUTE_FILES';
 export const FETCH_ROUTE_FILES_SUCCESS = 'eon/FETCH_ROUTE_FILES_SUCCESS';
 export const FETCH_ROUTE_FILES_FAILED = 'eon/FETCH_ROUTE_FILES_FAILED';
-
-export const SHOW_ROUTE = 'eon/SHOW_ROUTE';
-export const SHOW_ROUTE_SUCCESS = 'eon/SHOW_ROUTE_SUCCESS';
-export const SHOW_ROUTE_FAILED = 'eon/SHOW_ROUTE_FAILED';

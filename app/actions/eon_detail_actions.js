@@ -160,10 +160,12 @@ export function FETCH_SEGMENTS(startTime,endTime) {
     }
   };
 }
-export function FETCH_SEGMENTS_SUCCESS(results) {
+export function FETCH_SEGMENTS_SUCCESS(routesById, routesSorted) {
   return {
     type: types.FETCH_SEGMENTS_SUCCESS,
-    payload: results
+    payload: {
+      routesById, routesSorted
+    }
   }
 }
 export function FETCH_SEGMENTS_FAILED(error) {
@@ -260,6 +262,12 @@ export function FETCH_ROUTE_FILE_LINKS_FAILED(error) {
   return {
     type: types.FETCH_ROUTE_FILE_LINKS_FAILED,
     payload: error
+  }
+}
+
+export function HIDE_ROUTE() {
+  return {
+    type: types.HIDE_ROUTE
   }
 }
 

@@ -25,10 +25,11 @@ class SegmentsTab extends React.Component {
     this.props.SHOW_ROUTE(route.id);
   }
   render() {
-    const { segments, loading } = this.props;
+    const { activeRouteId, routes, routesSorted, loading } = this.props;
     // console.log(this.props);
     if (loading) return (<LoadingOverlay message={"Loading drives..."} />);
-    const drives = segments.map((drive) => {
+    const drives = routesSorted.map((routeKey) => {
+      const drive = routes[routeKey];
       return (
         <div onClick={(evt) => { this.handleRouteClick(evt,drive)}} className="drive" key={drive.id}>
           <div className="drive-thumbnail">
@@ -43,7 +44,7 @@ class SegmentsTab extends React.Component {
     return (
       <div className="drives">
         <div className="drives-list">{drives}</div>
-        <RouteModal />
+        {activeRouteId && <RouteModal />}
       </div>
     );
   }
@@ -56,15 +57,17 @@ function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = ({ eonDetail }) => {
-  const { segments, segmentsLoading } = eonDetail;
+  const { routes,activeRouteId, routesSorted, routesLoading } = eonDetail;
   // let routeKeys;
 
-  if (!segments || !segments.length) return { loading: true };
-  // routeKeys = Object.keys(segments).sort();
+  if (!routesSorted || !routesSorted.length) return { loading: true };
+  // routeKeys = Object.keys(routes).sort();
   return {
-    segments,
+    routes,
+    routesSorted,
     // routeKeys,
-    loading: segmentsLoading
+    activeRouteId,
+    loading: routesLoading
   };
 };
 

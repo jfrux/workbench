@@ -8,6 +8,7 @@
 
 $base-color: #24292e;
 $light-color: lighten(#24292e,5);
+$text-color: lighten($light-color,35);
 $dark-color: darken(#24292e,5);
 $darker-color: darken(#24292e,8);
 $active-color: var(--blue);
@@ -19,6 +20,10 @@ $eons-list-top-top: $top-bar-height;
 $eons-list-top-height: 30px;
 $eons-list-top: $top-bar-height + $eons-list-top-height;
 $right-content-width: calc(100% - #{$left-bar-width});
+$monaco-color: darken($dark-color,5);
+$file-name-color: lighten($light-color,40);
+$hidden-file-name-color: rgba($file-name-color,0.4);
+$state-toolbar-height: 40px;
 body {
   background-color:#212121;
 }
@@ -50,6 +55,7 @@ body {
   @import "styles/eon";
   @import "styles/eon-list";
   @import "styles/content";
+  @import "styles/console";
   @import "styles/left-bar";
   @import "styles/tab-list";
   @import "styles/tab-content";
@@ -859,4 +865,3 @@ body {
 
 
 }
-

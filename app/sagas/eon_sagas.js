@@ -328,11 +328,10 @@ function* getSegments({type, payload}) {
   const { eonDetail } = yield select();
   const { dataParams } = eonDetail;
   const { dongleId } = dataParams;
-  let results,routesData = [];
+  let results,routesData = [], segments, segmentsGroupedByRouteId, routesSorted, routesById = {}, routeKeys;
   // console.log("times:",payload);
   const endpoint = buildEndpointUrl('segments', { dongleId: dongleId.value, startTime, endTime });
   
-  let segments, segmentsGroupedByRouteId, routeKeys;
   // try {
     results = yield apiRequest(endpoint);
     segments = results;
@@ -343,13 +342,17 @@ function* getSegments({type, payload}) {
       let segments = segmentsGroupedByRouteId[routeKey];
       const segmentIds = [];
       if (segments) {
+        // segment_thumb_sec = 
         segments = segments.map((segment) => {
           let start_time = moment.utc(segment.start_time_utc_millis);
           let end_time = moment.utc(segment.end_time_utc_millis);
           let calendar_time = start_time.local().calendar();
           const duration = end_time.diff(start_time,'seconds');
           const duration_formatted = formattedTime(duration);
-          let label, sublabel;
+          let label, sublabel, current_sec_length = 0;
+          current_sec_length = (segment.start_time_utc_millis-segments[0].start_time_utc_millis) / 1000;
+          let base_url = removeEndOfUrl(segment.url);
+          let current_time = Math.ceil((current_sec_length+1)/10)*10;
           // console.log(calendar_time);
           label =  `${calendar_time}`;
           segmentIds.push(segment.number);
@@ -361,8 +364,11 @@ function* getSegments({type, payload}) {
             label,
             sublabel,
             duration,
+            base_url,
+            current_time,
             calendar_time,
-            duration_formatted
+            duration_formatted,
+            thumbnail_url: path.join(base_url,`sec${current_time}-tiny.jpg`)
           };
         });
         
@@ -388,14 +394,14 @@ function* getSegments({type, payload}) {
         const calendar_time = start_time.calendar();
         const duration = end_time.diff(start_time,'seconds');
         const duration_formatted = formattedTime(duration);
+        const avg_sec_length = duration / segments.length;
+        // map thumbnails;
         let sec_number = Math.round(duration / 2);
-        
         sec_number = Math.ceil((sec_number+1)/10)*10;
-        const base_url = removeEndOfUrl(firstSegment.url);
         // console.log("base_url:",base_url);
         // console.log("sec_number:",sec_number);
-        const thumbnail_url = path.join(base_url,`sec${sec_number}-tiny.jpg`);
-        // const thumbnail_url = midpointSegment.thumbnail_url;
+        // const thumbnail_url = path.join(base_url,`sec${sec_number}-tiny.jpg`)
+        const thumbnail_url = midpointSegment.thumbnail_url;
         return {
           ...firstSegment,
           start_time,
@@ -417,7 +423,13 @@ function* getSegments({type, payload}) {
       return b.start_time - a.start_time;
     });
     console.log(routesData);
-    yield put(eonDetailActions.FETCH_SEGMENTS_SUCCESS(routesData));
+    routesData.forEach((route) => {
+      routesById[route.id] = route;
+    });
+    routesSorted = routesData.map((route) => {
+      return route.id;
+    });
+    yield put(eonDetailActions.FETCH_SEGMENTS_SUCCESS( routesById, routesSorted));
   // } catch (e) {
   //   yield put(eonDetailActions.FETCH_ROUTES_FAILED(e));
   // }
@@ -545,12 +557,14 @@ function* handleFetchDataParams() {
   }
   
 }
+
 function* handleBootstrapEON() {
   yield call(getPrivateKey);
   yield call(connect);
   yield put(eonDetailActions.FETCH_AUTH_FILE());
   yield put(eonDetailActions.FETCH_DATA_PARAMS());
 }
+
 function* handleSelectEon() {
   const { eonDetail } = yield select();
   const { activeTab } = eonDetail;
@@ -642,7 +656,7 @@ function* handleShowRoute({type, payload}) {
   const routeId = payload;
   // need to fetch filelinks;
   try {
-    yield put(eonDetailActions.FETCH_ROUTE_FILE_LINKS(routeId));
+    yield getFileLinks({type: types.FETCH_ROUTE_FILE_LINKS, payload: routeId});
     //get updated route info with filelinks;
     console.log("Fetching file links...", routeId);
     yield put(eonDetailActions.SHOW_ROUTE_SUCCESS(routeId));
@@ -664,7 +678,7 @@ export function* eonSagas() {
     takeEvery(types.BOOTSTRAP_EON, handleBootstrapEON),
     takeEvery(fileListActionTypes.FETCH_DIRECTORY, handleFetchDirectory),
     takeEvery(fileListActionTypes.FETCH_FILE, handleFetchFile),
-    takeEvery(fileListActionTypes.FETCH_DIRECTORY_SUCCESS, handleFetchDirectorySuccess),
+    // takeEvery(fileListActionTypes.FETCH_DIRECTORY_SUCCESS, handleFetchDirectorySuccess),
     takeEvery(types.FETCH_DATA_PARAMS, handleFetchDataParams),
     takeEvery(types.FETCH_PROFILE, getProfile),
     takeEvery(types.FETCH_ROUTES, getRoutes),
