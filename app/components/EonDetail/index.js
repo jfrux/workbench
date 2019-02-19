@@ -42,7 +42,7 @@ class EonDetail extends React.PureComponent {
     this.props.TOGGLE_DATA();
   }
   render() {
-    const { activeTab, connecting, activeCommand, network, eon, serviceIds } = this.props;
+    const { activeTab,activeFile, connecting, activeCommand, network, eon, serviceIds } = this.props;
     const commandKeys = Object.keys(commands);
     
     if (connecting) return (<LoadingOverlay message={"Connecting to EON..."} />);
@@ -80,7 +80,8 @@ class EonDetail extends React.PureComponent {
     if (activeCommand) {
       CommandPane = commands[activeCommand];
     }
-   
+    const editorHeight = activeFile ? "50%" : 0;
+    const editorMinSize = activeFile ? 100 : 0;
     // const ELEMENT_MAP = {
     //   files: <FileList directory="/data/openpilot" />,
     //   states: StateTabs,
@@ -111,7 +112,7 @@ class EonDetail extends React.PureComponent {
             </SplitPane>
           </div>
           
-          <SplitPane split="horizontal" size={"50%"} minSize={100}>
+          <SplitPane split="horizontal" size={editorHeight} minSize={editorMinSize}>
             <div className="editor-container">
               <EditorTabs />
               <Editor />

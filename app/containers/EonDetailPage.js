@@ -7,7 +7,7 @@ import {getHasOpenedFiles} from '../selectors/get_opened_files_keys';
 import getSortedServiceIds from '../selectors/get_sorted_service_ids';
 // import { debugOnlyWastedRenderDetector } from "wastedrendersdetector";
 
-function mapStateToProps({eonDetail,eonList,networkConnection}) {
+function mapStateToProps({eonDetail,eonList,networkConnection,fileList}) {
   // let hasOpenedFiles = getHasOpenedFiles(fileList.openedFiles);
   let serviceIds = getSortedServiceIds();
   return {
@@ -21,7 +21,8 @@ function mapStateToProps({eonDetail,eonList,networkConnection}) {
     connecting: eonDetail.connecting,
     connected: eonDetail.connected,
     serviceIds,
-    services
+    services,
+    activeFile: fileList.activeFile
   };
 }
 

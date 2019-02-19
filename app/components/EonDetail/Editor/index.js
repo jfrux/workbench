@@ -18,8 +18,42 @@ class Editor extends React.PureComponent {
   editorDidMount = (editor, monaco) => {
     // console.log('editorDidMount', editor);
     editor.focus();
+    editor.addAction({
+      // An unique identifier of the contributed action.
+      id: 'save-op-file',
+    
+      // A label of the action that will be presented to the user.
+      label: 'Save File',
+    
+      // An optional array of keybindings for the action.
+      keybindings: [
+        monaco.KeyMod.CtrlCmd | monaco.KeyCode.F10,
+        // chord
+        monaco.KeyMod.chord(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S)
+      ],
+    
+      // A precondition for this action.
+      precondition: null,
+    
+      // A rule to evaluate on top of the precondition in order to dispatch the keybindings.
+      keybindingContext: null,
+    
+      contextMenuGroupId: 'navigation',
+    
+      contextMenuOrder: 1.5,
+    
+      // Method that will be executed when the action is triggered.
+      // @param editor The editor instance is passed in as a convinience
+      run: (ed) => {
+        this.onSave();
+        return null;
+      }
+    });
+    
   }
-  
+  onSave = () => {
+    this.props.SAVE_ACTIVE_FILE();
+  }
   onChange = (evt, newValue)  => {
     // console.log('onChange', newValue, e);
     // console.log(this);
@@ -29,7 +63,8 @@ class Editor extends React.PureComponent {
     const { fileType, name, content, hidden, allowOpen,  isDirty, _original } = this.props;
     const options = {
       selectOnLineNumbers: true,
-      renderSideBySide: true
+      renderSideBySide: true,
+      
     };
     // console.log("rendering...");
     return (<div className="editor">

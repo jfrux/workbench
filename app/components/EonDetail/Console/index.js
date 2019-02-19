@@ -13,24 +13,32 @@ import EndpointsTab from './EndpointsTab';
 import * as EonActions from '../../../actions/eon_detail_actions';
 const TABS = {
   'events': {
+    'id': 'events',
     'label': 'Events',
-    'component': EventsTab
+    'component': EventsTab,
+    'requireAuth': false
   },
   'params': {
+    'id': 'params',
     'label': 'Params',
-    'component': DataParamsTab
+    'component': DataParamsTab,
+    'requireAuth': true
   },
   'profile': {
+    'id': 'profile',
     'label': 'Profile',
-    'component': ProfileTab
+    'component': ProfileTab,
+    'requireAuth': true
   },
   // 'routes': {
   //   'label': 'Routes',
   //   'component': RoutesTab
   // },
   'segments': {
+    'id': 'segments',
     'label': 'Drives',
-    'component': SegmentsTab
+    'component': SegmentsTab,
+    'requireAuth': true
   }
   // 'endpoints': {
   //   'label': 'Endpoints',
@@ -50,20 +58,22 @@ class Console extends React.Component {
   }
   
   setTab(tab) {
-    if (this.state.activeTab !== tab) {
+    let disabled = (tab.requireAuth && !this.props.hasAuth);
+    if (this.state.activeTab !== tab.id && !disabled) {
       this.setState({
-        activeTab: tab
+        activeTab: tab.id
       });
     }
   }
   
   render() {
+    const { hasAuth } = this.props;
     const tabButtons = TAB_KEYS.map((tabKey) => {
       const tab = TABS[tabKey];
-
+      const disabled = tab.requireAuth && !hasAuth;
       return (
         <NavItem className="console-tab" key={`tab-item-${tabKey}`}>
-          <NavLink className={classnames({ active: this.state.activeTab === tabKey })} onClick={() => { this.setTab(tabKey); }}>
+          <NavLink className={classnames({ active: this.state.activeTab === tabKey })} onClick={() => { this.setTab(tab); }} disabled={disabled} >
             {tab.label}
           </NavLink>
         </NavItem>
@@ -98,8 +108,18 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(EonActions, dispatch);
 }
 
-const mapStateToProps = (state) => {
-  return {};
+const mapStateToProps = ({eonDetail}) => {
+  const { auth } = eonDetail;
+  let hasAuth;
+  if (auth) {
+    if (auth.commaUser) {
+      hasAuth = true;
+    }
+  } else {
+    hasAuth = false;
+  }
+  console.log("hasAuth:",hasAuth);
+  return { hasAuth };
 };
 
 export default connect(

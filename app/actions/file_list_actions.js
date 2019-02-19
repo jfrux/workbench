@@ -40,6 +40,17 @@ export function UPDATE_CONTENT(filePath,content) {
     }
   };
 }
+export function SAVE_ACTIVE_FILE() {
+  return {
+    type: types.SAVE_ACTIVE_FILE
+  };
+}
+
+export function SAVE_ACTIVE_FILE_SUCCESS() {
+  return {
+    type: types.SAVE_ACTIVE_FILE_SUCCESS
+  };
+}
 export function CLOSE_FILE(file) {
   return {
     type: types.CLOSE_FILE,

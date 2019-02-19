@@ -11,9 +11,12 @@ $console-tabs-height: 34px;
   z-index:100;
   display:flex;
   justify-content: flex-start;
+  background-color: lighten($monaco-color,20);
   li {
     width:25%;
-    a.nav-link { color:$text-color;
+    a.nav-link { 
+      color:$text-color;
+      background-color: lighten($monaco-color,5);
       &:hover {
         color:lighten($text-color,10);
       }

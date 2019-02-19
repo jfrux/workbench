@@ -119,6 +119,20 @@ function* connect() {
   console.log(`[sftp] Connected to EON (${eon.ip})`);
 }
 
+function* saveActiveFile() {
+  const { fileList } = yield select();
+  const { activeFile, openedFiles } = fileList;
+  const currentFile = openedFiles[activeFile];
+  const contentBuffer = Buffer.from(currentFile.content);
+  yield connect();
+  console.log(`[sftp] Saving ${activeFile}...`);
+  const savedFile = yield app.sftpClient.put(contentBuffer, activeFile);
+  yield put(fileListActions.SAVE_ACTIVE_FILE_SUCCESS());
+  return {
+    savedFile
+  };
+}
+
 function* retrieveFile(remoteFile, mergeWith={}) {
   yield connect();
   console.log(`[sftp] Retrieving file ${remoteFile}...`);
@@ -167,17 +181,11 @@ function* refreshFileList() {
   yield put(eonDetailActions.REFRESH_FILE_LIST_SUCCESS(baseItems));
 }
 
-function* fetchEndpoint(endpoint) {
-  const { eonDetail } = yield select();
-  const { dataParams } = eonDetail;
-  console.log("Fetching endpoint...", endpoint);
-  console.log("dataParams",dataParams);
-}
-
 function* apiRequest(endpointUrl) {
   const { eonDetail } = yield select();
   const { auth } = eonDetail;
   const { commaUser } = auth;
+  
   const { accessToken } = commaUser;
   if (!accessToken) return ;
   // console.log(accessToken);
@@ -199,7 +207,7 @@ function buildEndpointUrl(key, tokens = {}) {
   let endpoint = ENDPOINTS[key];
 
   let tokenKeys = [];
-  console.log(endpoint);
+  // console.log(endpoint);
   if (tokens) {
     tokenKeys = Object.keys(tokens);
   }
@@ -208,7 +216,7 @@ function buildEndpointUrl(key, tokens = {}) {
     tokenKeys.forEach((tokenKey) => {
       const tokenValue = tokens[tokenKey];
       // const length = endpoint.length
-      console.log(`replacing ${tokenKey} with ${tokenValue}`)
+      // console.log(`replacing ${tokenKey} with ${tokenValue}`)
       endpoint = endpoint.replace(/\{\{([a-zA-Z0-9\.]+)\}\}/,tokenValue);
     });
   }
@@ -676,6 +684,7 @@ export function* eonSagas() {
     takeLatest(eonListTypes.SELECT_EON, handleSelectEon),
     // takeEvery(types.CONNECT_FAILED, addEonListError),
     takeEvery(types.BOOTSTRAP_EON, handleBootstrapEON),
+    takeEvery(fileListActionTypes.SAVE_ACTIVE_FILE, saveActiveFile),
     takeEvery(fileListActionTypes.FETCH_DIRECTORY, handleFetchDirectory),
     takeEvery(fileListActionTypes.FETCH_FILE, handleFetchFile),
     // takeEvery(fileListActionTypes.FETCH_DIRECTORY_SUCCESS, handleFetchDirectorySuccess),

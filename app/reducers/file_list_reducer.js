@@ -50,11 +50,34 @@ export default function fileListReducer(state = initialState, action) {
           }
         }
       };
+    case types.SAVE_ACTIVE_FILE:
+      return {
+        ...state,
+        openedFiles: {
+          [state.activeFile]: {
+            ...state.openedFiles[state.activeFile],
+            isSaving: true
+          }
+        }
+      };
+    case types.SAVE_ACTIVE_FILE_SUCCESS:
+      return {
+        ...state,
+        openedFiles: {
+          [state.activeFile]: {
+            ...state.openedFiles[state.activeFile],
+            isSaving: false,
+            _original: state.openedFiles[state.activeFile].content,
+            isDirty: false
+          }
+        }
+      };
     case types.CLOSE_FILE:
       delete state.openedFiles[action.payload.filePath];
       
       return {
         ...state,
+        activeFile: null,
         openedFiles: {
           ...state.openedFiles
         }

@@ -57,7 +57,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = ({ eonDetail }) => {
-  const { routes,activeRouteId, routesSorted, routesLoading } = eonDetail;
+  const { routes, activeRouteId, routesSorted, routesLoading } = eonDetail;
   // let routeKeys;
 
   if (!routesSorted || !routesSorted.length) return { loading: true };
