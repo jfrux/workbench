@@ -42,11 +42,24 @@ $console-tabs-height: 34px;
         &:hover {
           background-color:lighten($monaco-color,10);
         }
+        .meta {
+          font-size: 10px;
+          display: block;
+          line-height: 1em;
+          > span {
+            display:inline-block;
+            padding-right:5px;
+            &:first-child {
+              font-weight:bold;
+            }
+          }
+        }
         .drive-thumbnail {
-          flex: 0 0 40px;
+          flex: 0 0 65px;
           img {
             max-width:100%;
             width:100%;
+            height:100%;
           }
         }
         .drive-title {
@@ -78,12 +91,64 @@ $console-tabs-height: 34px;
   $modal-header-height: 45px;
   $modal-footer-height: 45px;
 
-  width:30%;
+  width:43%;
   position: fixed;
   height: calc(100% - #{$top-bar-height});
   top: $top-bar-height;
   right:0;
   z-index:1000;
+  .video-outer {
+    position:relative;
+  }
+  .route-metadata {
+    position: absolute;
+    z-index: 1001;
+    bottom: 15px;
+    font-size: 10px;
+    left: 13px;
+    line-height: 1.1em;
+    opacity: 0.3;
+    > div {
+      &:first-child {
+        font-weight:bold;
+      }
+    }
+  }
+  .video-preview {
+    .video-react-big-play-button {
+      display:none;
+    }
+    position:relative!important;
+    top:0;
+    left:0;
+    max-width:100%;
+    .player-overlay {
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background-color:rgba(0,0,0,0.2);
+      z-index:100;
+    }
+    .video-react {
+      max-width:100%;
+      width:100%;
+      padding-top:0!important;
+      &.cabin-camera {
+        position:absolute;
+        width:40%;
+        opacity:0.8;
+        bottom:10px;
+        right:10px;
+        border:1px solid rgba(0,0,0,0.2);
+      }
+      video {
+        width:100%;
+        max-width:100%;
+      }
+    }
+  }
   .command-close {
     position:absolute;
     top:3px;

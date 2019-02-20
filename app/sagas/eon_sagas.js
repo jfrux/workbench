@@ -410,10 +410,19 @@ function* getSegments({type, payload}) {
         // console.log("sec_number:",sec_number);
         // const thumbnail_url = path.join(base_url,`sec${sec_number}-tiny.jpg`)
         const thumbnail_url = midpointSegment.thumbnail_url;
+        const git_repo = firstSegment.git_remote.replace('git@github.com:','').replace('https://github.com/').replace(".git","");
+        const git_commit_short = firstSegment.git_commit.slice(0,7);
+        const cabana_url = `https://community.comma.ai/cabana/?route=${routeKey}`;
+        const sharable_cabana_url = `https://community.comma.ai/cabana/?route=${routeKey}&max=19&url=${firstSegment.base_url}`;
+        
         return {
           ...firstSegment,
           start_time,
           start_lat,
+          git_repo,
+          cabana_url,
+          sharable_cabana_url,
+          git_commit_short,
           start_lng,
           end_time,
           id: routeKey,

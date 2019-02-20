@@ -10,23 +10,23 @@ import Measure from 'react-measure';
 // CSS for video
 import 'video-react/dist/video-react.css';
 import HLSSource from './hlsSource';
-import TimelineWorker from '../../timeline';
+// import TimelineWorker from '../TimelineWorker';
 
-const styles = theme => {
-  return {
-    root: {},
-    hidden: {
-      display: 'none'
-    },
-    canvas: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-    }
-  }
-};
+// const styles = theme => {
+//   return {
+//     root: {},
+//     hidden: {
+//       display: 'none'
+//     },
+//     canvas: {
+//       position: 'absolute',
+//       top: 0,
+//       left: 0,
+//       width: '100%',
+//       height: '100%',
+//     }
+//   }
+// };
 
 class VideoPreview extends Component {
   constructor (props) {
@@ -34,7 +34,8 @@ class VideoPreview extends Component {
 
     this.updatePreview = this.updatePreview.bind(this);
     this.imageRef = React.createRef();
-    this.videoPlayer = React.createRef();
+    this.roadVideoPlayer = React.createRef();
+    this.cabinVideoPlayer = React.createRef();
     this.canvas_lines = React.createRef();
     this.canvas_lead = React.createRef();
     this.canvas_mpc = React.createRef();
@@ -44,15 +45,31 @@ class VideoPreview extends Component {
 
     this.state = {
       bufferTime: 4,
-      src: this.videoURL(),
+      roadSrc: this.props.roadVideoUrl,
+      cabinSrc: this.props.cabinVideoUrl,
       noVideo: false
     };
   }
-
+  togglePlayback = (evt) => {
+    console.log("this:",this.roadVideoPlayer.current);
+    const roadPlayerState = this.roadVideoPlayer.current.video;
+    const cabinPlayerState = this.cabinVideoPlayer.current.video;
+    
+    if (roadPlayerState.video.paused) {
+      roadPlayerState.play();
+      cabinPlayerState.play();
+    } else {
+      roadPlayerState.pause();
+      cabinPlayerState.pause();
+    }
+  }
   componentDidMount () {
     this.mounted = true;
-    if (this.videoPlayer.current) {
-      this.videoPlayer.current.playbackRate = this.props.playSpeed || 1;
+    if (this.roadVideoPlayer.current) {
+      this.roadVideoPlayer.current.playbackRate = this.props.playSpeed || 1;
+    }
+    if (this.cabinVideoPlayer.current) {
+      this.cabinVideoPlayer.current.playbackRate = this.props.playSpeed || 1;
     }
 
     raf(this.updatePreview);
@@ -60,129 +77,138 @@ class VideoPreview extends Component {
   componentWillUnmount () {
     this.mounted = false;
     this.setState({
-      src: this.videoURL()
+      roadSrc: this.props.roadVideoUrl,
+      cabinSrc: this.props.cabinVideoUrl
     });
-    if (this.videoPlayer.current) {
-      this.videoPlayer.current.load();
+    if (this.roadVideoPlayer.current) {
+      this.roadVideoPlayer.current.load();
+    }
+    if (this.cabinVideoPlayer.current) {
+      this.cabinVideoPlayer.current.load();
     }
   }
 
   componentDidUpdate (prevProps, prevState) {
-    let newUrl = this.videoURL();
-    if (this.state.src !== newUrl) {
+    let newRoadUrl = this.props.roadVideoUrl;
+    let newCabinUrl = this.props.cabinVideoUrl;
+    if (this.state.roadSrc !== newRoadUrl || this.state.cabinSrc !== newCabinUrl) {
       this.setState({
-        src: newUrl
+        roadSrc: newRoadUrl,
+        cabinSrc: newCabinSrc
       });
-      if (this.videoPlayer.current) {
-        this.videoPlayer.current.load();
+      if (this.roadVideoPlayer.current) {
+        this.roadVideoPlayer.current.load();
+      }
+      if (this.cabinVideoPlayer.current) {
+        this.cabinVideoPlayer.current.load();
       }
     }
   }
 
   updatePreview () {
-    if (!this.mounted) {
-      return;
-    }
-    // schedule next run right away so that we can return early
-    raf(this.updatePreview);
+    // if (!this.mounted) {
+    //   return;
+    // }
+    // // schedule next run right away so that we can return early
+    // raf(this.updatePreview);
 
-    this.renderCanvas();
+    // this.renderCanvas();
 
-    let offset = TimelineWorker.currentOffset();
-    let shouldShowPreview = true;
-    let bufferTime = this.state.bufferTime;
-    let videoPlayer = this.videoPlayer.current;
-    let noVideo = this.state.noVideo;
-    let playSpeed = this.props.startTime < Date.now() ? this.props.playSpeed : 0;
+    // // let offset = TimelineWorker.currentOffset();
+    // let shouldShowPreview = true;
+    // let bufferTime = this.state.bufferTime;
+    // let videoPlayer = this.roadVideoPlayer.current;
+    // let noVideo = this.state.noVideo;
+    // let playSpeed = this.props.startTime < Date.now() ? this.props.playSpeed : 0;
 
-    if (videoPlayer) {
-      let playerState = videoPlayer.getState().player;
-      if (!playerState.buffered || Number.isNaN(playerState.duration)) {
-        return;
-      }
-      if (playSpeed && this.props.currentSegment) {
-        let curVideoTime = playerState.currentTime;
-        let desiredVideoTime = this.currentVideoTime(offset);
-        let timeDiff = desiredVideoTime - curVideoTime;
+    // if (videoPlayer) {
+    //   let playerState = videoPlayer.getState().player;
+    //   if (!playerState.buffered || Number.isNaN(playerState.duration)) {
+    //     return;
+    //   }
+    //   if (playSpeed && this.props.currentSegment) {
+    //     let curVideoTime = playerState.currentTime;
+    //     // let desiredVideoTime = this.currentVideoTime(offset);
+    //     let timeDiff = desiredVideoTime - curVideoTime;
 
-        let isBuffered = false;
-        for (let i = 0, buf = playerState.buffered, len = buf.length; i < len; ++i) {
-          let start = buf.start(i);
-          if (start < desiredVideoTime && buf.end(i) > desiredVideoTime) {
-            isBuffered = true;
-            break;
-          } else if (Math.abs(start - desiredVideoTime) < 5) {
-            isBuffered = true;
-            break;
-          }
-        }
+    //     let isBuffered = false;
+    //     for (let i = 0, buf = playerState.buffered, len = buf.length; i < len; ++i) {
+    //       let start = buf.start(i);
+    //       if (start < desiredVideoTime && buf.end(i) > desiredVideoTime) {
+    //         isBuffered = true;
+    //         break;
+    //       } else if (Math.abs(start - desiredVideoTime) < 5) {
+    //         isBuffered = true;
+    //         break;
+    //       }
+    //     }
 
-        // console.log('Adjusting time drift by', timeDiff, curVideoTime);
-        // console.log(playerState);
-        shouldShowPreview = playerState.buffered.length === 0 || playerState.waiting || (Math.abs(timeDiff) > 2);
+    //     // console.log('Adjusting time drift by', timeDiff, curVideoTime);
+    //     // console.log(playerState);
+    //     shouldShowPreview = playerState.buffered.length === 0 || playerState.waiting || (Math.abs(timeDiff) > 2);
 
-        if (Number.isFinite(timeDiff) && Math.abs(timeDiff) > 0.25) {
+    //     if (Number.isFinite(timeDiff) && Math.abs(timeDiff) > 0.25) {
 
-          if (Math.abs(timeDiff) > bufferTime * 1.1 || (Math.abs(timeDiff) > 0.5 && isBuffered)) {
-            if (desiredVideoTime > playerState.duration) {
-              noVideo = true;
-            } else if (desiredVideoTime < 0) {
-              noVideo = true;
-            } else {
-              noVideo = false;
-              console.log('Seeking!', desiredVideoTime);
-              // debugger;
-              if (isBuffered) {
-                videoPlayer.seek(desiredVideoTime);
-              } else {
-                console.log(playerState, desiredVideoTime);
-                videoPlayer.seek(desiredVideoTime + this.state.bufferTime * this.props.playSpeed);
-              }
-            }
-          } else {
-            if (timeDiff > 0) {
-              timeDiff = Math.min(1, timeDiff);
-            } else {
-              timeDiff = Math.max(0.25, timeDiff + this.props.playSpeed) - this.props.playSpeed;
-            }
-            if (this.props.startTime < Date.now()) {
-              videoPlayer.playbackRate = (this.props.playSpeed + timeDiff);
-            } else {
-              videoPlayer.playbackRate = 0;
-            }
-            noVideo = false;
-          }
-        } else {
-          noVideo = false;
-          videoPlayer.playbackRate = playSpeed;
-        }
+    //       if (Math.abs(timeDiff) > bufferTime * 1.1 || (Math.abs(timeDiff) > 0.5 && isBuffered)) {
+    //         if (desiredVideoTime > playerState.duration) {
+    //           noVideo = true;
+    //         } else if (desiredVideoTime < 0) {
+    //           noVideo = true;
+    //         } else {
+    //           noVideo = false;
+    //           console.log('Seeking!', desiredVideoTime);
+    //           // debugger;
+    //           if (isBuffered) {
+    //             videoPlayer.seek(desiredVideoTime);
+    //           } else {
+    //             console.log(playerState, desiredVideoTime);
+    //             videoPlayer.seek(desiredVideoTime + this.state.bufferTime * this.props.playSpeed);
+    //           }
+    //         }
+    //       } else {
+    //         if (timeDiff > 0) {
+    //           timeDiff = Math.min(1, timeDiff);
+    //         } else {
+    //           timeDiff = Math.max(0.25, timeDiff + this.props.playSpeed) - this.props.playSpeed;
+    //         }
+    //         if (this.props.startTime < Date.now()) {
+    //           videoPlayer.playbackRate = (this.props.playSpeed + timeDiff);
+    //         } else {
+    //           videoPlayer.playbackRate = 0;
+    //         }
+    //         noVideo = false;
+    //       }
+    //     } else {
+    //       noVideo = false;
+    //       videoPlayer.playbackRate = playSpeed;
+    //     }
 
-        if (this.props.currentSegment && playerState.paused && !playerState.seeking) {
-          console.log('Play');
-          videoPlayer.play();
-        }
-      } else {
-        shouldShowPreview = !this.props.currentSegment || !playerState.buffered.length;
-        if (!playerState.paused && !playerState.seeking && playerState.buffered.length) {
-          console.log('Pause');
-          videoPlayer.pause();
-        }
-      }
-    }
-    if (this.imageRef.current) {
-      if (shouldShowPreview && this.imageRef.current.src !== this.nearestImageFrame(offset)) {
-        this.imageRef.current.src = this.nearestImageFrame(offset);
-      }
-      this.imageRef.current.style.opacity = shouldShowPreview ? 1 : 0;
-    }
-    if (noVideo !== this.state.noVideo) {
-      this.setState({
-        noVideo
-      });
-    }
+    //     if (this.props.currentSegment && playerState.paused && !playerState.seeking) {
+    //       console.log('Play');
+    //       videoPlayer.play();
+    //     }
+    //   } else {
+    //     shouldShowPreview = !this.props.currentSegment || !playerState.buffered.length;
+    //     if (!playerState.paused && !playerState.seeking && playerState.buffered.length) {
+    //       console.log('Pause');
+    //       videoPlayer.pause();
+    //     }
+    //   }
+    // }
+    // if (this.imageRef.current) {
+    //   if (shouldShowPreview && this.imageRef.current.src !== this.nearestImageFrame(offset)) {
+    //     this.imageRef.current.src = this.nearestImageFrame(offset);
+    //   }
+    //   this.imageRef.current.style.opacity = shouldShowPreview ? 1 : 0;
+    // }
+    // if (noVideo !== this.state.noVideo) {
+    //   this.setState({
+    //     noVideo
+    //   });
+    // }
   }
   renderCanvas () {
-    var calibration = TimelineWorker.getCalibration(this.props.route);
+    // var calibration = TimelineWorker.getCalibration(this.props.route);
 
     if (!calibration) {
       this.lastCalibrationTime = false;
@@ -195,16 +221,16 @@ class VideoPreview extends Component {
       this.lastCalibrationTime = calibration.LogMonoTime;
     }
     if (this.canvas_lines.current) {
-      this.renderEventToCanvas(this.canvas_lines.current, calibration, TimelineWorker.currentModel, this.renderLaneLines);
+      // this.renderEventToCanvas(this.canvas_lines.current, calibration, TimelineWorker.currentModel, this.renderLaneLines);
     }
     if (this.canvas_lead.current) {
-      this.renderEventToCanvas(this.canvas_lead.current, calibration, TimelineWorker.currentLive20, this.renderLeadCars);
+      // this.renderEventToCanvas(this.canvas_lead.current, calibration, TimelineWorker.currentLive20, this.renderLeadCars);
     }
     if (this.canvas_mpc.current) {
-      this.renderEventToCanvas(this.canvas_mpc.current, calibration, TimelineWorker.currentMPC, this.renderMPC);
+      // this.renderEventToCanvas(this.canvas_mpc.current, calibration, TimelineWorker.currentMPC, this.renderMPC);
     }
     if (this.canvas_carstate.current) {
-      this.renderEventToCanvas(this.canvas_carstate.current, calibration, TimelineWorker.currentCarState, this.renderCarState);
+      // this.renderEventToCanvas(this.canvas_carstate.current, calibration, TimelineWorker.currentCarState, this.renderCarState);
     }
   }
   renderEventToCanvas (canvas, calibration, getEvent, renderEvent) {
@@ -217,7 +243,7 @@ class VideoPreview extends Component {
       return; // loading calibration from logs still...
     }
 
-    let event = getEvent.apply(TimelineWorker);
+    // let event = getEvent.apply(TimelineWorker);
     let logTime = event ? event.LogMonoTime : null;
     let monoIndex = getEvent.name + 'MonoTime';
     if (!event) {
@@ -517,22 +543,7 @@ class VideoPreview extends Component {
 
     return coord;
   }
-  videoURL () {
-    let segment = this.props.currentSegment || this.props.nextSegment;
-    if (!segment) {
-      return '';
-    }
-    return '//video.comma.ai/hls/' + this.props.dongleId + '/' + segment.url.split('/').pop() + '/index.m3u8';
-  }
 
-  currentVideoTime (offset = TimelineWorker.currentOffset()) {
-    if (!this.props.currentSegment) {
-      return 0;
-    }
-    offset = offset - this.props.currentSegment.routeOffset;
-
-    return offset / 1000;
-  }
 
   // nearest cache-worthy frame of the video
   // always show a frame before the current offset so that data is what happened
@@ -550,52 +561,67 @@ class VideoPreview extends Component {
 
   render () {
     return (
-      <div style={{ position: 'relative' }}>
-        <div className={ classNames({
-          [this.props.classes.hidden]: false // this.state.noVideo
-        }) }>
+      <div className={"video-preview"} style={{ position: 'relative' }}>
+          <div onClick={(evt) => { this.togglePlayback(evt) }} className={"player-overlay"}>
+          </div>
           <Player
+            className={"cabin-camera"}
             style={{ zIndex: 1 }}
-            ref={ this.videoPlayer }
+            ref={ this.cabinVideoPlayer }
             autoPlay={ !!this.props.currentSegment }
             muted={ true }
             fluid={ true }
-            src={ this.state.src }
-
-            startTime={ this.currentVideoTime() }
-            playbackRate={ this.props.startTime > Date.now() ? 0 : this.props.playSpeed }
+            src={ this.props.cabinVideoUrl }
+            controls={false}
+            // startTime={ this.currentVideoTime() }
+            playbackRate={ 1 }
             >
             <HLSSource
               isVideoChild
             />
             <ControlBar disabled />
           </Player>
+          <Player
+            className={"road-camera"}
+            style={{ zIndex: 1 }}
+            ref={ this.roadVideoPlayer }
+            autoPlay={ !!this.props.currentSegment }
+            muted={ true }
+            fluid={ true }
+            controls={false}
+            src={ this.props.roadVideoUrl }
 
-          <img style={{
-            width: '100%',
-            height: 'auto',
-            position: 'absolute',
-            top: 0,
-            zIndex: 1
-          }} ref={ this.imageRef } src={this.nearestImageFrame()} />
-          <canvas ref={ this.canvas_mpc } className={ this.props.classes.canvas } style={{
-            zIndex: 2
-          }} />
-          <canvas ref={ this.canvas_lines } className={ this.props.classes.canvas } style={{
-            zIndex: 2
-          }} />
-          <canvas ref={ this.canvas_lead } className={ this.props.classes.canvas } style={{
-            zIndex: 2
-          }} />
-          <canvas ref={ this.canvas_carstate } className={ this.props.classes.canvas } style={{
-            zIndex: 2
-          }} />
-        </div>
+            // startTime={ this.currentVideoTime() }
+            playbackRate={ 1 }
+            >
+            <HLSSource
+              isVideoChild
+            />
+            <ControlBar disabled />
+          </Player>
       </div>
     );
   }
 }
-
+// <img style={{
+//   width: '100%',
+//   height: 'auto',
+//   position: 'absolute',
+//   top: 0,
+//   zIndex: 1
+// }} ref={ this.imageRef } src={this.nearestImageFrame()} />
+// <canvas ref={ this.canvas_mpc } className={ this.props.classes.canvas } style={{
+//   zIndex: 2
+// }} />
+// <canvas ref={ this.canvas_lines } className={ this.props.classes.canvas } style={{
+//   zIndex: 2
+// }} />
+// <canvas ref={ this.canvas_lead } className={ this.props.classes.canvas } style={{
+//   zIndex: 2
+// }} />
+// <canvas ref={ this.canvas_carstate } className={ this.props.classes.canvas } style={{
+//   zIndex: 2
+// }} />
 function intrinsicMatrix () {
   return [
     950.892854,   0,        584,  0,
@@ -604,9 +630,176 @@ function intrinsicMatrix () {
     0,            0,        0,    0,
   ];
 }
-
-function mapStateToProps(state) {
-  return state.workerState;
+const modulo = function (num, div) {
+  return ((num % div) + div) % div;
 }
+const mapStateToProps = ({ eonDetail }) => {
+  let { activeRouteId, activeRouteLoading, activeRouteError, routes, activeSegmentId } = eonDetail;
+  let currentRoute = activeRouteId ? routes[activeRouteId] : null;
+  let currentSegment, nextSegment, prevSegment;
+  let dongleId;
+  if (!activeSegmentId) {
+    activeSegmentId = 0;
+  }
+  if (currentRoute) {
+    dongleId = currentRoute.dongle_id;
+  }
+  let nextSegmentId = modulo(activeSegmentId+1, currentRoute.segments.length);
+  let prevSegmentId = modulo(activeSegmentId-1, currentRoute.segments.length);
+  prevSegment = currentRoute.segments[prevSegmentId];
+  currentSegment = currentRoute.segments[activeSegmentId];
+  nextSegment = currentRoute.segments[nextSegmentId];
+  const urlEnding = currentSegment.base_url.replace("https://chffrprivate.blob.core.windows.net/chffrprivate3/v2/","");
+  // https://my-comma-video.azureedge.net/hls/0812e2149c1b5609/e64287160e762b190c41d9c2faa6e825_2019-02-05--22-48-30/index.m3u8?v=2&s=1
+  let roadVideoUrl = 'https://my-comma-video.azureedge.net/hls/' + urlEnding + '/index.m3u8?v=2&s=1';
+  let cabinVideoUrl = 'https://my-comma-video.azureedge.net/hls/' + urlEnding + '/dcamera/index.m3u8?v=2&s=1';
+  return {
+    route: currentRoute,
+    prevSegment,
+    currentSegment,
+    nextSegment,
+    dongleId,
+    roadVideoUrl,
+    cabinVideoUrl,
+    loading: activeRouteLoading,
+    error: activeRouteError,
+    open: (activeRouteId && activeRouteId.length > 0)
+  };
+};
 
 export default connect(mapStateToProps)(VideoPreview);
+
+// {
+//   "classes": {
+//     "hidden": "jss335",
+//     "videoContainer": "jss336",
+//     "videoImage": "jss337",
+//     "videoUiCanvas": "jss338"
+//   },
+//   "shouldShowUI": true,
+//   "front": false,
+//   "onVideoChange": "[function onVideoChange]",
+//   "start": 1549418400000,
+//   "end": 1550628000000,
+//   "dongleId": "0812e2149c1b5609",
+//   "route": "0812e2149c1b5609|2019-02-19--19-02-29",
+//   "segment": 4,
+//   "nextSegment": {
+//     "url": "https://chffrprivate-vzn.azureedge.net/chffrprivate3/v2/0812e2149c1b5609/e9d24fd6b4f24de86c9add536313a8cf_2019-02-19--19-02-29",
+//     "route": "0812e2149c1b5609|2019-02-19--19-02-29",
+//     "segment": 5,
+//     "routeOffset": 1202550158,
+//     "startOffset": 1202850158,
+//     "duration": 1147020,
+//     "events": {},
+//     "deviceType": 3,
+//     "videoAvailableBetweenOffsets": {},
+//     "hpgps": true,
+//     "hasVideo": true,
+//     "hasDriverCamera": true,
+//     "hasDriverCameraStream": true,
+//     "cameraStreamSegCount": 14,
+//     "driverCameraStreamSegCount": 4,
+//     "distanceMiles": 3.5573438869999996
+//   },
+//   "playSpeed": 1,
+//   "offset": 1202549158,
+//   "startTime": 1550626792241,
+//   "segments": [
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {},
+//     {}
+//   ],
+//   "segmentData": {
+//     "start": 1549418400000,
+//     "dongleId": "0812e2149c1b5609",
+//     "end": 1550628000000,
+//     "segments": {}
+//   },
+//   "loop": {
+//     "startTime": 1550620949158,
+//     "duration": 1149020
+//   },
+//   "profile": {
+//     "email": "joshua@remote-app.com",
+//     "id": "47a10d4ca4527f86",
+//     "points": 86574,
+//     "regdate": 1522528873,
+//     "superuser": false,
+//     "upload_video": false,
+//     "username": "joshuairl"
+//   },
+//   "currentSegment": {
+//     "url": "https://chffrprivate-vzn.azureedge.net/chffrprivate3/v2/0812e2149c1b5609/e9d24fd6b4f24de86c9add536313a8cf_2019-02-19--19-02-29",
+//     "route": "0812e2149c1b5609|2019-02-19--19-02-29",
+//     "segment": 4,
+//     "routeOffset": 1202550158,
+//     "startOffset": 1202790158,
+//     "duration": 1147020,
+//     "events": {},
+//     "deviceType": 3,
+//     "videoAvailableBetweenOffsets": {},
+//     "hpgps": true,
+//     "hasVideo": true,
+//     "hasDriverCamera": true,
+//     "hasDriverCameraStream": true,
+//     "cameraStreamSegCount": 14,
+//     "driverCameraStreamSegCount": 4,
+//     "distanceMiles": 3.5573438869999996
+//   },
+//   "range": 1209600000,
+//   "device": {
+//     "alias": "Pilot",
+//     "create_time": 1518049493,
+//     "device_type": "neo",
+//     "dongle_id": "0812e2149c1b5609",
+//     "imei": "014836007178800",
+//     "is_owner": true,
+//     "last_segment_utc_millis": 1550622090059,
+//     "serial": "1fe6b89a",
+//     "vehicle_id": null
+//   },
+//   "devices": [
+//     {},
+//     {},
+//     {}
+//   ],
+//   "dispatch": "[function ]"
+// }

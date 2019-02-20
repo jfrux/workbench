@@ -1,20 +1,20 @@
 import * as types from '../constants/eon_detail_action_types';
 
-export function CONNECT() {
-  return {
-    type: types.CONNECT
-  };
-}
-export function CONNECTED() {
-  return {
-    type: types.CONNECTED
-  };
-}
-export function CONNECT_FAILED() {
-  return {
-    type: types.CONNECT_FAILED
-  };
-}
+// export function CONNECT() {
+//   return {
+//     type: types.CONNECT
+//   };
+// }
+// export function CONNECTED() {
+//   return {
+//     type: types.CONNECTED
+//   };
+// }
+// export function CONNECT_FAILED() {
+//   return {
+//     type: types.CONNECT_FAILED
+//   };
+// }
 export function CHANGE_TAB(tab) {
   return {
     type: types.CHANGE_TAB,

@@ -37,6 +37,9 @@ class SegmentsTab extends React.Component {
           </div>
           <div className="drive-title">
             <span>{drive.label}</span>
+            <span className={"meta"}>
+              <span>{drive.git_repo}</span><span>{drive.git_branch}</span><span>{drive.version}</span>
+            </span>
           </div>
         </div>
       );

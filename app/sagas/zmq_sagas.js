@@ -9,7 +9,7 @@ const { ipcRenderer } = electron;
 let channel;
 
 function* createIPC(ipc, ip, service) {
-  // console.warn("createIPC",arguments);
+  console.warn("createIPC",arguments);
   channel = yield call(createIPCEventChannel, ipc);
   ipc.send(types.CONNECT, ip, service);
   while (true) {
@@ -19,7 +19,7 @@ function* createIPC(ipc, ip, service) {
 }
 
 export function* createIPCEventChannel(ipc) {
-  // console.warn("createIPCEventChannel",arguments);
+  console.warn("createIPCEventChannel",arguments);
   return eventChannel(emit => {
     const onError = (data) => {
       emit(actions.ERROR(data));
@@ -49,7 +49,7 @@ export function* createIPCEventChannel(ipc) {
 }
 
 function* connectZmq(ip, service) {
-  // console.warn("connectZmq",arguments);
+  console.warn("connectZmq",arguments);
   yield fork(createIPC, ipcRenderer, ip, service);
 }
 
@@ -64,7 +64,7 @@ function* handleConnect(action) {
   const serviceId = action.payload;
   const eon = eons[selectedEon];
   const service = serviceList[serviceId];
-  // console.warn("HANDLING CONNECT",service);
+  console.warn("HANDLING CONNECT",service);
   yield call(connectZmq, eon.ip, service);
 }
 

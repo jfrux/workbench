@@ -3,11 +3,13 @@ import { ipcMain } from 'electron';
 import * as types from '../../constants/zmq_action_types';
 const fs = require('fs');
 const Json2csvParser = require('json2csv').Parser;
+// import Reader from "@commaai/log_reader";
 const EventMessage = require('../../messages/event');
 const chalk = require("chalk");
 const prefix = chalk.bold.blue;
 const bgTaskColor = chalk.magenta;
 const data = {};
+const throttled = true;
 import throttle from "lodash.throttle";
 function writeLog(...params) {
   console.info(prefix('workbench') + ' ' + chalk.bold(bgTaskColor('[ZEROMQ]')), bgTaskColor(...params));
@@ -86,10 +88,18 @@ export function startZmqService(mainWindow, app) {
         data[service.id].messages = [];
         writeLog('ServiceID:',service.id);
         writeLog('Service Key:',service.key);
-        msgHandler = throttle((msg) => { return onMessage(sender, msg, service); }, 200, { leading: true });
+        if (throttled) {
+          msgHandler = throttle((msg) => { return onMessage(sender, msg, service); }, 200, { leading: true });
+        } else {
+          msgHandler = (msg) => { return onMessage(sender, msg, service); };
+        }
         sock.on('message', msgHandler);
-        writeLog(`Connecting to ${addr}`, service.id);
-        sock.connect(addr);
+        try {
+          writeLog(`Connecting to ${addr}`, service.id);
+          sock.connect(addr);
+        } catch (e) {
+          writeLog('[ERROR]',e.message);
+        }
       }
     });
 
@@ -97,8 +107,12 @@ export function startZmqService(mainWindow, app) {
       const { sender } = evt;
       const addr = `tcp://${ip}:${service.port}`;
       sock.removeListener('message', msgHandler);
-      writeLog(`Disconnect from ${addr}`, service.id);
-      sock.disconnect(addr);
+      try {
+        writeLog(`Disconnect from ${addr}`, service.id);
+        sock.disconnect(addr);
+      } catch (e) {
+        writeLog('[ERROR]',e.message);
+      }
     });
 
     // writeLog("Started ZeroMQ Service!");
