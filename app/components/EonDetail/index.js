@@ -42,7 +42,7 @@ class EonDetail extends React.PureComponent {
     this.props.TOGGLE_DATA();
   }
   render() {
-    const { activeTab,activeFile, connecting, activeCommand, network, eon, serviceIds } = this.props;
+    const { activeTab,activeFile, connecting, activeCommand, network, eon } = this.props;
     const commandKeys = Object.keys(commands);
     
     if (connecting) return (<LoadingOverlay message={"Connecting to EON..."} />);
@@ -76,7 +76,6 @@ class EonDetail extends React.PureComponent {
     ];
 
     let CommandPane;
-    const isLiveDataTab = (activeTab === 'live_data' || serviceIds.includes(activeTab));
     if (activeCommand) {
       CommandPane = commands[activeCommand];
     }

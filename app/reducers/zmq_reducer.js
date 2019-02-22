@@ -1,8 +1,12 @@
 /* reducer for managing list of eons and scanning for eons */
 import * as types from '../constants/zmq_action_types';
+import services from '../constants/service_list.yaml';
+
 const initialState = {
   connected: false,
-  data: {}
+  data: {},
+  services,
+  serviceIds: Object.keys(services).sort()
 };
 
 const deleteProperty = ({[key]: _, ...newObj}, key) => newObj;

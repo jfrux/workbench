@@ -9,7 +9,6 @@ import JSONPretty from 'react-json-pretty';
 import ReactJson from 'react-json-view';
 import * as ZmqActions from '../../../actions/zmq_actions';
 // import { ListGroup, Card, CardHeader, CardBody } from 'reactstrap'
-import { debugOnlyWastedRenderDetector } from "wastedrendersdetector";
 const propTypes = {
   messageCount: PropTypes.number,
   // messages: PropTypes.array,
@@ -23,7 +22,7 @@ const propTypes = {
 
 class StateList extends React.PureComponent {
   service = services[this.props.type]
-  
+
   componentDidMount(props) {
     this.props.CONNECT(this.props.type);
   }
@@ -32,23 +31,23 @@ class StateList extends React.PureComponent {
   }
   render() {
     let { type, data, depth, messageCount } = this.props;
- 
+
     let loadingMessage = "Waiting for messages...";
-    
+
     if (!data || messageCount <= 0) {
       return <LoadingOverlay message={loadingMessage} />;
     }
-    
+
     if (data) {
       return (
         <div>
           <div className={"state-data"}>
-            <ReactJson 
-              name={type} 
-              src={data} 
-              collapsed={depth} 
+            <ReactJson
+              name={type}
+              src={data}
+              collapsed={depth}
               style={{
-                backgroundColor: '#000', 
+                backgroundColor: '#000',
                 opacity: 1
               }}
               theme="brewer" />
@@ -61,28 +60,36 @@ class StateList extends React.PureComponent {
     }
   }
 }
-
+// <ReactJson
+//               name={type}
+//               src={data}
+//               collapsed={depth}
+//               style={{
+//                 backgroundColor: '#000',
+//                 opacity: 1
+//               }}
+//               theme="brewer" />
 StateList.propTypes = propTypes;
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(ZmqActions, dispatch);
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = ({eonDetail, zmq, ui}) => {
   let data;
   let messageCount = 0;
   let depth = 1;
-  let type = state.eonDetail.activeTab;
-  if (state.zmq.data && state.zmq.data[type]) {
-    if (state.zmq.data[type].messages) {
-      messageCount = state.zmq.data[type].messages.length;
+  let type = eonDetail.activeTab;
+  if (zmq.data && zmq.data[type]) {
+    if (zmq.data[type].messages) {
+      messageCount = zmq.data[type].messages.length;
     }
   }
-  if (state.zmq.data && state.zmq.data[type] && state.zmq.data[type].latestMessage) {
-    data = state.zmq.data[type].latestMessage;
+  if (zmq.data && zmq.data[type] && zmq.data[type].latestMessage) {
+    data = zmq.data[type].latestMessage;
   }
-  if (state.ui && state.ui.stateListDepth >= 0) {
-    depth = state.ui.stateListDepth;
+  if (ui && ui.stateListDepth >= 0) {
+    depth = ui.stateListDepth;
   }
   return {
     data,
@@ -95,4 +102,4 @@ const mapStateToProps = (state) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(debugOnlyWastedRenderDetector(StateList));
+)(StateList);

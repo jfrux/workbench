@@ -1,8 +1,8 @@
 {
   "name": "workbench",
   "productName": "Workbench",
-  "version": "0.2.1",
-  "description": "The Openpilot Workbench is to help people fix problems with EON, Openpilot, etc.",
+  "version": "0.2.0-alpha2",
+  "description": "Workbench is a desktop app for managing Openpilot and EON.",
   "main": "./main.prod.js",
   "author": {
     "name": "jfrux",
