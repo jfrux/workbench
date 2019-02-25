@@ -68,10 +68,11 @@ class ReactTerminal extends React.Component {
     this.fitResize();
   }
   onWindowPaste(e) {
-    console.warn('Pasted');
+    console.warn('Pasted',e);
     let paste = (e.clipboardData || window.clipboardData).getData('text');
-
-    this.sendCommand(paste);
+    if (e.path[0].className === 'xterm-helper-textarea') {
+      this.sendCommand(paste);
+    }
   }
   onMouseUp(e) {
     if (this.props.quickEdit && e.button === 2) {
@@ -136,7 +137,7 @@ class ReactTerminal extends React.Component {
     this.term.open(this.termRef);
     this.term.webLinksInit();
     this.term.winptyCompatInit();
-
+    this.term.setOption('theme', { background: '#0e1011' });
     if (props.term) {
       //We need to set options again after reattaching an existing term
       Object.keys(this.termOptions).forEach(option =>
@@ -176,7 +177,7 @@ class ReactTerminal extends React.Component {
     // this.term.attachCustomKeyEventHandler(this.keyboardHandler);
     // this.term._core.register(this.term.addDisposableListener('key', (key, ev) => {
     //   const printable = !ev.altKey && !ev.altGraphKey && !ev.ctrlKey && !ev.metaKey;
-  
+
     //   if (ev.keyCode === 13) {
     //     this.term.prompt();
     //   } else if (ev.keyCode === 8) {
@@ -188,7 +189,7 @@ class ReactTerminal extends React.Component {
     //     this.term.write(key);
     //   }
     // }));
-  
+
     // this.term._core.register(this.term.addDisposableListener('paste', (data, ev) => {
     //   this.term.write(data);
     // }));
@@ -244,7 +245,7 @@ class ReactTerminal extends React.Component {
     ipcRenderer.removeListener(types.TERMINAL_MESSAGE, this.handlePtyMessage);
     ipcRenderer.send(types.TERMINAL_DISCONNECT,{ pid: this.pid });
     this.pid = null;
-    
+
     ['title', 'focus', 'data', 'resize', 'cursormove'].forEach(type =>
       this.term.off(type)
     );
@@ -293,7 +294,7 @@ class ReactTerminal extends React.Component {
       const processId = pid;
       console.warn("Shell connected!", processId);
       this.pid = processId;
-      
+
       console.warn(process.platform);
       let filePath;
       const userHome = app.getPath('home');
