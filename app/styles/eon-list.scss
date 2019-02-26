@@ -89,7 +89,7 @@
   max-height: 100%;
   width:100%;
   flex:0 0 100%;
-  
+
   .list-group-item {
     .eon_icon {
       width:70px;
@@ -147,11 +147,26 @@
         color:#FFF;
       }
     }
-    &.disabled {
+    .results_button_delete {
+      display:none;
+    }
+    &.inactive {
       opacity: .65;
       outline:none;
+      background-color:darken($light-color,15)!important;
+      .results_button_delete {
+        display:block;
+        position:absolute;
+        top:0;
+        right:0;
+        height:100%;
+        width:15%;
+        background-color:darken($light-color,15)!important;
+        border:0;
+        color: lighten($light-color,40);
+      }
       &:hover {
-        background-color:rgba(#FFF,0.05)!important;
+        background-color:rgba(#000,0.1);
         .eon_icon {
           opacity:1;
           border-right:1px solid rgba(#000,0.5);

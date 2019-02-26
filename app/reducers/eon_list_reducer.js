@@ -57,7 +57,12 @@ export default function eonListReducer(state = initialState, action) {
         unresolvedEons: unresolveds
       };
     case types.REMOVE_UNRESOLVED_EON:
-      delete state.unresolvedEons[action.payload.id];  
+      delete state.unresolvedEons[action.payload.id];
+      return {
+        ...state
+      };
+    case types.REMOVE_EON:
+      delete state.eons[action.payload];
       return {
         ...state
       };
@@ -69,10 +74,18 @@ export default function eonListReducer(state = initialState, action) {
         eonToAdd: null
       };
     case types.CLEAR_UNRESOLVED_EONS:
+      let newEons = {};
+      const eonKeys = Object.keys(state.eons);
+      eonKeys.forEach((key) => {
+        let eon = state.eons[key];
+        eon.addStatus = 2;
+        newEons[key] = eon;
+      });
       return {
         ...state,
         addingEon: false,
         eonToAdd: null,
+        eons: newEons,
         unresolvedEons: {}
       };
     case types.RESOLVED_EON:

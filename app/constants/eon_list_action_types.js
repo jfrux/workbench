@@ -5,6 +5,7 @@ export const ADD_EON = 'eonList/ADD_EON';
 export const UPDATE_UNRESOLVED = 'eonList/UPDATE_UNRESOLVED';
 export const RESOLVED_EON = 'eonList/RESOLVED_EON';
 export const ADDING_EON = 'eonList/ADDING_EON';
+export const REMOVE_EON = 'eonList/REMOVE_EON';
 export const REMOVE_UNRESOLVED_EON = 'eonList/REMOVE_UNRESOLVED_EON';
 export const ADD_EON_ALREADY_EXISTS = 'eonList/ADD_EON_ALREADY_EXISTS';
 export const ADD_EON_FAILED = 'eonList/ADD_EON_FAILED';

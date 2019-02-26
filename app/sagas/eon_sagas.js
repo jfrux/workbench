@@ -19,6 +19,7 @@ import fs from 'fs';
 import * as routes from '../constants/routes.json';
 import * as types from '../constants/eon_detail_action_types';
 import * as eonListTypes from '../constants/eon_list_action_types';
+import * as networkScannerActions from '../actions/network_scanner_actions';
 import * as eonListActions from '../actions/eon_list_actions';
 import * as eonDetailActions from '../actions/eon_detail_actions';
 
@@ -131,15 +132,21 @@ function* handleSelectEon(action) {
   yield put(eonDetailActions.CHANGE_TAB('console', activeTab));
   yield put(push(routes.EON_DETAIL));
 }
-
+function* routeWatcher({payload}) {
+  const { location } = payload;
+  console.warn("routeWatcher",payload);
+  if (location.pathname === routes.EON_LIST) {
+    yield put(networkScannerActions.BEGIN_scanNetwork());
+  }
+}
 // EXPORT ROOT SAGA
 export function* eonSagas() {
   // console.warn("types:",types);
-  
+
   yield all([
     takeLatest(types.RUN_COMMAND, handleRunCommand),
     takeLatest(eonListTypes.SELECT_EON, handleSelectEon),
-    // takeLatest('@@router/LOCATION_CHANGE', routeWatcher),
+    takeEvery('@@router/LOCATION_CHANGE', routeWatcher),
     takeEvery(types.CONNECT_FAILED, addEonListError),
     // throttle(250,types.MESSAGE_RECEIVED,handleMessage),
   ]);

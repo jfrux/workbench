@@ -1,4 +1,13 @@
 
+  .terminal {
+    height:100%;
+    width:100%;
+
+  }
+  .xterm-screen {
+    height:100%!important;
+    width:100%!important;
+  }
   .content {
     position: relative;
     top: initial;
@@ -20,8 +29,8 @@
       }
     }
   }
-  .content::-webkit-scrollbar { 
-    display: none; 
+  .content::-webkit-scrollbar {
+    display: none;
   }
 
   &.eon-detail {

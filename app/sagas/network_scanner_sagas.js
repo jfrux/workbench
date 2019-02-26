@@ -1,6 +1,9 @@
 import { all, take, call, join, fork, race, spawn, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
 import { eventChannel, END } from 'redux-saga';
+const isPortReachable = require('is-port-reachable');
+
 import electron from 'electron';
+
 const { ipcRenderer } = electron;
 import rpc from '../rpc-client';
 import arp from 'node-arp';
@@ -44,7 +47,7 @@ export function* createScannerEventChannel(scanner) {
       // console.log("[NETWORK_SCANNER] scanPartialComplete",data);
       emit(networkScannerActions.PARTIALCOMPLETE_scanNetwork(data));
     };
-    
+
     const scanComplete = () => {
       // console.log("[NETWORK_SCANNER] scanComplete");
       emit(networkScannerActions.COMPLETE_scanNetwork());
@@ -83,11 +86,11 @@ function* scanNetwork() {
 
 function* handleAddEon(action) {
   const { eonList } = yield select();
-  const { unresolvedEons } = eonList; 
+  const { unresolvedEons } = eonList;
   let { payload } = action;
   let randomId = revisedRandId();
   console.warn(`[NETWORK_SCANNER] handleAddEon(${action})`);
-  
+
   let newEon = {};
 
   console.warn(`[NETWORK_SCANNER] Adding EON...`);
@@ -213,19 +216,25 @@ function pingEon(eon) {
     }
   });
 }
-
-function* handlePingEon(action) {
-  console.warn(`[NetworkScanner] Pinging IP address to check validity`,action);
-  const eon = action.payload.data;
+function* handlePingEon(eon) {
+  console.warn(`[NetworkScanner] Pinging IP address to check validity`,eon);
+  // const eon = action.payload.data;
   yield put(eonListActions.PING_EON(eon));
   try {
-    const {pingResp, timeout} = yield race({
-      pingResp: call(pingEon, eon),
-      timeout: delay(10000)
-    })
-    // console.warn(pingResp);
-    if (pingResp) {
-      yield put(eonListActions.PING_EON_SUCCESS(eon));
+    const isReachable = yield call(isPortReachable,8022, {host: eon.ip});
+    console.log(`[NetworkScanner] ${eon.ip}:8022 is port reachable?`,isReachable);
+    if (isReachable) {
+      const {pingResp, timeout} = yield race({
+        pingResp: call(pingEon, eon),
+        timeout: delay(10000)
+      });
+
+      console.warn(`[NetworkScanner] Response of ping: ${pingResp}`);
+      if (pingResp) {
+        yield put(eonListActions.PING_EON_SUCCESS(eon));
+      } else {
+        yield put(eonListActions.PING_EON_FAILED(eon));
+      }
     } else {
       yield put(eonListActions.PING_EON_FAILED(eon));
     }
@@ -241,16 +250,17 @@ function* pingEons() {
   const { foundCount } = networkScanner;
   const { eons, unresolvedEons } = eonList;
   let eonKeys = Object.keys(eons);
+  yield all(eonKeys.map((key) => {
+    const eon = eons[key];
+    return handlePingEon(eon);
+  }));
   try {
     rpc.emit('notify',{ title: 'Workbench finished scanning!', body: `Found ${foundCount} EON on the network.` });
   } catch (e) {
     console.warn("Cannot send notification right now...");
   }
   // console.warn("Pinging EONS:",eonKeys);
-  yield all(eonKeys.map(function * (key) {
-    const eon = eons[key];
-    yield put(eonListActions.DO_PING_EON(eon));
-  }));
+
   // yield put(networkScannerActions.PINGED_EONS());
 }
 
@@ -272,6 +282,9 @@ function* cleanUp() {
     // console.warn("cleaning up eon:",eon);
   });
 }
+function* handleDoPingEon(action) {
+  yield call(handlePingEon,action.payload.data);
+}
 // EXPORT ROOT SAGA
 export function* scannerSagas() {
   yield all([
@@ -281,7 +294,7 @@ export function* scannerSagas() {
     takeEvery(types.SCAN_NETWORK_RESULT, handleAddEon),
     takeLatest(types.SCAN_NETWORK, scanNetwork),
     takeEvery(types.SCAN_NETWORK_COMPLETE, pingEons),
-    takeLatest(eonListTypes.DO_PING_EON, handlePingEon),
+    takeLatest(eonListTypes.DO_PING_EON, handleDoPingEon),
     takeLatest(types.PINGED_EONS, cleanUp)
   ]);
 }

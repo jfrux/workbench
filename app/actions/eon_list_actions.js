@@ -14,6 +14,7 @@ export function SET_TERMINAL_PORT(port) {
     payload: port
   };
 }
+
 export function RESET_ERROR() {
   return {
     type: types.RESET_ERROR
@@ -71,6 +72,13 @@ export function ADD_EON_ALREADY_EXISTS(eon) {
     }
   };
 }
+export function REMOVE_EON(removeId) {
+  return {
+    type: types.REMOVE_EON,
+    payload: removeId
+  };
+}
+
 export function REMOVE_UNRESOLVED_EON(removeId) {
   return {
     type: types.REMOVE_UNRESOLVED_EON,
@@ -122,7 +130,7 @@ export function RESOLVED_EON(eon, mac) {
   eon.mac = mac;
   eon.id = mac;
   // updatedEon[eon.mac] = eon;
-  
+
   return {
     type: types.RESOLVED_EON,
     payload: {
