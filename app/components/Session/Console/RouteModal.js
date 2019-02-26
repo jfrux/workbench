@@ -20,7 +20,7 @@ const propTypes = {
 class RouteModal extends React.Component {
   // constructor(props) {
   //   super(props);
-    
+
   //   this.state = {
   //     modal: false
   //   };
@@ -76,7 +76,7 @@ class RouteModal extends React.Component {
         <div className={"cabana-url"}>
           <FormGroup>
             <Label for={"cabana-link"}>Sharable Cabana Link</Label>
-            <Input type={"textarea"} value={route.sharable_cabana_url} />
+            <Input type={"textarea"} defaultValue={route.sharable_cabana_url} />
           </FormGroup>
           <FormGroup>
             <Label for={"segments"}>Segments</Label>

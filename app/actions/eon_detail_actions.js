@@ -310,3 +310,43 @@ export function SHOW_EON_FAILED(e) {
     payload: e
   }
 }
+
+export function DOWNLOAD_ROUTE(eonId) {
+  return {
+    type: types.DOWNLOAD_ROUTE,
+    payload: eonId
+  }
+}
+
+export function DOWNLOAD_ROUTE_SUCCESS(eonId) {
+  return {
+    type: types.DOWNLOAD_ROUTE_SUCCESS,
+    payload: eonId
+  }
+}
+export function DOWNLOAD_ROUTE_FAILED(e) {
+  return {
+    type: types.DOWNLOAD_ROUTE_FAILED,
+    payload: e
+  }
+}
+
+export function DOWNLOAD_SEGMENT(eonId) {
+  return {
+    type: types.DOWNLOAD_SEGMENT,
+    payload: eonId
+  }
+}
+
+export function DOWNLOAD_SEGMENT_SUCCESS(eonId) {
+  return {
+    type: types.DOWNLOAD_SEGMENT_SUCCESS,
+    payload: eonId
+  }
+}
+export function DOWNLOAD_SEGMENT_FAILED(e) {
+  return {
+    type: types.DOWNLOAD_SEGMENT_FAILED,
+    payload: e
+  }
+}

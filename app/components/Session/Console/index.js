@@ -56,7 +56,7 @@ class Console extends React.Component {
       activeTab: 'events'
     };
   }
-  
+
   setTab(tab) {
     let disabled = (tab.requireAuth && !this.props.hasAuth);
     if (this.state.activeTab !== tab.id && !disabled) {
@@ -65,7 +65,7 @@ class Console extends React.Component {
       });
     }
   }
-  
+
   render() {
     const { hasAuth } = this.props;
     const tabButtons = TAB_KEYS.map((tabKey) => {
@@ -119,7 +119,9 @@ const mapStateToProps = ({eonDetail}) => {
     hasAuth = false;
   }
   console.log("hasAuth:",hasAuth);
-  return { hasAuth };
+  return {
+    hasAuth
+  };
 };
 
 export default connect(

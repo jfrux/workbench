@@ -25,6 +25,7 @@ $file-name-color: lighten($light-color,40);
 $hidden-file-name-color: rgba($file-name-color,0.4);
 $state-toolbar-height: 40px;
 body {
+  color:$text-color;
   background-color:#212121;
 }
 #foldout-container {
@@ -62,7 +63,7 @@ body {
   @import "styles/state-list";
   @import "styles/command-bar";
   @import "styles/is-mac";
-  
+
   .container-fluid {
     position: relative;
     width:100%;
@@ -86,8 +87,8 @@ body {
       width:100%;
     }
   }
-  .term_fit::-webkit-scrollbar { 
-    display: none; 
+  .term_fit::-webkit-scrollbar {
+    display: none;
   }
   .tab-pane {
     position:relative;
@@ -101,31 +102,31 @@ body {
       padding:15px;
     }
   }
-  .tab-pane::-webkit-scrollbar { 
-    display: none; 
+  .tab-pane::-webkit-scrollbar {
+    display: none;
   }
   .terminal-container {
     padding:10px;
   }
-  .terminal-container::-webkit-scrollbar { 
-    display: none; 
+  .terminal-container::-webkit-scrollbar {
+    display: none;
   }
-  
+
 .console-tab {
   position:relative;
   height:100%;
 }
-.console-tab::-webkit-scrollbar { 
-  display: none; 
+.console-tab::-webkit-scrollbar {
+  display: none;
 }
 .smalltalk {
   display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: center;
-  
+
   transition: 200ms opacity;
-  
+
   bottom: 0;
   left: 0;
   overflow: auto;
@@ -133,7 +134,7 @@ body {
   position: fixed;
   right: 0;
   top: 0;
-  
+
   z-index: 100;
 }
 
@@ -191,7 +192,7 @@ body {
   text-align:left;
   // width:100%!important;
   margin:0;
-  
+
   background:darken($base-color,5)!important;
   background:darken($base-color,5)!important;
   border-radius:0;
@@ -274,7 +275,7 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 500px;
-  
+
   user-select: none;
   color: #333;
   font-size: 120%;
@@ -287,7 +288,7 @@ body {
 .smalltalk .page .content-area {
   overflow: hidden;
   text-overflow: ellipsis;
-  
+
   padding: 6px 17px;
   position: relative;
 }
@@ -309,7 +310,7 @@ button {
   appearance: none;
   user-select: none;
   background-image: linear-gradient(#ededed, #ededed 38%, #dedede);
-  
+
   border: 1px solid rgba(0, 0, 0, 0.25);
   border-radius: 2px;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.75);
@@ -331,7 +332,7 @@ button {
 
 .smalltalk .page .button-strip {
   display: flex;
-  
+
   flex-direction: row;
   justify-content: flex-end;
 }
@@ -447,7 +448,7 @@ body {
       height:25px;
       font-size:11px;
     }
-    
+
     .state-list {
       display:table;
       width:100%;
@@ -527,7 +528,7 @@ body {
       }
     }
   }
-  
+
   &.dashboard {
     .state-card-body {
       .list-group {
@@ -535,7 +536,7 @@ body {
         flex-flow: row;
         justify-content: flex-start;
         background-color:rgba(#000,0.3);
-       
+
         .list-group-item {
           border:0;
           // border-radius: 0 !important;
@@ -599,10 +600,10 @@ body {
                 border-color:#28a745;
                 opacity:1;
                 .state-value {
-                  
+
                 }
                 .state-label {
-                  
+
                 }
               }
             }
@@ -617,14 +618,14 @@ body {
               width: $bubble-width;
               height: $bubble-height;
               position:relative;
-             
+
               .state-value {
                 top: 8px;
                 position: absolute;
                 font-size: 24px;
                 left: 13px;
                 font-weight: bold;
-                
+
               }
               .state-label {
                 position:absolute;
@@ -681,9 +682,9 @@ body {
     &:first-child,&:last-child {
       border-radius:0;
     }
-  
+
   }
-  
+
   .card-body {
     padding:0!important;
     background-color:rgba(#000,0);
@@ -825,11 +826,11 @@ body {
 }
 .progress_overlay {
   margin-top:25px;
-  
+
 }
 
 .scanned_no_results {
-  
+
 }
 .manual_error {
   background-color:transparent!important;

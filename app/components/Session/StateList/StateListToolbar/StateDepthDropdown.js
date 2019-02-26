@@ -5,16 +5,16 @@ import * as UiActions from '../../../../actions/ui_actions';
 import * as EonActions from '../../../../actions/eon_detail_actions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Nav, NavItem, Dropdown, DropdownItem, DropdownToggle, DropdownMenu, NavLink } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { getZmqServicesState, getZmqServicesIdsSortedState,  getActiveTabState} from '../../../../selectors/selectors';
+import { Dropdown, DropdownItem, DropdownToggle, DropdownMenu } from 'reactstrap';
+import { getDepthState } from '../../../../selectors/selectors';
+
 const propTypes = {
-  services: PropTypes.object,
-  activeTab: PropTypes.object,
-  serviceIds: PropTypes.array
+  paused: PropTypes.bool,
+  depth: PropTypes.number,
+  messageCount: PropTypes.number
 };
 
-class StateTypeDropdown extends Component {
+class StateDepthDropdown extends Component {
   constructor(props) {
     super(props);
 
@@ -46,41 +46,36 @@ class StateTypeDropdown extends Component {
   }
 
   render() {
-    const { serviceIds, services, activeService } = this.props;
-    const stateTabs = serviceIds.map((key) => {
-      const service = services[key];
-      return (
-        <DropdownItem onClick={() => { this.setService(key); }} id={key + "-tab-link"} key={key + "-tab-link"}>{service.label}</DropdownItem>
-      );
-    });
-    return (<Dropdown nav isOpen={this.state.servicelistOpen} toggle={this.toggleServiceList}>
+    const { depth } = this.props;
+    return (
+      <Dropdown nav isOpen={this.state.dropdownOpen} toggle={this.toggle}>
       <DropdownToggle nav caret>
-        {activeService.label}
-        {!activeService.id && "Inactive"}
+        Depth: {depth + ""}
       </DropdownToggle>
-      <DropdownMenu className="service-list-dropdown">
-        {stateTabs}
+      <DropdownMenu>
+        <DropdownItem onClick={() => { this.setDepth(0); }}>0</DropdownItem>
+        <DropdownItem onClick={() => { this.setDepth(1); }}>1</DropdownItem>
+        <DropdownItem onClick={() => { this.setDepth(2); }}>2</DropdownItem>
+        <DropdownItem onClick={() => { this.setDepth(3); }}>3</DropdownItem>
       </DropdownMenu>
     </Dropdown>
     );
   }
 }
 
-StateTypeDropdown.propTypes = propTypes;
+StateDepthDropdown.propTypes = propTypes;
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({...ZmqActions,...EonActions,...UiActions}, dispatch);
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, props) => {
   return {
-    serviceIds: getZmqServicesIdsSortedState(state),
-    services: getZmqServicesState(state),
-    activeService: getActiveTabState(state)
+    depth: getDepthState(state)
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(StateTypeDropdown);
+)(StateDepthDropdown);

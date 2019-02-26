@@ -27,18 +27,22 @@ export const getDepthState = createSelector(
 
 // ACTIVE STATE LIST
 const getActiveTab = ({ eonDetail }) => {
+  // console.log("getActiveTab:", eonDetail.activeTab);
   return eonDetail.activeTab;
 }
 
 export const getActiveTabState = createSelector(
   [ getActiveTab ],
-  (activeTab) => activeTab
-)
+  (activeTab) => {
+    // console.log("getActiveTabState:", activeTab);
+    return activeTab;
+  }
+);
 
 // ZMQ PAUSED
 const getZmqPaused = ({ zmq }) => {
   return zmq.paused;
-}
+};
 
 export const getZmqPausedState = createSelector(
   [ getZmqPaused ],
@@ -61,4 +65,13 @@ const getZmqServices = ({ zmq }) => {
 export const getZmqServicesState = createSelector(
   [ getZmqServices ],
   (services) => services
+)
+
+const getZmqData = ({ eonDetail, zmq }) => {
+  return zmq.data[eonDetail.activeTab];
+}
+
+export const getZmqDataState = createSelector(
+  [ getZmqData ],
+  (data) => data
 )

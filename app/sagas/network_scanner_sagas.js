@@ -44,7 +44,7 @@ export function* createScannerEventChannel(scanner) {
       // console.log("[NETWORK_SCANNER] scanPartialComplete",data);
       emit(networkScannerActions.PARTIALCOMPLETE_scanNetwork(data));
     };
-    
+
     const scanComplete = () => {
       // console.log("[NETWORK_SCANNER] scanComplete");
       emit(networkScannerActions.COMPLETE_scanNetwork());
@@ -83,11 +83,11 @@ function* scanNetwork() {
 
 function* handleAddEon(action) {
   const { eonList } = yield select();
-  const { unresolvedEons } = eonList; 
+  const { unresolvedEons } = eonList;
   let { payload } = action;
   let randomId = revisedRandId();
   console.warn(`[NETWORK_SCANNER] handleAddEon(${action})`);
-  
+
   let newEon = {};
 
   console.warn(`[NETWORK_SCANNER] Adding EON...`);

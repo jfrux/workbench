@@ -112,7 +112,7 @@ function getNeighborNetworks(ip) {
 
 export function getIpsForScan(ip) {
   const { afterNetwork, beforeNetwork } = getNeighborNetworks(ip);
-  const baseIpsToScan = [getBaseIp(ip,3).baseIp,beforeNetwork,afterNetwork]; 
+  const baseIpsToScan = [getBaseIp(ip,3).baseIp,beforeNetwork,afterNetwork];
   return baseIpsToScan;
 }
 

@@ -1,6 +1,6 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import EonDetail from '../components/EonDetail';
+import Session from '../components/Session';
 import * as EonActions from '../actions/eon_detail_actions';
 import {getHasOpenedFiles} from '../selectors/get_opened_files_keys';
 // import { debugOnlyWastedRenderDetector } from "wastedrendersdetector";
@@ -25,4 +25,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(EonDetail);
+)(Session);

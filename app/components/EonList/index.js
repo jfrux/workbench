@@ -28,7 +28,7 @@ const propTypes = {
   unresolvedEonIds: PropTypes.array
 };
 
-function ValidateIPaddress(ipaddress) 
+function ValidateIPaddress(ipaddress)
 {
  if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress))
   {
@@ -53,6 +53,7 @@ class EonList extends Component {
   }
   handleScanNetwork = () => {
     this.setState({showAddForm: false});
+
     this.props.BEGIN_scanNetwork();
   }
   toggleAddForm = () => {
@@ -115,7 +116,7 @@ class EonList extends Component {
     // console.log("eonList:",eonList);
     // if (selectedEon !== null) {
     //   // console.warn("SSH CONNECTION ERROR!",sshConnectionError);
-    //   return (<Redirect to={routes.EON_DETAIL} />); 
+    //   return (<Redirect to={routes.EON_DETAIL} />);
     // }
     if (network === 'disconnected') {
       return <NoConnection />;
@@ -166,7 +167,7 @@ class EonList extends Component {
               </CardBody>
             </Card>
           </Collapse>
-          
+
           <Collapse className={"message"} isOpen={error && error.length > 0}>
             <Card body inverse color="danger" className={"error_message"}>
               <CardBody className={"error_message_body"}>

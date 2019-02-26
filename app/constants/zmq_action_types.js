@@ -1,5 +1,7 @@
-export const CONNECT = 'zmq/CONNECT';
-export const DISCONNECT = 'zmq/DISCONNECT';
-export const MESSAGE = 'zmq/MESSAGE';
-export const ERROR = 'zmq/ERROR';
-export const TOGGLE_PAUSE = 'zmq/TOGGLE_PAUSE';
+module.exports = {
+  "CONNECT": 'zmq/CONNECT',
+  "DISCONNECT": 'zmq/DISCONNECT',
+  "MESSAGE": 'zmq/MESSAGE',
+  "ERROR": 'zmq/ERROR',
+  "TOGGLE_PAUSE": 'zmq/TOGGLE_PAUSE'
+}

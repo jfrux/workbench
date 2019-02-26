@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Nav } from 'reactstrap';
 import StateMessages from './StateMessages';
+import StateDepthDropdown from './StateDepthDropdown';
 import StateTypeDropdown from './StateTypeDropdown';
 const propTypes = {};
 
@@ -8,6 +9,7 @@ class StateListToolbar extends Component {
   render() {
     return (
       <Nav className="events-toolbar">
+        <StateDepthDropdown />
         <StateTypeDropdown />
         <StateMessages />
       </Nav>

@@ -12,6 +12,7 @@ export function DISCONNECT(service) {
   };
 }
 export function MESSAGE(data) {
+  // console.log("MESSAGE ACTION:", data);
   return {
     type: types.MESSAGE,
     payload: data

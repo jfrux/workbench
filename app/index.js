@@ -7,10 +7,12 @@ import './app.global.scss';
 
 // console.warn(configureStore);
 const { store, persistor } = configureStore();
+// import Test from './containers/Test';
+//
 
 render(
   <AppContainer>
-    <Root persistor={persistor} store={store} history={history} />
+  <Root persistor={persistor} store={store} history={history} />
   </AppContainer>,
   document.getElementById('root')
 );
@@ -26,3 +28,4 @@ if (module.hot) {
     );
   });
 }
+//

@@ -53,21 +53,33 @@ function scanNetwork(sender) {
   }));
 }
 
-export function startNetworkScannerService(mainWindow, app) {
-  // writeLog("Starting Scanner Service...");
-  return new Promise((resolve, reject) => {
-    ipcMain.on(types.SCAN_NETWORK,(evt) => {
-      // writeLog(`Received ${types.SCAN_NETWORK}`);
-      const { sender } = evt;
-      scanNetwork(sender).then((results) => {
-        // writeLog("Completed scan.");
-        sender.send(types.SCAN_NETWORK_COMPLETE,results);
-      }).catch((err) => {
-        // writeLog("Scan Failed!",err);
-        sender.send(types.SCAN_NETWORK_FAIL,err);
+const start = async () => {
+    const freep = await fp(12000, 12100);
+    const port = freep[0];
+
+    /**
+     * SOCKET IO SETUP
+     */
+    const app = require('express')();
+    const http = require('http').Server(app);
+    const io = require('socket.io')(http);
+
+    writeLog("Initialized http/socket io");
+    io.on('connection', function(client) {
+      client.on(types.SCAN_NETWORK,() => {
+        // writeLog(`Received ${types.SCAN_NETWORK}`);
+        scanNetwork(client).then((results) => {
+          // writeLog("Completed scan.");
+          client.emit(types.SCAN_NETWORK_COMPLETE,results);
+        }).catch((err) => {
+          // writeLog("Scan Failed!",err);
+          client.emit(types.SCAN_NETWORK_FAIL,err);
+        });
       });
     });
+
     resolve();
     // writeLog("Scanner Service Started!");
-  });
-}
+};
+
+start();

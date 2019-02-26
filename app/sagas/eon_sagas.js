@@ -167,6 +167,24 @@ function* downloadScreenshot() {
   }
 }
 
+function* downloadRoute(route) {
+  // let route;
+  // let route = '/data/screenshots/screenshot.png';
+  let localScreenshotsDir = path.join(require('os').homedir(), 'Desktop', 'eon_screenshots');
+  let localScreenshotsFile = path.join(localScreenshotsDir,'EON_' + new Date().getTime() + '.png');
+
+  console.log(`[sftp] Downloading screenshot from EON...`);
+  mkdirp.sync(localScreenshotsDir);
+  try {
+    screenshotFile = yield downloadFile(remoteScreenshotFile, localScreenshotsFile);
+    console.log(`[sftp] Screenshot downloaded to ${localScreenshotsFile}.`);
+    rpc.emit('notify', 'Screenshot captured!', 'Workbench has saved the screenshot to:\n' + localScreenshotsDir);
+  } catch (e) {
+    console.error(e);
+    rpc.emit('notify', 'ERROR! Screenshot failed!', 'Workbench could not take a screenshot.');
+  }
+}
+
 function* listDirectory(remotePath) {
   yield connect();
   return yield app.sftpClient.list(remotePath);
@@ -185,7 +203,7 @@ function* apiRequest(endpointUrl) {
   const { eonDetail } = yield select();
   const { auth } = eonDetail;
   const { commaUser } = auth;
-  
+
   const { accessToken } = commaUser;
   if (!accessToken) return ;
   // console.log(accessToken);
@@ -199,7 +217,7 @@ function* apiRequest(endpointUrl) {
 
   return resp;
 };
-const groupBy = (arr, k, fn = () => true) => 
+const groupBy = (arr, k, fn = () => true) =>
   arr.reduce((r, c) => (fn(c[k]) ? r[c[k]] = [...r[c[k]] || [], c] : null, r), {});
 
 import {ENDPOINTS} from '../constants/comma_endpoints';
@@ -227,7 +245,7 @@ function buildEndpointUrl(key, tokens = {}) {
 function* getProfile() {
   let results;
   const endpoint = buildEndpointUrl('profile');
-  
+
   try {
     results = yield apiRequest(endpoint);
     yield put(eonDetailActions.FETCH_PROFILE_SUCCESS(results));
@@ -302,7 +320,7 @@ function* getRoutes() {
 function* getDevices() {
   let results;
   const endpoint = buildEndpointUrl('devices');
-  
+
   try {
     results = yield apiRequest(endpoint);
     yield put(eonDetailActions.FETCH_DEVICES_SUCCESS(results));
@@ -314,7 +332,7 @@ function* getDevices() {
 function* getLogs(fullname) {
   let results;
   const endpoint = buildEndpointUrl('logs', { fullname });
-  
+
   try {
     results = yield apiRequest(endpoint);
     yield put(eonDetailActions.FETCH_LOGS_SUCCESS(results));
@@ -339,7 +357,7 @@ function* getSegments({type, payload}) {
   let results,routesData = [], segments, segmentsGroupedByRouteId, routesSorted, routesById = {}, routeKeys;
   // console.log("times:",payload);
   const endpoint = buildEndpointUrl('segments', { dongleId: dongleId.value, startTime, endTime });
-  
+
   // try {
     results = yield apiRequest(endpoint);
     segments = results;
@@ -350,7 +368,7 @@ function* getSegments({type, payload}) {
       let segments = segmentsGroupedByRouteId[routeKey];
       const segmentIds = [];
       if (segments) {
-        // segment_thumb_sec = 
+        // segment_thumb_sec =
         segments = segments.map((segment) => {
           let start_time = moment.utc(segment.start_time_utc_millis);
           let end_time = moment.utc(segment.end_time_utc_millis);
@@ -379,7 +397,7 @@ function* getSegments({type, payload}) {
             thumbnail_url: path.join(base_url,`sec${current_time}-tiny.jpg`)
           };
         });
-        
+
         const numOfSegments = segmentIds.length;
         let midpointSegmentIndex = 0, midpointSegment;
         if (numOfSegments > 1) {
@@ -388,7 +406,7 @@ function* getSegments({type, payload}) {
         const firstSegment = segments[0];
         midpointSegment = segments[midpointSegmentIndex];
         const lastSegment = segments[numOfSegments-1];
-        
+
         // console.log("midpointSegmentIndex:",midpointSegmentIndex);
         // console.log("midpointSegment:",midpointSegment);
         const start_time = firstSegment.start_time;
@@ -414,7 +432,7 @@ function* getSegments({type, payload}) {
         const git_commit_short = firstSegment.git_commit.slice(0,7);
         const cabana_url = `https://community.comma.ai/cabana/?route=${routeKey}`;
         const sharable_cabana_url = `https://community.comma.ai/cabana/?route=${routeKey}&max=19&url=${firstSegment.base_url}`;
-        
+
         return {
           ...firstSegment,
           start_time,
@@ -467,7 +485,7 @@ function* getFileLinks({type, payload}) {
 function* getAnnotations(dongleId, startTime, endTime) {
   let results;
   const endpoint = buildEndpointUrl('annotations', { dongleId, startTime, endTime });
-  
+
   try {
     results = yield apiRequest(endpoint);
     yield put(eonDetailActions.FETCH_ANNOTATIONS_SUCCESS(results));
@@ -563,7 +581,7 @@ function* handleFetchDataParams() {
     fileDataParams.forEach((final) => {
       finalDataParams[final.id] = final;
     });
-    
+
     yield put(eonDetailActions.FETCH_DATA_PARAMS_SUCCESS(finalDataParams));
   } catch (e) {
     console.log("Failed to fetch data params...", e);
@@ -572,7 +590,7 @@ function* handleFetchDataParams() {
 
     dataParamResults = yield call(handleFetchDataParams);
   }
-  
+
 }
 
 function* handleBootstrapEON() {
@@ -631,7 +649,7 @@ function* handleFetchDirectory(data) {
       fileExt = "";
     }
     const fileType = (fileExt) ? fileExt : "";
-  
+
     // console.log(fileExt);
     let fileObj = {
       ...file,

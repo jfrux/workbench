@@ -4,7 +4,7 @@ function assignGetter(data, name, capnpObject, method) {
     configurable: true,
     get: function () {
       var value = capnpObject[method]();
-      // 
+      //
       switch (value.constructor.name) {
         case 'Uint64':
         case 'Int64':
@@ -27,7 +27,7 @@ function assignGetter(data, name, capnpObject, method) {
   });
 }
 
-export function toJSON(capnpObject, struct) {
+const toJSON = function(capnpObject, struct) {
   if (typeof capnpObject !== 'object' || !capnpObject._capnp) {
     return capnpObject;
   }
@@ -77,3 +77,5 @@ export function toJSON(capnpObject, struct) {
 
   return data;
 }
+
+module.exports = toJSON;

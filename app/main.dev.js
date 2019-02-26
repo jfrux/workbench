@@ -7,6 +7,8 @@
  * `./app/main.prod.js` using webpack. This gives us some performance wins.
  *
  */
+const { fork } = require('child_process');
+import { requireTaskPool } from 'electron-remote';
 import { writeLog, writeFailed, writeSuccess} from './main/log';
 import { app, BrowserWindow, shell, Menu, nativeImage } from 'electron';
 import Analytics from 'electron-google-analytics';
@@ -103,7 +105,7 @@ let mainWindow;
 
 app.on('ready', async () => {
   writeLog("Ready.");
-  let analytics; 
+  let analytics;
   try {
     analytics = new Analytics('UA-122297332-4', { userAgent: `workbench-${version}` });
   } catch (e) {
@@ -139,7 +141,11 @@ app.on('ready', async () => {
     width,
     height,
     minWidth: 320,
-    minHeight: 240
+    minHeight: 240,
+    webPreferences: {
+      // nativeWindowOpen: true,
+      // nodeIntegrationInWorker: true
+    }
   };
   try {
     analytics.event('App', 'open', { evLabel: 'opened-workbench', evValue: true, clientId: app.clientId });
@@ -158,14 +164,14 @@ app.on('ready', async () => {
 
   const makeMenu = () => {
     const menu = AppMenu.createMenu(app.createWindow);
-  
+
     Menu.setApplicationMenu(AppMenu.buildMenu(menu));
   };
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
-  
+
   let webContents = mainWindow.webContents;
-  mainWindow.on('resize', debounce((msg) => { 
+  mainWindow.on('resize', debounce((msg) => {
     // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with
     // the height, width, and x and y coordinates.
     let { width, height } = mainWindow.getBounds();
@@ -193,24 +199,23 @@ app.on('ready', async () => {
     app.quit();
     mainWindow = null;
   });
-  
+
   makeMenu();
 
   // const { startWsService } = require("./main/services/websocket");
   const { startShellService } = require("./main/services/shell");
   const { startNetworkScannerService } = require("./main/services/network-scanner");
-  const { startZmqService } = require("./main/services/zmq");
-  const { startSftpService } = require("./main/services/sftp");
+  // const { startSftpService } = require("./main/services/sftp");
   const { startUiService } = require("./main/services/ui");
   // startStreamer().catch((e) => {
   //   writeLog("Streamer service could not be started.", e.message);
   // });
-  try {
-    await startSftpService(mainWindow, app);
-    writeSuccess('SFTP Service');
-  } catch (e) {
-    writeFailed('SFTP Service', e)
-  }
+  // try {
+  //   await startSftpService(mainWindow, app);
+  //   writeSuccess('SFTP Service');
+  // } catch (e) {
+  //   writeFailed('SFTP Service', e)
+  // }
   try {
     await startShellService(mainWindow, app);
     writeSuccess('Shell Service');
@@ -224,13 +229,14 @@ app.on('ready', async () => {
     writeFailed('RPC Service', e);
   }
   try {
-    await startNetworkScannerService(mainWindow, app);
+    fork(path.resolve(__dirname, "./main/services/network-scanner"));
+    // await startNetworkScannerService(mainWindow, app);
     writeSuccess('Network Scanner Service');
   } catch (e) {
     writeFailed('Network Scanner Service', e);
   }
   try {
-    await startZmqService(mainWindow, app);
+    fork(path.resolve(__dirname, "./main/services/zmq"));
     writeSuccess('ZeroMQ Service');
   } catch (e) {
     writeFailed('ZeroMQ Service', e);
