@@ -1,0 +1,8 @@
+scanner:
+  id: "scanner"
+  type: "Object"
+  key: "Scanner"
+  port: 12000
+  label: "Scanner"
+  fields:
+  description: "Network scanner socket"

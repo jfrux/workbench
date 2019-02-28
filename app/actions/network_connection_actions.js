@@ -1,7 +1,8 @@
-import * as CidrUtil from "node-cidr";
-import IpUtil from "ip";
-import iprange, { IPEmitter }  from 'iprange';
+const CidrUtil = require("node-cidr");
+const IpUtil = require("ip");
+const iprange = require('iprange');
 const ipv4 = /^(?:(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?:\.(?!$)|$)){4}$/;
+
 function modulo(num, div) {
   return ((num % div) + div) % div;
 }
@@ -25,7 +26,7 @@ function ip2hex(ip) {
 function assertIpv4(str, msg) {
   if (!ipv4.test(str)) { throw new Error(msg); }
 }
-export function getBaseIp(ip,octets=3) {
+function getBaseIp(ip,octets=3) {
   let aIp = ip.split('.');
   let counter = aIp.length;
   let lastSegment;
@@ -44,7 +45,7 @@ function numberRange(start, end) {
   return new Array(end - start).fill().map((d, i) => i + start);
 }
 
-export function getIpList(ip1,ip2) {
+function getIpList(ip1,ip2) {
   let ipList = [];
   for (let ip of range(ip1, ip2)) {
     if (ip.endsWith('.0')) {
@@ -59,7 +60,7 @@ export function getIpList(ip1,ip2) {
  * @param {String} ip2   last IPv4 of the range
  * @yield {String} IPv4 included in the range
  */
-export function *range(ip1, ip2) {
+function *range(ip1, ip2) {
   assertIpv4(ip1, 'argument "ip1" must be a valid IPv4 address');
   assertIpv4(ip2, 'argument "ip2" must be a valid IPv4 address');
 
@@ -81,7 +82,7 @@ function getAfterOctet(ip) {
   const aIp = ip.split('.');
   const baseIp = getBaseIp(ip,2);
   // console.warn("afterbaseIp",baseIp);
-  let differ = (baseIp.lastSegment+20);
+  let differ = (baseIp.lastSegment+30);
   if (differ > 254) {
     differ = 254;
   }
@@ -94,7 +95,7 @@ function getBeforeOctet(ip) {
   const aIp = ip.split('.');
   const baseIp = getBaseIp(ip,2);
   // console.warn("beforebaseIp",baseIp);
-  let differ = (baseIp.lastSegment-20);
+  let differ = (baseIp.lastSegment-30);
   if (differ < 0) {
     differ = 0;
   }
@@ -110,17 +111,17 @@ function getNeighborNetworks(ip) {
   };
 }
 
-export function getIpsForScan(ip) {
+function getIpsForScan(ip) {
   const { afterNetwork, beforeNetwork } = getNeighborNetworks(ip);
-  const baseIpsToScan = [getBaseIp(ip,3).baseIp,beforeNetwork,afterNetwork]; 
+  const baseIpsToScan = [getBaseIp(ip,3).baseIp,beforeNetwork,afterNetwork];
   return baseIpsToScan;
 }
 
-export function isSameNetwork(ip,otherIp) {
+function isSameNetwork(ip,otherIp) {
   return (getBaseIp(ip) === getBaseIp(otherIp));
 }
 
-export function setupNetworkEvents() {
+function setupNetworkEvents() {
   return (dispatch, getState) => {
     const alertOnlineStatus = () => {
       let currentIp = IpUtil.address();
@@ -140,4 +141,13 @@ export function setupNetworkEvents() {
 
     alertOnlineStatus();
   };
+}
+
+module.exports = {
+  getBaseIp,
+  getIpList,
+  availableRange,
+  getIpsForScan,
+  isSameNetwork,
+  setupNetworkEvents
 }

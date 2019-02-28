@@ -12,6 +12,8 @@ import { app, BrowserWindow, shell, Menu, nativeImage } from 'electron';
 import Analytics from 'electron-google-analytics';
 const uuidv1 = require('uuid/v1');
 const { version } = require('./package.json');
+const fork   = require('child_process').fork;
+let services  = [];
 import debounce from "lodash.debounce";
 
 import { autoUpdater } from "electron-updater";
@@ -103,7 +105,7 @@ let mainWindow;
 
 app.on('ready', async () => {
   writeLog("Ready.");
-  let analytics; 
+  let analytics;
   try {
     analytics = new Analytics('UA-122297332-4', { userAgent: `workbench-${version}` });
   } catch (e) {
@@ -158,14 +160,14 @@ app.on('ready', async () => {
 
   const makeMenu = () => {
     const menu = AppMenu.createMenu(app.createWindow);
-  
+
     Menu.setApplicationMenu(AppMenu.buildMenu(menu));
   };
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
-  
+
   let webContents = mainWindow.webContents;
-  mainWindow.on('resize', debounce((msg) => { 
+  mainWindow.on('resize', debounce((msg) => {
     // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with
     // the height, width, and x and y coordinates.
     let { width, height } = mainWindow.getBounds();
@@ -193,13 +195,26 @@ app.on('ready', async () => {
     app.quit();
     mainWindow = null;
   });
-  
+
   makeMenu();
 });
+
+// var cleanExit = function() { process.exit(); };
+// process.on('SIGINT', cleanExit); // catch ctrl-c
+// process.on('SIGTERM', cleanExit); // catch kill
+
+// process.on('exit', function() {
+//   console.log('killing', services.length, 'child processes');
+//   services.forEach(function(service) {
+//     service.kill();
+//   });
+// });
+
+// setTimeout(function() { process.exit(0) }, 3000);
 app.on('ready', async () => {
   // const { startServer } = require("./main/services/server");
   const { startShellService } = require("./main/services/shell-service");
-  const { startScanner } = require("./main/services/network-scanner");
+  // const startScanner = require();
   const { startZmq } = require("./main/services/zmq");
   const { startRpc } = require("./main/services/rpc");
   // startStreamer().catch((e) => {
@@ -218,7 +233,7 @@ app.on('ready', async () => {
     writeFailed('RPC Service', e);
   }
   try {
-    await startScanner();
+    services.push(fork(path.resolve(__dirname,"./main/services/network-scanner")));
     writeSuccess('Network Scanner Service');
   } catch (e) {
     writeFailed('Network Scanner Service', e);

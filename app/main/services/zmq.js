@@ -31,7 +31,7 @@ function onMessage(sender, event_message, service, cb) {
     writeLog("ERROR: Failed to convert EventMessage to JSON", e.message, service, msg);
     return;
   }
-  
+
   try {
     writeLog(`Extracting ${service.key} from JSON...`);
     jsonData = jsonData[service.key];
@@ -55,7 +55,7 @@ function onMessage(sender, event_message, service, cb) {
       ]
     };
     writeLog("message count: " + data[service.id].messages.length);
-  
+
     msgResp = {};
     msgResp[service.id] = data[service.id];
   }
@@ -68,7 +68,7 @@ export function startZmq(mainWindow, app) {
   return new Promise((resolve, reject) => {
     const sock = zmq.socket('sub');
     sock.subscribe('');
-    
+
     let msgHandler;
     ipcMain.on(types.CONNECT, (evt, ip, service) => {
       const { sender } = evt;

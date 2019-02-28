@@ -136,7 +136,7 @@ function* routeWatcher({payload}) {
   const { location } = payload;
   console.warn("routeWatcher",payload);
   if (location.pathname === routes.EON_LIST) {
-    yield put(networkScannerActions.BEGIN_scanNetwork());
+    // yield put(networkScannerActions.());
   }
 }
 // EXPORT ROOT SAGA

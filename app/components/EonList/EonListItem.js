@@ -22,7 +22,7 @@ const propTypes = {
 class EonListItem extends Component {
   componentDidMount() {
     if (this.props.addStatus === 1) {
-      this.props.DO_PING_EON(this.props);
+      // this.props.DO_PING_EON(this.props);
     }
   }
   deleteEon = () => {
@@ -48,7 +48,8 @@ class EonListItem extends Component {
     if (disabled) {
       tagName = "div";
     }
-    return (<ListGroupItem key={index} onClick={() => { this.selectEon(id) }} className={eonClasses} tag={tagName}>
+    return (<ListGroupItem key={index} className={eonClasses}>
+      <button onClick={() => { this.selectEon(id) }}>
         <span className={"eon_icon"}>
           {(addStatus === 1 && reachable === 1) &&
             [<FontAwesomeIcon icon={'check'} key={'icon-'+index}/>,
@@ -79,15 +80,17 @@ class EonListItem extends Component {
           </span>
           <span className={"results_button_mac"}>{ip}</span>
         </span>
-        {(addStatus === 2) &&
-          <button className={"results_button_delete"}>
-            <span onClick={this.deleteEon}><FontAwesomeIcon icon={'trash-alt'}/></span>
-          </button>
-        }
         {(addStatus !== 2) &&
           <span className={"results_button_selected"}><FontAwesomeIcon icon={'chevron-right'}/></span>
         }
-    </ListGroupItem>);
+      </button>
+      {(addStatus === 2) &&
+        <button className={"results_button_delete"}>
+          <span onClick={this.deleteEon}><FontAwesomeIcon icon={'trash-alt'}/></span>
+        </button>
+      }
+    </ListGroupItem>
+    );
   }
 }
 

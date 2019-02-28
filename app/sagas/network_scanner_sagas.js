@@ -1,9 +1,7 @@
 import { all, take, call, join, fork, race, spawn, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
 import { eventChannel, END } from 'redux-saga';
 const isPortReachable = require('is-port-reachable');
-
 import electron from 'electron';
-
 const { ipcRenderer } = electron;
 import rpc from '../rpc-client';
 import arp from 'node-arp';
@@ -14,15 +12,19 @@ import * as networkConnectionTypes from '../constants/network_connection_action_
 import * as networkScannerActions from '../actions/network_scanner_actions';
 import * as eonListActions from '../actions/eon_list_actions';
 import ping from 'net-ping';
+import connectSocket from "socket.io-client"
+
+const ws = connectSocket('http://localhost:12000');
+
 const delay = (ms) => new Promise (res => setTimeout(res, ms))
 function revisedRandId() {
   return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
 }
 
-function* createScanner(scanner, ips) {
-  // console.log("[NETWORK_SCANNER] Creating scanner", scanner, ips);
-  const channel = yield call(createScannerEventChannel, scanner);
-  scanner.send(types.SCAN_NETWORK, ips);
+function* createScanner(socket, ips) {
+  // console.log("[NETWORK_SCANNER] Creating socket", socket, ips);
+  const channel = yield call(createScannerEventChannel, socket);
+  // socket.send(types.SCAN_NETWORK, ips);
   // console.log("[NETWORK_SCANNER] Send IPC ",types.SCAN_NETWORK, ips);
   while (true) {
     let action = yield take(channel);
@@ -30,20 +32,20 @@ function* createScanner(scanner, ips) {
   }
 }
 
-export function* createScannerEventChannel(scanner) {
-  // console.log("[NETWORK_SCANNER] createScannerEventChannel",scanner);
+export function* createScannerEventChannel(socket) {
+  // console.log("[NETWORK_SCANNER] createScannerEventChannel",socket);
   return eventChannel(emit => {
     const scanError = (data) => {
       // console.log("[NETWORK_SCANNER] scanError",data);
       emit(networkScannerActions.FAIL_scanNetwork(data.toString()));
     };
 
-    const scanResult = (evt, data) => {
-      // console.log("[NETWORK_SCANNER] scanResult",data);
+    const scanResult = (data) => {
+      console.log("[NETWORK_SCANNER] scanResult",data);
       emit(networkScannerActions.RESULT_scanNetwork(data));
     };
 
-    const scanPartialComplete = (evt, data) => {
+    const scanPartialComplete = (data) => {
       // console.log("[NETWORK_SCANNER] scanPartialComplete",data);
       emit(networkScannerActions.PARTIALCOMPLETE_scanNetwork(data));
     };
@@ -55,17 +57,19 @@ export function* createScannerEventChannel(scanner) {
     };
 
     // IPC sharing the same event type constants for clarity.
-    scanner.on(types.SCAN_NETWORK_RESULT, scanResult);
-    scanner.on(types.SCAN_NETWORK_PARTIAL_COMPLETE, scanPartialComplete);
-    scanner.on(types.SCAN_NETWORK_FAIL, scanError);
-    scanner.on(types.SCAN_NETWORK_COMPLETE, scanComplete);
+    socket.on(types.SCAN_NETWORK_RESULT, scanResult);
+    socket.on(types.SCAN_NETWORK_PARTIAL_COMPLETE, scanPartialComplete);
+    socket.on(types.SCAN_NETWORK_FAIL, scanError);
+    socket.on(types.SCAN_NETWORK_COMPLETE, scanComplete);
+
+    socket.emit(types.SCAN_NETWORK);
     return () => {
       // This is a handler to uncreateScannerEventChannel.
       // console.warn("Scan done.");
-      scanner.removeListener(types.SCAN_NETWORK_RESULT, scanResult);
-      scanner.removeListener(types.SCAN_NETWORK_PARTIAL_COMPLETE, scanPartialComplete);
-      scanner.removeListener(types.SCAN_NETWORK_FAIL, scanError);
-      scanner.removeListener(types.SCAN_NETWORK_COMPLETE, scanComplete);
+      socket.off(types.SCAN_NETWORK_RESULT, scanResult);
+      socket.off(types.SCAN_NETWORK_PARTIAL_COMPLETE, scanPartialComplete);
+      socket.off(types.SCAN_NETWORK_FAIL, scanError);
+      socket.off(types.SCAN_NETWORK_COMPLETE, scanComplete);
     };
   });
 }
@@ -80,7 +84,7 @@ function* scanNetwork() {
   yield call(cleanUnresolvedEons);
   // console.log("[NETWORK_SCANNER] CLEANED unresolved");
   // console.log("[NETWORK_SCANNER] Spawning createScanner / ipcRenderer");
-  yield call(createScanner, ipcRenderer);
+  yield fork(createScanner, ws);
   // console.log("[NETWORK_SCANNER] Spawned createScanner / ipcRenderer");
 }
 
@@ -89,7 +93,7 @@ function* handleAddEon(action) {
   const { unresolvedEons } = eonList;
   let { payload } = action;
   let randomId = revisedRandId();
-  console.warn(`[NETWORK_SCANNER] handleAddEon(${action})`);
+  console.warn(`[NETWORK_SCANNER] handleAddEon(${JSON.stringify(action)})`);
 
   let newEon = {};
 
@@ -122,7 +126,7 @@ function* handleAddEon(action) {
     yield put(networkScannerActions.REMOVE_SCANNED_RESULT(payload.id));
   } else {
     console.warn(`[NETWORK_SCANNER] EON did not already exist...`);
-    if (!payload.id) {
+    if (payload && !payload.id) {
       console.warn(`[NETWORK_SCANNER] Payload didn't have an id...`);
       newEon = {
         ...payload,

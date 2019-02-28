@@ -28,8 +28,9 @@ export function PARTIALCOMPLETE_scanNetwork() {
 }
 export function RESULT_scanNetwork(result) {
   let randomId = revisedRandId();
-  let newEon = {}
-  if (result.status !== "open") {
+  let newEon = {};
+  console.log("result:",result);
+  if (result && result.status !== "open") {
     // console.log(result.ip);
     return {
       type: types.SCAN_NETWORK_PROGRESS,
@@ -37,7 +38,6 @@ export function RESULT_scanNetwork(result) {
     };
   }
 
-  
   // console.warn("OPEN " + result.ip,result);
   // newEon[randomId] = {
   //   ...result,
