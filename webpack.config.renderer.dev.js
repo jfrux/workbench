@@ -74,6 +74,7 @@ export default merge.smart(baseConfig, {
 
   module: {
     rules: [
+
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,

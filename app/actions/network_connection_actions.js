@@ -121,27 +121,11 @@ function isSameNetwork(ip,otherIp) {
   return (getBaseIp(ip) === getBaseIp(otherIp));
 }
 
-function setupNetworkEvents() {
-  return (dispatch, getState) => {
-    const alertOnlineStatus = () => {
-      let currentIp = IpUtil.address();
-      navigator.onLine ? dispatch({
-        type: "network/CONNECTED",
-        payload: {
-          ip: currentIp
-          // ip_cidr: CidrUtil.cidr.toCidr(ip.address())
-        }
-      }) : dispatch({
-        type: "network/DISCONNECTED"
-      });
-    };
-
-    window.addEventListener('online',  alertOnlineStatus);
-    window.addEventListener('offline',  alertOnlineStatus);
-
-    alertOnlineStatus();
-  };
-}
+// function setupNetworkEvents() {
+//   return (dispatch, getState) => {
+//
+//   };
+// }
 
 module.exports = {
   getBaseIp,
@@ -149,5 +133,5 @@ module.exports = {
   availableRange,
   getIpsForScan,
   isSameNetwork,
-  setupNetworkEvents
+  // setupNetworkEvents
 }

@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import thunk from 'redux-thunk';
+// import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
 import { createHashHistory } from 'history'
 import { connectRouter, routerMiddleware } from 'connected-react-router'
@@ -20,7 +20,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 const router = routerMiddleware(history);
 
 const enhancer = compose(
-  applyMiddleware(thunk),
+  // applyMiddleware(thunk),
   applyMiddleware(createSagaMiddleware),
   applyMiddleware(router),
 );
@@ -34,7 +34,7 @@ const configureStore = (initialState) => {
 
   // Thunk Middleware
   middleware.push(sagaMiddleware);
-  middleware.push(thunk);
+  // middleware.push(thunk);
 
   // Logging Middleware
   const logger = createLogger({

@@ -2,16 +2,11 @@ import zmq from 'zeromq';
 import { ipcMain } from 'electron';
 import * as types from '../../constants/zmq_action_types';
 const fs = require('fs');
-const Json2csvParser = require('json2csv').Parser;
 const EventMessage = require('../../messages/event');
-const chalk = require("chalk");
-const prefix = chalk.bold.blue;
-const bgTaskColor = chalk.magenta;
+
 const data = {};
+const { writeLog } = require("../log");
 import throttle from "lodash.throttle";
-function writeLog(...params) {
-  console.info(prefix('workbench') + ' ' + chalk.bold(bgTaskColor('[ZEROMQ]')), bgTaskColor(...params));
-}
 
 function onMessage(sender, event_message, service, cb) {
   // console.warn(arguments);

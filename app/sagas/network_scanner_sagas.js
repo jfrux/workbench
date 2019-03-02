@@ -1,8 +1,9 @@
-import { all, take, call, join, fork, race, spawn, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
+import { all, take, call, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
 import { eventChannel, END } from 'redux-saga';
-const isPortReachable = require('is-port-reachable');
+// const isPortReachable = require('is-port-reachable');
 import electron from 'electron';
-const { ipcRenderer } = electron;
+// const { ipcRenderer } = electron;
+const evilscan = require('evilscan');
 import rpc from '../rpc-client';
 import arp from 'node-arp';
 import * as routes from '../constants/routes.json';
@@ -11,18 +12,58 @@ import * as types from '../constants/network_scanner_action_types';
 import * as networkConnectionTypes from '../constants/network_connection_action_types';
 import * as networkScannerActions from '../actions/network_scanner_actions';
 import * as eonListActions from '../actions/eon_list_actions';
-import ping from 'net-ping';
-import connectSocket from "socket.io-client"
+// import Worker from 'worker-loader!../main/services/network-scanner.worker.js';
+// import ping from 'net-ping';
+// const path = require("path");
+// const scanner = new Worker(path.resolve(process.execPath,"../../../../../Resources/app/network-scanner-worker.js"));
+const verifyPort = (ip) => {
+  return new Promise((resolve, reject) => {
+    const scan = new evilscan({
+      target: ip,
+      port:'8022',
+      status:'TROU'
+    });
+    scan.on('result', (data) => {
+      console.log("Scanned ip...",data);
+      resolve(data);
+    });
+    scan.on('error', (err) => {
+      // console.log('Error:',err);
+      // console.log(`[${ip}] Failed to scan ${ip}...`, err);
+      reject(err);
+    });
+    scan.on('done', (data) => {
+      // resolve(data);
+    });
 
-const ws = connectSocket('http://localhost:12000');
+    scan.run();
+  });
+};
+// const path = require("path");
+// import connectSocket from "socket.io-client"
 
+
+function createWebSocketConnection() {
+  return new Promise((resolve,reject) => {
+    // const scanner = new WebSocket('ws://127.0.0.1:12000');
+    const ws = new WebSocket('ws://127.0.0.1:9020/');
+
+    ws.addEventListener("open", (socket) => {
+      console.log("Opened connection!");
+      resolve(ws);
+    });
+    // resolve(ws);
+  });
+}
 const delay = (ms) => new Promise (res => setTimeout(res, ms))
 function revisedRandId() {
   return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
 }
 
-function* createScanner(socket, ips) {
-  // console.log("[NETWORK_SCANNER] Creating socket", socket, ips);
+function* createScanner() {
+  console.log("[NETWORK_SCANNER] Creating socket");
+  const socket = yield call(createWebSocketConnection);
+  console.log("socket created:",socket);
   const channel = yield call(createScannerEventChannel, socket);
   // socket.send(types.SCAN_NETWORK, ips);
   // console.log("[NETWORK_SCANNER] Send IPC ",types.SCAN_NETWORK, ips);
@@ -32,11 +73,12 @@ function* createScanner(socket, ips) {
   }
 }
 
-export function* createScannerEventChannel(socket) {
-  // console.log("[NETWORK_SCANNER] createScannerEventChannel",socket);
+function* createScannerEventChannel(socket) {
+  console.log("[NETWORK_SCANNER] createScannerEventChannel",socket);
   return eventChannel(emit => {
+
     const scanError = (data) => {
-      // console.log("[NETWORK_SCANNER] scanError",data);
+      console.log("[NETWORK_SCANNER] scanError",data);
       emit(networkScannerActions.FAIL_scanNetwork(data.toString()));
     };
 
@@ -46,31 +88,65 @@ export function* createScannerEventChannel(socket) {
     };
 
     const scanPartialComplete = (data) => {
-      // console.log("[NETWORK_SCANNER] scanPartialComplete",data);
+      console.log("[NETWORK_SCANNER] scanPartialComplete",data);
       emit(networkScannerActions.PARTIALCOMPLETE_scanNetwork(data));
     };
 
     const scanComplete = () => {
-      // console.log("[NETWORK_SCANNER] scanComplete");
+      console.log("[NETWORK_SCANNER] scanComplete");
       emit(networkScannerActions.COMPLETE_scanNetwork());
       emit(END);
     };
 
-    // IPC sharing the same event type constants for clarity.
-    socket.on(types.SCAN_NETWORK_RESULT, scanResult);
-    socket.on(types.SCAN_NETWORK_PARTIAL_COMPLETE, scanPartialComplete);
-    socket.on(types.SCAN_NETWORK_FAIL, scanError);
-    socket.on(types.SCAN_NETWORK_COMPLETE, scanComplete);
+    // const onPing = (event) => {
+    //   // puts event payload into the channel
+    //   // this allows a Saga to take this payload from the returned channel
+    //   emit(event.payload)
+    // }
+    // const onError = (err) => {
+    //   console.log("err!:)",err);
+    // }
+    const onMessage = (msg) => {
+      // console.log(msg);
+      const parsedMsg = JSON.parse(msg.data);
+      const messageType = parsedMsg.type;
+      const messagePayload = parsedMsg.payload;
+      console.log("parsedMsg:", parsedMsg);
+      switch (messageType) {
+        case types.SCAN_NETWORK_RESULT:
+          scanResult(messagePayload);
+          break;
+        case types.SCAN_NETWORK_PARTIAL_COMPLETE:
+          scanPartialComplete();
+          break;
+        case types.SCAN_NETWORK_FAIL:
+          scanError(messagePayload);
+          break;
+        case types.SCAN_NETWORK_COMPLETE:
+          scanComplete();
+      }
+      // types.SCAN_NETWORK_RESULT, scanResult);
+      // socket.addEventListener(types.SCAN_NETWORK_PARTIAL_COMPLETE, scanPartialComplete);
+      // socket.addEventListener(types.SCAN_NETWORK_FAIL, scanError);
+      // socket.addEventListener(types.SCAN_NETWORK_COMPLETE, scanComplete);
+    }
+    socket.onmessage = onMessage;
+    socket.addEventListener('message', onMessage);
+    // socket.addEventListener('ping', onPing);
+    // socket.addEventListener('error', onError);
 
-    socket.emit(types.SCAN_NETWORK);
-    return () => {
-      // This is a handler to uncreateScannerEventChannel.
-      // console.warn("Scan done.");
-      socket.off(types.SCAN_NETWORK_RESULT, scanResult);
-      socket.off(types.SCAN_NETWORK_PARTIAL_COMPLETE, scanPartialComplete);
-      socket.off(types.SCAN_NETWORK_FAIL, scanError);
-      socket.off(types.SCAN_NETWORK_COMPLETE, scanComplete);
-    };
+    // socket.postMessage(JSON.stringify({ type: types.SCAN_NETWORK}));
+    socket.send(JSON.stringify({ type: types.SCAN_NETWORK }) );
+    const unsubscribe = () => {
+      // socket.removeEventHandler('ping', onPing);
+      // socket.removeEventHandler('error', onError);
+      // socket.removeEventHandler('message', onMessage);
+    }
+
+    // IPC sharing the same event type constants for clarity.
+
+
+    return unsubscribe;
   });
 }
 
@@ -79,13 +155,13 @@ function* cleanUnresolvedEons() {
 }
 
 function* scanNetwork() {
-  // console.log("[NETWORK_SCANNER] Starting scan...");
-  // console.log("[NETWORK_SCANNER] cleanUnresolvedEons");
+  console.log("[NETWORK_SCANNER] Starting scan...");
+  console.log("[NETWORK_SCANNER] cleanUnresolvedEons");
   yield call(cleanUnresolvedEons);
-  // console.log("[NETWORK_SCANNER] CLEANED unresolved");
-  // console.log("[NETWORK_SCANNER] Spawning createScanner / ipcRenderer");
-  yield fork(createScanner, ws);
-  // console.log("[NETWORK_SCANNER] Spawned createScanner / ipcRenderer");
+  console.log("[NETWORK_SCANNER] CLEANED unresolved");
+  console.log("[NETWORK_SCANNER] Spawning createScanner / ipcRenderer");
+  yield call(createScanner);
+  console.log("[NETWORK_SCANNER] Spawned createScanner / ipcRenderer");
 }
 
 function* handleAddEon(action) {
@@ -191,50 +267,45 @@ function* resolveEon(action) {
   }
 }
 
-function pingEon(eon) {
-  // console.warn("Pinging EON",eon);
-  return new Promise((resolve,reject) => {
-    try {
-      var session = ping.createSession({
-        networkProtocol: ping.NetworkProtocol.IPv4,
-        packetSize: 16,
-        retries: 1,
-        sessionId: (process.pid % 65535),
-        timeout: 5000,
-        ttl: 128
-      });
+// function pingEon(eon) {
+//   // console.warn("Pinging EON",eon);
+//   return new Promise((resolve,reject) => {
+//     try {
+//       var session = ping.createSession({
+//         networkProtocol: ping.NetworkProtocol.IPv4,
+//         packetSize: 16,
+//         retries: 1,
+//         sessionId: (process.pid % 65535),
+//         timeout: 5000,
+//         ttl: 128
+//       });
 
-      session.pingHost(eon.ip, function pingEon(error, target) {
-        if (error) {
-          console.warn("No response from EON",error.toString());
-          reject(eon, "Could not ping EON...", error.toString());
-        } else {
-          resolve(true);
-          // console.warn("Response found for EON",eon);
-          session.close();
-        }
-      });
-    } catch (e) {
-      console.warn("Cannot ping on this platform...");
-      resolve(true);
-    }
-  });
-}
+//       session.pingHost(eon.ip, function pingEon(error, target) {
+//         if (error) {
+//           console.warn("No response from EON",error.toString());
+//           reject(eon, "Could not ping EON...", error.toString());
+//         } else {
+//           resolve(true);
+//           // console.warn("Response found for EON",eon);
+//           session.close();
+//         }
+//       });
+//     } catch (e) {
+//       console.warn("Cannot ping on this platform...");
+//       resolve(true);
+//     }
+//   });
+// }
 function* handlePingEon(eon) {
   console.warn(`[NetworkScanner] Pinging IP address to check validity`,eon);
   // const eon = action.payload.data;
   yield put(eonListActions.PING_EON(eon));
   try {
-    const isReachable = yield call(isPortReachable,8022, {host: eon.ip});
-    console.log(`[NetworkScanner] ${eon.ip}:8022 is port reachable?`,isReachable);
-    if (isReachable) {
-      const {pingResp, timeout} = yield race({
-        pingResp: call(pingEon, eon),
-        timeout: delay(10000)
-      });
-
-      console.warn(`[NetworkScanner] Response of ping: ${pingResp}`);
-      if (pingResp) {
+    const verifiedPort = yield call(verifyPort,eon.ip);
+    console.log(`[NetworkScanner] ${eon.ip}:8022 is port reachable?`,verifiedPort);
+    if (verifiedPort) {
+      console.warn(`[NetworkScanner] Response of ping: ${JSON.stringify(verifiedPort)}`);
+      if (verifiedPort.status === "open") {
         yield put(eonListActions.PING_EON_SUCCESS(eon));
       } else {
         yield put(eonListActions.PING_EON_FAILED(eon));

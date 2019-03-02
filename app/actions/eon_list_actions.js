@@ -165,59 +165,59 @@ export function DESELECT_EON(index) {
   };
 }
 
-export function selectEon(eon) {
-  return (dispatch, getState) => {
-    console.log("Selecting eon",eon);
-    dispatch(SELECT_EON(eon));
-  };
-}
-export function checkExistingEONStatuses() {
-  return (dispatch, getState) => {
-    const { scanResults } = getState().eonList;
-    scanResults.forEach((eon) => {
-      //check if available.
-      dispatch({
-        type: types.CHECK_EON_STATUS,
-        payload: {
-          eon
-        }
-      });
-      isPortReachable(8022, {
-        host: eon.ip
-      }).then(reachable => {
-        if (reachable) {
-          dispatch({
-            type: types.CHECK_EON_STATUS_ONLINE,
-            payload: {
-              eon
-            }
-          });
-        } else {
-          dispatch({
-            type: types.CHECK_EON_STATUS_OFFLINE,
-            payload: {
-              eon
-            }
-          });
-        }
-        //=> true
-      });
-    });
-  };
-}
-export function retrieveEonFromSettings() {
-  return (dispatch, getState) => {
-    let scanResults = getState().eonList.scanResults;
-    // let selectedEon = parseInt(settings.get("selectedEon")) || null;
-    console.warn("Getting saved eons from settings...",scanResults);
-    dispatch(resetScanNetwork());
-    // dispatch(FOUND_scanNetwork());
-    // if (scanResults && scanResults.length) {
-    //   dispatch(SUCCESS_scanNetwork(scanResults,getState()));
-    //   dispatch(selectEon(selectedEon));
-    //   // if (selectedEon) {
-    //   //   this.props.history.push(routes.EON_DETAIL);
-    //   // }
-    // }
-  };
-}
+// export function selectEon(eon) {
+//   return (dispatch, getState) => {
+//     console.log("Selecting eon",eon);
+//     dispatch(SELECT_EON(eon));
+//   };
+// }
+// export function checkExistingEONStatuses() {
+//   return (dispatch, getState) => {
+//     const { scanResults } = getState().eonList;
+//     scanResults.forEach((eon) => {
+//       //check if available.
+//       dispatch({
+//         type: types.CHECK_EON_STATUS,
+//         payload: {
+//           eon
+//         }
+//       });
+//       isPortReachable(8022, {
+//         host: eon.ip
+//       }).then(reachable => {
+//         if (reachable) {
+//           dispatch({
+//             type: types.CHECK_EON_STATUS_ONLINE,
+//             payload: {
+//               eon
+//             }
+//           });
+//         } else {
+//           dispatch({
+//             type: types.CHECK_EON_STATUS_OFFLINE,
+//             payload: {
+//               eon
+//             }
+//           });
+//         }
+//         //=> true
+//       });
+//     });
+//   };
+// }
+// export function retrieveEonFromSettings() {
+//   return (dispatch, getState) => {
+//     let scanResults = getState().eonList.scanResults;
+//     // let selectedEon = parseInt(settings.get("selectedEon")) || null;
+//     console.warn("Getting saved eons from settings...",scanResults);
+//     dispatch(resetScanNetwork());
+//     // dispatch(FOUND_scanNetwork());
+//     // if (scanResults && scanResults.length) {
+//     //   dispatch(SUCCESS_scanNetwork(scanResults,getState()));
+//     //   dispatch(selectEon(selectedEon));
+//     //   // if (selectedEon) {
+//     //   //   this.props.history.push(routes.EON_DETAIL);
+//     //   // }
+//     // }
+//   };
+// }

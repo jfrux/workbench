@@ -1,19 +1,21 @@
-const chalk = require('chalk');
-const prefix = chalk.bold.blue;
-const success = chalk.bold.green;
-const failed = chalk.bold.red;
-const mainColor = chalk.bold.white;
-const bgTaskColor = chalk.white;
+// const winston = require('winston');
+// require('winston-syslog').Syslog;
+// winston.add(new winston.transports.Syslog(options));
+const log = require('electron-log');
+log.transports.console.appName = 'Workbench';
+log.transports.file.appName = 'Workbench';
+log.transports.console.level = 'debug';
+log.transports.file.level = 'debug';
+log.transports.file.format = '{h}:{i}:{s}:{ms} {text}';
 
-export function writeLog(...params) {
-  //eslint-disable-next-line no-console
-  console.info(prefix('workbench') + ' ' + mainColor('[MAIN]'), bgTaskColor(...params));
-}
-export function writeSuccess(...params) {
-  //eslint-disable-next-line no-console
-  console.info(prefix('workbench') + ' ' + mainColor('[MAIN]') + ' ' + success('[SUCCESS]'), bgTaskColor(...params));
-}
-export function writeFailed(...params) {
-  //eslint-disable-next-line no-console
-  console.info(prefix('workbench') + ' ' + mainColor('[MAIN]') + ' ' + failed('[FAILED]'), bgTaskColor(...params));
-}
+module.exports = {
+  writeLog(...params) {
+    log.info(`[MAIN]`, ...params);
+  },
+  writeSuccess(...params) {
+    log.info(`[MAIN] [SUCCESS]`, ...params);
+  },
+  writeFailed(...params) {
+    log.error(`[MAIN] [FAILED]`, ...params);
+  }
+};

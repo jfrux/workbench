@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import StateListItem from './StateListItem';
 import LoadingOverlay from '../../LoadingOverlay';
 import services from '../../../constants/service_list.yaml';
-import JSONPretty from 'react-json-pretty';
+// import JSONPretty from 'react-json-pretty';
 import ReactJson from 'react-json-view';
 import * as ZmqActions from '../../../actions/zmq_actions';
 // import { ListGroup, Card, CardHeader, CardBody } from 'reactstrap'
@@ -23,7 +23,7 @@ const propTypes = {
 
 class StateList extends React.PureComponent {
   service = services[this.props.type]
-  
+
   componentDidMount(props) {
     this.props.CONNECT(this.props.type);
   }
@@ -32,13 +32,13 @@ class StateList extends React.PureComponent {
   }
   render() {
     let { type, data, depth, messageCount } = this.props;
- 
+
     let loadingMessage = "Waiting for messages...";
-    
+
     if (!data || messageCount <= 0) {
       return <LoadingOverlay message={loadingMessage} />;
     }
-    
+
     if (data) {
       return (
         <div>
@@ -46,19 +46,19 @@ class StateList extends React.PureComponent {
             <StateListToolbar type={type} />
           </div>
           <div className={"state-data"}>
-            <ReactJson 
-              name={type} 
-              src={data} 
-              collapsed={depth} 
+            <ReactJson
+              name={type}
+              src={data}
+              collapsed={depth}
               style={{
-                backgroundColor: '#000', 
+                backgroundColor: '#000',
                 opacity: 1
               }}
               theme="brewer" />
           </div>
         </div>
       );
-      return (<div><JSONPretty json={JSON.parse(JSON.stringify(data))} /></div>);
+      // return (<div><JSONPretty json={JSON.parse(JSON.stringify(data))} /></div>);
     } else {
       return (<div></div>);
     }

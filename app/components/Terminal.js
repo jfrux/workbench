@@ -33,7 +33,7 @@ class ReactTerminal extends React.Component {
   constructor(props) {
     super(props);
     this.HOST = `127.0.0.1:${app.TERMINAL_PORT}`;
-    this.SOCKET_URL = `ws://${this.HOST}/terminals/`;
+    // this.SOCKET_URL = `ws://${this.HOST}/terminals/`;
     this.failures = 0;
     this.interval = null;
     this.fontSize = 16;

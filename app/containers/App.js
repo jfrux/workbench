@@ -9,7 +9,6 @@ import { faStream, faCode, faTrashAlt, faTerminal, faPause, faTimes, faPlay, faU
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import settings from 'electron-settings';
 library.add(faStream, faCode, faTrashAlt,faTerminal, faPause, faTimes, faUndo, faPlay, faCheck, faCircle, faGithub, faQuestion, faSync, faChevronLeft, faPlus, faChevronRight);
-
 function mapStateToProps(state) {
   return {};
 }
@@ -27,7 +26,7 @@ class App extends React.Component {
     settings.watch("eonSshKeyPath",() => {
       rpc.emit('notify',{title:'Workbench SSH Key Path updated!', body: 'Reopen Workbench'});
     });
-    this.props.setupNetworkEvents();
+    // this.props.setupNetworkEvents();
   }
   render() {
     const { children } = this.props;

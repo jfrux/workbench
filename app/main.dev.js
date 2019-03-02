@@ -10,9 +10,10 @@
 import { writeLog, writeFailed, writeSuccess} from './main/log';
 import { app, BrowserWindow, shell, Menu, nativeImage } from 'electron';
 import Analytics from 'electron-google-analytics';
+import { rendererRequireDirect } from 'electron-remote';
 const uuidv1 = require('uuid/v1');
 const { version } = require('./package.json');
-const fork   = require('child_process').fork;
+// const spawn   = require('child_process').spawn;
 let services  = [];
 import debounce from "lodash.debounce";
 
@@ -141,7 +142,12 @@ app.on('ready', async () => {
     width,
     height,
     minWidth: 320,
-    minHeight: 240
+    minHeight: 240,
+    webPreferences: {
+			// allow code inside this window to use use native window.open()
+			nativeWindowOpen: true,
+			nodeIntegrationInWorker: true,
+		}
   };
   try {
     analytics.event('App', 'open', { evLabel: 'opened-workbench', evValue: true, clientId: app.clientId });
@@ -199,27 +205,25 @@ app.on('ready', async () => {
   makeMenu();
 });
 
-// var cleanExit = function() { process.exit(); };
-// process.on('SIGINT', cleanExit); // catch ctrl-c
-// process.on('SIGTERM', cleanExit); // catch kill
+var cleanExit = function() { process.exit(); };
+process.on('SIGINT', cleanExit); // catch ctrl-c
+process.on('SIGTERM', cleanExit); // catch kill
 
-// process.on('exit', function() {
-//   console.log('killing', services.length, 'child processes');
-//   services.forEach(function(service) {
-//     service.kill();
-//   });
-// });
+process.on('exit', function() {
+  // console.log('killing', services.length, 'child processes');
+  services.forEach(function(service) {
+    service.kill();
+  });
+});
 
 // setTimeout(function() { process.exit(0) }, 3000);
 app.on('ready', async () => {
-  // const { startServer } = require("./main/services/server");
   const { startShellService } = require("./main/services/shell-service");
   // const startScanner = require();
+  // const { startScanner } = require("./main/services/scanner-ipc");
   const { startZmq } = require("./main/services/zmq");
   const { startRpc } = require("./main/services/rpc");
-  // startStreamer().catch((e) => {
-  //   writeLog("Streamer service could not be started.", e.message);
-  // });
+  // require("./main/services/start-server");
   try {
     await startShellService();
     writeSuccess('Shell Service');
@@ -233,13 +237,16 @@ app.on('ready', async () => {
     writeFailed('RPC Service', e);
   }
   try {
-    services.push(fork(path.resolve(__dirname,"./main/services/network-scanner")));
+    require("./main/services/scanner-ws");
+
     writeSuccess('Network Scanner Service');
   } catch (e) {
     writeFailed('Network Scanner Service', e);
   }
   try {
     await startZmq();
+
+    // require("./main/services/network-scanner");
     writeSuccess('ZeroMQ Service');
   } catch (e) {
     writeFailed('ZeroMQ Service', e);

@@ -36,6 +36,7 @@ export default {
   ],
   module: {
     rules: [
+
       {
         test: /\.node$/,
         use: 'node-loader'
@@ -67,7 +68,7 @@ export default {
    * Determine the array of extensions that should be used to resolve modules.
    */
   resolve: {
-    extensions: ['.js', '.jsx', '.json'],
+    extensions: ['.worker.js', '.js', '.jsx', '.json'],
     modules: [path.join(__dirname, 'app'), 'node_modules']
   },
 

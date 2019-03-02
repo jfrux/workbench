@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect'
-import { get } from 'dot-prop-immutable';
 
 const getItems = (state, ownProps) => {
   const { items, type } = ownProps;
@@ -10,8 +9,8 @@ const getItems = (state, ownProps) => {
   items.forEach((rootItem) => {
     try {
       // console.warn("rootItem:",rootItem);
-      
-      
+
+
     } catch (e) {
       console.warn(`Error mapping keys to props...`,e);
     }

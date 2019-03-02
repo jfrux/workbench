@@ -37,14 +37,14 @@ class EonDetail extends React.PureComponent {
   render() {
     const { activeTab, activeCommand, network, devices, currentStateKeys, eon, services, serviceIds } = this.props;
     const commandKeys = Object.keys(commands);
-    
+
     if (network === 'disconnected' || eon == null) {
       return (<Redirect to={routes.EON_LIST} />);
     }
     let stateTabs, statePanes;
     let commandTabs = commandKeys.map((key,index) => {
       const command = new commands[key];
-      console.log(command);
+      // console.log(command);
       return (<NavItem key={key + "-tab-link"}>
         <NavLink
           className={classnames({
@@ -58,7 +58,7 @@ class EonDetail extends React.PureComponent {
       </NavItem>
       );
     });
-    
+
     stateTabs = serviceIds.map((key) => {
       const service = services[key];
       return (
@@ -99,7 +99,7 @@ class EonDetail extends React.PureComponent {
       CommandPane = commands[activeCommand];
     }
 
-  // STASHING THIS FOR LATER.  
+  // STASHING THIS FOR LATER.
   // <NavItem key={"editor-tab-link"}>
   //   <NavLink className={classnames({
   //       "no-select": true,
@@ -122,8 +122,8 @@ class EonDetail extends React.PureComponent {
               onClick={() => { this.setTab('console'); }}>
               <span className={"icon"}><FontAwesomeIcon icon="terminal" /></span> Console
             </NavLink>
-            
-            {activeTab === 'console' && 
+
+            {activeTab === 'console' &&
               <Nav tabs className={'command-list'}>
                 {commandTabs}
               </Nav>
@@ -145,8 +145,8 @@ class EonDetail extends React.PureComponent {
               </Nav>
             }
           </NavItem>
-          
-          
+
+
         </Nav>
         <TabContent className={'tab-content'} activeTab={activeTab}>
           <TabPane className={"console-tab console-tab-pane"} key={"console-tab-pane"} tabId={'console'}>

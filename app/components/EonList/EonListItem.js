@@ -22,7 +22,7 @@ const propTypes = {
 class EonListItem extends Component {
   componentDidMount() {
     if (this.props.addStatus === 1) {
-      // this.props.DO_PING_EON(this.props);
+      this.props.DO_PING_EON(this.props);
     }
   }
   deleteEon = () => {
@@ -33,7 +33,7 @@ class EonListItem extends Component {
   }
   selectEon = (id) => {
     if (this.props.addStatus !== 2) {
-      this.props.selectEon(id);
+      this.props.SELECT_EON(id);
     }
   }
   render() {
