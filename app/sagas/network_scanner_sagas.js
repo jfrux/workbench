@@ -129,6 +129,7 @@ function* createScannerEventChannel(socket) {
       // socket.addEventListener(types.SCAN_NETWORK_FAIL, scanError);
       // socket.addEventListener(types.SCAN_NETWORK_COMPLETE, scanComplete);
     }
+    // socket.on('error', () => console.log('errored'));
     socket.onmessage = onMessage;
     socket.addEventListener('message', onMessage);
     // socket.addEventListener('ping', onPing);

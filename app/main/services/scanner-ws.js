@@ -100,6 +100,8 @@ function start() {
   wss.on('connection', function(ws) {
     // console.log("Connection received!");
     // console.log("client");
+
+    ws.on('error', () => console.log('errored'));
     ws.addEventListener("message",(msg) => {
       // console.log("received message",arguments;
       const parsedMsg = JSON.parse(msg.data);
