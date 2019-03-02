@@ -1,7 +1,6 @@
 import { all, take, call, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
 import { eventChannel, END } from 'redux-saga';
 // const isPortReachable = require('is-port-reachable');
-import electron from 'electron';
 // const { ipcRenderer } = electron;
 const evilscan = require('evilscan');
 import rpc from '../rpc-client';

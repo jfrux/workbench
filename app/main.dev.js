@@ -8,9 +8,9 @@
  *
  */
 import { writeLog, writeFailed, writeSuccess} from './main/log';
-import { app, BrowserWindow, shell, Menu, nativeImage } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 import Analytics from 'electron-google-analytics';
-import { rendererRequireDirect } from 'electron-remote';
+// import { rendererRequireDirect } from 'electron-remote';
 const uuidv1 = require('uuid/v1');
 const { version } = require('./package.json');
 // const spawn   = require('child_process').spawn;
