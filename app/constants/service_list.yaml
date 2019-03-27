@@ -481,6 +481,41 @@ driverMonitoring:
   label: "Driver Monitoring"
   fields:
   description: ""
+liveParameters:
+  id: "liveParameters"
+  type: "Object"
+  key: "LiveParameters"
+  port: 8064
+  fields:
+  description:
+liveMapData:
+  id: "liveMapData"
+  type: "Object"
+  key: "LiveMapData"
+  port: 8065
+  fields:
+  description:
+cameraOdometry:
+  id: "cameraOdometry"
+  type: "Object"
+  key: "CameraOdometry"
+  port: 8066
+  fields:
+  description:
+pathPlan:
+  id: "pathPlan"
+  type: "Object"
+  key: "PathPlan"
+  port: 8067
+  fields:
+  description:
+kalmanOdometry:
+  id: "kalmanOdometry"
+  type: "Object"
+  key: "KalmanOdometry"
+  port: 8068
+  fields:
+  description:
 testModel:
   id: "testModel"
   type: "Object"
