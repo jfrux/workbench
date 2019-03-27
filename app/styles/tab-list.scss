@@ -23,7 +23,7 @@
     > .nav {
       .nav-item {
         .nav-link {
-          padding-left:30px;
+          padding-left:15px;
           &.active {
             color:rgba(#FFF,0.8);
             font-weight:normal;
@@ -42,7 +42,7 @@
       text-align:left;
       background-color:$darker-color;
       color:rgba(#FFF,0.5);
-      
+
       &:before {
         position: absolute;
         bottom: -1px;
@@ -76,5 +76,5 @@
   }
 }
 .tab-list::-webkit-scrollbar {
-  display: none; 
+  display: none;
 }
