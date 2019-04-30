@@ -104,3 +104,11 @@ Feel free to create issues for feature requests and/or bugs.
 
 ## License
 MIT
+
+#### To run on Arch Linux
+
+1. Download latest appimage
+2. open terminal and cd /home/user/Downloads
+3. chmod +x Workbenchxxx.appimage
+4. ./Workbenchxxx
+5. It will ask if you want to integrate the appimage into system, select no
