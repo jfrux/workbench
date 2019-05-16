@@ -12,13 +12,8 @@ It also has a goal of providing easier porting of new vehicles.
 
 [![license](https://img.shields.io/github/license/openpilot-community/workbench.svg)](https://github.com/openpilot-community/workbench/blob/master/LICENSE)
 
-### Help fuel development!
-
-Think you can spare $1/month to support the open source efforts of Workbench and The Openpilot Community?<br />
-We receive **zero funding** from any commercial entity and all our code is MIT licensed so every little contribution helps...<br />
-Consider becoming a Patreon supporter and help us support you!
-
-<a href="https://www.patreon.com/bePatron?u=9861134" ><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" width="120" /></a>
+## SEEKING MAINTAINERS
+I'm no longer maintaining this...
 
 ## Getting Started
 
