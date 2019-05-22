@@ -14,7 +14,7 @@ It also has a goal of providing easier porting of new vehicles.
 
 ## Getting Started
 
-### [Download Workbench](https://opc.ai/workbench)
+### [Download Workbench](https://github.com/jfrux/workbench/releases)
 
 > IMPORTANT: Workbench manages your EON over SSH.  You must enable SSH in your Settings on EON.
 
