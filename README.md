@@ -12,7 +12,7 @@ It also has a goal of providing easier porting of new vehicles.
 
 [![license](https://img.shields.io/github/license/openpilot-community/workbench.svg)](https://github.com/openpilot-community/workbench/blob/master/LICENSE)
 
-**For support with Workbench, connect with me on the [Workbench Discord Channel](https://discord.gg/EvqPbw).••
+**For Support with Workbench, connect with me on the [Workbench Discord Channel](https://discord.gg/EvqPbw).
 
 ## Getting Started
 
