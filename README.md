@@ -12,9 +12,6 @@ It also has a goal of providing easier porting of new vehicles.
 
 [![license](https://img.shields.io/github/license/openpilot-community/workbench.svg)](https://github.com/openpilot-community/workbench/blob/master/LICENSE)
 
-## SEEKING MAINTAINERS
-I'm no longer maintaining this...
-
 ## Getting Started
 
 ### [Download Workbench](https://opc.ai/workbench)
