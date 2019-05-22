@@ -66,12 +66,14 @@ I'm no longer maintaining this...
 4. Install a version of nodejs with `nvm` or your node version manager.
    `nvm install 8.14.0` is the version I recommend.
    `nvm use 8.14.0`
-5. Move to the cloned directory and install the dependencies: 
+5. Install python 2.7.15 with `pyenv` or `asdf `.
+   `pyenv install 2.7.15` and set the current directory with `pyenv local 2.7.15`
+6. Move to the cloned directory and install the dependencies: 
   `npm run setup`
-6. Build the code and watch for changes:
+7. Build the code and watch for changes:
   `npm run dev`
-7. Checkout a new branch for your feature... something like `feature/what-is-it` or `bugfix/the-fix-for-something`
-8. Push your change up to your own GitHub fork and create a New Pull Request to request your new feature / bugfix branch  be upstreamed into the master for inclusion in the next release.
+8. Checkout a new branch for your feature... something like `feature/what-is-it` or `bugfix/the-fix-for-something`
+9. Push your change up to your own GitHub fork and create a New Pull Request to request your new feature / bugfix branch  be upstreamed into the master for inclusion in the next release.
 
 To make sure that your code works in the finished application, you can generate the binaries like this:
 
