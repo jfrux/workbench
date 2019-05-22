@@ -1,7 +1,7 @@
 
 
 # Workbench for Openpilot
-Workbench is a desktop application to help you manage your Comma EON(s) as well as assisting with installing Openpilot.
+Workbench is a desktop application to help you manage openpilot driving agent running on a compatible Android device.
 It also has a goal of providing easier porting of new vehicles.
 
 <!-- ![](https://opc.ai/assets/workbench-readme-splash.png)
