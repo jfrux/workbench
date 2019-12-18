@@ -37,6 +37,14 @@ It also has a goal of providing easier porting of new vehicles.
 - [ ] Review videos
 - [ ] Monitor uploads
 
+## Contributing
+
+I welcome any and all pull requests!
+Please, if you see a bug that could use a fix - submit a PR and we can make this thing great together.
+Any change, big or small should be included if it makes sense for the community as a whole.
+
+Let's get some review processes together and work through the bugs!
+
 ## For Workbench Developers
 
 1. Install necessary development dependencies:
