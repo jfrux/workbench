@@ -7285,7 +7285,7 @@ ip-regex@^2.1.0:
   resolved "https://registry.yarnpkg.com/ip-regex/-/ip-regex-2.1.0.tgz#fa78bf5d2e6913c911ce9f819ee5146bb6d844e9"
   integrity sha1-+ni/XS5pE8kRzp+BnuUUa7bYROk=
 
-ip@^1.1.0, ip@^1.1.4, ip@^1.1.5:
+ip@^1.1.0, ip@^1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/ip/-/ip-1.1.5.tgz#bdded70114290828c0a039e72ef25f5aaec4354a"
   integrity sha1-vd7XARQpCCjAoDnnLvJfWq7ENUo=
@@ -8814,13 +8814,13 @@ loader-utils@^1.0.1, loader-utils@^1.0.2, loader-utils@^1.1.0:
     emojis-list "^2.0.0"
     json5 "^1.0.1"
 
-local-devices@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/local-devices/-/local-devices-1.1.1.tgz#3efc2c8546fa52e1241d1e71ec4897364d47648d"
-  integrity sha512-z0V8ZxLZ1DBxJExORtKlpLwsO7iOp6Rq8i+HLbBepVfJOdAEe+vkukAXPqbkF5GNZ2k04AZiQnphXx9gRs81ew==
+local-devices@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/local-devices/-/local-devices-3.0.0.tgz#88b4101963549850ab926d598b23c30b5eb60bb4"
+  integrity sha512-pu4Ma/WfhGRMs+h7V1VLGE0LxU8TKMQFCJKZIVBZrUqbWB1ZBSdd4wRbEmKMw/S4/Sq/5NRv7ht9PC4XNts4mQ==
   dependencies:
-    ip "^1.1.4"
-    mz "^2.6.0"
+    ip "^1.1.5"
+    mz "^2.7.0"
 
 locate-path@^2.0.0:
   version "2.0.0"
@@ -9616,7 +9616,7 @@ mute-stream@~0.0.4:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
 
-mz@^2.6.0:
+mz@^2.7.0:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/mz/-/mz-2.7.0.tgz#95008057a56cafadc2bc63dde7f9ff6955948e32"
   integrity sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==
