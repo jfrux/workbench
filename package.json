@@ -274,7 +274,7 @@
     "local-devices": "^1.1.1",
     "lodash.throttle": "^4.1.1",
     "mkdirp": "^0.5.1",
-    "moment": "^2.22.2",
+    "moment": "^2.29.4",
     "moment-timezone": "^0.5.21",
     "network-list": "^1.1.5",
     "node-arp": "^1.0.6",
